@@ -8,7 +8,6 @@ var flatten      = require('gulp-flatten');
 var gulp         = require('gulp');
 var gulpif       = require('gulp-if');
 var imagemin     = require('gulp-imagemin');
-var eslint       = require('gulp-eslint');
 var lazypipe     = require('lazypipe');
 var less         = require('gulp-less');
 var merge        = require('merge-stream');
@@ -19,6 +18,7 @@ var runSequence  = require('run-sequence');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var uglify       = require('gulp-uglify');
+var eslint       = require('gulp-eslint');
 
 // See https://github.com/austinpray/asset-builder
 var manifest = require('asset-builder')('./assets/manifest.json');
@@ -186,9 +186,9 @@ gulp.task('styles', ['wiredep'], function() {
 });
 
 // ### Scripts
-// `gulp scripts` - Runs JSHint then compiles, combines, and optimizes Bower JS
+// `gulp scripts` - Runs ESLint then compiles, combines, and optimizes Bower JS
 // and project JS.
-gulp.task('scripts', ['eslint'], function() {
+gulp.task('scripts', ['lint'], function() {
   var merged = merge();
   manifest.forEachDependency('js', function(dep) {
     merged.add(
@@ -223,21 +223,19 @@ gulp.task('images', function() {
     .pipe(browserSync.stream());
 });
 
-// ### JSHint
-// `gulp eslint` - Lints project JS.
-gulp.task('eslint', function() {
-  return gulp.src([
-    'gulpfile.js'
-  ].concat(project.js))
-      // eslint() attaches the lint output to the eslint property
-      // of the file object so it can be used by other modules.
-      .pipe(eslint())
-      // eslint.format() outputs the lint results to the console.
-      // Alternatively use eslint.formatEach() (see Docs).
-      .pipe(eslint.format())
-      // To have the process exit with an error code (1) on
-      // lint error, return the stream and pipe to failOnError last.
-      .pipe(eslint.failOnError());
+// ### ESLint
+// `gulp lint` - Lints project JS.
+gulp.task('lint', function() {
+    return gulp.src(project.js)
+        // eslint() attaches the lint output to the eslint property
+        // of the file object so it can be used by other modules.
+        .pipe(eslint())
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failOnError last.
+        .pipe(eslint.failOnError());
 });
 
 // ### Clean

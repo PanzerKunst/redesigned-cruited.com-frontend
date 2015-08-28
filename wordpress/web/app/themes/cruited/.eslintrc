@@ -1,0 +1,22 @@
+{
+    "envs": [
+        "browser"
+    ],
+
+    "globals": {
+        "CS": true,
+        "P": true,
+        "$": true,
+        "_": true,
+        "TweenLite": true,
+        "Modernizr": true
+    },
+
+    "rules": {
+        "strict": 0,
+        "new-cap": 0,
+        "no-underscore-dangle": 0,
+        "no-alert": 0,
+        "no-console": 0
+    }
+}
