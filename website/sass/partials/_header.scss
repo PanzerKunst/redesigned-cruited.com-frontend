@@ -1,0 +1,15 @@
+header {
+  position: fixed;
+  height: $header-height;
+  width: 100%;
+
+  z-index: $z-index-menu;
+}
+
+#menu-btn {
+  float: right;
+
+  &:after {
+    @include icon-font($fa-var-bars);
+  }
+}

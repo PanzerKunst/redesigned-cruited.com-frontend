@@ -1,0 +1,16 @@
+{
+  "name": "main",
+  "private": true,
+  "devDependencies": {
+    "eslint-plugin-react": "*",
+    "grunt": "~0.4.5",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-sass": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-eslint": "*",
+    "grunt-babel": "*",
+    "matchdep": "*"
+  }
+}

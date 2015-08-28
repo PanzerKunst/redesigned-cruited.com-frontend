@@ -1,0 +1,57 @@
+@(title: String, pageId: String)(header: Html)(content: Html)(javascript: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+        <title>@title</title>
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("main-v1.css")">
+
+        <!-- TODO Favicon
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")"> -->
+
+        <!-- Fonts on CDN -->
+    </head>
+    <body id="@pageId">
+    <div id="container">
+        <header>@header</header>
+        <div role="main">
+            <div id="content">@content</div>
+        </div>
+        <footer></footer>
+    </div>
+
+    <!-- Javascript CDN libs -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenLite.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/easing/EasePack.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/plugins/CSSPlugin.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons.js"></script>  <!-- TODO: add ".min" when switching to production -->
+
+    <!-- Project Javascripts -->
+    <script src="@routes.Assets.at("main.js")"></script>
+
+    <script type="text/javascript">
+            CR.Services.Browser.addUserAgentAttributeToHtmlTag();
+
+        // FastClick init
+        window.addEventListener('load', function() {
+            FastClick.attach(document.body);
+        }, false);
+    </script>
+
+    @javascript
+    </body>
+</html>
