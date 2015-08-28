@@ -1,0 +1,23 @@
+$sprite-url: 'images/sprite';
+
+$action-color: rgb(66, 133, 244);  // #4285F4
+$background-body-color: rgb(255, 255, 255);  // #FFF
+
+$line-height-project: 1.75em;
+
+$small-content-width: 320px;
+$medium-content-width: $small-content-width * 2;
+$large-content-width: $small-content-width * 3;
+
+$spacer-unit-size: 14px;
+
+$font-size-base-px: 14;
+$font-size-base-em: 1em;
+$font-size-small: 0.75em;
+
+$z-index-header: 10;
+
+$header-height: 40px;
+$footer-height: 40px;
+
+$font-color-inverse: #fff;

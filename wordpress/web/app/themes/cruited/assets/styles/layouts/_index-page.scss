@@ -1,0 +1,46 @@
+/* TODO body.home,
+.wrap.container,
+.content,
+.main {
+  height: 100%; // For child's "height: 100%" declaration to work
+} */
+
+
+body.home {
+  .main {
+    > section {
+      padding: 0 $spacer-unit-size;
+    }
+  }
+
+  #hero {
+    color: $font-color-inverse;
+
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+
+    background-image: url(../images/hero-901.jpg);
+
+    @media screen and (min-width: 902px), screen and (min-resolution: 2dppx) {
+      background-image: url(../images/hero-1920.jpg);
+    }
+
+    > h1 {
+      padding-top: $spacer-unit-size * 5;
+    }
+  }
+
+  #scroll-down {
+    color: $font-color-inverse;
+
+    > p {
+      margin-bottom: -$spacer-unit-size/2;
+    }
+
+    > .fa-chevron-down {
+      margin-bottom: $spacer-unit-size;
+    }
+  }
+}
