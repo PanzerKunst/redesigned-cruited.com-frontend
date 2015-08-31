@@ -1,46 +1,209 @@
-/* TODO body.home,
-.wrap.container,
-.content,
-.main {
-  height: 100%; // For child's "height: 100%" declaration to work
-} */
-
-
 body.home {
-  .main {
-    > section {
-      padding: 0 $spacer-unit-size;
-    }
-  }
-
   #hero {
-    color: $font-color-inverse;
-
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-
     background-image: url(../images/hero-901.jpg);
 
     @media screen and (min-width: 902px), screen and (min-resolution: 2dppx) {
       background-image: url(../images/hero-1920.jpg);
     }
 
-    > h1 {
-      padding-top: $spacer-unit-size * 5;
+    > div {
+      padding-bottom: 0;
+    }
+
+    h1 {
+      margin-top: 3em;
+    }
+
+    #subtitle {
+      $subtitle-margin-top: 1em;
+      $subtitle-margin-bottom: 3em;
+      margin: $subtitle-margin-top 0 $subtitle-margin-bottom 0;
+      @include medium-screen {
+        margin: $subtitle-margin-top*$medium-screen-ratio-l 0 $subtitle-margin-bottom*$medium-screen-ratio-l 0;
+      }
+      @include large-screen {
+        margin: $subtitle-margin-top*$large-screen-ratio-l 0 $subtitle-margin-bottom*$large-screen-ratio-l 0;
+      }
+    }
+
+    a {
+      color: $font-color-inverse;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
     }
   }
 
-  #scroll-down {
-    color: $font-color-inverse;
+  #money-back-garantee-indication {
+    font-size: $font-size-small;
+    opacity: 0.8;
+
+    margin-top: 0.5em;
+  }
+
+  a[href="#how-it-works"] {
+    $how-we-do-it-margin: 2em;
+    margin-top: $how-we-do-it-margin;
+    @include medium-screen {
+      margin-top: $how-we-do-it-margin * $medium-screen-ratio-l;
+    }
+    @include large-screen {
+      margin-top: $how-we-do-it-margin * $large-screen-ratio-l;
+    }
 
     > p {
-      margin-bottom: -$spacer-unit-size/2;
+      margin-bottom: 0;
+
+      font-size: #{$font-size-base-px}px;
+
+      &#how-it-works-text-medium-screen {
+        display: none;
+      }
+      @include medium-screen {
+        &#how-it-works-text-small-screen {
+          display: none;
+        }
+        &#how-it-works-text-medium-screen {
+          display: block;
+        }
+      }
     }
 
     > .fa-chevron-down {
-      margin-bottom: $spacer-unit-size;
+      margin-bottom: 1em;
+    }
+  }
+
+  #steps {
+    text-align: center;
+
+    $steps-margin-top: $spacer-unit-size * 1.5;
+    margin-top: $steps-margin-top;
+    @include medium-screen {
+      margin-top: $steps-margin-top*$medium-screen-ratio-l;
+    }
+    @include large-screen {
+      margin-top: $steps-margin-top*$large-screen-ratio-l;
+    }
+
+    > ul {
+      display: inline-block;
+
+      margin-bottom: 0;
+    }
+
+    li {
+      display: inline-block;
+      vertical-align: top;
+
+      $step-panel-width: $small-content-width - 2*$spacer-unit-size;
+      width: $step-panel-width;
+
+      $step-margin-bottom: $spacer-unit-size * 3;
+      margin-bottom: $step-margin-bottom;
+      @include medium-screen {  // Same for large screen
+        margin-bottom: $step-margin-bottom*$medium-screen-ratio-l;
+      }
+
+      .step-image {
+        $step-1-image-location-x: 0;
+        $step-1-image-location-y: 0;
+
+        @include hdpi-sprite();
+        background-position: $step-1-image-location-x $step-1-image-location-y;
+        @include hidpi {
+          background-position: half-pos($step-1-image-location-x, $step-1-image-location-y);
+        }
+
+        // Unnecessary width: $step-panel-width;
+        height: 150px;
+      }
+
+      h3 {
+        padding-top: 1.2em;
+
+        $step-1-image-location-x: 125px;
+        $step-1-image-location-y: -300px;
+
+        @include hdpi-sprite();
+        background-position: $step-1-image-location-x $step-1-image-location-y;
+        @include hidpi {
+          background-position: $step-1-image-location-x $step-1-image-location-y/2;
+        }
+
+        height: 84px;
+      }
+
+      &:nth-child(2) {
+        .step-image {
+          $step-2-image-location-x: -600px;
+          $step-2-image-location-y: 0;
+
+          background-position: $step-2-image-location-x $step-2-image-location-y;
+          @include hidpi {
+            background-position: half-pos($step-2-image-location-x, $step-2-image-location-y);
+          }
+        }
+
+        h3 {
+          $step-2-image-location-x: 125px;
+          $step-2-image-location-y: -500px;
+
+          background-position: $step-2-image-location-x $step-2-image-location-y;
+          @include hidpi {
+            background-position: $step-2-image-location-x $step-2-image-location-y/2;
+          }
+        }
+      }
+
+      &:last-child {
+        .step-image {
+          $step-3-image-location-x: -1200px;
+          $step-3-image-location-y: 0;
+
+          background-position: $step-3-image-location-x $step-3-image-location-y;
+          @include hidpi {
+            background-position: half-pos($step-3-image-location-x, $step-3-image-location-y);
+          }
+        }
+
+        h3 {
+          $step-3-image-location-x: 125px;
+          $step-3-image-location-y: -700px;
+
+          background-position: $step-3-image-location-x $step-3-image-location-y;
+          @include hidpi {
+            background-position: $step-3-image-location-x $step-3-image-location-y/2;
+          }
+        }
+      }
+
+      @include medium-screen {
+        &:first-child {
+          margin-right: $spacer-unit-size;
+        }
+        &:last-child {
+          margin-left: $spacer-unit-size;
+        }
+      }
+    }
+
+    h3 {
+      font-size: 22px;
+    }
+
+    p {
+      font-size: #{$font-size-base-px}px;
+    }
+  }
+
+  #report-preview {
+    background-image: url(../images/report-preview-section-bg-839.jpg);
+
+    @media screen and (min-width: 840px), screen and (min-resolution: 2dppx) {
+      background-image: url(../images/report-preview-section-bg-1920.jpg);
     }
   }
 }

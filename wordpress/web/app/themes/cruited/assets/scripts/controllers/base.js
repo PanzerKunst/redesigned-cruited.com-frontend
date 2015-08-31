@@ -1,2 +1,2 @@
-CR.Controllers.Base = P(function () {
+CR.Controllers.Base = P(function() {
 });

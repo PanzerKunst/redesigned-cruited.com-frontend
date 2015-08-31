@@ -1,0 +1,25 @@
+.btn {
+  padding: 0.7em 2em;
+}
+
+.btn-primary {
+  background-color: $primary-btn-color;
+  border-color: $primary-btn-color;
+  opacity: 0.9;
+
+  &:active,
+  &:focus,
+  &:hover {
+    background-color: darken($primary-btn-color, 15%);
+    border-color: darken($primary-btn-color, 25%);
+    opacity: 1;
+  }
+}
+
+.btn.secondary {
+  @include styleless-btn;
+
+  border: 2px solid $secondary-action-color;
+
+  color: $secondary-action-color;
+}

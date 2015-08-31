@@ -2,7 +2,6 @@
     "dependencies": {
         "main.js": {
             "files": [
-                "../vendor/p.js",
                 "scripts/global.js",
                 "scripts/services/browser.js",
                 "scripts/controllers/base.js",
@@ -21,6 +20,9 @@
             "files": [
                 "styles/editor-style.scss"
             ]
+        },
+        "p.js": {
+            "files": ["../vendor/p.js"]
         }
     },
     "config": {

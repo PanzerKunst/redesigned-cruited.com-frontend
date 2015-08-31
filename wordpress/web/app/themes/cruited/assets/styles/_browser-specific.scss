@@ -1,0 +1,10 @@
+/* iOS */
+
+/* Fixed background doesn't work on iOS */
+html[data-useragent*="iPhone"],
+html[data-useragent*="iPad"],
+html[data-useragent*="iPod"] {
+  section.img-bg {
+    background-attachment: scroll;
+  }
+}

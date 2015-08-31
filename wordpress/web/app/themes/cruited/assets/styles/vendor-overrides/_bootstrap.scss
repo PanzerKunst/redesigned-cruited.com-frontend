@@ -14,6 +14,13 @@ button {
 
     > .close {
       margin-top: -6px;
+
+      @include medium-screen {
+        margin-top: 2px;
+      }
+      @include large-screen {
+        margin-top: 4px;
+      }
     }
   }
 }
@@ -23,12 +30,27 @@ button {
     $alert-close-btn-margin-top: -10px;
 
     margin-top: $alert-close-btn-margin-top;
+
+    @include medium-screen {
+      margin-top: $alert-close-btn-margin-top / $medium-screen-ratio-l;
+    }
+    @include large-screen {
+      margin-top: $alert-close-btn-margin-top / $large-screen-ratio-l;
+    }
   }
 
   > p+p {
     $alert-p-margin-top: $spacer-unit-size / 2;
 
     margin-top: $alert-p-margin-top;
+
+    @include medium-screen {
+      margin-top: $alert-p-margin-top * $medium-screen-ratio-l;
+    }
+
+    @include large-screen {
+      margin-top: $alert-p-margin-top * $large-screen-ratio-l;
+    }
   }
 }
 
@@ -38,6 +60,13 @@ button {
 
   > .close {
     margin-top: -6px;
+
+    @include medium-screen {
+      margin-top: 0;
+    }
+    @include large-screen {
+      margin-top: 3px;
+    }
   }
 }
 
@@ -64,4 +93,16 @@ h4, .h4,
 h5, .h5,
 h6, .h6 {
   margin-top: 0;
+}
+
+p {
+  $default-p-margin-bottom: ($line-height-computed / 2);
+
+  @include medium-screen {
+    margin-bottom: $default-p-margin-bottom * $medium-screen-ratio-l;
+  }
+
+  @include large-screen {
+    margin-bottom: $default-p-margin-bottom * $large-screen-ratio-l;
+  }
 }

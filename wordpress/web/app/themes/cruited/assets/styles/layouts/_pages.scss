@@ -1,0 +1,75 @@
+.main > section {
+  > div {
+    $section-padding-top: $spacer-unit-size * 1.75;
+    $section-padding-bottom: $spacer-unit-size * 3;
+
+    padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+
+    @include medium-screen {
+      padding-top: $section-padding-top * $medium-screen-ratio-l;
+      padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+
+      width: $medium-content-width;
+
+      padding-left: 0;
+      padding-right: 0;
+      margin: 0 auto;
+    }
+    @include large-screen {
+      padding-top: $section-padding-top * $large-screen-ratio-l;
+      padding-bottom: $section-padding-bottom * $large-screen-ratio-l;
+
+      width: $large-content-width;
+    }
+
+    > h2 {
+      margin-bottom: $section-padding-top;
+      @include medium-screen {
+        margin-bottom: $section-padding-top * $medium-screen-ratio-l;
+      }
+      @include large-screen {
+        margin-bottom: $section-padding-top * $large-screen-ratio-l;
+      }
+    }
+  }
+}
+
+section.img-bg {
+  background-position-x: center;  // background-position-y does not work - mystery
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+
+  h1,
+  h2,
+  h3,
+  p,
+  span {
+    text-shadow: 0 0 0.2em $gray-darker;
+  }
+}
+
+.with-circles {
+  background-image: url(../images/section-circles.png);
+  background-position: top center;
+  background-repeat: no-repeat;
+
+  @include medium-screen {
+    background-image: url(../images/section-circles-large.png);
+  }
+}
+
+
+.img-bg {
+  .with-circles {
+    background-image: url(../images/section-circles-dark-bg.png);
+
+    @include medium-screen {
+      background-image: url(../images/section-circles-dark-bg-large.png);
+    }
+  }
+}
+
+.img-bg {
+  color: $font-color-inverse;
+}

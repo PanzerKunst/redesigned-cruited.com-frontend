@@ -226,7 +226,7 @@ gulp.task('images', function() {
 // ### ESLint
 // `gulp lint` - Lints project JS.
 gulp.task('lint', function() {
-    return gulp.src(project.js)
+    return gulp.src(manifest.dependencies["main.js"].files)
         // eslint() attaches the lint output to the eslint property
         // of the file object so it can be used by other modules.
         .pipe(eslint())
