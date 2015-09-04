@@ -11,15 +11,18 @@
 
 // Vendor overrides
 @import "vendor-overrides/_bootstrap";
+@import "vendor-overrides/_mailchimp-for-wp";
 
 // Global
 @import "common/_global";
+@import "common/_fonts";
 
 @import "components/_buttons";
 @import "components/_comments";
 @import "components/_forms";
 @import "components/_wp-classes";
 @import "components/_headings";
+@import "components/_type";
 
 @import "layouts/_header";
 @import "layouts/_sidebar";

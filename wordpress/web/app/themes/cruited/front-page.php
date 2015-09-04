@@ -6,7 +6,7 @@
 
         <button class="btn btn-primary">Get Started Today</button>
 
-        <p id="money-back-garantee-indication">You're covered by our money-back guarantee <a href="#faq">*</a></p>
+        <a href="#faq" id="money-back-garantee-indication">You're covered by our money-back guarantee *</a>
 
         <a href="#how-it-works">
             <p id="how-it-works-text-small-screen">See how we do it</p>
@@ -46,7 +46,7 @@
             </ul>
         </div>
 
-        <button class="btn secondary">See Our Methodology</button>
+        <a class="btn secondary" href="/var-metod">See Our Methodology</a>
     </div>
 </section>
 
@@ -56,31 +56,197 @@
 
         <p>Understand what your scores mean and the kind of jobs they could lead to with our elegant yet intuitive assessment report page.</p>
 
-        <div id="preview-for-low-res"></div>
+        <img id="preview-img" src="app/themes/cruited/dist/images/report-preview-devices_640.png">
 
-        <ul id="cool-things-about-the-report" class="styleless">
+        <div id="report-preview-body-wrapper">
+            <section>
+                <ul class="styleless">
+                    <li>
+                        <div></div>
+                        <article>
+                            <h3>Get the advice you need</h3>
+                            <p>Personal advice about the most important improvements you can make on your job applications.</p>
+                        </article>
+                    </li>
+                    <li>
+                        <div></div>
+                        <article>
+                            <h3>Cruited Assessment Score</h3>
+                            <p>Tells you how close you are from your perfect profile, and how your application compares to others</p>
+                        </article>
+                    </li>
+                    <li>
+                        <div></div>
+                        <article>
+                            <h3>Make a great impression</h3>
+                            <p>Stand out from the crowd by improving your job application and increase your chances of getting an interview</p>
+                        </article>
+                    </li>
+                    <li>
+                        <div></div>
+                        <article>
+                            <h3>Get your report within 24 hours</h3>
+                            <p>Skip the job applications jargon. Save time by getting to know what you need to focus on.</p>
+                        </article>
+                    </li>
+                </ul>
+
+                <button class="btn btn-primary">Get Started Today</button>
+            </section>
+
+            <div id="preview-img-large-screen"></div>
+        </div>
+    </div>
+</section>
+
+<section id="testimonials" class="centered-contents">
+    <div class="with-circles">
+        <h2>What our Users are saying</h2>
+
+        <p>1000's use Cruited to maximize their chances of landing the job they'll love.</p>
+
+        <section id="main-testimonial">
+            <blockquote class="primary">
+                <p>Efter Cruiteds granskning höll jag på i 4 dagar för att förbättra mitt CV på LinkedIn, men framförallt utöka mitt nätverk som var orsaken till mitt dåliga betyg.</p>
+
+                <p>Och guess what! Under dessa 4 dagar har jag fått 4 mail varav ett var ett jobberbjudande! Om det inte är betyg nog för Cruiteds granskning så vet jag inte vad!</p>
+            </blockquote>
+        </section>
+
+        <section id="secondary-testimonials">
+            <ul class="styleless">
+                <li>
+                    <blockquote class="secondary">We are many who think it is time for change in an outdated industry. Job search is changing and Cruited is an innovative service
+                        that Talent Bank can warmly recommend.</blockquote>
+                    <div>
+                        <div></div>
+                        <article>
+                            <span>Susanne Sundling</span>
+                            <span>CEO Talent Bank</span>
+                        </article>
+                    </div>
+                </li>
+                <li>
+                    <blockquote class="secondary">Cruited among the few who really discovered this and taking fresh new and effective approach.</blockquote>
+                    <div>
+                        <div></div>
+                        <article>
+                            <span>Per Frykman</span>
+                            <span>Reputation Advisor</span>
+                        </article>
+                    </div>
+                </li>
+                <li>
+                    <blockquote class="secondary">Cover letter and resume is your first impression to an employer. Cruited is a really good tool that can increase your competitiveness
+                        by direct feedback on what you need to strengthen your application documents.</blockquote>
+                    <div>
+                        <div></div>
+                        <article>
+                            <span>Mrs Palm</span>
+                            <span>Strategic Development Advisor</span>
+                        </article>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <a class="btn secondary" href="/vara-kunder">Read More Testimonials</a>
+    </div>
+</section>
+
+<section id="cruited-fits-you" class="img-bg">
+    <div>
+        <h2>Live your Dreams.<br>
+            Love your Job.</h2>
+
+        <p>At Cruited, we focus on factors that are becoming increasingly important in professional life. <strong>Cultural fit, Potential and Personality.</strong></p>
+
+        <p>We target professionals who are active in their choices about their career, and care about what they do, and why they do it.</p>
+
+        <p>Our global mission is to show opportunities, provide new perspectives, new approaches and renewed energy. We are passionate about people who believe in themselves,
+            who know that they will get the job, who are interested to develop and continue to explore the world. They want to accomplish something - they think that the job
+            will be much more than just a job.</p>
+    </div>
+</section>
+
+<section id="faq" class="centered-contents">
+    <div class="with-circles">
+        <h2>Frequently Asked Questions</h2>
+
+        <p>Here's a few answers to our most common questions.</p>
+
+        <ul class="styleless">
             <li>
-                <div class="cool-thing-image"></div>
-                <h3>Get the advice you need</h3>
-                <p>Personal advice about the most important improvements you can make on your job applications.</p>
+                <div>
+                    <span>Can you examine applications for any job?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
             </li>
             <li>
-                <div class="cool-thing-image"></div>
-                <h3>Cruited Assessment Score</h3>
-                <p>Tells you how close you are from your perfect profile, and how your application compares to others</p>
+                <div>
+                    <span>Does this work for both the private and public sector?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
             </li>
             <li>
-                <div class="cool-thing-image"></div>
-                <h3>Make a great impression</h3>
-                <p>Stand out from the crowd by improving your job application and increase your chances of getting an interview</p>
+                <div>
+                    <span>Does this work for both the private and public sector?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
             </li>
             <li>
-                <div class="cool-thing-image"></div>
-                <h3>Get your report within 24 hours</h3>
-                <p>Skip the job applications jargon. Save time by getting to know what you need to focus on.</p>
+                <div>
+                    <span>Does this work for both the private and public sector?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
+            </li>
+            <li>
+                <div>
+                    <span>Does this work for both the private and public sector?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
+            </li>
+            <li>
+                <div>
+                    <span>Does this work for both the private and public sector?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
+            </li>
+            <li>
+                <div>
+                    <span>Does this work for both the private and public sector?</span>
+                    <button class="styleless"></button>
+                </div>
+                <p>Ja. Vi har granskat personliga brev och cv:n inom så gott som alla branscher och till en rad tjänster, inom såväl industri, som handel, service och tjänstemän.
+                    Även om branscher och jobb skiljer sig åt så har vi sett att de råd som ger jobb, i mycket stor utsträckning är desamma. Däremot granskar vi för närvarande
+                    enbart ansökningar till jobb i Sverige.</p>
             </li>
         </ul>
+    </div>
+</section>
 
-        <button class="btn btn-primary">Get Started Today</button>
+<section id="bottom-hero" class="img-bg centered-contents">
+    <div>
+        <h2>Start Improving on your Job Applications Now!</h2>
+
+        <button class="btn btn-primary">Kick Start Your Career</button>
     </div>
 </section>

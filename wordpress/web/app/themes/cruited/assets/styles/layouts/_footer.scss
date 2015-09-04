@@ -1,0 +1,126 @@
+footer {
+  > .container {
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-image: url(../images/section-circles-flipped_184.png);
+    @media screen and (min-resolution: 2dppx) {
+      background-image: url(../images/section-circles-flipped_368.png);
+      background-size: 184px 79px;
+    }
+
+    $footer-padding-top: $spacer-unit-size * 1.75;
+    padding-top: $footer-padding-top;
+    padding-bottom: 7em;
+
+    > h2 {
+      font-size: 34px;
+    }
+
+    @include medium-screen {
+      background-image: url(../images/section-circles-large-flipped.png);
+
+      width: $medium-content-width;
+      margin: 0 auto;
+
+      padding-top: $footer-padding-top * $medium-screen-ratio-l;
+      padding-bottom: 10em;
+    }
+
+    @include large-screen {
+      width: $large-content-width;
+
+      padding-top: $footer-padding-top * $large-screen-ratio-l;
+      padding-bottom: 7em;
+
+      display: flex;
+      justify-content: space-between;
+
+      > h2 {
+        margin-top: 0.1em;
+      }
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+
+        flex-basis: 37.5em;
+      }
+    }
+  }
+
+  .customer-service,
+  .widget_mc4wp_widget {
+    font-size: #{$font-size-base-px}px;
+  }
+
+  .customer-service {
+    margin-bottom: 2em;
+
+    > span {
+      display: block;
+    }
+
+    .contact {
+      font-weight: bold;
+      color: $action-color;
+    }
+
+    &.large-screen {
+      display: none;
+
+      text-align: left;
+
+      flex-basis: 333px;
+
+      $contact-large-screen-margin: 0.5em;
+
+      > span {
+        margin-left: $contact-large-screen-margin;
+      }
+
+      > div {
+        font-weight: bold;
+        color: $action-color;
+      }
+
+      .contact {
+        display: inline-block;
+
+        font-size: 13px;
+
+        margin: 0 $contact-large-screen-margin;
+      }
+    }
+
+    @include large-screen {
+      &.small-screen {
+        display: none;
+      }
+      &.large-screen {
+        display: block;
+      }
+    }
+  }
+
+  .widget_mc4wp_widget > h3 {
+    color: $grey-text-color;
+  }
+
+  @include large-screen {
+    .widget_mc4wp_widget {
+      flex-basis: 520px;
+
+      padding-top: 0.4em;
+
+      > h3 {
+        font-size: 15px;
+        margin-top: 0.5em;
+      }
+    }
+
+    .mc4wp-form {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+}

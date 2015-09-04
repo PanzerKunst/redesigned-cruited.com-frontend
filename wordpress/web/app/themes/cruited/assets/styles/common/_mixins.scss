@@ -63,3 +63,7 @@
   box-shadow: none;
   background-color: transparent;
 }
+
+@mixin text-shadow($color: $gray-darker) {
+  text-shadow: 0 0 0.2em $color;
+}

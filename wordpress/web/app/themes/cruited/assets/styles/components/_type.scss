@@ -1,0 +1,56 @@
+p:last-child {
+  margin-bottom: 0;
+}
+
+blockquote {
+  padding: 0;
+  font-weight: bold;
+
+  &.primary {
+    font-size: 1.2em;
+    color: $grey-text-color;
+
+    &:before,
+    &:after {
+      font-family: "Arial Black";
+      font-size: 89px;
+      color: $light-grey;
+
+      opacity: 0.2;
+      display: block; // For text-align and margin
+    }
+
+    &:before {
+      content: "“";
+      text-align: left;
+      margin-bottom: 0.1em;
+    }
+    &:after {
+      content: "”";
+      text-align: right;
+      margin-top: 0.3em;
+    }
+  }
+
+  &.secondary {
+    font-size: 13px;
+    color: $grey-text-color;
+
+    padding: 1em 1em 2.2em 1em;
+
+    background-image: url(../images/secondary-testimonial-bg.png);
+    @media screen and (min-resolution: 2dppx) {
+      background-image: url(../images/secondary-testimonial-bg_2x.png);
+      background-size: 300px 226px;
+    }
+
+    background-position: center bottom;
+  }
+}
+
+.brand {
+  font-family: "Signika", sans-serif;
+  font-weight: bold;
+
+  color: $grey-text-color;
+}

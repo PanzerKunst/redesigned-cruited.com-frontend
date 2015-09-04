@@ -29,7 +29,8 @@ p,
 span,
 li,
 a,
-label {
+label,
+blockquote {
   line-height: $line-height-project;
 }
 
@@ -53,6 +54,7 @@ button.styleless {
 
   &:focus {
     @include styleless-btn;
+    outline: none;
   }
 
   &:hover {

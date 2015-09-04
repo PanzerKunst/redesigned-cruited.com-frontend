@@ -1,14 +1,39 @@
 @font-face {
-  font-family: 'Gotham Rounded';
-  src: url("../fonts/gotham-rounded/gotham-rounded-medium.otf");
+  font-family: "Gotham Rounded";
+  src: url("../fonts/gotham-rounded-medium.otf");
 }
 @font-face {
-  font-family: 'Gotham Rounded';
-  src: url("../fonts/gotham-rounded/gotham-rounded-bold.otf");
+  font-family: "Gotham Rounded";
+  src: url("../fonts/gotham-rounded-bold.otf");
   font-weight: 700;
 }
 @font-face {
-  font-family: 'Gotham Rounded';
-  src: url("../fonts/gotham-rounded/gotham-rounded-light.otf");
+  font-family: "Gotham Rounded";
+  src: url("../fonts/gotham-rounded-light.otf");
   font-weight: 100;
+}
+
+@font-face {
+  font-family: "Signika";
+  src: url("../fonts/Signika-Regular.otf");
+}
+@font-face {
+  font-family: "Signika";
+  src: url("../fonts/Signika-Semibold.otf");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Signika";
+  src: url("../fonts/Signika-Light.otf");
+  font-weight: 100;
+}
+@font-face {
+  font-family: "Signika";
+  src: url("../fonts/Signika-Bold.otf");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Arial Black";
+  src: url("../fonts/arial-black.ttf");
 }

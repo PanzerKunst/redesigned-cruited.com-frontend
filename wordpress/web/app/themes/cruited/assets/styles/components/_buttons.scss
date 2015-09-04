@@ -10,8 +10,8 @@
   &:active,
   &:focus,
   &:hover {
-    background-color: darken($primary-btn-color, 15%);
-    border-color: darken($primary-btn-color, 25%);
+    background-color: darken($primary-btn-color, 15%) !important;
+    border-color: darken($primary-btn-color, 25%) !important;
     opacity: 1;
   }
 }

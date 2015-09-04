@@ -1,5 +1,6 @@
-CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
+"use strict";
 
+CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
     c.init = function() {
         this._initElements();
         this._initEvents();
@@ -10,18 +11,28 @@ CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
 
         this.$siteHeader = $(".banner");
         /* TODO this.$menuBtnWrapper = this.$siteHeader.children("#menu-btn-wrapper");
-        this.$menuBtn = this.$menuBtnWrapper.children(); */
+         this.$menuBtn = this.$menuBtnWrapper.children(); */
+
+        this.$sectionsWithBgImages = $("section.img-bg");
 
         this.$mainPanel = $(".main");
         this.$scrollingAnchors = this.$mainPanel.find("a[href^=#]");
+
+        this.$faqItems = $("#faq").find("li");
+        this.$faqHeaders = this.$faqItems.children("div");
+        this.$faqBodies = this.$faqItems.children("p");
     };
 
     c._initEvents = function() {
         this.$window.scroll(_.debounce($.proxy(this._onScroll, this), 15));
 
+        this.$sectionsWithBgImages.parallax();
+
         // TODO this.$menuBtn.click($.proxy(this._toggleMenu, this));
 
         this.$scrollingAnchors.click(this._scrollToSection);
+
+        this.$faqHeaders.click($.proxy(this._toggleFaqBody, this));
     };
 
     c._onScroll = function() {
@@ -31,7 +42,7 @@ CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
 
         this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
 
-        this.scrollPos = scrollPos;
+        this.scrollPos = scrollPos || 0;
     };
 
     c._toggleMenu = function() {
@@ -46,7 +57,29 @@ CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
         var $section = $(document.getElementById(sectionId));
 
         var scrollYPos = $section.offset().top;
-        TweenLite.to(window, CR.defaultAnimationDuration, {scrollTo: scrollYPos, ease: Power4.easeOut});
+        TweenLite.to(window, 1, {scrollTo: scrollYPos, ease: Power4.easeOut});
+    };
+
+    c._toggleFaqBody = function(e) {
+        var $target = $(e.currentTarget);
+        var $faqItem = $target.parent();
+        var $faqBody = $faqItem.children("p");
+
+        var isOpen = $faqItem.hasClass("expanded");
+
+        // We close all open
+        this.$faqItems.removeClass("expanded");
+        this.$faqBodies.css({"display": "none"});
+
+        if (!isOpen) {
+            this._expandFaqBody($faqBody);
+            $faqItem.addClass("expanded");
+        }
+    };
+
+    c._expandFaqBody = function($faqBody) {
+        $faqBody.css({"display": "block", "opacity": 0});
+        TweenLite.to($faqBody, CR.defaultAnimationDuration, {opacity: 1});
     };
 
     c._isScrollUp = function(scrollPos) {

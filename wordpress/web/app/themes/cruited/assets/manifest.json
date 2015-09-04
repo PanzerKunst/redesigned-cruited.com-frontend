@@ -4,6 +4,8 @@
             "files": [
                 "scripts/global.js",
                 "scripts/services/browser.js",
+                "scripts/services/animator.js",
+                "scripts/services/jquery.parallax.js",
                 "scripts/controllers/base.js",
                 "scripts/controllers/index.js",
                 "scripts/main.js"
@@ -17,11 +19,10 @@
             "main": true
         },
         "editor-style.css": {
-            "files": [
-                "styles/editor-style.scss"
-            ]
+            "files": ["styles/editor-style.scss"]
         },
-        "p.js": {
+        "vendor.js": {
+            "bower": ["jquery"],
             "files": ["../vendor/p.js"]
         }
     },

@@ -1,3 +1,5 @@
+"use strict";
+
 var CR = {};
 
 // Additional namespaces

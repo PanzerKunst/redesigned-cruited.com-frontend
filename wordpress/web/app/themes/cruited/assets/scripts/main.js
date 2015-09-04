@@ -10,6 +10,8 @@
  * always reference jQuery with $, even when in .noConflict() mode.
  * ======================================================================== */
 
+"use strict";
+
 (function($) {
 
     // Use this variable to set up the common and page specific functions. If you
@@ -20,6 +22,8 @@
             init: function() {
                 // JavaScript to be fired on all pages
                 CR.Services.Browser.addUserAgentAttributeToHtmlTag();
+
+                FastClick.attach(document.body);
             },
             finalize: function() {
                 // JavaScript to be fired on all pages, after page specific JS is fired

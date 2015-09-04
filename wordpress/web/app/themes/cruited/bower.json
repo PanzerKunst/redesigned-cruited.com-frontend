@@ -16,48 +16,49 @@
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
     "bourbon": "~4.2.4",
+    "fastclick": "~1.0.6",
     "font-awesome": "~4.4.0",
     "gsap": "~1.17.0",
     "lodash": "~3.10.1",
     "modernizr": "~2.8.3"
   },
-    "overrides": {
-        "jquery": {
-            "main": "./dist/jquery.min.js"
-        },
-        "modernizr": {
-            "main": "./modernizr.js"
-        },
-        "bootstrap-sass": {
-            "main": [
-                "./assets/stylesheets/_bootstrap.scss",
-                "./assets/javascripts/bootstrap/transition.js",
-                "./assets/javascripts/bootstrap/alert.js",
-                "./assets/javascripts/bootstrap/button.js",
-                "./assets/javascripts/bootstrap/carousel.js",
-                "./assets/javascripts/bootstrap/collapse.js",
-                "./assets/javascripts/bootstrap/dropdown.js",
-                "./assets/javascripts/bootstrap/modal.js",
-                "./assets/javascripts/bootstrap/tooltip.js",
-                "./assets/javascripts/bootstrap/popover.js",
-                "./assets/javascripts/bootstrap/scrollspy.js",
-                "./assets/javascripts/bootstrap/tab.js",
-                "./assets/javascripts/bootstrap/affix.js"
-            ]
-        },
-        "font-awesome": {
-            "main": [
-                "./scss/font-awesome.scss",
-                "./fonts/*"
-            ]
-        },
-        "gsap": {
-            "main": [
-                "./src/minified/TweenLite.min.js",
-                "./src/minified/easing/EasePack.min.js",
-                "./src/minified/plugins/CSSPlugin.min.js",
-                "./src/minified/plugins/ScrollToPlugin.min.js"
-            ]
-        }
+  "overrides": {
+    "jquery": {
+      "main": "./dist/jquery.min.js"
+    },
+    "modernizr": {
+      "main": "./modernizr.js"
+    },
+    "bootstrap-sass": {
+      "main": [
+        "./assets/stylesheets/_bootstrap.scss",
+        "./assets/javascripts/bootstrap/transition.js",
+        "./assets/javascripts/bootstrap/alert.js",
+        "./assets/javascripts/bootstrap/button.js",
+        "./assets/javascripts/bootstrap/carousel.js",
+        "./assets/javascripts/bootstrap/collapse.js",
+        "./assets/javascripts/bootstrap/dropdown.js",
+        "./assets/javascripts/bootstrap/modal.js",
+        "./assets/javascripts/bootstrap/tooltip.js",
+        "./assets/javascripts/bootstrap/popover.js",
+        "./assets/javascripts/bootstrap/scrollspy.js",
+        "./assets/javascripts/bootstrap/tab.js",
+        "./assets/javascripts/bootstrap/affix.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "./scss/font-awesome.scss",
+        "./fonts/*"
+      ]
+    },
+    "gsap": {
+      "main": [
+        "./src/minified/TweenLite.min.js",
+        "./src/minified/easing/EasePack.min.js",
+        "./src/minified/plugins/CSSPlugin.min.js",
+        "./src/minified/plugins/ScrollToPlugin.min.js"
+      ]
     }
+  }
 }
