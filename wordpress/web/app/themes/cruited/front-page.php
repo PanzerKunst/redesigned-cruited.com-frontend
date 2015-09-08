@@ -242,11 +242,3 @@
         </ul>
     </div>
 </section>
-
-<section id="bottom-hero" class="img-bg centered-contents">
-    <div>
-        <h2>Start Improving on your Job Applications Now!</h2>
-
-        <button class="btn btn-primary">Kick Start Your Career</button>
-    </div>
-</section>

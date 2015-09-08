@@ -24,6 +24,8 @@
                 CR.Services.Browser.addUserAgentAttributeToHtmlTag();
 
                 FastClick.attach(document.body);
+
+                CR.Controllers.Common();
             },
             finalize: function() {
                 // JavaScript to be fired on all pages, after page specific JS is fired

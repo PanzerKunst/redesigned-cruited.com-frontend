@@ -109,3 +109,4 @@ globals:
     FastClick: true
     TweenLite: true
     Power4: true
+    Breakpoints: true

@@ -1,3 +1,7 @@
+.wrap {
+  font-weight: lighter;
+}
+
 .main > section {
   > div {
     $section-padding-top: $spacer-unit-size * 1.75;
@@ -59,7 +63,7 @@ section.img-bg {
   background-position: center top;
   background-repeat: no-repeat;
   background-image: url(../images/section-circles_184.png);
-  @media screen and (min-resolution: 2dppx) {
+  @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
     background-image: url(../images/section-circles_368.png);
     background-size: 184px 79px;
   }

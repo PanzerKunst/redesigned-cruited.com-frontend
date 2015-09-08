@@ -67,3 +67,7 @@
 @mixin text-shadow($color: $gray-darker) {
   text-shadow: 0 0 0.2em $color;
 }
+
+@mixin no-transition {
+  @include transition(none !important);
+}

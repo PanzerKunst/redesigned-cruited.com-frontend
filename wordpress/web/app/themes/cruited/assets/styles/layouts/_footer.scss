@@ -3,7 +3,7 @@ footer {
     background-position: center bottom;
     background-repeat: no-repeat;
     background-image: url(../images/section-circles-flipped_184.png);
-    @media screen and (min-resolution: 2dppx) {
+    @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
       background-image: url(../images/section-circles-flipped_368.png);
       background-size: 184px 79px;
     }
@@ -43,7 +43,31 @@ footer {
         display: flex;
         justify-content: space-between;
 
-        flex-basis: 37.5em;
+        width: 37.5em;
+      }
+    }
+  }
+
+  #bottom-hero {
+    background-image: url(../images/bottom-hero_640.jpg);
+    background-position: 80% 80%;
+
+    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
+      background-image: url(../images/bottom-hero_1920.jpg);
+    }
+
+    > div {
+      padding-top: 8em;
+      padding-bottom: 8em;
+
+      @include large-screen {
+        text-align: left;
+
+        padding-bottom: 5em;
+
+        > h2 {
+          max-width: 13em;
+        }
       }
     }
   }
@@ -58,6 +82,7 @@ footer {
 
     > span {
       display: block;
+      font-weight: lighter;
     }
 
     .contact {
@@ -70,7 +95,7 @@ footer {
 
       text-align: left;
 
-      flex-basis: 333px;
+      width: 333px;
 
       $contact-large-screen-margin: 0.5em;
 
@@ -108,7 +133,7 @@ footer {
 
   @include large-screen {
     .widget_mc4wp_widget {
-      flex-basis: 520px;
+      width: 520px;
 
       padding-top: 0.4em;
 

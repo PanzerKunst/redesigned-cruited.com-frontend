@@ -7,6 +7,7 @@
                 "scripts/services/animator.js",
                 "scripts/services/jquery.parallax.js",
                 "scripts/controllers/base.js",
+                "scripts/controllers/common.js",
                 "scripts/controllers/index.js",
                 "scripts/main.js"
             ],

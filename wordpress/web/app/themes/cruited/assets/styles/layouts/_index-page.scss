@@ -1,4 +1,33 @@
 body.home {
+  header {
+    > .container {
+      a {
+        color: $background-body-color;
+      }
+
+      button {
+        $menu-btn-img-location-x: -600px;
+        $menu-btn-img-location-y: -500px;
+
+        background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
+        @include hidpi {
+          background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
+        }
+
+        color: $background-body-color;
+      }
+    }
+
+    &.scrolled-down,
+    &.menu-open {
+      > .container {
+        a {
+          color: $dark-grey-text-color;
+        }
+      }
+    }
+  }
+
   #hero {
     background-image: url(../images/hero_640.jpg);
 
@@ -541,7 +570,7 @@ body.home {
       margin-bottom: $spacer-unit-size;
 
       @include medium-screen {
-        flex-basis: 48%;
+        width: 48%;
       }
 
       > div {
@@ -618,30 +647,6 @@ body.home {
           @include hidpi {
             background-position: half-pos($faq-collapse-img-location-x, $faq-collapse-img-location-y);
           }
-        }
-      }
-    }
-  }
-
-  #bottom-hero {
-    background-image: url(../images/bottom-hero_640.jpg);
-    background-position: 80% 80%;
-
-    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
-      background-image: url(../images/bottom-hero_1920.jpg);
-    }
-
-    > div {
-      padding-top: 8em;
-      padding-bottom: 8em;
-
-      @include large-screen {
-        text-align: left;
-
-        padding-bottom: 5em;
-
-        > h2 {
-          max-width: 13em;
         }
       }
     }

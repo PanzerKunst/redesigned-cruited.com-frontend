@@ -5,16 +5,19 @@ html {
 
 body {
   font-family: "Gotham Rounded", sans-serif;
-  font-weight: lighter;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   @include medium-screen {
     font-size: $font-size-base-em * $medium-screen-ratio-m;
+
+    @include defineBreakpoint("GLOBAL_MEDIUM_SCREEN_BREAKPOINT");
   }
   @include large-screen {
     font-size: $font-size-base-em * $large-screen-ratio-m;
+
+    @include defineBreakpoint("GLOBAL_LARGE_SCREEN_BREAKPOINT");
   }
 }
 
