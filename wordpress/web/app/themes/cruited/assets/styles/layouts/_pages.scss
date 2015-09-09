@@ -15,6 +15,22 @@
 
   $page-header-h1-bottom-margin: 40px;
 
+  > div {
+    margin: 0 auto;
+
+    $page-header-padding-top: $spacer-unit-size * 1.75;
+    $page-header-padding-bottom: $spacer-unit-size * 5;
+    padding: $page-header-padding-top $spacer-unit-size $page-header-padding-bottom $spacer-unit-size;
+    @include medium-screen {
+      padding-top: $page-header-padding-top * $medium-screen-ratio-l;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @include large-screen {
+      padding-top: $page-header-padding-top * $large-screen-ratio-l;
+    }
+  }
+
   h1 {
     margin: 3em 0 $page-header-h1-bottom-margin 0;
 
@@ -33,7 +49,7 @@
     font-size: 1em;
     font-weight: lighter;
 
-    $subtitle-margin-top: -($page-header-h1-bottom-margin * 0.9);
+    $subtitle-margin-top: -($page-header-h1-bottom-margin * 0.7);
     $subtitle-margin-bottom: 2em;
     margin: $subtitle-margin-top 0 $subtitle-margin-bottom 0;
     @include medium-screen {
@@ -46,9 +62,8 @@
 }
 
 .main {
-  > .page-content,
-  > section > div {
-    $section-padding-top: $spacer-unit-size * 1.75;
+  > .page-content {
+    $section-padding-top: $spacer-unit-size * 6;
     $section-padding-bottom: $spacer-unit-size * 2.5;
 
     padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
@@ -63,28 +78,16 @@
       padding-right: 0;
       margin: 0 auto;
     }
-    @include large-screen {
-      padding-top: $section-padding-top * $large-screen-ratio-l;
-      padding-bottom: $section-padding-bottom * $large-screen-ratio-l;
+  }
 
+  @include large-screen {
+    > .page-content {
+      font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
+      width: 720px;
+    }
+
+    > section > div {
       width: $large-content-width;
-    }
-
-    > h2 {
-      margin-bottom: $section-padding-top;
-      @include medium-screen {
-        margin-bottom: $section-padding-top * $medium-screen-ratio-l;
-      }
-      @include large-screen {
-        margin-bottom: $section-padding-top * $large-screen-ratio-l;
-      }
-    }
-
-    > p {
-      margin-left: auto;
-      margin-right: auto;
-
-      max-width: $large-content-width;
     }
   }
 }
@@ -102,6 +105,10 @@
   p,
   span {
     @include text-shadow;
+  }
+
+  h2 {
+    color: $background-body-color;
   }
 }
 

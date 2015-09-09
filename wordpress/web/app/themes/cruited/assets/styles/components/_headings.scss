@@ -6,24 +6,26 @@ h5,
 h6 {
   line-height: 1.2;
   text-rendering: optimizelegibility;
+
+  margin: 1.5em 0 1.2em 0;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $secondary-action-color;
 }
 
 h1 {
   font-size: 1.8em;
-
   font-weight: bold;
-
   text-align: center;
 }
 
 h2 {
   font-size: 1.5em;
-
-  color: $secondary-action-color;
-}
-
-.img-bg h2 {
-  color: $font-color-inverse;
 }
 
 h3 {

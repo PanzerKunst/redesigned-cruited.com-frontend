@@ -7,7 +7,7 @@ body.home {
     }
 
     > div {
-      padding-bottom: 0;
+      padding-bottom: 0 !important;
     }
 
     #subtitle {
@@ -72,6 +72,51 @@ body.home {
     }
   }
 
+  .main > section {
+    $section-padding-top: $spacer-unit-size * 1.75;
+
+    > div {
+      $section-padding-bottom: $spacer-unit-size * 2.5;
+
+      padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+
+      @include medium-screen {
+        padding-top: $section-padding-top * $medium-screen-ratio-l;
+        padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+
+        width: $medium-content-width;
+
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 auto;
+      }
+
+      @include large-screen {
+        width: $large-content-width;
+
+        padding-top: $section-padding-top * $large-screen-ratio-l;
+      }
+
+      > p {
+        margin-left: auto;
+        margin-right: auto;
+
+        max-width: $large-content-width;
+      }
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: $section-padding-top;
+      @include medium-screen {
+        margin-bottom: $section-padding-top * $medium-screen-ratio-l;
+      }
+      @include large-screen {
+        margin-bottom: $section-padding-top * $large-screen-ratio-l;
+      }
+    }
+  }
+
   #steps {
     text-align: center;
 
@@ -119,6 +164,8 @@ body.home {
       }
 
       h3 {
+        color: rgb(42, 68, 94); // #2A445E
+
         padding-top: 1.3em;
 
         $step-1-image-location-x: 125px;
@@ -254,6 +301,11 @@ body.home {
         @include large-screen {
           margin-top: 0;
         }
+      }
+
+      h3 {
+        color: $background-body-color;
+        margin: 0 0 0.5em 0;
       }
 
       p {

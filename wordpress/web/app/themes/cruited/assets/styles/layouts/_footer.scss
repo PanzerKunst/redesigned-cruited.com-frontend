@@ -25,7 +25,7 @@ footer {
       }
 
       > h2 {
-        margin-bottom: $spacer-unit-size * 1.75;
+        margin: 0 0 $spacer-unit-size*1.75 0;
 
         @include large-screen {
           max-width: 13em;
@@ -48,6 +48,7 @@ footer {
     padding-bottom: 7em;
 
     > h2 {
+      margin-top: 0;
       font-size: 34px;
     }
 
