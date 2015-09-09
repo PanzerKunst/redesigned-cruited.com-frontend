@@ -3,8 +3,15 @@ p:last-child {
 }
 
 blockquote {
-  padding: 0;
+  $blockquote-padding: 1em;
+  padding: $blockquote-padding;
+  margin-left: -$blockquote-padding;
+  margin-right: -$blockquote-padding;
+
+  background-color: $lighter-grey;
+
   font-weight: bold;
+  text-align: center;
 
   &.primary {
     font-size: 1.2em;
