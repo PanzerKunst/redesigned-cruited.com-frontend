@@ -1,5 +1,40 @@
 footer {
-  > .container {
+  #bottom-hero {
+    background-image: url(../images/bottom-hero_640.jpg);
+    background-position: 80% 80%;
+
+    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
+      background-image: url(../images/bottom-hero_1920.jpg);
+    }
+
+    > div {
+      padding: 8em $spacer-unit-size;
+
+      @include medium-screen {
+        width: $medium-content-width;
+
+        padding: 5em 0;
+
+        margin: 0 auto;
+      }
+
+      @include large-screen {
+        width: $large-content-width;
+
+        text-align: left;
+      }
+
+      > h2 {
+        margin-bottom: $spacer-unit-size * 1.75;
+
+        @include large-screen {
+          max-width: 13em;
+        }
+      }
+    }
+  }
+
+  #footer-proper {
     background-position: center bottom;
     background-repeat: no-repeat;
     background-image: url(../images/section-circles-flipped_184.png);
@@ -44,30 +79,6 @@ footer {
         justify-content: space-between;
 
         width: 37.5em;
-      }
-    }
-  }
-
-  #bottom-hero {
-    background-image: url(../images/bottom-hero_640.jpg);
-    background-position: 80% 80%;
-
-    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
-      background-image: url(../images/bottom-hero_1920.jpg);
-    }
-
-    > div {
-      padding-top: 8em;
-      padding-bottom: 8em;
-
-      @include large-screen {
-        text-align: left;
-
-        padding-bottom: 5em;
-
-        > h2 {
-          max-width: 13em;
-        }
       }
     }
   }

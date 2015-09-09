@@ -1,34 +1,5 @@
 body.home {
-  header {
-    > .container {
-      a {
-        color: $background-body-color;
-      }
-
-      button {
-        $menu-btn-img-location-x: -600px;
-        $menu-btn-img-location-y: -500px;
-
-        background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
-        @include hidpi {
-          background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
-        }
-
-        color: $background-body-color;
-      }
-    }
-
-    &.scrolled-down,
-    &.menu-open {
-      > .container {
-        a {
-          color: $dark-grey-text-color;
-        }
-      }
-    }
-  }
-
-  #hero {
+  .page-header {
     background-image: url(../images/hero_640.jpg);
 
     @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
@@ -39,28 +10,19 @@ body.home {
       padding-bottom: 0;
     }
 
-    h1 {
-      margin-top: 3em;
-
-      @include large-screen {
-        font-size: 2.2em;
-      }
-    }
-
     #subtitle {
-      $subtitle-margin-top: 1em;
       $subtitle-margin-bottom: 3em;
-      margin: $subtitle-margin-top 0 $subtitle-margin-bottom 0;
+      margin-bottom: $subtitle-margin-bottom;
       @include medium-screen {
-        margin: $subtitle-margin-top*$medium-screen-ratio-l 0 $subtitle-margin-bottom*$medium-screen-ratio-l 0;
+        margin-bottom: $subtitle-margin-bottom * $medium-screen-ratio-l;
       }
       @include large-screen {
-        margin: $subtitle-margin-top*$large-screen-ratio-l 0 $subtitle-margin-bottom*$large-screen-ratio-l 0;
+        margin-bottom: $subtitle-margin-bottom * $large-screen-ratio-l;
       }
     }
 
     a {
-      color: $font-color-inverse;
+      color: $background-body-color;
 
       &:hover,
       &:focus {
@@ -516,7 +478,6 @@ body.home {
         }
         &:last-child {
           font-size: 12px;
-          color: $dark-grey-text-color;
         }
       }
     }

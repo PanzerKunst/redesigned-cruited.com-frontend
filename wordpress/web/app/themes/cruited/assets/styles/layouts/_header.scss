@@ -1,6 +1,6 @@
 @mixin header-box-shadow {
   //          offset-x  offset-y  blur-radius spread-radius color
-  box-shadow: 0         0.25em    0.5em       0             transparentize(black, 0.8);
+  box-shadow: 0 0.25em 0.5em 0 transparentize(black, 0.8);
 }
 
 @mixin header-bg-color-transition {
@@ -21,14 +21,14 @@ header {
     font-size: #{$font-size-base-px}px;
 
     a {
-      color: $dark-grey-text-color;
+      color: $background-body-color;
     }
 
     .brand:hover {
       text-decoration: none;
     }
 
-    #other-nav-ux {
+    .other-nav-ux {
       display: flex;
       justify-content: flex-end;
 
@@ -64,11 +64,20 @@ header {
 
   // Small and medium screen declarations
   > .container {
-    > div {
-      display: flex;
-      justify-content: space-between;
+    &#small-medium-screen-menu {
+      display: block;
+    }
+    &#large-screen-menu {
+      display: none;
+    }
 
+    > div {
       @include header-bg-color-transition;
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+      }
     }
 
     .brand {
@@ -85,7 +94,7 @@ header {
 
     button {
       $menu-btn-img-location-x: -600px;
-      $menu-btn-img-location-y: -600px;
+      $menu-btn-img-location-y: -500px;
 
       @include hdpi-sprite();
       background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
@@ -96,7 +105,7 @@ header {
       width: 40px;
       height: 40px;
 
-      color: $grey-text-color;
+      color: $background-body-color;
       font-weight: bold;
       text-transform: uppercase;
 
@@ -106,7 +115,7 @@ header {
       }
     }
 
-    #other-nav-ux {
+    .other-nav-ux {
       > a[href="/login"] {
         margin-top: 5px;
       }
@@ -119,7 +128,7 @@ header {
 
   &.scrolled-down,
   &.menu-open {
-    > .container > div {
+    > #small-medium-screen-menu > div {
       background-color: $background-body-color;
     }
 
@@ -127,70 +136,77 @@ header {
       $menu-btn-img-location-x: -600px;
       $menu-btn-img-location-y: -600px;
 
-      background-position: $menu-btn-img-location-x $menu-btn-img-location-y !important;
+      background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
       @include hidpi {
-        background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y) !important;
+        background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
       }
 
-      color: $grey-text-color !important;
+      color: $grey-text-color;
     }
   }
 
   &.scrolled-down {
-    > .container > div {
+    > #small-medium-screen-menu > div {
       @include header-box-shadow;
     }
   }
 
   &.menu-open {
-    > .container > div {
+    > #small-medium-screen-menu > div {
       box-shadow: none !important;
     }
   }
 
   // Medium screen declarations
-  /* TODO: remove?
   @include medium-screen {
-    .nav {
-      @include columns(2);
-      @include column-rule(1px solid lighten($dark-grey-text-color, 50%));
+    > #small-medium-screen-menu {
+      > div > div,
+      > nav > div {
+        max-width: 640px;
+        margin: 0 auto;
+      }
     }
-  } */
+  }
 
   // Large screen declarations
   @include large-screen {
     > .container {
-      @include header-bg-color-transition;
+      &#small-medium-screen-menu {
+        display: none;
+      }
+      &#large-screen-menu {
+        display: block;
 
-      height: 60px;
+        @include header-bg-color-transition;
 
-      display: flex;
-      justify-content: space-between;
+        height: 60px;
+
+        > div {
+          max-width: $large-content-width;
+          margin: 0 auto;
+
+          display: flex;
+          justify-content: space-between;
+        }
+      }
 
       $logo-width-large-screen: 15%;
 
-      > div {
-        width: $logo-width-large-screen;
-      }
-
       .brand {
+        width: $logo-width-large-screen;
+
         font-size: 30px;
 
-        padding: 4px 0 0 $spacer-unit-size;
+        padding: 4px 0 0 0;
       }
 
-      > nav {
-        background-color: transparent;
-        box-shadow: none;
-
+      nav {
         width: 100% - $logo-width-large-screen;
 
         display: flex;
         justify-content: space-between;
 
         .nav {
-          @include columns(auto auto);
-
           margin-top: 8px;
 
           > li {
@@ -203,7 +219,7 @@ header {
         display: none;
       }
 
-      #other-nav-ux {
+      .other-nav-ux {
         > a[href="/login"] {
           margin-top: 18px;
         }
@@ -213,21 +229,24 @@ header {
         }
 
         > select {
-          margin: 13px $spacer-unit-size 0 0;
+          margin: 13px 0 0 0;
         }
       }
     }
 
     &.scrolled-down {
-      > .container {
+      > #large-screen-menu {
         background-color: $background-body-color;
         @include header-box-shadow;
-
-        > div {
-          background-color: transparent;
-          box-shadow: none;
-        }
       }
     }
+  }
+}
+
+header,
+header.menu-open,
+header.scrolled-down {
+  .current-menu-item > a {
+    color: $primary-btn-color;
   }
 }

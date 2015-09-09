@@ -13,7 +13,11 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
         this.$siteHeader = $("header");
         this.$menuBtn = this.$siteHeader.find("button");
-        this.$nav = this.$siteHeader.find("nav");
+        this.$smallAndMediumScreenNav = this.$siteHeader.children("#small-medium-screen-menu").children("nav");
+
+        this.$sectionsWithBgImages = $("section.img-bg");
+
+        this.$pageHeader = $(".page-header");
 
         this.$scrollingAnchors = $(".main").find("a[href^=#]");
     };
@@ -23,17 +27,15 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
         this._initMenuEvents();
 
-        this.$scrollingAnchors.click(this._scrollToSection);
+        this.$sectionsWithBgImages.parallax();
+
+        this._initPageHeaderBackground();
+
+        this.$scrollingAnchors.click($.proxy(this._scrollToSection, this));
     };
 
     c._initMenuEvents = function() {
         this.$menuBtn.click($.proxy(this._toggleMenu, this));
-
-        Breakpoints.on({
-            name: "GLOBAL_LARGE_SCREEN_BREAKPOINT",
-            matched: $.proxy(this._onLargeScreenBreakpointMatch, this),
-            exit: $.proxy(this._onLargeScreenBreakpointExit, this)
-        });
     };
 
     c._onScroll = function() {
@@ -44,7 +46,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
     c._toggleMenu = function() {
         if (this.$siteHeader.hasClass("menu-open")) {
-            var tween = TweenLite.to(this.$nav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
+            var tween = TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
 
             tween.eventCallback("onComplete", function() {
                 this.$nav.css({"display": "none"});
@@ -54,20 +56,25 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
             this.$siteHeader.removeClass("menu-open");
         } else {
-            this.$nav.css({"display": "block", "opacity": 0});
-            TweenLite.to(this.$nav, this.menuOpacityTweenDuration, {opacity: 1});
+            this.$smallAndMediumScreenNav.css({"display": "block", "opacity": 0});
+            TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 1});
 
             this.$siteHeader.addClass("menu-open");
         }
     };
 
-    c._onLargeScreenBreakpointMatch = function() {
-        this.$nav.css({"display": "flex", "opacity": 1});
-        this.$siteHeader.removeClass("menu-open");
-    };
+    c._initPageHeaderBackground = function() {
+        var dataUrlBgImg640px = this.$pageHeader.data("urlBgImg640px");
+        var dataUrlBgImg1920px = this.$pageHeader.data("urlBgImg1920px");
 
-    c._onLargeScreenBreakpointExit = function() {
-        this.$nav.css({"display": "none"});
+        if (CR.Services.Browser.isSmallScreen()
+            && !window.matchMedia("(min-resolution: 2dppx)").matches
+            && dataUrlBgImg640px) {
+
+            this.$pageHeader.css("background-image", "url(" + dataUrlBgImg640px + ")");
+        } else if (dataUrlBgImg1920px) {
+            this.$pageHeader.css("background-image", "url(" + dataUrlBgImg1920px + ")");
+        }
     };
 
     c._scrollToSection = function(e) {
@@ -78,7 +85,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
         var sectionId = hash.substring(1);
         var $section = $(document.getElementById(sectionId));
 
-        var scrollYPos = $section.offset().top;
+        var scrollYPos = $section.offset().top - this.$siteHeader.height();
         TweenLite.to(window, 1, {scrollTo: scrollYPos, ease: Power4.easeOut});
     };
 });

@@ -7,15 +7,12 @@ CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
     };
 
     c._initElements = function() {
-        this.$sectionsWithBgImages = $("section.img-bg");
-
         this.$faqItems = $("#faq").find("li");
         this.$faqHeaders = this.$faqItems.children("div");
         this.$faqBodies = this.$faqItems.children("p");
     };
 
     c._initEvents = function() {
-        this.$sectionsWithBgImages.parallax();
         this.$faqHeaders.click($.proxy(this._toggleFaqBody, this));
     };
 

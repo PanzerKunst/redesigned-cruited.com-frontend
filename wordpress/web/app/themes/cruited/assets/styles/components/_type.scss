@@ -53,4 +53,9 @@ blockquote {
   font-weight: bold;
 
   color: $grey-text-color;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
 }

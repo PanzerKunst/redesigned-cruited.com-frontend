@@ -2,8 +2,52 @@
   font-weight: lighter;
 }
 
-.main > section {
-  > div {
+.page-header {
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  background-image: url(../images/default-page-hero-bg_640.jpg);
+
+  @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
+    background-image: url(../images/default-page-hero-bg_1920.jpg);
+  }
+
+  $page-header-h1-bottom-margin: 40px;
+
+  h1 {
+    margin: 3em 0 $page-header-h1-bottom-margin 0;
+
+    @include medium-screen {
+      margin-bottom: $page-header-h1-bottom-margin * $medium-screen-ratio-l;
+    }
+
+    @include large-screen {
+      margin-bottom: $page-header-h1-bottom-margin * $large-screen-ratio-l;
+
+      font-size: 2.2em;
+    }
+  }
+
+  #subtitle {
+    font-size: 1em;
+    font-weight: lighter;
+
+    $subtitle-margin-top: -($page-header-h1-bottom-margin * 0.9);
+    $subtitle-margin-bottom: 2em;
+    margin: $subtitle-margin-top 0 $subtitle-margin-bottom 0;
+    @include medium-screen {
+      margin: $subtitle-margin-top*$medium-screen-ratio-l 0 $subtitle-margin-bottom*$medium-screen-ratio-l 0;
+    }
+    @include large-screen {
+      margin: $subtitle-margin-top*$large-screen-ratio-l 0 $subtitle-margin-bottom*$large-screen-ratio-l 0;
+    }
+  }
+}
+
+.main {
+  > .page-content,
+  > section > div {
     $section-padding-top: $spacer-unit-size * 1.75;
     $section-padding-bottom: $spacer-unit-size * 2.5;
 
@@ -45,10 +89,12 @@
   }
 }
 
-section.img-bg {
+.img-bg {
   background-position: center top;
   background-attachment: fixed;
   background-size: cover;
+
+  color: $background-body-color;
 
   h1,
   h2,
@@ -73,17 +119,10 @@ section.img-bg {
   }
 }
 
+.img-bg .with-circles {
+  background-image: url(../images/section-circles-dark-bg.png); // TODO: add Hi DPI
 
-.img-bg {
-  .with-circles {
-    background-image: url(../images/section-circles-dark-bg.png); // TODO: add Hi DPI
-
-    @include medium-screen {
-      background-image: url(../images/section-circles-dark-bg-large.png);
-    }
+  @include medium-screen {
+    background-image: url(../images/section-circles-dark-bg-large.png);
   }
-}
-
-.img-bg {
-  color: $font-color-inverse;
 }

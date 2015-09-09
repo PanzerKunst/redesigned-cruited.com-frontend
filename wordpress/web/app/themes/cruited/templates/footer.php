@@ -8,7 +8,7 @@
             </div>
         </section>
 
-        <section>
+        <section id="footer-proper">
             <h2 class="brand">Cruited</h2>
 
             <div>

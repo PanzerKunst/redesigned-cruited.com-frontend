@@ -1,8 +1,8 @@
-<section id="hero" class="img-bg centered-contents">
+<section class="page-header img-bg centered-contents">
     <div>
         <h1>Write more powerful job applications to get a better job</h1>
 
-        <p id="subtitle">We review your cover letter, CV and Linkedin profile. <strong>From $39</strong></p>
+        <h2 id="subtitle">We review your cover letter, CV and Linkedin profile. <strong>From $39</strong></h2>
 
         <button class="btn btn-primary">Get Started Today</button>
 
