@@ -1,4 +1,9 @@
 body.home {
+  blockquote {
+    margin: 0;
+    background-color: transparent;
+  }
+
   .page-header {
     background-image: url(../images/hero_640.jpg);
 
@@ -419,7 +424,7 @@ body.home {
         padding: 360px $spacer-unit-size 0 $spacer-unit-size;
 
         @include medium-screen {
-          @include text-shadow(#fff); // Because over image
+          @include text-shadow($background-body-color); // Because over image
 
           font-size: #{$font-size-base-px}px;
 

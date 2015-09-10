@@ -8,7 +8,7 @@ Modify the Nginx config file to enable PHP:
 
 Modify those lines:
 
-- `root /home/play/camp5;` -> `root /home/play/cruited-frontend;`
+- `root /home/play/camp5;` -> `root /home/play/cruited-frontend/web;`
 - `server_name camp5.nu www.camp5.nu;` -> `server_name frontend.cruited.8b.nu;`
 
 `$ sudo service nginx reload`
