@@ -10,7 +10,7 @@
 
         <a href="#how-it-works">
             <p id="how-it-works-text-small-screen">See how we do it</p>
-            <p id="how-it-works-text-medium-screen">Thousands are already using Cruited to maximize their changes for jobs. See how we do it</p>
+            <p id="how-it-works-text-medium-screen">Thousands are already using Cruited to maximize their chances for jobs. See how we do it</p>
             <i class="fa fa-chevron-down"></i>
         </a>
     </div>
