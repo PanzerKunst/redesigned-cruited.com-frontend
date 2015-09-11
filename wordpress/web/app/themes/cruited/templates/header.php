@@ -1,56 +1,14 @@
-<header class="banner" role="banner">
-    <div id="small-medium-screen-menu" class="container">
-        <div>
-            <div>
-                <a class="brand" href="<?= esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
-                <button class="styleless"></button>
-            </div>
-        </div>
+<?php
+// create a new cURL resource
+$ch = curl_init("https://raw.githubusercontent.com/PanzerKunst/redesigned-cruited.com-frontend/master/wordpress/web/app/themes/cruited/templates/header.html");
 
-        <nav role="navigation">
-            <div>
-                <?php
-                if (has_nav_menu('primary_navigation')) :
-                    wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'nav']);
-                endif;
-                ?>
+// set URL and other appropriate options
+curl_setopt($ch, CURLOPT_HEADER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-                <div class="other-nav-ux">
-                    <a href="/login">Login</a>
+// grab URL and pass it to the browser
+curl_exec($ch);
 
-                    <a href="/users/select-document" class="btn secondary">Get Started</a>
-
-                    <select class="form-control">
-                        <option value="sv">Sv</option>
-                        <option value="en">En</option>
-                    </select>
-                </div>
-            </div>
-        </nav>
-    </div>
-
-    <div id="large-screen-menu" class="container">
-        <div>
-            <a class="brand" href="<?= esc_url(home_url('/')); ?>"><?php bloginfo('name'); ?></a>
-
-            <nav role="navigation">
-                <?php
-                if (has_nav_menu('primary_navigation')) :
-                    wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'nav']);
-                endif;
-                ?>
-
-                <div class="other-nav-ux">
-                    <a href="/login">Login</a>
-
-                    <a href="/users/select-document" class="btn secondary">Get Started</a>
-
-                    <select class="form-control">
-                        <option value="sv">Sv</option>
-                        <option value="en">En</option>
-                    </select>
-                </div>
-            </nav>
-        </div>
-    </div>
-</header>
+// close cURL resource, and free up system resources
+curl_close($ch);
+?>

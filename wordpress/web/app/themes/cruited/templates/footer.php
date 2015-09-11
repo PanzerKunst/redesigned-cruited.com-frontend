@@ -1,32 +1,14 @@
-<footer class="content-info" role="contentinfo">
-    <div class="container centered-contents">
-        <section id="bottom-hero" class="img-bg">
-            <div>
-                <h2>Start Improving on your Job Applications Now!</h2>
+<?php
+// create a new cURL resource
+$ch = curl_init("https://raw.githubusercontent.com/PanzerKunst/redesigned-cruited.com-frontend/master/wordpress/web/app/themes/cruited/templates/footer.html");
 
-                <a href="/users/select-document" class="btn btn-primary">Kick Start Your Career</a>
-            </div>
-        </section>
+// set URL and other appropriate options
+curl_setopt($ch, CURLOPT_HEADER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-        <section id="footer-proper">
-            <h2 class="brand">Cruited</h2>
+// grab URL and pass it to the browser
+curl_exec($ch);
 
-            <div>
-                <section class="customer-service small-screen">
-                    <span>Customer Service</span>
-                    <span class="contact">P: <a href="tel:+46855918880">08-559 188 80</a></span>
-                    <span class="contact">E: <a href="mailto:kontakt@cruited.com">kontakt@cruited.com</a></span>
-                </section>
-
-                <section class="customer-service large-screen">
-                    <span>Customer Service</span>
-                    <div>
-                        <span class="contact">P: <a href="tel:+46855918880">08-559 188 80</a></span> / <span class="contact">E: <a href="mailto:kontakt@cruited.com">kontakt@cruited.com</a></span>
-                    </div>
-                </section>
-
-                <?php dynamic_sidebar('sidebar-footer'); ?>
-            </div>
-        </section>
-    </div>
-</footer>
+// close cURL resource, and free up system resources
+curl_close($ch);
+?>
