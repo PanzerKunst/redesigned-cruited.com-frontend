@@ -4,7 +4,7 @@
             <div>
                 <h2>Start Improving on your Job Applications Now!</h2>
 
-                <button class="btn btn-primary">Kick Start Your Career</button>
+                <a href="/users/select-document" class="btn btn-primary">Kick Start Your Career</a>
             </div>
         </section>
 

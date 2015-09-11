@@ -11,7 +11,8 @@
 
   &:active,
   &:focus,
-  &:hover {
+  &:hover,
+  &:active:focus {
     background-color: darken($primary-btn-color, 15%);
     border-color: darken($primary-btn-color, 25%);
     opacity: 1;
