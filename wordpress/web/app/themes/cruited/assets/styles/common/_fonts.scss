@@ -37,3 +37,27 @@
   font-family: "Arial Black";
   src: url("../fonts/arial-black.ttf");
 }
+
+@font-face {
+  font-family: "Arial Rounded MT";
+  src: url("../fonts/Arial Rounded MT Regular.ttf");
+}
+@font-face {
+  font-family: "Arial Rounded MT";
+  src: url("../fonts/Arial Rounded MT Bold Regular.ttf");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Arial Rounded MT";
+  src: url("../fonts/Arial Rounded MT Light.ttf");
+  font-weight: 100;
+}
+
+/* @font-face {
+  font-family: "Linotte";
+  src: url("../fonts/Linotte-SemiBold-webfont.eot") format("embedded-opentype"),
+    url("../fonts/Linotte-SemiBold-webfont.woff2") format("woff2"),
+    url("../fonts/Linotte-SemiBold-webfont.woff") format("woff"),
+    url("../fonts/Linotte-SemiBold-webfont.ttf") format("truetype"),
+    url("../fonts/Linotte-SemiBold-webfont.svg") format("svg");
+} */
