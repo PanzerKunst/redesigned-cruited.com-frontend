@@ -1,5 +1,7 @@
 .btn {
   padding: 0.7em 2em;
+
+  @include transition(all $default-animation-duration ease);
 }
 
 .btn-primary {
@@ -10,8 +12,8 @@
   &:active,
   &:focus,
   &:hover {
-    background-color: darken($primary-btn-color, 15%) !important;
-    border-color: darken($primary-btn-color, 25%) !important;
+    background-color: darken($primary-btn-color, 15%);
+    border-color: darken($primary-btn-color, 25%);
     opacity: 1;
   }
 }
@@ -19,7 +21,14 @@
 .btn.secondary {
   @include styleless-btn;
 
+  color: $secondary-action-color;
   border: 2px solid $secondary-action-color;
 
-  color: $secondary-action-color;
+  &:active,
+  &:focus,
+  &:hover {
+    color: $background-body-color;
+    background-color: darken($secondary-action-color, 15%);
+    border-color: darken($secondary-action-color, 25%);
+  }
 }

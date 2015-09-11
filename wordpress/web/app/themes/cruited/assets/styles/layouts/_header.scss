@@ -4,7 +4,7 @@
 }
 
 @mixin header-bg-color-transition {
-  @include transition(background-color 300ms ease);
+  @include transition(background-color $default-animation-duration ease);
 }
 
 header {
@@ -45,6 +45,14 @@ header {
         padding: 0.35em 1.5em;
 
         margin-right: $header-side-padding;
+
+        &:active,
+        &:focus,
+        &:hover {
+          color: $background-body-color;
+          background-color: darken($primary-btn-color, 15%);
+          border-color: darken($primary-btn-color, 25%);
+        }
       }
 
       > select {
