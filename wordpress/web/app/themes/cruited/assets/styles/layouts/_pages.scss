@@ -115,10 +115,10 @@
 .with-circles {
   background-position: center top;
   background-repeat: no-repeat;
-  background-image: url(../images/section-circles_184.png);
+  background-image: url(../images/section-circles_263.png);
   @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
-    background-image: url(../images/section-circles_368.png);
-    background-size: 184px 79px;
+    background-image: url(../images/section-circles_526.png);
+    background-size: 263px 80px;
   }
 
   @include medium-screen {
@@ -127,9 +127,12 @@
 }
 
 .img-bg .with-circles {
-  background-image: url(../images/section-circles-dark-bg.png); // TODO: add Hi DPI
+  background-image: url(../images/section-circles-dark-bg_263.png);
+  @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
+    background-image: url(../images/section-circles-dark-bg_526.png);
+  }
 
   @include medium-screen {
-    background-image: url(../images/section-circles-dark-bg-large.png);
+    background-image: url(../images/section-circles-large-dark-bg.png);
   }
 }
