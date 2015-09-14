@@ -1,10 +1,26 @@
-<?php while (have_posts()) : the_post(); ?>
+<?php while (have_posts()) : the_post();
+
+    $fieldImg1920px = get_field("page_header_background_image_1920px", get_the_ID());
+    $dataUrlBgImg1920px = null;
+    if ($fieldImg1920px) {
+        $dataUrlBgImg1920px = 'data-url-bg-img1920px="' . $fieldImg1920px["url"] . '"';
+    }
+
+    $fieldImg640px = get_field("page_header_background_image_640px", get_the_ID());
+    $dataUrlBgImg640px = null;
+    if ($fieldImg640px) {
+        $dataUrlBgImg640px = 'data-url-bg-img640px="' . $fieldImg640px["url"] . '"';
+    }
+?>
+
   <article <?php post_class(); ?>>
-    <header>
-      <h1 class="entry-title"><?php the_title(); ?></h1>
-      <?php get_template_part('templates/entry-meta'); ?>
+    <header class="img-bg centered-contents" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
+        <div>
+          <h1 class="entry-title"><?php the_title(); ?></h1>
+          <?php get_template_part('templates/entry-meta'); ?>
+        </div>
     </header>
-    <div class="entry-content">
+    <div class="entry-content with-circles">
       <?php the_content(); ?>
     </div>
     <footer>

@@ -7,7 +7,7 @@
   @include transition(background-color $default-animation-duration ease);
 }
 
-header {
+.banner {
   $header-side-padding: 8px;
 
   position: fixed;
@@ -251,9 +251,9 @@ header {
   }
 }
 
-header,
-header.menu-open,
-header.scrolled-down {
+.banner,
+.banner.menu-open,
+.banner.scrolled-down {
   .current-menu-item > a {
     color: $primary-btn-color;
   }

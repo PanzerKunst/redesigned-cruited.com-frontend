@@ -2,7 +2,8 @@
   font-weight: lighter;
 }
 
-.page-header {
+.page-header,
+article.post > header {
   margin: 0;
   padding: 0;
   border: none;
@@ -25,9 +26,13 @@
       padding-top: $page-header-padding-top * $medium-screen-ratio-l;
       padding-left: 0;
       padding-right: 0;
+
+      max-width: $medium-content-width;
     }
     @include large-screen {
       padding-top: $page-header-padding-top * $large-screen-ratio-l;
+
+      max-width: $large-content-width;
     }
   }
 
@@ -45,50 +50,58 @@
     }
   }
 
+  #subtitle,
+  time {
+    $subtitle-margin-top: -($page-header-h1-bottom-margin * 0.7);
+    margin-top: $subtitle-margin-top;
+    @include medium-screen {
+      margin-top: $subtitle-margin-top*$medium-screen-ratio-l;
+    }
+    @include large-screen {
+      margin-top: $subtitle-margin-top*$large-screen-ratio-l;
+    }
+  }
+
   #subtitle {
     font-size: 1em;
     font-weight: lighter;
 
-    $subtitle-margin-top: -($page-header-h1-bottom-margin * 0.7);
     $subtitle-margin-bottom: 2em;
-    margin: $subtitle-margin-top 0 $subtitle-margin-bottom 0;
+    margin-bottom: $subtitle-margin-bottom;
     @include medium-screen {
-      margin: $subtitle-margin-top*$medium-screen-ratio-l 0 $subtitle-margin-bottom*$medium-screen-ratio-l 0;
+      margin-bottom: $subtitle-margin-bottom*$medium-screen-ratio-l;
     }
     @include large-screen {
-      margin: $subtitle-margin-top*$large-screen-ratio-l 0 $subtitle-margin-bottom*$large-screen-ratio-l 0;
+      margin-bottom: $subtitle-margin-bottom*$large-screen-ratio-l;
     }
   }
 }
 
-.main {
-  > .page-content {
-    $section-padding-top: $spacer-unit-size * 6;
-    $section-padding-bottom: $spacer-unit-size * 2.5;
+.main > .page-content,
+.entry-content {
+  $section-padding-top: $spacer-unit-size * 6;
+  $section-padding-bottom: $spacer-unit-size * 2.5;
 
-    padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+  padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
 
-    @include medium-screen {
-      padding-top: $section-padding-top * $medium-screen-ratio-l;
-      padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+  @include medium-screen {
+    padding-top: $section-padding-top * $medium-screen-ratio-l;
+    padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
 
-      width: $medium-content-width;
+    width: $medium-content-width;
 
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0 auto;
-    }
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
   }
 
   @include large-screen {
-    > .page-content {
-      font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
-      width: 720px;
-    }
+    font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
+    width: 720px;
+  }
 
-    > section > div {
-      width: $large-content-width;
-    }
+  > h2:first-child {
+    margin-top: 0;
   }
 }
 
@@ -98,15 +111,6 @@
   background-size: cover;
 
   color: $background-body-color;
-
-  h1,
-  h2,
-  h3,
-  p,
-  span {
-    @include text-shadow;
-  }
-
   h2 {
     color: $background-body-color;
   }

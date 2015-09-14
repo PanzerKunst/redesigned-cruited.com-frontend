@@ -1,0 +1,21 @@
+article > header time {
+  display: block;
+}
+
+.byline.author {
+  $byline-margin-bottom: 1em;
+  margin-bottom: $byline-margin-bottom;
+  @include medium-screen {
+    margin-bottom: $byline-margin-bottom*$medium-screen-ratio-l;
+  }
+  @include large-screen {
+    margin-bottom: $byline-margin-bottom*$large-screen-ratio-l;
+  }
+}
+
+body.single {
+  .byline.author > a {
+    color: $background-body-color;
+    text-decoration: underline;
+  }
+}

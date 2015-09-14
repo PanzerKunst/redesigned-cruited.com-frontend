@@ -1,0 +1,41 @@
+.archive {
+  article.post {
+    > header,
+    > .entry-summary {
+      padding: 0 $spacer-unit-size 0;
+
+      @include medium-screen {
+        width: $medium-content-width;
+
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 auto;
+      }
+
+      @include large-screen {
+        font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
+        width: 720px;
+      }
+    }
+
+    > header {
+      background-image: none;
+
+      > h2 {
+        margin-bottom: 0.5em;
+      }
+
+      time {
+        margin-top: 0;
+      }
+    }
+  }
+
+  > footer {
+    $footer-margin-top: $spacer-unit-size * 2.5;
+    margin-top: $footer-margin-top;
+    @include medium-screen {
+      margin-top: $footer-margin-top * $medium-screen-ratio-l;
+    }
+  }
+}

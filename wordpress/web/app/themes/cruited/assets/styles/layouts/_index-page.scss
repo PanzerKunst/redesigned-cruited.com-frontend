@@ -316,7 +316,7 @@ body.home {
       }
 
       > div {
-        $cool-thing-1-image-location-x: -400px;
+        $cool-thing-1-image-location-x: -600px;
         $cool-thing-1-image-location-y: -300px;
 
         @include hdpi-sprite();
@@ -341,7 +341,7 @@ body.home {
 
       &:nth-child(2) {
         > div {
-          $cool-thing-2-image-location-x: -600px;
+          $cool-thing-2-image-location-x: -400px;
           $cool-thing-2-image-location-y: -300px;
 
           background-position: $cool-thing-2-image-location-x $cool-thing-2-image-location-y;
@@ -561,7 +561,6 @@ body.home {
       font-size: 2.2em;
       font-weight: bold;
       color: $primary-btn-color;
-      text-shadow: none;
     }
 
     @include large-screen {

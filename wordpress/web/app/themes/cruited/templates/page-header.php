@@ -1,6 +1,5 @@
-<?php use Roots\Sage\Titles; ?>
+<?php use Roots\Sage\Titles;
 
-<?php
 $fieldImg1920px = get_field("page_header_background_image_1920px", get_the_ID());
 $dataUrlBgImg1920px = null;
 if ($fieldImg1920px) {
