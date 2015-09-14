@@ -18,9 +18,11 @@ if ($fieldImg640px) {
         <h1><?= Titles\title(); ?></h1>
 
         <?php
-        $subtitleField = get_field("subtitle", get_the_ID());
-        if ($subtitleField) {
-            echo '<h2 id="subtitle">' . $subtitleField . '</h2>';
+        if (is_page()) {
+            $subtitleField = get_field("subtitle", get_the_ID());
+            if ($subtitleField) {
+                echo '<h2 id="subtitle">' . $subtitleField . '</h2>';
+            }
         }
         ?>
     </div>
