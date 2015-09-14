@@ -4,7 +4,7 @@
 html[data-useragent*="iPhone"],
 html[data-useragent*="iPad"],
 html[data-useragent*="iPod"] {
-  section.img-bg {
+  .img-bg {
     background-attachment: scroll;
   }
 }

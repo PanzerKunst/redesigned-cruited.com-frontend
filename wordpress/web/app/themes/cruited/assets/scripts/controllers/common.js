@@ -15,7 +15,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
         this.$menuBtn = this.$siteHeader.find("button");
         this.$smallAndMediumScreenNav = this.$siteHeader.children("#small-medium-screen-menu").children("nav");
 
-        this.$sectionsWithBgImages = $("section.img-bg");
+        this.$sectionsWithBgImages = $(".img-bg");
 
         this.$pageHeader = $("body.page .page-header").add("body.single article.post > header");
 
