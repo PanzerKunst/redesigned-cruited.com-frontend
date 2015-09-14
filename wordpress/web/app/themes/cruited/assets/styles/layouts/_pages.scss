@@ -136,3 +136,13 @@
     background-image: url(../images/section-circles-large-dark-bg.png);
   }
 }
+
+a[href$="#faq"] {
+  font-weight: lighter;
+  color: $background-body-color;
+  font-size: $font-size-small;
+  opacity: 0.8;
+
+  display: block;
+  margin-top: 0.5em;
+}

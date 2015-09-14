@@ -34,14 +34,6 @@ body.home {
         text-decoration: none;
       }
 
-      &[href="#faq"] {
-        font-size: $font-size-small;
-        opacity: 0.8;
-
-        display: block;
-        margin-top: 0.5em;
-      }
-
       &[href="#how-it-works"] {
         $how-we-do-it-margin: 2em;
         margin-top: $how-we-do-it-margin;
@@ -105,9 +97,11 @@ body.home {
       > p {
         max-width: $large-content-width;
 
-        margin: 0 $spacer-unit-size;
+        margin-left: $spacer-unit-size;
+        margin-right: $spacer-unit-size;
         @include medium-screen {
-          margin: 0 auto;
+          margin-left: auto;
+          margin-right: auto;
         }
       }
     }
@@ -402,6 +396,10 @@ body.home {
 
       padding-left: 0;
       padding-right: 0;
+
+      > p {
+        margin-bottom: 0;
+      }
     }
 
     $testimonials-bg-img-width: 1308px;

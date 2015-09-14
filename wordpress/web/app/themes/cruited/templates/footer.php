@@ -2,9 +2,11 @@
     <div class="container centered-contents">
         <section id="bottom-hero" class="img-bg">
             <div>
-                <h2>Start Improving on your Job Applications Now!</h2>
+                <h2>Börja förbättra din jobbansökan nu!</h2>
 
-                <a href="/users/select-document" class="btn btn-primary">Kick Start Your Career</a>
+                <a href="/users/select-document" class="btn btn-primary">Starta din granskning</a>
+
+                <a href="/#faq">100% nöjd - eller pengarna tillbaka - Leverans inom 24 timmar</a>
             </div>
         </section>
 
