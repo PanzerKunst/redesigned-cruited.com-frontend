@@ -1,0 +1,14 @@
+#authorsure-author-profile {
+  padding: 0 $spacer-unit-size;
+  margin: 0 auto;
+
+  @include medium-screen {
+    padding: 0;
+
+    max-width: $medium-content-width;
+  }
+
+  @include large-screen {
+    max-width: $large-content-width-more-readable;
+  }
+}

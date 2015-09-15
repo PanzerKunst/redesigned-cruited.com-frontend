@@ -15,6 +15,7 @@ $line-height-project: 1.75em;
 $small-content-width: 320px;
 $medium-content-width: $small-content-width * 2;
 $large-content-width: $small-content-width * 3;
+$large-content-width-more-readable: 720px;
 
 $spacer-unit-size: 14px;
 
@@ -39,3 +40,6 @@ $default-animation-duration: 300ms;
 
 $page-header-h1-vertical-margin: 100px;
 $page-header-h1-vertical-margin-medium-screen: 15vw;
+
+$page-header-h1-margin-top-no-img: 50px;
+$page-header-h1-margin-bottom-no-img: $page-header-h1-margin-top-no-img * 0.7;

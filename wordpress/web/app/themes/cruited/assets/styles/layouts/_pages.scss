@@ -22,7 +22,7 @@
 
   @include large-screen {
     font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
-    width: 720px;
+    width: $large-content-width-more-readable;
   }
 
   > h2:first-child {

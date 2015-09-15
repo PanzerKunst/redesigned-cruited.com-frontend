@@ -63,9 +63,6 @@ article.post > header {
       background-image: url(../images/default-page-header-bg_1920.jpg);
     }
 
-    $page-header-h1-margin-top-no-img: 50px;
-    $page-header-h1-margin-bottom-no-img: $page-header-h1-margin-top-no-img * 0.7;
-
     h1 {
       margin-top: $page-header-h1-margin-top-no-img;
       margin-bottom: $page-header-h1-margin-bottom-no-img;
@@ -79,23 +76,15 @@ article.post > header {
       }
     }
 
-    #subtitle,
-    time {
-      margin-top: - $page-header-h1-margin-bottom-no-img * 0.7;
-      @include medium-screen {
-        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $medium-screen-ratio-m;
-      }
-      @include large-screen {
-        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $large-screen-ratio-m;
-      }
-    }
-
     #subtitle {
+      margin-top: - $page-header-h1-margin-bottom-no-img * 0.7;
       margin-bottom: $page-header-h1-margin-bottom-no-img;
       @include medium-screen {
+        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $medium-screen-ratio-m;
         margin-bottom: $page-header-h1-margin-bottom-no-img * $medium-screen-ratio-m;
       }
       @include large-screen {
+        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $large-screen-ratio-m;
         margin-bottom: $page-header-h1-margin-bottom-no-img * $large-screen-ratio-m;
       }
     }

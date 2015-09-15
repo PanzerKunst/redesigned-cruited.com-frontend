@@ -14,7 +14,7 @@
 
       @include large-screen {
         font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
-        width: 720px;
+        width: $large-content-width-more-readable;
       }
     }
 
@@ -35,6 +35,21 @@
       time {
         margin-top: 0;
       }
+    }
+  }
+
+  .main > .posts-navigation {
+    padding: 0 $spacer-unit-size;
+    margin: $spacer-unit-size*2.5 auto 0 auto;
+
+    @include medium-screen {
+      padding: 0;
+
+      max-width: $medium-content-width;
+    }
+
+    @include large-screen {
+      max-width: $large-content-width;
     }
   }
 

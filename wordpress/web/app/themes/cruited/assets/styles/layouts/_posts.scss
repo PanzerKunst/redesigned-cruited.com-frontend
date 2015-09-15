@@ -1,22 +1,46 @@
-article > header time {
-  display: block;
-
-  margin-top: - ($page-header-h1-vertical-margin - 10px);
-  @include medium-screen {
-    margin-top: - ($page-header-h1-vertical-margin-medium-screen - 2vw);
-  }
-}
-
-.byline.author {
-  margin-bottom: $page-header-h1-vertical-margin;
-  @include medium-screen {
-    margin-bottom: $page-header-h1-vertical-margin-medium-screen;
-  }
-}
-
 body.single {
-  .byline.author > a {
-    color: $background-body-color;
-    text-decoration: underline;
+  article.post > header {
+    time {
+      display: block;
+
+      margin-top: - ($page-header-h1-vertical-margin - 10px);
+      @include medium-screen {
+        margin-top: - ($page-header-h1-vertical-margin-medium-screen - 2vw);
+      }
+    }
+
+    .byline.author {
+      margin-bottom: $page-header-h1-vertical-margin;
+      @include medium-screen {
+        margin-bottom: $page-header-h1-vertical-margin-medium-screen;
+      }
+
+      > a {
+        color: $background-body-color;
+        text-decoration: underline;
+      }
+    }
+
+    &.no-img {
+      time {
+        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7;
+        @include medium-screen {
+          margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $medium-screen-ratio-m;
+        }
+        @include large-screen {
+          margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $large-screen-ratio-m;
+        }
+      }
+
+      .byline.author {
+        margin-bottom: $page-header-h1-margin-bottom-no-img;
+        @include medium-screen {
+          margin-bottom: $page-header-h1-margin-bottom-no-img * $medium-screen-ratio-m;
+        }
+        @include large-screen {
+          margin-bottom: $page-header-h1-margin-bottom-no-img * $large-screen-ratio-m;
+        }
+      }
+    }
   }
 }
