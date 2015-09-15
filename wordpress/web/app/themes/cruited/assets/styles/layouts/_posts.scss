@@ -1,15 +1,16 @@
 article > header time {
   display: block;
+
+  margin-top: - ($page-header-h1-vertical-margin - 10px);
+  @include medium-screen {
+    margin-top: - ($page-header-h1-vertical-margin-medium-screen - 2vw);
+  }
 }
 
 .byline.author {
-  $byline-margin-bottom: 1em;
-  margin-bottom: $byline-margin-bottom;
+  margin-bottom: $page-header-h1-vertical-margin;
   @include medium-screen {
-    margin-bottom: $byline-margin-bottom*$medium-screen-ratio-l;
-  }
-  @include large-screen {
-    margin-bottom: $byline-margin-bottom*$large-screen-ratio-l;
+    margin-bottom: $page-header-h1-vertical-margin-medium-screen;
   }
 }
 

@@ -71,8 +71,10 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
             && !window.matchMedia("(min-resolution: 2dppx)").matches
             && dataUrlBgImg640px) {
 
+            this.$pageHeader.removeClass("no-img");
             this.$pageHeader.css("background-image", "url(" + dataUrlBgImg640px + ")");
         } else if (dataUrlBgImg1920px) {
+            this.$pageHeader.removeClass("no-img");
             this.$pageHeader.css("background-image", "url(" + dataUrlBgImg1920px + ")");
         }
     };

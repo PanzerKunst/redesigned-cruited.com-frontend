@@ -1,0 +1,103 @@
+.wrap {
+  font-weight: lighter;
+}
+
+.page-header,
+article.post > header {
+  margin: 0;
+  padding: 0;
+
+  > div {
+    margin: 0 auto;
+
+    padding: 1px $spacer-unit-size;
+    @include medium-screen {
+      padding-left: 0;
+      padding-right: 0;
+
+      max-width: $medium-content-width;
+    }
+    @include large-screen {
+      max-width: $large-content-width;
+    }
+  }
+
+  h1,
+  h2,
+  time,
+  a {
+    @include text-shadow;
+  }
+
+  h1 {
+    margin: $page-header-h1-vertical-margin 0;
+
+    @include medium-screen {
+      margin: $page-header-h1-vertical-margin-medium-screen 0;
+    }
+    @include large-screen {
+      font-size: 2.2em;
+    }
+  }
+
+  #subtitle {
+    margin-top: - ($page-header-h1-vertical-margin - 10px);
+    @include medium-screen {
+      margin-top: - ($page-header-h1-vertical-margin-medium-screen - 2vw);
+    }
+  }
+
+  #subtitle {
+    font-size: 1em;
+
+    margin-bottom: $page-header-h1-vertical-margin;
+    @include medium-screen {
+      margin-bottom: $page-header-h1-vertical-margin-medium-screen;
+    }
+  }
+
+  &.no-img {
+    background-image: url(../images/default-page-header-bg_640.jpg);
+
+    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
+      background-image: url(../images/default-page-header-bg_1920.jpg);
+    }
+
+    $page-header-h1-margin-top-no-img: 50px;
+    $page-header-h1-margin-bottom-no-img: $page-header-h1-margin-top-no-img * 0.7;
+
+    h1 {
+      margin-top: $page-header-h1-margin-top-no-img;
+      margin-bottom: $page-header-h1-margin-bottom-no-img;
+      @include medium-screen {
+        margin-top: $page-header-h1-margin-top-no-img * $medium-screen-ratio-m;
+        margin-bottom: $page-header-h1-margin-bottom-no-img * $medium-screen-ratio-m;
+      }
+      @include large-screen {
+        margin-top: $page-header-h1-margin-top-no-img * $large-screen-ratio-m;
+        margin-bottom: $page-header-h1-margin-bottom-no-img * $large-screen-ratio-m;
+      }
+    }
+
+    #subtitle,
+    time {
+      margin-top: - $page-header-h1-margin-bottom-no-img * 0.7;
+      @include medium-screen {
+        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $medium-screen-ratio-m;
+      }
+      @include large-screen {
+        margin-top: - $page-header-h1-margin-bottom-no-img * 0.7 * $large-screen-ratio-m;
+      }
+    }
+
+    #subtitle {
+      margin-bottom: $page-header-h1-margin-bottom-no-img;
+      @include medium-screen {
+        margin-bottom: $page-header-h1-margin-bottom-no-img * $medium-screen-ratio-m;
+      }
+      @include large-screen {
+        margin-bottom: $page-header-h1-margin-bottom-no-img * $large-screen-ratio-m;
+      }
+    }
+  }
+}

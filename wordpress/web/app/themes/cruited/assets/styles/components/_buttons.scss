@@ -4,7 +4,9 @@
   @include transition(all $default-animation-duration ease);
 }
 
-.btn-primary {
+.btn-primary,
+a.btn-primary {
+  color: $background-body-color;
   background-color: $primary-btn-color;
   border-color: $primary-btn-color;
   opacity: 0.9;

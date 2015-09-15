@@ -20,10 +20,10 @@
 
                     <a href="/users/select-document" class="btn secondary">Get Started</a>
 
-                    <select class="form-control">
+                    <!-- select class="form-control">
                         <option value="sv">Sv</option>
                         <option value="en">En</option>
-                    </select>
+                    </select -->
                 </div>
             </div>
         </nav>
@@ -45,10 +45,10 @@
 
                     <a href="/users/select-document" class="btn secondary">Get Started</a>
 
-                    <select class="form-control">
+                    <!-- select class="form-control">
                         <option value="sv">Sv</option>
                         <option value="en">En</option>
-                    </select>
+                    </select -->
                 </div>
             </nav>
         </div>

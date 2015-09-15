@@ -2,7 +2,7 @@
   article.post {
     > header,
     > .entry-summary {
-      padding: 0 $spacer-unit-size 0;
+      padding: 0 $spacer-unit-size;
 
       @include medium-screen {
         width: $medium-content-width;
@@ -20,6 +20,13 @@
 
     > header {
       background-image: none;
+
+      h1,
+      h2,
+      time,
+      a {
+        text-shadow: none;
+      }
 
       > h2 {
         margin-bottom: 0.5em;

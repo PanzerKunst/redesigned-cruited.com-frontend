@@ -14,7 +14,7 @@
 ?>
 
   <article <?php post_class(); ?>>
-    <header class="img-bg centered-contents" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
+    <header class="img-bg centered-contents no-img" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
         <div>
           <h1 class="entry-title"><?php the_title(); ?></h1>
           <?php get_template_part('templates/entry-meta'); ?>

@@ -13,7 +13,7 @@ if ($fieldImg640px) {
 }
 ?>
 
-<section class="page-header img-bg centered-contents" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
+<section class="page-header img-bg centered-contents no-img" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
     <div>
         <h1><?= Titles\title(); ?></h1>
 

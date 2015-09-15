@@ -4,7 +4,7 @@ body.home {
     background-color: transparent;
   }
 
-  .page-header {
+  .main > .page-header {
     background-image: url(../images/hero_640.jpg);
 
     @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
@@ -12,10 +12,13 @@ body.home {
     }
 
     > div {
-      padding-bottom: 0 !important;
+      padding-top: 1px;
+      padding-bottom: 1px;
     }
 
     #subtitle {
+      font-weight: lighter;
+
       $subtitle-margin-bottom: 3em;
       margin-bottom: $subtitle-margin-bottom;
       @include medium-screen {
@@ -32,6 +35,10 @@ body.home {
       &:hover,
       &:focus {
         text-decoration: none;
+      }
+
+      &.btn {
+        text-shadow: none;
       }
 
       &[href="#how-it-works"] {
@@ -162,6 +169,8 @@ body.home {
 
         // Unnecessary width: $step-panel-width;
         height: 150px;
+
+        margin-bottom: 5px;
       }
 
       h3 {
@@ -169,7 +178,7 @@ body.home {
 
         padding-top: 1.3em;
 
-        margin: 0.25em 0 0 0;
+        margin: 0;
 
         $step-1-image-location-x: 125px;
         $step-1-image-location-y: -300px;
@@ -478,30 +487,30 @@ body.home {
         }
       }
 
-      > div {
+      > footer {
         display: flex;
 
         text-align: left;
 
         padding: $spacer-unit-size 0 0 6px;
+      }
 
-        > div {
-          $secondary-testimonial-1-img-location-x: -1200px;
-          $secondary-testimonial-1-img-location-y: -300px;
+      div {
+        $secondary-testimonial-1-img-location-x: -1200px;
+        $secondary-testimonial-1-img-location-y: -300px;
 
-          @include hdpi-sprite();
-          background-position: $secondary-testimonial-1-img-location-x $secondary-testimonial-1-img-location-y;
-          @include hidpi {
-            background-position: half-pos($secondary-testimonial-1-img-location-x, $secondary-testimonial-1-img-location-y);
-          }
-
-          width: 85px;
-          height: 70px;
+        @include hdpi-sprite();
+        background-position: $secondary-testimonial-1-img-location-x $secondary-testimonial-1-img-location-y;
+        @include hidpi {
+          background-position: half-pos($secondary-testimonial-1-img-location-x, $secondary-testimonial-1-img-location-y);
         }
+
+        width: 85px;
+        height: 70px;
       }
 
       &:nth-child(2) {
-        > div > div {
+        div {
           $secondary-testimonial-2-img-location-x: -1400px;
           $secondary-testimonial-2-img-location-y: -300px;
 
@@ -513,7 +522,7 @@ body.home {
       }
 
       &:last-child {
-        > div > div {
+        div {
           $secondary-testimonial-3-img-location-x: -1600px;
           $secondary-testimonial-3-img-location-y: -300px;
 
