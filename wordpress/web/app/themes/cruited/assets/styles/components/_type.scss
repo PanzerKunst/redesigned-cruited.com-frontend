@@ -17,6 +17,10 @@ blockquote {
     font-size: 1.2em;
     color: $grey-text-color;
 
+    > footer {
+      color: transparentize($grey-text-color, 0.2);
+    }
+
     &:before,
     &:after {
       font-family: "Arial Black";
@@ -35,7 +39,22 @@ blockquote {
     &:after {
       content: "”";
       text-align: right;
-      margin-top: 0.3em;
+    }
+
+    &.dark-bg {
+      > p {
+        color: transparentize($background-body-color, 0.3);
+      }
+
+      > footer {
+        color: transparentize($background-body-color, 0.6);
+      }
+
+      &:before,
+      &:after {
+        color: $lighter-grey;
+        opacity: 0.4;
+      }
     }
   }
 

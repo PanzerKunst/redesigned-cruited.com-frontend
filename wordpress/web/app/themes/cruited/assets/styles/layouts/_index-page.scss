@@ -101,14 +101,18 @@ body.home {
         padding-top: $section-padding-top * $large-screen-ratio-l;
       }
 
-      > p {
-        max-width: $large-content-width;
-
+      > p,
+      > blockquote {
         margin-left: $spacer-unit-size;
         margin-right: $spacer-unit-size;
         @include medium-screen {
           margin-left: auto;
           margin-right: auto;
+
+          max-width: $medium-content-width;
+        }
+        @include large-screen {
+          max-width: $large-content-width;
         }
       }
     }
@@ -262,8 +266,12 @@ body.home {
       background-image: url(../images/report-preview-section-bg_1920.jpg);
     }
 
-    > .with-circles > p {
+    > .with-circles > blockquote {
       margin-bottom: 4em;
+
+      @include medium-screen {
+        font-size: 1em;
+      }
     }
 
     @include large-screen {
