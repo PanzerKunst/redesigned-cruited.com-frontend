@@ -15,15 +15,15 @@
 
             <div>
                 <section class="customer-service small-screen">
-                    <span>Customer Service</span>
-                    <span class="contact">P: <a href="tel:+46855918880">08-559 188 80</a></span>
+                    <span>Kontakt</span>
+                    <span class="contact">T: <a href="tel:+46855918880">08-559 188 80</a></span>
                     <span class="contact">E: <a href="mailto:kontakt@cruited.com">kontakt@cruited.com</a></span>
                 </section>
 
                 <section class="customer-service large-screen">
-                    <span>Customer Service</span>
+                    <span>Kontakt</span>
                     <div>
-                        <span class="contact">P: <a href="tel:+46855918880">08-559 188 80</a></span> / <span class="contact">E: <a href="mailto:kontakt@cruited.com">kontakt@cruited.com</a></span>
+                        <span class="contact">T: <a href="tel:+46855918880">08-559 188 80</a></span> / <span class="contact">E: <a href="mailto:kontakt@cruited.com">kontakt@cruited.com</a></span>
                     </div>
                 </section>
 

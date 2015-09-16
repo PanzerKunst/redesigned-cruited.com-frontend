@@ -107,8 +107,8 @@
     }
 
     button {
-      $menu-btn-img-location-x: -600px;
-      $menu-btn-img-location-y: -500px;
+      $menu-btn-img-location-x: 0;
+      $menu-btn-img-location-y: -900px;
 
       @include hdpi-sprite();
       background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
@@ -151,8 +151,8 @@
     }
 
     button {
-      $menu-btn-img-location-x: -600px;
-      $menu-btn-img-location-y: -600px;
+      $menu-btn-img-location-x: 0;
+      $menu-btn-img-location-y: -1000px;
 
       background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
       @include hidpi {

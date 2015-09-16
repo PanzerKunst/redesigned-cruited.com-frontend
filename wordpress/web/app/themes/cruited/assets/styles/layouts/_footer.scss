@@ -52,6 +52,10 @@ footer.content-info {
       font-size: 34px;
     }
 
+    > div {
+      font-size: #{$font-size-base-px}px;
+    }
+
     @include medium-screen {
       background-image: url(../images/section-circles-large-flipped.png);
 
@@ -78,15 +82,11 @@ footer.content-info {
       > div {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
 
-        width: 37.5em;
+        width: 830px;
       }
     }
-  }
-
-  .customer-service,
-  .widget_mc4wp_widget {
-    font-size: #{$font-size-base-px}px;
   }
 
   .customer-service {
@@ -106,8 +106,6 @@ footer.content-info {
       display: none;
 
       text-align: left;
-
-      width: 333px;
 
       $contact-large-screen-margin: 0.5em;
 
@@ -141,17 +139,16 @@ footer.content-info {
 
   .widget_mc4wp_widget > h3 {
     color: $grey-text-color;
+
+    margin-top: 0.5em;
   }
 
   @include large-screen {
     .widget_mc4wp_widget {
-      width: 520px;
-
       padding-top: 0.4em;
 
       > h3 {
         font-size: 15px;
-        margin-top: 0.5em;
       }
     }
 
