@@ -28,6 +28,12 @@
   > h2:first-child {
     margin-top: 0;
   }
+
+  // To disable the stupid "width" and "height" attributes added by the Wordpress composer on images
+  img {
+    width: auto;
+    height: auto;
+  }
 }
 
 .img-bg {

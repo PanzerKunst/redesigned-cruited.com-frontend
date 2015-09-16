@@ -1,4 +1,6 @@
-<?php while (have_posts()) : the_post();
+<?php use Roots\Sage\Cruited;
+
+while (have_posts()) : the_post();
 
     $fieldImg1920px = get_field("page_header_background_image_1920px", get_the_ID());
     $dataUrlBgImg1920px = null;
@@ -16,12 +18,16 @@
   <article <?php post_class(); ?>>
     <header class="img-bg centered-contents no-img" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
         <div>
-          <h1 class="entry-title"><?php the_title(); ?></h1>
+          <h1 class="entry-title"><?= Cruited\word_wrapper(get_the_title()); ?></h1>
           <?php get_template_part('templates/entry-meta'); ?>
         </div>
     </header>
     <div class="entry-content with-circles">
-      <?php the_content(); ?>
+      <?php if (function_exists('yoast_breadcrumb')) {
+          yoast_breadcrumb('<p class="yoast-breadcrumbs">','</p>');
+      }
+
+      the_content(); ?>
     </div>
     <footer>
       <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
