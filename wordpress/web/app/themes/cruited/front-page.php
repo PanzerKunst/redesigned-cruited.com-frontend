@@ -1,6 +1,6 @@
 <?php
 // create a new cURL resource
-$ch = curl_init("https://raw.githubusercontent.com/PanzerKunst/redesigned-cruited.com-frontend/master/wordpress/web/app/themes/cruited/front-page.html");
+$ch = curl_init("https://raw.githubusercontent.com/PanzerKunst/redesigned-cruited.com-frontend/master/wordpress/web/app/themes/cruited/templates/front-page.html");
 
 // set URL and other appropriate options
 curl_setopt($ch, CURLOPT_HEADER, false);
