@@ -19,9 +19,9 @@ while (have_posts()) : the_post();
     <header class="img-bg centered-contents no-img" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
         <div>
           <h1 class="entry-title"><?= Cruited\word_wrapper(get_the_title()); ?></h1>
-          <?php get_template_part('templates/entry-meta'); ?>
         </div>
     </header>
+
     <div class="entry-content with-circles">
       <?php if (function_exists('yoast_breadcrumb')) {
           yoast_breadcrumb('<p class="yoast-breadcrumbs">','</p>');
@@ -29,6 +29,9 @@ while (have_posts()) : the_post();
 
       the_content(); ?>
     </div>
+
+    <?php get_template_part('templates/entry-meta'); ?>
+
     <footer>
       <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
     </footer>

@@ -3,10 +3,7 @@ p:last-child {
 }
 
 blockquote {
-  $blockquote-padding: 1em;
-  padding: $blockquote-padding;
-  margin-left: -$blockquote-padding;
-  margin-right: -$blockquote-padding;
+  padding: 0;
 
   background-color: $lighter-grey;
 
@@ -24,8 +21,8 @@ blockquote {
     &:before,
     &:after {
       font-family: "Arial Black";
-      font-size: 89px;
-      color: $light-grey;
+      font-size: 4em;
+      color: $light-grey-blue;
 
       opacity: 0.2;
       display: block; // For text-align and margin

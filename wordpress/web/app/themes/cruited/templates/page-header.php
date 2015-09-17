@@ -1,4 +1,4 @@
-<?php use Roots\Sage\Titles;
+<?php use Roots\Sage\Cruited;
 
 $fieldImg1920px = get_field("page_header_background_image_1920px", get_the_ID());
 $dataUrlBgImg1920px = null;
@@ -15,7 +15,7 @@ if ($fieldImg640px) {
 
 <section class="page-header img-bg centered-contents no-img" <?= $dataUrlBgImg1920px ?> <?= $dataUrlBgImg640px ?>>
     <div>
-        <h1><?= Titles\title(); ?></h1>
+        <h1><?= Cruited\title(); ?></h1>
 
         <?php
         if (is_page()) {
