@@ -126,6 +126,7 @@
       &::before {
         content: "MENU";
         margin-left: -80px;
+        @include text-shadow;
       }
     }
 
@@ -160,6 +161,10 @@
       }
 
       color: $grey-text-color;
+
+      &::before {
+        text-shadow: none;
+      }
     }
   }
 
