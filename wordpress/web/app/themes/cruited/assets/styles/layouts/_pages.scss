@@ -38,9 +38,24 @@
   }
 
   blockquote {
+    font-style: italic;
+    font-weight: normal;
+
     padding: 1em;
     @include large-screen {
       padding: 2em;
+    }
+
+    &.highlighted {
+      border-left: 0.3em solid transparentize($secondary-action-color, 0.6);
+      background-color: transparentize($secondary-action-color, 0.8);
+
+      font-style: normal;
+      font-weight: lighter;
+      text-align: left;
+
+      margin-left: 2em;
+      margin-right: 2em;
     }
   }
 
@@ -49,6 +64,12 @@
     > li {
       margin-top: 1em;
     }
+  }
+
+  strong {
+    background-color: transparentize($secondary-action-color, 0.6);
+    font-weight: lighter;
+    padding: 0.2em;
   }
 }
 

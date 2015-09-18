@@ -8,6 +8,10 @@ h6 {
   text-rendering: optimizelegibility;
 
   margin: 2em 0 1.2em 0;
+
+  > a {
+    line-height: 1.2;
+  }
 }
 
 h2,
