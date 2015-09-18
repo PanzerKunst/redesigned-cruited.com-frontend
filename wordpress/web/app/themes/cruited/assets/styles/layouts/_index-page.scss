@@ -588,6 +588,22 @@ body.home {
         margin-right: 0;
       }
     }
+
+    .btn {
+      color: $background-body-color;
+      background-color: $secondary-action-color;
+      border-color: $secondary-action-color;
+      opacity: 0.9;
+
+      &:active,
+      &:focus,
+      &:hover,
+      &:active:focus {
+        background-color: darken($secondary-action-color, 15%);
+        border-color: darken($secondary-action-color, 25%);
+        opacity: 1;
+      }
+    }
   }
 
   #faq {
