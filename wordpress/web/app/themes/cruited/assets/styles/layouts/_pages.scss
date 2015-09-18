@@ -42,9 +42,6 @@
     padding: 1em;
 
     @include large-screen {
-      margin-left: - ($large-content-width - $large-content-width-more-readable) / 2;
-      margin-right: - ($large-content-width - $large-content-width-more-readable) / 2;
-
       padding: 2em;
     }
   }
