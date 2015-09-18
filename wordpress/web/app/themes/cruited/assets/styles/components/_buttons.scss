@@ -4,6 +4,22 @@
   @include transition(all $default-animation-duration ease);
 }
 
+.btn-default,
+a.btn-default {
+  @include styleless-btn;
+
+  color: $grey-text-color;
+  border: 2px solid $grey-text-color;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $background-body-color;
+    background-color: darken($grey-text-color, 15%);
+    border-color: darken($grey-text-color, 25%);
+  }
+}
+
 .btn-primary,
 a.btn-primary {
   color: $background-body-color;
