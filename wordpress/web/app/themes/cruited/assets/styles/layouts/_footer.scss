@@ -59,7 +59,7 @@ footer.content-info {
     }
 
     .widget {
-      width: $small-content-width;
+      width: $small-content-width - 2 * $spacer-unit-size;
       margin: 0 auto;
 
       ul {
@@ -68,6 +68,8 @@ footer.content-info {
     }
 
     @include medium-screen {
+      width: $small-content-width;
+
       background-image: url(../images/section-circles-large-flipped.png);
 
       padding-top: $footer-padding-top * $medium-screen-ratio-l;

@@ -53,31 +53,20 @@ body.single {
   }
 
   .entry-meta {
-    padding: 0 $spacer-unit-size;
-
-    @include medium-screen {
-      width: $medium-content-width;
-
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0 auto;
-    }
-
-    @include large-screen {
-      width: $large-content-width-more-readable;
-    }
-
     position: relative;
 
     color: lighten($grey-text-color, 25%);
+    font-size: 0.8em;
+
+    padding: 0 $spacer-unit-size;
 
     > span {
       &:after {
         content: "";
 
         position: absolute;
-        left: 0;
-        width: 100%;
+        left: $spacer-unit-size;
+        right: $spacer-unit-size;
         top: 1.7em;
         z-index: -1;
 
@@ -102,6 +91,23 @@ body.single {
         padding-top: $padding-to-ensure-white-background;
         margin-top: - $padding-to-ensure-white-background;
       }
+    }
+
+    @include medium-screen {
+      width: $medium-content-width;
+
+      padding-left: 0;
+      padding-right: 0;
+      margin: 0 auto;
+
+      > span:after {
+        left: 0;
+        right: 0;
+      }
+    }
+
+    @include large-screen {
+      width: $large-content-width-more-readable;
     }
   }
 }

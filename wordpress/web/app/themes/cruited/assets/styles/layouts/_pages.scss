@@ -25,7 +25,6 @@
     width: $large-content-width-more-readable;
   }
 
-  > p,
   > h2 {
     &:first-child {
       margin-top: 0;
@@ -40,7 +39,6 @@
 
   blockquote {
     padding: 1em;
-
     @include large-screen {
       padding: 2em;
     }
