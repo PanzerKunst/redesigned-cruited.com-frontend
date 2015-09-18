@@ -43,6 +43,13 @@
       padding: 2em;
     }
   }
+
+  ul,
+  ol {
+    > li {
+      margin-top: 1em;
+    }
+  }
 }
 
 .img-bg {
