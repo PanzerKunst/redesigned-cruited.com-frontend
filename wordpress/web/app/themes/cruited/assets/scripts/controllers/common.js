@@ -64,18 +64,18 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
     };
 
     c._initPageHeaderBackground = function() {
-        var dataUrlBgImg640px = this.$pageHeader.data("urlBgImg640px");
-        var dataUrlBgImg1920px = this.$pageHeader.data("urlBgImg1920px");
+        var dataUrlBgImgLarge = this.$pageHeader.data("urlBgImgLarge");
+        var dataUrlBgImgSmall = this.$pageHeader.data("urlBgImgSmall");
 
         if (CR.Services.Browser.isSmallScreen()
             && !window.matchMedia("(min-resolution: 2dppx)").matches
-            && dataUrlBgImg640px) {
+            && dataUrlBgImgSmall) {
 
-            this.$pageHeader.removeClass("no-img");
-            this.$pageHeader.css("background-image", "url(" + dataUrlBgImg640px + ")");
-        } else if (dataUrlBgImg1920px) {
-            this.$pageHeader.removeClass("no-img");
-            this.$pageHeader.css("background-image", "url(" + dataUrlBgImg1920px + ")");
+            this.$pageHeader.css("background-image", "url(" + dataUrlBgImgSmall + ")");
+        } else if (dataUrlBgImgLarge) {
+            this.$pageHeader.css("background-image", "url(" + dataUrlBgImgLarge + ")");
+        } else {
+            this.$pageHeader.addClass("no-img");
         }
     };
 

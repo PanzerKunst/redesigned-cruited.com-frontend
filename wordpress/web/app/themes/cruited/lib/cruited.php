@@ -1,6 +1,4 @@
-<?php
-
-namespace Roots\Sage\Cruited;
+<?php namespace Roots\Sage\Cruited;
 
 /**
  * Kills widows in text
@@ -15,6 +13,26 @@ function word_wrapper($text, $minWords = 3) {
         $return = implode(' ',$arr);
     }
     return $return;
+}
+
+/**
+ * Builds data attributes for featured images used in page header
+ */
+function get_data_url_bg_imgs($postId, $thumbnailId) {
+    $dataUrlBgImgLarge = null;
+    $dataUrlBgImgSmall = null;
+
+    if (has_post_thumbnail($postId)) {
+        $featuredImageUrl = wp_get_attachment_image_src($thumbnailId, "full" )[0];
+        $dataUrlBgImgLarge = 'data-url-bg-img-large="' . $featuredImageUrl . '"';
+
+        $fieldImg640px = get_field("featured_image_640px", $postId);
+        if ($fieldImg640px) {
+            $dataUrlBgImgSmall = 'data-url-bg-img-small="' . $fieldImg640px["url"] . '"';
+        }
+    }
+
+    return $dataUrlBgImgLarge . " " . $dataUrlBgImgSmall;
 }
 
 /**
@@ -39,4 +57,11 @@ function title() {
     } else {
         return get_the_title();
     }
+}
+
+/**
+ * Post excerpt for category page
+ */
+function get_the_excerpt() {
+    return get_field("short_description", get_the_ID());
 }

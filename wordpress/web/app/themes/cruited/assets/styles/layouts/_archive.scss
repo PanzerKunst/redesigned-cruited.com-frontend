@@ -1,40 +1,20 @@
 .archive {
-  article.post {
-    > header,
-    > .entry-summary {
-      padding: 0 $spacer-unit-size;
+  article.post > header {
+    background-image: none;
 
-      @include medium-screen {
-        width: $medium-content-width;
-
-        padding-left: 0;
-        padding-right: 0;
-        margin: 0 auto;
-      }
-
-      @include large-screen {
-        font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
-        width: $large-content-width-more-readable;
-      }
+    h1,
+    h2,
+    time,
+    a {
+      text-shadow: none;
     }
 
-    > header {
-      background-image: none;
+    > h2 {
+      margin-bottom: 0.5em;
+    }
 
-      h1,
-      h2,
-      time,
-      a {
-        text-shadow: none;
-      }
-
-      > h2 {
-        margin-bottom: 0.5em;
-      }
-
-      time {
-        margin-top: 0;
-      }
+    time {
+      margin-top: 0;
     }
   }
 
