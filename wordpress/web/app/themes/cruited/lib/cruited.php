@@ -26,9 +26,9 @@ function get_data_url_bg_imgs($postId, $thumbnailId) {
         $featuredImageUrl = wp_get_attachment_image_src($thumbnailId, "full" )[0];
         $dataUrlBgImgLarge = 'data-url-bg-img-large="' . $featuredImageUrl . '"';
 
-        $fieldImg640px = get_field("featured_image_640px", $postId);
-        if ($fieldImg640px) {
-            $dataUrlBgImgSmall = 'data-url-bg-img-small="' . $fieldImg640px["url"] . '"';
+        $fieldImg960px = get_field("featured_image_960px", $postId);
+        if ($fieldImg960px) {
+            $dataUrlBgImgSmall = 'data-url-bg-img-small="' . $fieldImg960px["url"] . '"';
         }
     }
 

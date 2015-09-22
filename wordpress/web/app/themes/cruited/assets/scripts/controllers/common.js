@@ -67,7 +67,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
         var dataUrlBgImgLarge = this.$pageHeader.data("urlBgImgLarge");
         var dataUrlBgImgSmall = this.$pageHeader.data("urlBgImgSmall");
 
-        if (CR.Services.Browser.isSmallScreen()
+        if (!CR.Services.Browser.isLargeScreen()
             && !window.matchMedia("(min-resolution: 2dppx)").matches
             && dataUrlBgImgSmall) {
 

@@ -57,9 +57,9 @@ article.post > header {
   }
 
   &.no-img {
-    background-image: url(../images/default-page-header-bg_640.jpg);
+    background-image: url(../images/default-page-header-bg_960.jpg);
 
-    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
+    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
       background-image: url(../images/default-page-header-bg_1920.jpg);
     }
 

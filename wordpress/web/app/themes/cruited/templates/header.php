@@ -16,7 +16,7 @@
                 ?>
 
                 <div class="other-nav-ux">
-                    <a href="/login">Login</a>
+                    <a href="/users">Login</a>
 
                     <a href="/users/select-document" class="btn secondary">Get Started</a>
 
@@ -41,7 +41,7 @@
                 ?>
 
                 <div class="other-nav-ux">
-                    <a href="/login">Login</a>
+                    <a href="/users">Login</a>
 
                     <a href="/users/select-document" class="btn secondary">Get Started</a>
 

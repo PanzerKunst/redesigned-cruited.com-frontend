@@ -1,9 +1,9 @@
 footer.content-info {
   #bottom-hero {
-    background-image: url(../images/bottom-hero_640.jpg);
+    background-image: url(../images/bottom-hero_960.jpg);
     background-position: 80% 80%;
 
-    @media screen and (min-width: 641px), screen and (min-resolution: 2dppx) {
+    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
       background-image: url(../images/bottom-hero_1920.jpg);
     }
 
@@ -68,16 +68,17 @@ footer.content-info {
     }
 
     @include medium-screen {
-      width: $small-content-width;
-
       background-image: url(../images/section-circles-large-flipped.png);
+
+      width: $medium-content-width;
+
+      margin: 0 auto;
 
       padding-top: $footer-padding-top * $medium-screen-ratio-l;
       padding-bottom: 4em;
 
       > h2 {
         text-align: left;
-        margin-left: $spacer-unit-size;
       }
 
       > div {
@@ -88,14 +89,16 @@ footer.content-info {
 
       .widget {
         width: auto;
-        margin: 0 $spacer-unit-size;
+
+        margin: 0;
+        &:nth-child(2) {
+          margin: 0 $spacer-unit-size;
+        }
       }
     }
 
     @include large-screen {
-      width: $large-content-width + 2 * $spacer-unit-size;
-
-      margin: 0 auto;
+      width: $large-content-width;
 
       padding-top: $footer-padding-top * $large-screen-ratio-l;
       padding-bottom: 3em;
