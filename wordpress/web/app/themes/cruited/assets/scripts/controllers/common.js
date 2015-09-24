@@ -31,7 +31,8 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
         this._initPageHeaderBackground();
 
-        this.$scrollingAnchors.click($.proxy(this._scrollToSection, this));
+        /* We are not using this method, because it clashes with the "Table Of Contents Plus" Wordpress plugin
+        this.$scrollingAnchors.click($.proxy(this._scrollToSection, this)); */
     };
 
     c._initMenuEvents = function() {

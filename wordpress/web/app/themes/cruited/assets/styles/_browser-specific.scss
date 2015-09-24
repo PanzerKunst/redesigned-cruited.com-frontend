@@ -8,14 +8,3 @@ html[data-useragent*="iPod"] {
     background-attachment: scroll;
   }
 }
-
-
-/* IE */
-
-// IE actually checks if we're allowed to use web fonts, and notices that we are not allowed to use Gotham Rounded. So we use Arial Rounded as fallback.
-html[data-useragent*="Trident"],
-html[data-useragent*="MSIE"] {
-  body {
-    font-family: "Arial Rounded MT", sans-serif;
-  }
-}
