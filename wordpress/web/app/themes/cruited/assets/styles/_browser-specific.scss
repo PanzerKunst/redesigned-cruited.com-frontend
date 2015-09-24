@@ -7,37 +7,6 @@ html[data-useragent*="iPod"] {
   .img-bg {
     background-attachment: scroll;
   }
-
-  .banner {
-    button {
-      width: 120px;
-
-      $menu-btn-img-location-x: 160px;
-      $menu-btn-img-location-y: -900px;
-
-      background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
-      @include hidpi {
-        background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
-      }
-
-      &::before {
-        margin-left: 0;
-      }
-    }
-
-    &.scrolled-down,
-    &.menu-open {
-      button {
-        $menu-btn-img-location-x: 160px;
-        $menu-btn-img-location-y: -1000px;
-
-        background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
-        @include hidpi {
-          background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
-        }
-      }
-    }
-  }
 }
 
 

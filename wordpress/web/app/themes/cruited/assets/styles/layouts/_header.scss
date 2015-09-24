@@ -107,16 +107,16 @@
     }
 
     button {
-      $menu-btn-img-location-x: 0;
+      $menu-btn-img-location-x: 80px;
       $menu-btn-img-location-y: -900px;
 
       @include hdpi-sprite();
       background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
       @include hidpi {
-        background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
+        background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
       }
 
-      width: 40px;
+      width: 120px;
       height: 40px;
 
       color: $background-body-color;
@@ -125,7 +125,6 @@
 
       &::before {
         content: "MENU";
-        margin-left: -80px;
         @include text-shadow;
       }
     }
@@ -152,12 +151,12 @@
     }
 
     button {
-      $menu-btn-img-location-x: 0;
+      $menu-btn-img-location-x: 80px;
       $menu-btn-img-location-y: -1000px;
 
       background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
       @include hidpi {
-        background-position: half-pos($menu-btn-img-location-x, $menu-btn-img-location-y);
+        background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
       }
 
       color: $grey-text-color;

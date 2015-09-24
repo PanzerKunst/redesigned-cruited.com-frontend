@@ -112,6 +112,8 @@ blockquote {
 }
 
 .nav > li > a {
+  display: inline-block;
+
   &:hover,
   &:focus {
     text-decoration: underline;

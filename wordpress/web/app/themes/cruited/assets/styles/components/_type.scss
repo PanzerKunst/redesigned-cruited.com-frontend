@@ -36,6 +36,7 @@ blockquote {
     &:after {
       content: "”";
       text-align: right;
+      margin-top: 0.2em;
     }
 
     &.dark-bg {
@@ -61,7 +62,7 @@ blockquote {
     padding: 1em 1em 2.2em 1em;
 
     background-image: url(../images/secondary-testimonial-bg.png);
-    @media screen and (min-resolution: 2dppx) {
+    @include hidpi {
       background-image: url(../images/secondary-testimonial-bg_2x.png);
       background-size: 300px 226px;
     }

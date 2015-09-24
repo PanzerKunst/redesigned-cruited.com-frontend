@@ -296,7 +296,7 @@ body.home {
           background-repeat: no-repeat;
 
           $preview-img-large-screen-height: 743px;
-          min-height: $preview-img-large-screen-height;
+          height: $preview-img-large-screen-height;
         }
       }
     }
@@ -423,6 +423,10 @@ body.home {
 
     #main-testimonial {
       background-image: url(../images/primary-testimonial-bg_719.jpg);
+      @include hidpi {
+        background-image: url(../images/primary-testimonial-bg_1445.jpg);
+      }
+
       background-repeat: no-repeat;
       background-position: 15% 0;
       background-size: $testimonials-bg-img-width*$testimonials-bg-img-scale-small-medium-screen $testimonials-bg-img-height*$testimonials-bg-img-scale-small-medium-screen;
@@ -576,9 +580,20 @@ body.home {
       color: $primary-btn-color;
     }
 
+    a[href="/var-metod"] {
+      margin-top: 1.25em;
+    }
+
     #method-graph {
       display: none;
     }
+
+    $cruited-fits-you-text-max-width-large-screen: 640px;
+
+    $cscore-graph-img-large-screen-width: 433px;
+    $cscore-graph-img-large-screen-height: 572px;
+
+    $cscore-graph-margin-left: $spacer-unit-size * 2;
 
     @include large-screen {
       > div {
@@ -587,7 +602,7 @@ body.home {
 
         > section {
           margin-left: 10%;
-          max-width: 640px;
+          max-width: $cruited-fits-you-text-max-width-large-screen;
         }
 
         h2 {
@@ -604,13 +619,25 @@ body.home {
 
           flex-grow: 1;
 
-          margin-left: $spacer-unit-size * 2;
+          margin-left: $cscore-graph-margin-left;
 
-          background-image: url(../images/metod.png);
+          background-image: url(../images/cScore.png);
           background-repeat: no-repeat;
 
-          $cruited-fits-you-img-large-screen-height: 572px;
-          min-height: $cruited-fits-you-img-large-screen-height;
+          height: $cscore-graph-img-large-screen-height;
+        }
+      }
+    }
+
+    @media screen and (min-width: $cruited-fits-you-text-max-width-large-screen + $cscore-graph-margin-left + $cscore-graph-img-large-screen-width) {
+      > div {
+        max-width: $cruited-fits-you-text-max-width-large-screen + $cscore-graph-margin-left + $cscore-graph-img-large-screen-width;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        > section {
+          margin-left: 0;
         }
       }
     }
