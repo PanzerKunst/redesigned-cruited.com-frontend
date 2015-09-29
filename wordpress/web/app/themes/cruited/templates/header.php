@@ -16,9 +16,9 @@
                 ?>
 
                 <div class="other-nav-ux">
-                    <a href="/users">Login</a>
+                    <a href="/users/">Login</a>
 
-                    <a href="/users/select-document" class="btn secondary">Get Started</a>
+                    <a href="/users/select-document/" class="btn secondary">Get Started</a>
 
                     <!-- select class="form-control">
                         <option value="sv">Sv</option>
@@ -41,9 +41,9 @@
                 ?>
 
                 <div class="other-nav-ux">
-                    <a href="/users">Login</a>
+                    <a href="/users/">Login</a>
 
-                    <a href="/users/select-document" class="btn secondary">Get Started</a>
+                    <a href="/users/select-document/" class="btn secondary">Get Started</a>
 
                     <!-- select class="form-control">
                         <option value="sv">Sv</option>
