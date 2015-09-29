@@ -37,7 +37,7 @@
       display: flex;
       justify-content: flex-end;
 
-      > a[href="/users"] {
+      > a[href="/users/"] {
         margin-right: 3 * $spacer-unit-size;
       }
 
@@ -130,7 +130,7 @@
     }
 
     .other-nav-ux {
-      > a[href="/users"] {
+      > a[href="/users/"] {
         margin-top: 5px;
       }
 
@@ -242,7 +242,7 @@
       }
 
       .other-nav-ux {
-        > a[href="/users"] {
+        > a[href="/users/"] {
           margin-top: 18px;
         }
 
