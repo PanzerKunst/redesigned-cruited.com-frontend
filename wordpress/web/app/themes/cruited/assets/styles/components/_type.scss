@@ -5,14 +5,13 @@ p:last-child {
 blockquote {
   padding: 0;
 
-  background-color: $lighter-grey;
-
   font-weight: bold;
   text-align: center;
 
   &.primary {
     font-size: 1.2em;
     color: $grey-text-color;
+    background-color: $lighter-grey;
 
     > footer {
       color: transparentize($grey-text-color, 0.2);

@@ -5,24 +5,27 @@
 }
 
 .mc4wp-form {
-  > form {
-    display: inline-block;
-
-    > input {
-      vertical-align: top;
-    }
+  input[type="email"],
+  input[type="text"],
+  input[type="submit"] {
+    vertical-align: top;
   }
 
-  input[type="email"] {
+  input[type="email"],
+  input[type="text"] {
     display: inline-block;
 
     width: 15em;
 
-    margin: 0 0.2em 0.5em 0.5em;
+    margin: 0 0.2em 0.5em 0;
   }
 
   input[type="submit"] {
     padding-top: 0.45em;
     padding-bottom: 0.45em;
+  }
+
+  label {
+    margin: 0.3em 0.5em 0 0;
   }
 }

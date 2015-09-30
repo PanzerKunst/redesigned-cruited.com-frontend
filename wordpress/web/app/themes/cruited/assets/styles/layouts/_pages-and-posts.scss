@@ -25,9 +25,34 @@
     width: $large-content-width-more-readable;
   }
 
-  > h2 {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     &:first-child {
       margin-top: 0;
+    }
+  }
+
+  > article.well {
+    background-color: $lighter-grey;
+
+    padding: 1em;
+    @include large-screen {
+      padding: 2em;
+    }
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;  // TODO: not supported on Android browser
+
+    > img {
+      margin-right: 1em;
+    }
+
+    > div {
+      flex-grow: 1;
     }
   }
 

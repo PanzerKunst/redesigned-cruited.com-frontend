@@ -6,6 +6,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
     c.init = function() {
         this._initElements();
         this._initEvents();
+        this._removeEmptyParagraphTagsAddedByTheWpEditor();
     };
 
     c._initElements = function() {
@@ -33,6 +34,10 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
         /* We are not using this method, because it clashes with the "Table Of Contents Plus" Wordpress plugin
         this.$scrollingAnchors.click($.proxy(this._scrollToSection, this)); */
+    };
+
+    c._removeEmptyParagraphTagsAddedByTheWpEditor = function() {
+        $("p:empty").remove();
     };
 
     c._initMenuEvents = function() {

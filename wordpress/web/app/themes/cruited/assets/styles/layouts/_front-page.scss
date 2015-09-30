@@ -686,7 +686,7 @@ body.home {
 
       > div {
         display: flex;
-        align-items: center;
+        align-items: center;  // TODO: poor support on Android
         height: 4em;
 
         background-color: $lighter-grey;
