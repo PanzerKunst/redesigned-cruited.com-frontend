@@ -567,7 +567,7 @@ body.home {
     }
   }
 
-  #cruited-fits-you {
+  #our-methodology {
     background-image: url(../images/dark-bg_960.jpg);
 
     @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
@@ -582,64 +582,6 @@ body.home {
 
     a[href="/var-metod"] {
       margin-top: 1.25em;
-    }
-
-    #method-graph {
-      display: none;
-    }
-
-    $cruited-fits-you-text-max-width-large-screen: 640px;
-
-    $cscore-graph-img-large-screen-width: 433px;
-    $cscore-graph-img-large-screen-height: 572px;
-
-    $cscore-graph-margin-left: $spacer-unit-size * 2;
-
-    @include large-screen {
-      > div {
-        width: 100%;
-        display: flex;
-
-        > section {
-          margin-left: 10%;
-          max-width: $cruited-fits-you-text-max-width-large-screen;
-        }
-
-        h2 {
-          font-size: 40px;
-          margin-bottom: $section-padding-top * $medium-screen-ratio-l;
-        }
-
-        p {
-          font-size: #{$medium-screen-ratio-m * $font-size-base-px}px;
-        }
-
-        > #method-graph {
-          display: block;
-
-          flex-grow: 1;
-
-          margin-left: $cscore-graph-margin-left;
-
-          background-image: url(../images/cScore.png);
-          background-repeat: no-repeat;
-
-          height: $cscore-graph-img-large-screen-height;
-        }
-      }
-    }
-
-    @media screen and (min-width: $cruited-fits-you-text-max-width-large-screen + $cscore-graph-margin-left + $cscore-graph-img-large-screen-width) {
-      > div {
-        max-width: $cruited-fits-you-text-max-width-large-screen + $cscore-graph-margin-left + $cscore-graph-img-large-screen-width;
-
-        margin-left: auto;
-        margin-right: auto;
-
-        > section {
-          margin-left: 0;
-        }
-      }
     }
 
     .btn {
