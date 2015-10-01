@@ -41,9 +41,9 @@
     border-radius: 0;
     box-shadow: none;
 
-    padding: 1em;
-    @include large-screen {
-      padding: 2em;
+    padding: $well-padding;
+    @include medium-screen {
+      padding: $well-padding * $medium-screen-ratio-l;
     }
 
     display: flex;
@@ -69,9 +69,9 @@
     font-style: italic;
     font-weight: normal;
 
-    padding: 1em;
-    @include large-screen {
-      padding: 2em;
+    padding: $well-padding;
+    @include medium-screen {
+      padding: $well-padding * $medium-screen-ratio-l;
     }
 
     &.highlighted {

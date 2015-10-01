@@ -1,20 +1,27 @@
 .archive {
-  article.post > header {
-    background-image: none;
-
-    h1,
-    h2,
-    time,
-    a {
-      text-shadow: none;
+  article.post {
+    margin-top: 3em;
+    @include medium-screen {
+      margin-top: 4em;
     }
 
-    > h2 {
-      margin-bottom: 0.5em;
-    }
+    > header {
+      background-image: none;
 
-    time {
-      margin-top: 0;
+      h1,
+      h2,
+      time,
+      a {
+        text-shadow: none;
+      }
+
+      > h2 {
+        margin-bottom: 0.5em;
+      }
+
+      time {
+        margin-top: 0;
+      }
     }
   }
 
