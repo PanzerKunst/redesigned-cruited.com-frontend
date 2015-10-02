@@ -12,10 +12,11 @@
 
 // Vendor overrides
 @import "vendor-overrides/_bootstrap";
-@import "vendor-overrides/_mailchimp-for-wp";
+@import "vendor-overrides/_mailchimp";
 @import "vendor-overrides/_disqus";
 @import "vendor-overrides/_authorsure";
 @import "vendor-overrides/_yoast-seo";
+@import "vendor-overrides/_toc-plus";
 
 // Global
 @import "common/_global";
@@ -36,6 +37,7 @@
 @import "layouts/_posts";
 @import "layouts/_front-page";
 @import "layouts/_archive";
+@import "layouts/_404";
 
 // Browser hacks
 @import "_browser-specific";

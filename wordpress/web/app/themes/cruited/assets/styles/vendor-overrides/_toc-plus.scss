@@ -1,0 +1,19 @@
+#toc_container {
+  background-color: $lighter-grey;
+
+  // Inside "#toc_container" for declarations to be high-enough priority
+  > .toc_list {
+    margin: 0 1em;
+    padding-bottom: $content-element-margin-bottom;
+
+    li {
+      margin-top: 0;
+    }
+  }
+}
+
+.toc_title {
+  text-align: center;
+  font-weight: bold;
+  padding-top: $content-element-margin-bottom;
+}

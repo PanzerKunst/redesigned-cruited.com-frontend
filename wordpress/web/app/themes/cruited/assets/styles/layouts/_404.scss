@@ -1,0 +1,30 @@
+body.error404 {
+  .main {
+    > .alert,
+    > .search-form {
+      text-align: center;
+    }
+  }
+
+  .input-group-btn {
+    font-size: inherit;
+  }
+
+  .search-submit {
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+
+    @include large-screen {
+      padding-top: 0.425em;
+      padding-bottom: 0.425em;
+    }
+  }
+
+  > footer {
+    $footer-margin-top: $spacer-unit-size * 2.5;
+    margin-top: $footer-margin-top;
+    @include medium-screen {
+      margin-top: $footer-margin-top * $medium-screen-ratio-l;
+    }
+  }
+}
