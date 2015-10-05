@@ -23,6 +23,12 @@
         margin-top: 0;
       }
     }
+
+    > .entry-summary {
+      .btn {
+        padding-right: 1.25em;
+      }
+    }
   }
 
   .main > .posts-navigation {

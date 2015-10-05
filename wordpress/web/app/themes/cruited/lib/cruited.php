@@ -6,12 +6,14 @@
  */
 function word_wrapper($text, $minWords = 3) {
     $return = $text;
-    $arr = explode(' ',$text);
-    if(count($arr) >= $minWords) {
-        $arr[count($arr) - 2].= '&nbsp;'.$arr[count($arr) - 1];
+    $arr = explode(' ', $text);
+
+    if (count($arr) >= $minWords) {
+        $arr[count($arr) - 2] .= '&nbsp;' . $arr[count($arr) - 1];
         array_pop($arr);
-        $return = implode(' ',$arr);
+        $return = implode(' ', $arr);
     }
+
     return $return;
 }
 
@@ -23,7 +25,7 @@ function get_data_url_bg_imgs($postId, $thumbnailId) {
     $dataUrlBgImgSmall = null;
 
     if (has_post_thumbnail($postId)) {
-        $featuredImageUrl = wp_get_attachment_image_src($thumbnailId, "full" )[0];
+        $featuredImageUrl = wp_get_attachment_image_src($thumbnailId, "full")[0];
         $dataUrlBgImgLarge = 'data-url-bg-img-large="' . $featuredImageUrl . '"';
 
         $fieldImg960px = get_field("featured_image_960px", $postId);
@@ -47,7 +49,7 @@ function title() {
         }
     } elseif (is_category()) {
         $term = get_queried_object();
-        return apply_filters( 'single_cat_title', $term->name );
+        return apply_filters('single_cat_title', $term->name);
     } elseif (is_archive() && !is_category()) {
         return get_the_archive_title();
     } elseif (is_search()) {
@@ -69,11 +71,28 @@ function get_the_excerpt() {
 /**
  * String utility functions
  */
-function startsWith($haystack, $needle) {
+function starts_with($haystack, $needle) {
     // search backwards starting from haystack length characters from the end
     return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
 }
-function endsWith($haystack, $needle) {
+
+function ends_with($haystack, $needle) {
     // search forward starting from end minus needle length characters
     return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
 }
+
+
+function filter_child_categories($query) {
+    if ($query->is_category) {
+        $queried_object = get_queried_object();
+        $child_cats = (array)get_term_children($queried_object->term_id, 'category');
+
+        if (!$query->is_admin)
+            //exclude the posts in child categories
+            $query->set('category__not_in', array_merge($child_cats));
+    }
+
+    return $query;
+}
+
+add_filter('pre_get_posts', __NAMESPACE__ . '\filter_child_categories');
