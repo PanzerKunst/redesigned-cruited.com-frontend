@@ -62,10 +62,34 @@ function title() {
 }
 
 /**
- * Post excerpt for category page
+ * Post or page excerpt
  */
-function get_the_excerpt() {
+function get_excerpt() {
+    if (get_post_type() === 'post') {
+        return get_post_excerpt();
+    };
+
+    return get_page_excerpt();
+}
+
+/**
+ * Post excerpt
+ */
+function get_post_excerpt() {
     return get_field("short_description", get_the_ID());
+}
+
+/**
+ * Page excerpt
+ */
+function get_page_excerpt() {
+    $sharing_buttons_excerpt_text = "Facebook LinkedIn Twitter Email";
+    $excerpt = get_the_excerpt();
+    if (starts_with($excerpt, $sharing_buttons_excerpt_text)) {
+        $excerpt = substr($excerpt, strlen($sharing_buttons_excerpt_text));
+    }
+
+    return $excerpt;
 }
 
 /**
