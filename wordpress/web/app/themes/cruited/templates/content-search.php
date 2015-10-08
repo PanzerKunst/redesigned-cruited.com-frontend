@@ -9,11 +9,12 @@ use Roots\Sage\Extras;
         <h2 class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
     </header>
     <div class="entry-summary">
-        <?php if (get_post_type() === 'post') { ?>
-            <p><?= Cruited\get_post_excerpt() ?></p>
-            <div><?= Extras\excerpt_more() ?></div>
-        <?php } else { ?>
-            <p><?= Cruited\get_page_excerpt() ?></p>
-        <?php } ?>
+        <p>
+            <?php if (get_post_type() === 'post') { ?>
+                <?= Cruited\get_post_excerpt() ?><?= Extras\excerpt_more() ?>
+            <?php } else { ?>
+                <?= Cruited\get_page_excerpt() ?>
+            <?php } ?>
+        </p>
     </div>
 </article>

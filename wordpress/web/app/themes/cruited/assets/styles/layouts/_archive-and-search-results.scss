@@ -31,12 +31,10 @@
 
     > .entry-summary {
       .btn {
-        padding-right: 1.25em;
-      }
-
-      > p > .btn {
         display: table; // To have it go below the text
+
         margin-top: $content-element-margin-bottom;
+        padding-right: 1.25em;
       }
     }
   }

@@ -9,8 +9,6 @@ use Roots\Sage\Extras;
         <h2 class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
     </header>
     <div class="entry-summary">
-        <p><?= Cruited\get_excerpt() ?></p>
-
-        <div><?= Extras\excerpt_more() ?></div>
+        <p><?= Cruited\get_excerpt() ?><?= Extras\excerpt_more() ?></p>
     </div>
 </article>
