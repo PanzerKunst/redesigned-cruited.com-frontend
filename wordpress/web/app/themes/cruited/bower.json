@@ -1,11 +1,11 @@
 {
-    "name": "cruited",
-    "version": "0.0.0",
-    "homepage": "https://github.com/PanzerKunst/redesigned-cruited.com-frontend",
+    "name": "Cruited Wordpress website",
+    "version": "2.0.0",
+    "homepage": "https://github.com/PanzerKunst/redesigned-cruited.com-frontend/wordpress",
     "authors": [
-        "Christophe Bram <cbramdit@gmail.com>"
+        "Christophe Bram <christophe@8b.nu>"
     ],
-    "license": "MIT",
+    "license": "GPL V3",
     "ignore": [
         "**/.*",
         "node_modules",
@@ -21,7 +21,8 @@
         "gsap": "~1.17.0",
         "js-breakpoints": "~1.0.2",
         "lodash": "~3.10.1",
-        "modernizr": "~2.8.3"
+        "modernizr": "~2.8.3",
+        "pjs": "jneen/pjs#~5.1.1"
     },
     "overrides": {
         "jquery": {
@@ -65,6 +66,11 @@
             "main": [
                 "./breakpoints.js",
                 "./breakpoints.scss"
+            ]
+        },
+        "pjs": {
+            "main": [
+                "./src/p.js"
             ]
         }
     }

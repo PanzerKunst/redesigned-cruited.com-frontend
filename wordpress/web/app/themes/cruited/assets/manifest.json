@@ -23,8 +23,7 @@
             "files": ["styles/editor-style.scss"]
         },
         "vendor.js": {
-            "bower": ["jquery"],
-            "files": ["../vendor/p.js"]
+            "bower": ["jquery"]
         }
     },
     "config": {
