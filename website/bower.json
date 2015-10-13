@@ -1,0 +1,75 @@
+{
+    "name": "Cruited web app",
+    "version": "2.0.0",
+    "homepage": "https://github.com/PanzerKunst/redesigned-cruited.com-frontend/website",
+    "authors": [
+        "Christophe Bram <christophe@8b.nu>"
+    ],
+    "license": "GPL V3",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jquery": "~2.1.4",
+        "bootstrap-sass": "~3.3.5",
+        "bourbon": "~4.2.5",
+        "fastclick": "~1.0.6",
+        "font-awesome": "~4.4.0",
+        "js-breakpoints": "~1.0.2",
+        "gsap": "~1.18.0",
+        "lodash": "~3.10.1",
+        "pjs": "jneen/pjs#~5.1.1",
+        "react": "~0.13.3"
+    },
+    "description": "Application part of the Cruited website",
+    "main": "",
+    "moduleType": [],
+    "private": true,
+    "overrides": {
+        "bootstrap-sass": {
+            "main": [
+                "./assets/stylesheets/_bootstrap.scss",
+                "./assets/javascripts/bootstrap.min.js"
+            ]
+        },
+        "font-awesome": {
+            "main": [
+                "./scss/font-awesome.scss",
+                "./fonts/*"
+            ]
+        },
+        "gsap": {
+            "main": [
+                "./src/minified/TweenLite.min.js",
+                "./src/minified/easing/EasePack.min.js",
+                "./src/minified/plugins/CSSPlugin.min.js",
+                "./src/minified/plugins/ScrollToPlugin.min.js"
+            ]
+        },
+        "jquery": {
+            "main": [
+                "./dist/jquery.min.js"
+            ]
+        },
+        "js-breakpoints": {
+            "main": [
+                "./breakpoints.js",
+                "./breakpoints.scss"
+            ]
+        },
+        "pjs": {
+            "main": [
+                "./src/p.js"
+            ]
+        },
+        "react": {
+            "main": [
+                "./react-with-addons.min.js"
+            ]
+        }
+    }
+}

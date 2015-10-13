@@ -1,0 +1,127 @@
+footer.content-info {
+  #bottom-hero {
+    background-image: url(../images/bottom-hero_960.jpg);
+    background-position: 80% 80%;
+
+    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
+      background-image: url(../images/bottom-hero_1920.jpg);
+    }
+
+    > div {
+      padding: 8em $spacer-unit-size;
+
+      @include medium-screen {
+        width: $medium-content-width;
+
+        padding: 5em 0;
+
+        margin: 0 auto;
+      }
+
+      @include large-screen {
+        width: $large-content-width;
+
+        text-align: left;
+      }
+
+      > h2 {
+        margin: 0 0 $spacer-unit-size*1.75 0;
+
+        @include large-screen {
+          max-width: 13em;
+        }
+      }
+    }
+  }
+
+  #footer-proper {
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-image: url(../images/section-circles-flipped_263.png);
+    @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
+      background-image: url(../images/section-circles-flipped_526.png);
+      background-size: 263px 80px;
+    }
+
+    $footer-padding-top: $spacer-unit-size * 1.75;
+    padding-top: $footer-padding-top;
+    padding-bottom: 2em;
+
+    > h2 {
+      margin: 0;
+      font-size: 34px;
+
+      text-align: center;
+    }
+
+    > div {
+      font-size: #{$font-size-base-px}px;
+    }
+
+    .widget {
+      width: $small-content-width - 2 * $spacer-unit-size;
+      margin: 0 auto;
+
+      ul {
+        text-align: left;
+      }
+    }
+
+    @include medium-screen {
+      background-image: url(../images/section-circles-large-flipped.png);
+
+      width: $medium-content-width;
+
+      margin: 0 auto;
+
+      padding-top: $footer-padding-top * $medium-screen-ratio-l;
+      padding-bottom: 2em;
+
+      > h2 {
+        text-align: left;
+      }
+
+      > div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .widget {
+        width: auto;
+
+        margin: 0;
+        &:nth-child(2) {
+          margin: 0 $spacer-unit-size;
+        }
+      }
+    }
+
+    @include large-screen {
+      width: $large-content-width;
+
+      padding-top: $footer-padding-top * $large-screen-ratio-l;
+      padding-bottom: 2em;
+    }
+  }
+
+  // Newsletter widget
+  .widget_mc4wp_widget > h3 {
+    color: $grey-text-color;
+
+    margin-top: 0.5em;
+  }
+
+  @include large-screen {
+    .widget_mc4wp_widget {
+      > h3 {
+        font-size: 15px;
+      }
+    }
+
+    .mc4wp-form {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+}

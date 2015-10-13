@@ -1,0 +1,24 @@
+{
+    "dependencies": {
+        "main.js": {
+            "files": [
+                "scripts/global.js",
+                "scripts/services/browser.js",
+                "scripts/services/animator.js",
+                "scripts/controllers/base.js",
+                "scripts/controllers/common.js",
+                "scripts/controllers/index.js"
+            ],
+            "main": true
+        },
+        "main.css": {
+            "files": [
+                "styles/main.scss"
+            ],
+            "main": true
+        },
+        "vendor.js": {
+            "files": ["../vendor/modernizr-custom.js"]
+        }
+    }
+}

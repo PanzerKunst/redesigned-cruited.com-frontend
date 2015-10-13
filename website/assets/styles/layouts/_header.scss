@@ -1,0 +1,274 @@
+@mixin header-box-shadow {
+  //          offset-x  offset-y  blur-radius spread-radius color
+  box-shadow: 0 0.25em 0.5em 0 transparentize(black, 0.8);
+}
+
+@mixin header-bg-color-transition {
+  @include transition(background-color $default-animation-duration ease);
+}
+
+.banner {
+  $header-side-padding: 8px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-index-header;
+
+  // Declarations global to all screen sizes
+  > .container {
+    font-size: #{$font-size-base-px}px;
+
+    a {
+      color: $background-body-color;
+
+      @include text-shadow;
+      &.btn {
+        text-shadow: none;
+      }
+    }
+
+    .brand:hover {
+      text-decoration: none;
+    }
+
+    .other-nav-ux {
+      display: flex;
+      justify-content: flex-end;
+
+      > a[href="/users/"] {
+        margin-right: 3 * $spacer-unit-size;
+      }
+
+      > .btn {
+        color: $primary-btn-color;
+        border-color: $primary-btn-color;
+
+        height: $form-control-height;
+
+        padding: 0.35em 1.5em;
+
+        margin-right: $header-side-padding;
+
+        &:active,
+        &:focus,
+        &:hover {
+          color: $background-body-color;
+          background-color: darken($primary-btn-color, 15%);
+          border-color: darken($primary-btn-color, 25%);
+        }
+      }
+
+      > select {
+        width: 70px;
+      }
+    }
+  }
+
+  &.scrolled-down,
+  &.menu-open {
+    > .container {
+      a {
+        color: $dark-grey-text-color;
+        text-shadow: none;
+      }
+    }
+  }
+
+  // Small and medium screen declarations
+  > .container {
+    &#small-medium-screen-menu {
+      display: block;
+    }
+    &#large-screen-menu {
+      display: none;
+    }
+
+    > div {
+      @include header-bg-color-transition;
+
+      > div {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .brand {
+      font-size: 22px;
+      padding: 0 $header-side-padding;
+    }
+
+    > nav {
+      display: none;
+
+      background-color: $background-body-color;
+      @include header-box-shadow;
+    }
+
+    button {
+      $menu-btn-img-location-x: 80px;
+      $menu-btn-img-location-y: -900px;
+
+      @include hdpi-sprite();
+      background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
+      @include hidpi {
+        background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
+      }
+
+      width: 120px;
+      height: 40px;
+
+      color: $background-body-color;
+      font-weight: bold;
+      text-transform: uppercase;
+
+      &::before {
+        content: "MENU";
+        @include text-shadow;
+      }
+    }
+
+    .other-nav-ux {
+      > a[href="/users/"] {
+        margin-top: 5px;
+      }
+
+      > .btn {
+        margin-bottom: $header-side-padding;
+      }
+
+      > select {
+        margin-right: $header-side-padding;
+      }
+    }
+  }
+
+  &.scrolled-down,
+  &.menu-open {
+    > #small-medium-screen-menu > div {
+      background-color: $background-body-color;
+    }
+
+    button {
+      $menu-btn-img-location-x: 80px;
+      $menu-btn-img-location-y: -1000px;
+
+      background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
+      @include hidpi {
+        background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
+      }
+
+      color: $grey-text-color;
+
+      &::before {
+        text-shadow: none;
+      }
+    }
+  }
+
+  &.scrolled-down {
+    > #small-medium-screen-menu > div {
+      @include header-box-shadow;
+    }
+  }
+
+  &.menu-open {
+    > #small-medium-screen-menu > div {
+      box-shadow: none !important;
+    }
+  }
+
+  // Medium screen declarations
+  @include medium-screen {
+    > #small-medium-screen-menu {
+      > div > div,
+      > nav > div {
+        max-width: 640px;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  // Large screen declarations
+  @include large-screen {
+    > .container {
+      &#small-medium-screen-menu {
+        display: none;
+      }
+      &#large-screen-menu {
+        display: block;
+
+        @include header-bg-color-transition;
+
+        height: 60px;
+
+        > div {
+          max-width: $large-content-width;
+          margin: 0 auto;
+
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+
+      $logo-width-large-screen: 15%;
+
+      .brand {
+        width: $logo-width-large-screen;
+
+        font-size: 30px;
+
+        padding: 4px 0 0 0;
+      }
+
+      nav {
+        width: 100% - $logo-width-large-screen;
+
+        display: flex;
+        justify-content: space-between;
+
+        .nav {
+          margin-top: 8px;
+
+          > li {
+            display: inline-block;
+          }
+        }
+      }
+
+      button {
+        display: none;
+      }
+
+      .other-nav-ux {
+        > a[href="/users/"] {
+          margin-top: 18px;
+        }
+
+        > .btn {
+          margin-top: 13px;
+        }
+
+        > select {
+          margin: 13px 0 0 0;
+        }
+      }
+    }
+
+    &.scrolled-down {
+      > #large-screen-menu {
+        background-color: $background-body-color;
+        @include header-box-shadow;
+      }
+    }
+  }
+}
+
+.banner,
+.banner.menu-open,
+.banner.scrolled-down {
+  .current-menu-item > a {
+    color: $primary-btn-color;
+  }
+}

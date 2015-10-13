@@ -1,4 +1,4 @@
-@()(implicit messages: Messages)
+@(linkedinAuthCodeRequestUrl: String)(implicit messages: Messages)
 
 @main("Cruited", "index") {
 <!--
@@ -11,10 +11,7 @@
     Content
 -->
 <div class="centered-contents">
-    <h1>@Messages("home.title")</h1>
-    <h2>@Html(Messages("home.subtitle"))</h2>
-    <button class="btn btn-primary" id="hero-call-to-action-btn">@Messages("home.hero.callToActionBtn")</button>
-    <span>@Messages("home.moneyBackGuarantee")*</span>
+    <a href="@linkedinAuthCodeRequestUrl">@Messages("home.signInWithLinkedIn")</a>
 </div>
 } {
 <!--

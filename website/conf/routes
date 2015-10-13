@@ -7,6 +7,6 @@ GET     /assets/*file                               controllers.Assets.at(path="
 
 # Pages
 GET     /                                           controllers.Application.index
+GET     /auth/linkedin/callback                     controllers.Application.linkedinCallback
 
 # API
-POST    /api                                        controllers.api.CouponApi.create

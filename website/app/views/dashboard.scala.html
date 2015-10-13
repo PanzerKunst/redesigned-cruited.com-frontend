@@ -1,0 +1,23 @@
+@(linkedinErrorMessage: Option[String], linkedinProfile: play.api.libs.json.JsValue)(implicit messages: Messages)
+
+@main("Cruited", "dashboard") {
+<!--
+    Header
+-->
+@header("dashboard")
+
+} {
+<!--
+    Content
+-->
+<h1>Your Dashboard</h1>
+@if(linkedinErrorMessage.isDefined) {
+<span>@linkedinErrorMessage.get</span>
+}
+<p>@linkedinProfile.toString</p>
+} {
+<!--
+    Javascript
+-->
+
+}
