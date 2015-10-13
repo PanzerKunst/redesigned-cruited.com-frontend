@@ -10,11 +10,11 @@ use Roots\Sage\Extras;
     </header>
     <div class="entry-summary">
         <p>
-            <?php if (get_post_type() === 'post') { ?>
-                <?= Cruited\get_post_excerpt() ?><?= Extras\excerpt_more() ?>
-            <?php } else { ?>
-                <?= Cruited\get_page_excerpt() ?>
-            <?php } ?>
+            <?php if (get_post_type() === 'post') {
+                echo Cruited\get_post_excerpt() . Extras\excerpt_more();
+            } else {
+                echo Cruited\get_page_excerpt();
+            } ?>
         </p>
     </div>
 </article>
