@@ -7,7 +7,8 @@
                 "scripts/services/animator.js",
                 "scripts/controllers/base.js",
                 "scripts/controllers/common.js",
-                "scripts/controllers/index.js"
+                "scripts/controllers/dashboard.js",
+                "scripts/controllers/productSelection.js"
             ],
             "main": true
         },

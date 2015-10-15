@@ -1,0 +1,23 @@
+@(headerData: HeaderData)(implicit messages: Messages)
+
+@main("Cruited", "product-selection") {
+<!--
+    Header
+-->
+@header(headerData, "product-selection")
+
+} {
+<!--
+    Content
+-->
+<h1>Product selection</h1>
+} {
+<!--
+    Javascript
+-->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        CR.Controllers.ProductSelection();
+    });
+</script>
+}

@@ -41,7 +41,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
             var tween = TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
 
             tween.eventCallback("onComplete", function() {
-                this.$nav.css({"display": "none"});
+                this.$smallAndMediumScreenNav.css({"display": "none"});
             }.bind(this));
 
             tween.resume();

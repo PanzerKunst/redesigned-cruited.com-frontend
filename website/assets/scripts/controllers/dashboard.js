@@ -1,7 +1,10 @@
 "use strict";
 
-CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
+CR.Controllers.Dashboard = P(CR.Controllers.Base, function(c) {
     c.init = function() {
+        // TODO: remove
+        console.log("Dashboard");
+
         this._initElements();
         this._initEvents();
     };

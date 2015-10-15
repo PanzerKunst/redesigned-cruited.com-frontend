@@ -2,11 +2,13 @@ package controllers.api
 
 import javax.inject.{Inject, Singleton}
 
+import models.LinkedinBasicProfile
 import play.api.Play
 import play.api.Play.current
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsError, JsSuccess, JsValue}
 import play.api.libs.ws.WSClient
 import play.api.mvc.Controller
+import services.ConfigHelper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
@@ -18,7 +20,7 @@ class LinkedinApi @Inject()(val ws: WSClient) extends Controller {
   val linkedinClientId = Play.configuration.getString("linkedin.client.id").get
   val linkedinClientSecret = Play.configuration.getString("linkedin.client.secret").get
   val linkedinRequestedPermissions = Play.configuration.getString("linkedin.requestedPermissions").get
-  val linkedinState = Play.configuration.getString("play.crypto.secret").get
+  val linkedinState = ConfigHelper.applicationSecret
   val linkedinAuthUri = Play.configuration.getString("linkedin.authUri").get
   val linkedinRedirectUri = Play.configuration.getString("linkedin.redirectUri").get
   val linkedinAccessTokenUri = Play.configuration.getString("linkedin.accessTokenUri").get
@@ -52,12 +54,12 @@ class LinkedinApi @Inject()(val ws: WSClient) extends Controller {
     val accessTokenResult: Try[String] = Await.ready(futureAccessToken, Duration.Inf).value.get
 
     accessTokenResult match {
-      case Success(token) => accessToken = Some(token)
       case Failure(e) => throw e
+      case Success(token) => accessToken = Some(token)
     }
   }
 
-  def getProfile: JsValue = {
+  def getProfile: LinkedinBasicProfile = {
     accessToken match {
       case None => throw new Exception("Cannot get profile without access token first")
       case Some(token) =>
@@ -72,8 +74,11 @@ class LinkedinApi @Inject()(val ws: WSClient) extends Controller {
         val profileResult: Try[JsValue] = Await.ready(futureProfile, Duration.Inf).value.get
 
         profileResult match {
-          case Success(profile) => profile
           case Failure(e) => throw e
+          case Success(profileJson) => profileJson.validate[LinkedinBasicProfile] match {
+            case e: JsError => throw new Exception(JsError.toJson(e).toString())
+            case s: JsSuccess[LinkedinBasicProfile] => s.get
+          }
         }
     }
   }

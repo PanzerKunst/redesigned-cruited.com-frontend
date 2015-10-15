@@ -1,7 +1,26 @@
-@(pageId: String)
+@(headerData: HeaderData, pageId: String)
 
-<section id="top-bar">
-    <a href="/" id="home-btn">Cruited</a>
+<div id="small-medium-screen-menu">
+    <div>
+        <div>
+            <a class="brand" href="/">Cruited</a>
+            <button class="styleless"></button>
+        </div>
+    </div>
 
-    <button id="menu-btn" class="styleless">Menu</button>
-</section>
+    <nav role="navigation">
+        <div>
+            <ul class="links-to-wp-site">
+                <li><a href="https://cruited.com/vara-tjanster/">Våra tjänster</a></li>
+                <li><a href="https://cruited.com/var-metod/">Vår metod</a></li>
+                <li><a href="https://cruited.com/om-cruited/">Om Cruited</a></li>
+            </ul>
+
+            <div class="other-nav-ux">
+                @if(!headerData.isSignedIn) {
+                <a href="@headerData.linkedinAuthCodeRequestUrl">Logga in</a>
+                }
+            </div>
+        </div>
+    </nav>
+</div>

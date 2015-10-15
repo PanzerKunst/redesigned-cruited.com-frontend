@@ -10,3 +10,4 @@ GET     /                                           controllers.Application.inde
 GET     /auth/linkedin/callback                     controllers.Application.linkedinCallback
 
 # API
+POST    /api/db/re-create-tables                    controllers.api.DbAdminApi.reCreateTables

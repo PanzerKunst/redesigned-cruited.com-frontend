@@ -13663,7 +13663,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
             var tween = TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
 
             tween.eventCallback("onComplete", function() {
-                this.$nav.css({"display": "none"});
+                this.$smallAndMediumScreenNav.css({"display": "none"});
             }.bind(this));
 
             tween.resume();
@@ -13692,8 +13692,29 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
 "use strict";
 
-CR.Controllers.Index = P(CR.Controllers.Base, function(c) {
+CR.Controllers.Dashboard = P(CR.Controllers.Base, function(c) {
     c.init = function() {
+        // TODO: remove
+        console.log("Dashboard");
+
+        this._initElements();
+        this._initEvents();
+    };
+
+    c._initElements = function() {
+    };
+
+    c._initEvents = function() {
+    };
+});
+
+"use strict";
+
+CR.Controllers.ProductSelection = P(CR.Controllers.Base, function(c) {
+    c.init = function() {
+        // TODO: remove
+        console.log("ProductSelection");
+
         this._initElements();
         this._initEvents();
     };

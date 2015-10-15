@@ -1,23 +1,23 @@
-@(linkedinErrorMessage: Option[String], linkedinProfile: play.api.libs.json.JsValue)(implicit messages: Messages)
+@(headerData: HeaderData, linkedinErrorMessage: Option[String], linkedinProfile: play.api.libs.json.JsValue)(implicit messages: Messages)
 
 @main("Cruited", "dashboard") {
 <!--
     Header
 -->
-@header("dashboard")
+@header(headerData, "dashboard")
 
 } {
 <!--
     Content
 -->
-<h1>Your Dashboard</h1>
-@if(linkedinErrorMessage.isDefined) {
-<span>@linkedinErrorMessage.get</span>
-}
-<p>@linkedinProfile.toString</p>
+<h1>Dashboard</h1>
 } {
 <!--
     Javascript
 -->
-
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        CR.Controllers.Dashboard();
+    });
+</script>
 }
