@@ -105,23 +105,14 @@ footer.content-info {
     }
   }
 
-  // Newsletter widget
-  .widget_mc4wp_widget > h3 {
-    color: $grey-text-color;
+  // Contact widget
+  .widget.text-4 > .textwidget {
+    > div:first-child {
+      margin-bottom: $content-element-margin-bottom;
 
-    margin-top: 0.5em;
-  }
-
-  @include large-screen {
-    .widget_mc4wp_widget {
-      > h3 {
-        font-size: 15px;
+      > p {
+        margin-bottom: 0;
       }
-    }
-
-    .mc4wp-form {
-      display: inline-block;
-      vertical-align: top;
     }
   }
 }
