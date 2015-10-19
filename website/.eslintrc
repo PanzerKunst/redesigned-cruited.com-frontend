@@ -109,3 +109,7 @@ globals:
     TweenLite: true
     Power4: true
     Breakpoints: true
+    React: true
+
+ecmaFeatures:
+    jsx: true

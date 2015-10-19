@@ -66,6 +66,11 @@
                 "./src/p.js"
             ]
         },
+        "lodash": {
+            "main": [
+                "./lodash.min.js"
+            ]
+        },
         "react": {
             "main": [
                 "./react-with-addons.min.js"

@@ -3,37 +3,41 @@ package db
 import java.util.Date
 
 import anorm._
-import models.{Account, LinkedinBasicProfile}
+import models.Account
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsValue, Json}
 
 object AccountDto {
-  def create(emailAddress: String, password: Option[String], linkedinBasicProfile: Option[LinkedinBasicProfile]): Option[Long] = {
+  def create(emailAddress: String, password: Option[String], linkedinBasicProfile: Option[JsValue]): Option[Long] = {
     DB.withConnection { implicit c =>
       val passwordClause = password match {
         case None => "NULL"
         case Some(pass) => "'" + DbUtil.safetize(pass) + "'"
       }
 
-      val linkedinAccountIdClause = password match {
+      val linkedinAccountIdClause = linkedinBasicProfile match {
         case None => "NULL"
-        case Some(pass) => "'" + DbUtil.safetize(pass) + "'"
+        case Some(basicProfile) =>
+          val linkedinAccountId = (basicProfile \ "id").as[String]
+          "'" + DbUtil.safetize(linkedinAccountId) + "'"
       }
 
       val linkedinBasicProfileClause = linkedinBasicProfile match {
         case None => "NULL"
-        case Some(basicProfile) => "'" + Json.toJson(basicProfile) + "'"
+        case Some(basicProfile) => "'" + basicProfile.toString + "'"
       }
 
       val query = """
-      insert into useri(email, pass, linkedin_id, linkedin_basic_profile_fields, registered_at)
+      insert into useri(email, pass, linkedin_id, linkedin_basic_profile_fields, registered_at, /* useful fields */
+        code, img, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(emailAddress) + """', """ +
         passwordClause + """, """ +
         linkedinAccountIdClause + """, """ +
-        linkedinBasicProfileClause + """, """ +
-        new Date() + """);"""
+        linkedinBasicProfileClause + """,
+        now(),
+        '', '', 0, '', '', '', now(), now(), 0, 0);"""
 
       Logger.info("AccountDto.create():" + query)
 
@@ -55,12 +59,7 @@ object AccountDto {
         case Some(row) =>
           val linkedinBasicProfileOpt = row[Option[String]]("linkedin_basic_profile_fields") match {
             case None => None
-            case Some(json) => Some(
-              Json.toJson(json).validate[LinkedinBasicProfile] match {
-                case e: JsError => throw new Exception("Validation of LinkedinBasicProfile failed")
-                case s: JsSuccess[LinkedinBasicProfile] => s.get
-              }
-            )
+            case Some(jsonString) => Some(Json.toJson(jsonString))
           }
 
           Some(
@@ -91,12 +90,7 @@ object AccountDto {
         case Some(row) =>
           val linkedinBasicProfileOpt = row[Option[String]]("linkedin_basic_profile_fields") match {
             case None => None
-            case Some(json) => Some(
-              Json.toJson(json).validate[LinkedinBasicProfile] match {
-                case e: JsError => throw new Exception("Validation of LinkedinBasicProfile failed")
-                case s: JsSuccess[LinkedinBasicProfile] => s.get
-              }
-            )
+            case Some(jsonString) => Some(Json.toJson(jsonString))
           }
 
           Some(

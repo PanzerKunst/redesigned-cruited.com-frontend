@@ -2,10 +2,9 @@ package controllers.api
 
 import javax.inject.{Inject, Singleton}
 
-import models.LinkedinBasicProfile
 import play.api.Play
 import play.api.Play.current
-import play.api.libs.json.{JsError, JsSuccess, JsValue}
+import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
 import play.api.mvc.Controller
 import services.ConfigHelper
@@ -59,7 +58,7 @@ class LinkedinApi @Inject()(val ws: WSClient) extends Controller {
     }
   }
 
-  def getProfile: LinkedinBasicProfile = {
+  def getProfile: JsValue = {
     accessToken match {
       case None => throw new Exception("Cannot get profile without access token first")
       case Some(token) =>
@@ -75,11 +74,12 @@ class LinkedinApi @Inject()(val ws: WSClient) extends Controller {
 
         profileResult match {
           case Failure(e) => throw e
-          case Success(profileJson) => profileJson.validate[LinkedinBasicProfile] match {
-            case e: JsError => throw new Exception(JsError.toJson(e).toString())
-            case s: JsSuccess[LinkedinBasicProfile] => s.get
-          }
+          case Success(profileJson) => profileJson
         }
     }
+  }
+
+  def invalidateAccessToken() {
+    accessToken = None
   }
 }

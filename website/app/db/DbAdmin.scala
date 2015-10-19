@@ -75,6 +75,8 @@ object DbAdmin {
 
         SQL("insert into product_price(product_id, amount, currency_code) values(1, 299, 'SEK');").execute()
         SQL("insert into product_price(product_id, amount, currency_code) values(1, 39, 'USD');").execute()
+        SQL("insert into product_price(product_id, amount, currency_code) values(2, 299, 'SEK');").execute()
+        SQL("insert into product_price(product_id, amount, currency_code) values(2, 39, 'USD');").execute()
     }
   }
 }

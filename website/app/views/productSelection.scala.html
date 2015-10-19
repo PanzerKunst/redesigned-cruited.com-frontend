@@ -1,4 +1,4 @@
-@(headerData: HeaderData)(implicit messages: Messages)
+@(headerData: HeaderData, products: List[CruitedProduct])(implicit messages: Messages)
 
 @main("Cruited", "product-selection") {
 <!--
@@ -8,16 +8,11 @@
 
 } {
 <!--
-    Content
--->
-<h1>Product selection</h1>
-} {
-<!--
     Javascript
 -->
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
-        CR.Controllers.ProductSelection();
+        CR.Controllers.ProductSelection(@Html(play.api.libs.json.Json.toJson(products).toString));
     });
 </script>
 }

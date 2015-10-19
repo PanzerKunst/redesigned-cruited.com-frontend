@@ -1,4 +1,4 @@
-@(title: String, pageId: String)(header: Html)(content: Html)(javascript: Html)
+@(title: String, pageId: String)(header: Html)(javascript: Html)
 
 <!DOCTYPE html>
 
@@ -24,13 +24,12 @@
     <div id="container">
         <header>@header</header>
         <div role="main">
-            <div id="content">@content</div>
+            <div id="content"></div>
         </div>
         <footer></footer>
     </div>
 
     <!-- Javascripts -->
-    <script src="@routes.Assets.at("scripts/vendor.js")"></script>
     <script src="@routes.Assets.at("scripts/main.js")"></script>
 
     <script type="text/javascript">
