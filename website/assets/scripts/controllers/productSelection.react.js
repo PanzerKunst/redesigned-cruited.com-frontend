@@ -12,7 +12,7 @@ CR.Controllers.ProductSelection = P(function(c) {
         }
     });
 
-    c.init = function(products) {
+    c.init = function(i18nMessages, products) {
         this.products = products;
 
         this.reactInstance = React.render(

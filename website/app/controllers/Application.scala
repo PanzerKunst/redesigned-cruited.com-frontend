@@ -3,8 +3,9 @@ package controllers
 import javax.inject.Inject
 
 import controllers.api.LinkedinApi
-import db.{ProductDto, AccountDto}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import db.{AccountDto, ProductDto}
+import play.api.Play.current
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.JsNull
 import play.api.mvc._
 
@@ -17,12 +18,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinApi: Linke
     if (headerData.isSignedIn) {
       Ok(views.html.dashboard(headerData, None, JsNull))
     } else {
-      Ok(views.html.productSelection(headerData, ProductDto.all))
+      Ok(views.html.productSelection(getI18nMessages(request), headerData, ProductDto.all))
     }
   }
 
   def productSelection = Action { request =>
-    Ok(views.html.productSelection(getHeaderData(request.session), ProductDto.all))
+    Ok(views.html.productSelection(getI18nMessages(request), getHeaderData(request.session), ProductDto.all))
   }
 
   def linkedinCallback = Action { request =>
@@ -68,5 +69,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinApi: Linke
 
   private def getHeaderData(session: Session): HeaderData = {
     HeaderData(isSignedIn(session), linkedinApi.linkedinAuthCodeRequestUrl)
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 }

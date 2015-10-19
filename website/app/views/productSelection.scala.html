@@ -1,4 +1,4 @@
-@(headerData: HeaderData, products: List[CruitedProduct])(implicit messages: Messages)
+@(i18nMessages: Map[String, String], headerData: HeaderData, products: List[CruitedProduct])
 
 @main("Cruited", "product-selection") {
 <!--
@@ -11,8 +11,11 @@
     Javascript
 -->
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function () {
-        CR.Controllers.ProductSelection(@Html(play.api.libs.json.Json.toJson(products).toString));
+    document.addEventListener("DOMContentLoaded", function() {
+        CR.Controllers.ProductSelection(
+            @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
+            @Html(play.api.libs.json.Json.toJson(products).toString)
+        );
     });
 </script>
 }

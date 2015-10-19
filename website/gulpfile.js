@@ -92,8 +92,8 @@ gulp.task("fonts", function() {
 });
 
 // ### Icon fonts
-// `gulp iconFonts`
-gulp.task("iconFonts", function() {
+// `gulp fontAwesomeFonts`
+gulp.task("fontAwesomeFonts", function() {
     return gulp.src("bower_components/font-awesome/fonts/*")
         .pipe(gulp.dest(fontDistDir));
 });
@@ -155,7 +155,7 @@ gulp.task("build", function(callback) {
     runSequence("styles",
         "scripts",
         "cleanSrcScriptsDistFile",
-        ["fonts", "iconFonts", "images"],
+        ["fonts", "fontAwesomeFonts", "images"],
         callback);
 });
 
