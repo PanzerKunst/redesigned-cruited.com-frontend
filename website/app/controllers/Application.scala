@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import controllers.api.LinkedinApi
-import db.{AccountDto, ProductDto}
+import db.{ReductionDto, AccountDto, CruitedProductDto}
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.JsNull
@@ -18,12 +18,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinApi: Linke
     if (headerData.isSignedIn) {
       Ok(views.html.dashboard(headerData, None, JsNull))
     } else {
-      Ok(views.html.productSelection(getI18nMessages(request), headerData, ProductDto.all))
+      Ok(views.html.productSelection(getI18nMessages(request), headerData, CruitedProductDto.all, ReductionDto.all))
     }
   }
 
   def productSelection = Action { request =>
-    Ok(views.html.productSelection(getI18nMessages(request), getHeaderData(request.session), ProductDto.all))
+    Ok(views.html.productSelection(getI18nMessages(request), getHeaderData(request.session), CruitedProductDto.all, ReductionDto.all))
   }
 
   def linkedinCallback = Action { request =>

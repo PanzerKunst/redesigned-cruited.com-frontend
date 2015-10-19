@@ -1,4 +1,4 @@
-@(headerData: HeaderData, pageId: String)
+@(headerData: HeaderData, pageId: String)(implicit messages: Messages)
 
 <div id="small-medium-screen-menu">
     <div>
@@ -10,15 +10,15 @@
 
     <nav role="navigation">
         <div>
-            <ul class="links-to-wp-site">
+            <!-- TODO ul class="links-to-wp-site">
                 <li><a href="https://cruited.com/vara-tjanster/">Våra tjänster</a></li>
                 <li><a href="https://cruited.com/var-metod/">Vår metod</a></li>
                 <li><a href="https://cruited.com/om-cruited/">Om Cruited</a></li>
-            </ul>
+            </ul -->
 
             <div class="other-nav-ux">
                 @if(!headerData.isSignedIn) {
-                <a href="@headerData.linkedinAuthCodeRequestUrl">Logga in</a>
+                <a href="@headerData.linkedinAuthCodeRequestUrl">@Messages("signIn")</a>
                 }
             </div>
         </div>

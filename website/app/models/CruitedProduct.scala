@@ -5,12 +5,12 @@ import play.api.libs.json.{JsPath, Writes}
 
 case class CruitedProduct(id: Long,
                           code: String,
-                          prices: List[ProductPrice])
+                          price: Price)
 
 object CruitedProduct {
   implicit val writes: Writes[CruitedProduct] = (
     (JsPath \ "id").write[Long] and
       (JsPath \ "code").write[String] and
-      (JsPath \ "prices").write[List[ProductPrice]]
+      (JsPath \ "price").write[Price]
     )(unlift(CruitedProduct.unapply))
 }

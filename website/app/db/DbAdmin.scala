@@ -7,11 +7,11 @@ import play.api.db.DB
 
 object DbAdmin {
   def reCreateTables() {
-    dropTable("product_price")
+    dropTable("reduction")
     dropTable("product")
 
     createTableProduct()
-    createTableProductPrice()
+    createTableReduction()
   }
 
   private def createTableProduct() {
@@ -20,6 +20,8 @@ object DbAdmin {
           create table product (
             id serial,
             code varchar(32) not null,
+            price_amount decimal(5,2) not null,
+            price_currency_code varchar(3) not null,
             primary key(id)
           ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
 
@@ -29,18 +31,18 @@ object DbAdmin {
     }
   }
 
-  private def createTableProductPrice() {
+  private def createTableReduction() {
     DB.withConnection { implicit c =>
       val query = """
-          create table product_price (
+          create table reduction (
             id serial,
-            product_id bigint unsigned not null,
-            amount decimal(5,2) not null,
-            currency_code varchar(3) not null,
-            foreign key (product_id) references product(id)
+            code varchar(32) not null,
+            reduction_amount decimal(5,2) not null,
+            reduction_currency_code varchar(3) not null,
+            primary key(id)
           ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
 
-      Logger.info("DbAdmin.createTableProductPrice():" + query)
+      Logger.info("DbAdmin.createTableReduction():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -56,27 +58,21 @@ object DbAdmin {
 
   def initData() {
     initDataProduct()
-    initDataProductPrice()
+    initDataReduction()
   }
 
   private def initDataProduct() {
-    DB.withConnection {
-      implicit c =>
-
-        SQL("insert into product(code) values('CV_REVIEW');").execute()
-        SQL("insert into product(code) values('COVER_LETTER_REVIEW');").execute()
-        SQL("insert into product(code) values('LINKEDIN_PROFILE_REVIEW');").execute()
+    DB.withConnection { implicit c =>
+        SQL("insert into product(code, price_amount, price_currency_code) values('CV_REVIEW', 299, 'SEK');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('COVER_LETTER_REVIEW', 299, 'SEK');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('LINKEDIN_PROFILE_REVIEW', 299, 'SEK');").execute()
     }
   }
 
-  private def initDataProductPrice() {
-    DB.withConnection {
-      implicit c =>
-
-        SQL("insert into product_price(product_id, amount, currency_code) values(1, 299, 'SEK');").execute()
-        SQL("insert into product_price(product_id, amount, currency_code) values(1, 39, 'USD');").execute()
-        SQL("insert into product_price(product_id, amount, currency_code) values(2, 299, 'SEK');").execute()
-        SQL("insert into product_price(product_id, amount, currency_code) values(2, 39, 'USD');").execute()
+  private def initDataReduction() {
+    DB.withConnection { implicit c =>
+        SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, 'SEK');").execute()
+        SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, 'SEK');").execute()
     }
   }
 }
