@@ -35,6 +35,10 @@
     }
   }
 
+  a {
+    display: inline;
+  }
+
   > article.well {
     background-color: $lighter-grey;
     border: 0;
