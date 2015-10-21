@@ -8,5 +8,9 @@ CR.Services = {};
 CR.Models = {};
 
 CR.defaultAnimationDuration = 0.5;
+CR.localStorageKeys = {
+    cart: "cart"
+};
+
 
 // Global functions

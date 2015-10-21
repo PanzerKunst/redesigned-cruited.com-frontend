@@ -13,12 +13,10 @@
         <title>@title</title>
 
         <!-- Stylesheets -->
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("styles/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("styles/main.css")">
 
         <!-- TODO Favicon
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")"> -->
-
-        <!-- Fonts -->
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")"> -->
     </head>
     <body id="@pageId">
     <div id="container">
@@ -30,7 +28,7 @@
     </div>
 
     <!-- Javascripts -->
-    <script src="@routes.Assets.at("scripts/main.js")"></script>
+    <script src="@routes.Assets.versioned("scripts/main.js")"></script>
 
     <script type="text/javascript">
         CR.Services.Browser.addUserAgentAttributeToHtmlTag();

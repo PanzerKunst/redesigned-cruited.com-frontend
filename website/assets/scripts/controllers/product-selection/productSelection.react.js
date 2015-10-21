@@ -1,6 +1,5 @@
 "use strict";
 
-// TODO: move to "product-selection" package
 CR.Controllers.ProductSelection = P(function(c) {
     c.$el = $(document.getElementById("content"));
 
@@ -29,9 +28,6 @@ CR.Controllers.ProductSelection = P(function(c) {
                             <h2>{this.state.i18nMessages["productSelection.productsSection.title"]}</h2>
                             <ul className="styleless">
                             {this.state.products.map(function(item, index) {
-                                // TODO: remove
-                                console.log("item", item);
-
                                 var reactItemId = "product-" + index;
 
                                 return <CR.Controllers.ProductListItem key={reactItemId} product={item} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
@@ -47,7 +43,9 @@ CR.Controllers.ProductSelection = P(function(c) {
     c.init = function(i18nMessages, products, reductions) {
         this.i18nMessages = i18nMessages;
         this.products = products;
-        this.reductions = reductions;
+
+        CR.reductions = reductions;
+        CR.cart = CR.Models.Cart(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart));
 
         this.reactInstance = React.render(
             React.createElement(this.reactClass),
@@ -61,41 +59,35 @@ CR.Controllers.ProductSelection = P(function(c) {
         this.reactInstance.replaceState({
             i18nMessages: this.i18nMessages,
             products: this._getProductsWithReductions(),
-            reductions: this.reductions,
             controller: this
         });
     };
 
     c._getProductsWithReductions = function() {
-        var productsWithReductions = _.cloneDeep(this.products);
+        var productsWithReductions = this._initProductsWithReductions();
+        var cartProducts = CR.cart.getProducts();
+
+        for (var i = 0; i < productsWithReductions.length; i++) {
+            var sameProductInCart = _.find(cartProducts, function(cartProduct) {
+                return productsWithReductions[i].id === cartProduct.id;
+            });
+
+            if (sameProductInCart) {
+                productsWithReductions[i] = _.cloneDeep(sameProductInCart);
+            }
+        }
+
+        return productsWithReductions;
+    };
+
+    c._initProductsWithReductions = function() {
+        var productsWithReductions = this.products ? _.cloneDeep(this.products) : [];
 
         productsWithReductions.forEach(function(product) {
-            product.currentPrice = product.price;
+            product.defaultPrice = product.price;
+            product.currentPrice = product.defaultPrice;
+            delete product.price;
         });
-
-        var reductionAmountFor2ProductsSameOrder = _.find(this.reductions, function(reduction) {
-            return reduction.code === CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER;
-        }).price.amount;
-
-        var reductionAmountFor3ProductsSameOrder = _.find(this.reductions, function(reduction) {
-            return reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER;
-        }).price.amount;
-
-        if (CR.Cart.products.length === 2) {
-            productsWithReductions[1].currentPrice = {
-                amount: productsWithReductions[1].price.amount - reductionAmountFor2ProductsSameOrder,
-                currencyCode: productsWithReductions[1].price.currencyCode
-            };
-        } else if (CR.Cart.products.length === 3) {
-            productsWithReductions[1].currentPrice = {
-                amount: productsWithReductions[1].price.amount - reductionAmountFor3ProductsSameOrder / 2,
-                currencyCode: productsWithReductions[1].price.currencyCode
-            };
-            productsWithReductions[2].currentPrice = {
-                amount: productsWithReductions[2].price.amount - reductionAmountFor3ProductsSameOrder / 2,
-                currencyCode: productsWithReductions[2].price.currencyCode
-            };
-        }
 
         return productsWithReductions;
     };

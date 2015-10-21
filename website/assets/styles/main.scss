@@ -4,6 +4,7 @@
 @import "../../bower_components/bourbon/app/assets/stylesheets/_bourbon.scss";
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
 @import "../../bower_components/js-breakpoints/breakpoints.scss";
+@import "../../bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
 // endbower
 
 // Utils
@@ -12,6 +13,7 @@
 
 // Vendor overrides
 @import "vendor-overrides/_bootstrap";
+@import "vendor-overrides/_awesomeBootstrapCheckbox";
 
 // Global
 @import "common/_global";

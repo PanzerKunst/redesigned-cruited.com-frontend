@@ -1,0 +1,11 @@
+.checkbox label::before {
+  margin-top: 3px;
+
+  @include medium-screen {
+    margin-top: 7px;
+  }
+
+  @include large-screen {
+    margin-top: 12px;
+  }
+}
