@@ -10,11 +10,11 @@ blockquote {
 
   &.primary {
     font-size: 1.2em;
-    color: $grey-text-color;
+    color: $grey;
     background-color: $lighter-grey;
 
     > footer {
-      color: transparentize($grey-text-color, 0.2);
+      color: transparentize($grey, 0.2);
     }
 
     &:before,
@@ -56,7 +56,7 @@ blockquote {
   }
 
   &.secondary {
-    color: $darker-grey-text-color;
+    color: $darker-grey;
 
     padding: 1em 1em 2.2em 1em;
 
@@ -74,7 +74,7 @@ blockquote {
   font-family: "Signika", sans-serif;
   font-weight: bold;
 
-  color: $grey-text-color;
+  color: $grey;
 
   &:hover,
   &:focus {

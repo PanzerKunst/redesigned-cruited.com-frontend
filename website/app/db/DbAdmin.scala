@@ -7,11 +7,13 @@ import play.api.db.DB
 
 object DbAdmin {
   def reCreateTables() {
+    dropTable("product_edition")
     dropTable("reduction")
     dropTable("product")
 
     createTableProduct()
     createTableReduction()
+    createTableProductEdition()
   }
 
   private def createTableProduct() {
@@ -48,6 +50,21 @@ object DbAdmin {
     }
   }
 
+  private def createTableProductEdition() {
+    DB.withConnection { implicit c =>
+      val query = """
+          create table product_edition (
+            id serial,
+            code varchar(32) not null,
+            primary key(id)
+          ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
+
+      Logger.info("DbAdmin.createTableProductEdition():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
   private def dropTable(tableName: String) {
     DB.withConnection { implicit c =>
       val query = "drop table if exists " + tableName + ";"
@@ -59,6 +76,7 @@ object DbAdmin {
   def initData() {
     initDataProduct()
     initDataReduction()
+    initDataProductEdition()
   }
 
   private def initDataProduct() {
@@ -73,6 +91,14 @@ object DbAdmin {
     DB.withConnection { implicit c =>
         SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, 'SEK');").execute()
         SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, 'SEK');").execute()
+    }
+  }
+
+  private def initDataProductEdition() {
+    DB.withConnection { implicit c =>
+      SQL("insert into product_edition(code) values('PRO');").execute()
+      SQL("insert into product_edition(code) values('YOUNG_PRO');").execute()
+      SQL("insert into product_edition(code) values('EXEC');").execute()
     }
   }
 }

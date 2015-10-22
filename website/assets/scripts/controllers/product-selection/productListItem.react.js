@@ -4,15 +4,27 @@ CR.Controllers.ProductListItem = React.createClass({
     render: function() {
         var checkboxId = "product-" + this.props.product.id;
 
+        var priceWrapperClasses = classNames({
+            "with-reduced-price": this.props.product.reducedPrice !== undefined
+        });
+
+        var reducedPriceParagraph = null;
+
+        if (this.props.product.reducedPrice) {
+            reducedPriceParagraph = (
+                <p className="reduced-price">{this.props.product.reducedPrice.currencyCode} {this.props.product.reducedPrice.amount}</p>
+                );
+        }
+
         return (
             <li ref="li">
                 <div className="checkbox checkbox-success">
-                    <input type="checkbox" id={checkboxId} onChange={this._handleProductToggle} checked={this._isInCart()} />
+                    <input type="checkbox" id={checkboxId} checked={this._isInCart()} onChange={this._handleProductToggle} />
                     <label htmlFor={checkboxId}>{this.props.i18nMessages["productSelection.productsSection.productName." + this.props.product.code]}</label>
                 </div>
-                <div>
-                    <div className="default-price">{this.props.product.defaultPrice.currencyCode} {this.props.product.defaultPrice.amount}</div>
-                    <div className="current-price">{this.props.product.currentPrice.currencyCode} {this.props.product.currentPrice.amount}</div>
+                <div className={priceWrapperClasses}>
+                    <p className="price">{this.props.product.price.currencyCode} {this.props.product.price.amount}</p>
+                    {reducedPriceParagraph}
                 </div>
             </li>
             );

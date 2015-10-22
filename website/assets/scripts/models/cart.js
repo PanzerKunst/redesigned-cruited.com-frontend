@@ -3,6 +3,8 @@
 CR.Models.Cart = P(function(c) {
     c.init = function(cart) {
         this._products = cart ? _.cloneDeep(cart.products) : [];
+        this._reductions = cart ? _.cloneDeep(cart.reductions) : [];
+        this._edition = cart ? _.cloneDeep(cart.edition) : null;
     };
 
     c.getProducts = function() {
@@ -17,7 +19,7 @@ CR.Models.Cart = P(function(c) {
         if (!foundProduct) {
             this._products.push(product);
             this._calculateReductions();
-            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.cart, {products: this._products});
+            this._saveCartInLocalStorage();
         }
     };
 
@@ -34,8 +36,21 @@ CR.Models.Cart = P(function(c) {
         if (!_.isNull(productIndex)) {
             this._products.splice(productIndex, 1);
             this._calculateReductions();
-            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.cart, {products: this._products});
+            this._saveCartInLocalStorage();
         }
+    };
+
+    c.getReductions = function() {
+        return this._reductions;
+    };
+
+    c.getEdition = function() {
+        return this._edition;
+    };
+
+    c.setEdition = function(edition) {
+        this._edition = edition;
+        this._saveCartInLocalStorage();
     };
 
     c._calculateReductions = function() {
@@ -49,17 +64,48 @@ CR.Models.Cart = P(function(c) {
             return reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER;
         });
 
+        this._reductions = [];
+
         if (this._products.length === 2 && reductionFor2ProductsSameOrder) {
-            this._products[1].currentPrice.amount = this._products[1].defaultPrice.amount - reductionFor2ProductsSameOrder.price.amount;
-        } else if (this._products.length === 3 && reductionFor3ProductsSameOrder) {
-            this._products[1].currentPrice.amount = this._products[1].defaultPrice.amount - reductionFor3ProductsSameOrder.price.amount / 2;
-            this._products[2].currentPrice.amount = this._products[2].defaultPrice.amount - reductionFor3ProductsSameOrder.price.amount / 2;
+            this._products[1].reducedPrice = {
+                amount: this._products[1].price.amount - reductionFor2ProductsSameOrder.price.amount,
+                currencyCode: this._products[1].price.currencyCode
+            };
+
+            this._addReduction(reductionFor2ProductsSameOrder);
+        } else if (this._products.length === 3 && reductionFor2ProductsSameOrder && reductionFor3ProductsSameOrder) {
+            this._products[1].reducedPrice = {
+                amount: this._products[1].price.amount - reductionFor2ProductsSameOrder.price.amount,
+                currencyCode: this._products[1].price.currencyCode
+            };
+
+            this._products[2].reducedPrice = {
+                amount: this._products[2].price.amount - (reductionFor3ProductsSameOrder.price.amount - reductionFor2ProductsSameOrder.price.amount),
+                currencyCode: this._products[2].price.currencyCode
+            };
+
+            this._addReduction(reductionFor3ProductsSameOrder);
         }
     };
 
+    c._addReduction = function(reduction) {
+        this._reductions.push(reduction);
+    };
+
     c._resetReductions = function() {
-        this._products.forEach(function(product) {
-            product.currentPrice = _.cloneDeep(product.defaultPrice);
+        for (var i = 0; i < this._products.length; i++) {
+            delete this._products[i].reducedPrice;
+        }
+    };
+
+    c._saveCartInLocalStorage = function() {
+        CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.cart, {
+            products: this._products,
+            reductions: this._reductions,
+            edition: this._edition
         });
+
+        // TODO: remove
+        console.log("Cart saved", CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart));
     };
 });

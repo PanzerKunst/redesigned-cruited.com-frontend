@@ -1,6 +1,6 @@
 @(headerData: HeaderData, pageId: String)(implicit messages: Messages)
 
-<div id="small-medium-screen-menu">
+<div id="small-medium-screen-menu" class="container">
     <div>
         <div>
             <a class="brand" href="/">Cruited</a>
@@ -23,4 +23,26 @@
             </div>
         </div>
     </nav>
+</div>
+
+<div id="large-screen-menu" class="container">
+    <div>
+        <a class="brand" href="/">Cruited</a>
+
+        <nav role="navigation">
+            <div>
+                <!-- TODO ul class="links-to-wp-site">
+                    <li><a href="https://cruited.com/vara-tjanster/">Våra tjänster</a></li>
+                    <li><a href="https://cruited.com/var-metod/">Vår metod</a></li>
+                    <li><a href="https://cruited.com/om-cruited/">Om Cruited</a></li>
+                </ul -->
+
+                <div class="other-nav-ux">
+                    @if(!headerData.isSignedIn) {
+                    <a href="@headerData.linkedinAuthCodeRequestUrl">@Messages("signIn")</a>
+                    }
+                </div>
+            </div>
+        </nav>
+    </div>
 </div>

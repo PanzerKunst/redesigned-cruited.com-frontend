@@ -7,7 +7,7 @@
   @include transition(background-color $default-animation-duration ease);
 }
 
-.banner {
+#container > header {
   $header-side-padding: 8px;
 
   position: fixed;
@@ -21,7 +21,7 @@
     font-size: #{$font-size-base-px}px;
 
     a {
-      color: $background-body-color;
+      color: white;
 
       @include text-shadow;
       &.btn {
@@ -54,7 +54,7 @@
         &:active,
         &:focus,
         &:hover {
-          color: $background-body-color;
+          color: white;
           background-color: darken($primary-btn-color, 15%);
           border-color: darken($primary-btn-color, 25%);
         }
@@ -70,7 +70,7 @@
   &.menu-open {
     > .container {
       a {
-        color: $dark-grey-text-color;
+        color: $dark-grey;
         text-shadow: none;
       }
     }
@@ -102,7 +102,7 @@
     > nav {
       display: none;
 
-      background-color: $background-body-color;
+      background-color: white;
       @include header-box-shadow;
     }
 
@@ -119,7 +119,7 @@
       width: 120px;
       height: 40px;
 
-      color: $background-body-color;
+      color: white;
       font-weight: bold;
       text-transform: uppercase;
 
@@ -147,7 +147,7 @@
   &.scrolled-down,
   &.menu-open {
     > #small-medium-screen-menu > div {
-      background-color: $background-body-color;
+      background-color: white;
     }
 
     button {
@@ -159,7 +159,7 @@
         background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
       }
 
-      color: $grey-text-color;
+      color: $grey;
 
       &::before {
         text-shadow: none;
@@ -258,17 +258,19 @@
 
     &.scrolled-down {
       > #large-screen-menu {
-        background-color: $background-body-color;
+        background-color: white;
         @include header-box-shadow;
       }
     }
   }
 }
 
-.banner,
-.banner.menu-open,
-.banner.scrolled-down {
-  .current-menu-item > a {
-    color: $primary-btn-color;
+#container {
+  > header,
+  > header.menu-open,
+  > header.scrolled-down {
+    .current-menu-item > a {
+      color: $primary-btn-color;
+    }
   }
 }

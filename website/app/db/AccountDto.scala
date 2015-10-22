@@ -81,7 +81,8 @@ object AccountDto {
       val query = """
         select id, email, linkedin_basic_profile_fields, registered_at
         from useri
-        where linkedin_id = '""" + linkedInAccountId + """';"""
+        where linkedin_id = '""" + linkedInAccountId + """'
+        limit 1;"""
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
 

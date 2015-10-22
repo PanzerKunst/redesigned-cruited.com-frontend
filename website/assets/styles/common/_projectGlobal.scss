@@ -1,0 +1,54 @@
+[role=main] {
+  background-color: $lighter-grey;
+}
+
+#page-header-bar {
+  background-color: $dark-grey;
+  color: white;
+}
+
+.with-circles {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-image: url(../images/section-circles_263.png);
+  @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
+    background-image: url(../images/section-circles_526.png);
+    background-size: 263px 80px;
+  }
+
+  @include medium-screen {
+    background-image: url(../images/section-circles-large.png);
+  }
+
+  $section-padding-top: $spacer-unit-size * 6;
+  $section-padding-bottom: $spacer-unit-size * 2.5;
+
+  padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+
+  @include medium-screen {
+    padding-top: $section-padding-top * $medium-screen-ratio-l;
+    padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+
+    width: $medium-content-width;
+
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
+  }
+
+  @include large-screen {
+    width: $large-content-width;
+  }
+}
+
+button.styleless.fa {
+  margin-top: -0.5em;
+
+  padding: 0.93em 1.04em;
+  @include medium-screen {
+    padding: 0.8em 0.9em;
+  }
+  @include large-screen {
+    padding: 0.5em 0.6em;
+  }
+}

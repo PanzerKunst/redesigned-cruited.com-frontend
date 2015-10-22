@@ -11,7 +11,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
     c._initElements = function() {
         this.$window = $(window);
 
-        this.$siteHeader = $(".banner");
+        this.$siteHeader = $("#container").children("header");
         this.$menuBtn = this.$siteHeader.find("button");
         this.$smallAndMediumScreenNav = this.$siteHeader.children("#small-medium-screen-menu").children("nav");
 

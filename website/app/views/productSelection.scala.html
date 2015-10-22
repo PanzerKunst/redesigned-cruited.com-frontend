@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], headerData: HeaderData, products: List[CruitedProduct], reductions: List[Reduction])(implicit messages: Messages)
+@(i18nMessages: Map[String, String], headerData: HeaderData, products: List[CruitedProduct], reductions: List[Reduction], editions: List[Edition])(implicit messages: Messages)
 
 @main("Cruited", "product-selection") {
 <!--
@@ -15,7 +15,8 @@
         CR.Controllers.ProductSelection(
             @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
             @Html(play.api.libs.json.Json.toJson(products).toString),
-            @Html(play.api.libs.json.Json.toJson(reductions).toString)
+            @Html(play.api.libs.json.Json.toJson(reductions).toString),
+            @Html(play.api.libs.json.Json.toJson(editions).toString)
         );
     });
 </script>

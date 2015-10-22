@@ -6,3 +6,4 @@
 /website/bower_components
 /website/conf/application.conf
 /website/public
+*.log

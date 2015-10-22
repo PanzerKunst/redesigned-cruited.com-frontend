@@ -110,6 +110,7 @@ globals:
     Power4: true
     Breakpoints: true
     React: true
+    classNames: true
 
 ecmaFeatures:
     jsx: true

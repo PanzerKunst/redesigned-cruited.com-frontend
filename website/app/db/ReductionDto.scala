@@ -7,14 +7,13 @@ import play.api.Play.current
 import play.api.db.DB
 
 object ReductionDto {
-  val all = getAll
-
-  private def getAll: List[Reduction] = {
+  def getAll: List[Reduction] = {
     DB.withConnection { implicit c =>
       val query = """
         select id, code, reduction_amount
         from reduction
-        where reduction_currency_code = 'SEK';"""
+        where reduction_currency_code = 'SEK'
+        order by id;"""
 
       Logger.info("ReductionDto.getAll():" + query)
 

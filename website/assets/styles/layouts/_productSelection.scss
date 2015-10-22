@@ -1,5 +1,53 @@
 #product-selection {
-  .default-price {
-    // TODO display: none;
+  .reduced-price {
+    display: none;
+  }
+
+  .with-reduced-price {
+    > .price {
+      color: $brand-danger;
+      text-decoration: line-through;
+    }
+
+    > .reduced-price {
+      display: block;
+    }
+  }
+
+  #products-section,
+  #edition-selection {
+    li {
+      background-color: white;
+
+      border-width: 0.1em;
+      border-color: $well-border-color;
+      border-radius: 0.3em;
+
+      display: flex;
+      justify-content: space-around;
+
+      margin-bottom: 1em;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #products-section li {
+    border-style: dashed;
+  }
+
+  #edition-selection li {
+    border-style: solid;
+  }
+
+  #cart-section {
+    p {
+      margin-bottom: 0;
+    }
   }
 }

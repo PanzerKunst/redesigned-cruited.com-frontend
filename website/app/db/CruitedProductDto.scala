@@ -14,7 +14,8 @@ object CruitedProductDto {
       val query = """
         select id, code, price_amount
         from product
-        where price_currency_code = 'SEK';"""
+        where price_currency_code = 'SEK'
+        order by id;"""
 
       Logger.info("CruitedProductDto.getAll():" + query)
 

@@ -1,13 +1,14 @@
 "use strict";
 
 CR.Controllers.ProductSelection = P(function(c) {
-    c.$el = $(document.getElementById("content"));
+    c.$el = $("[role=main]");
 
     c.reactClass = React.createClass({
         getInitialState: function() {
             return {
                 i18nMessages: null,
                 products: [],
+                editions: [],
                 controller: null
             };
         },
@@ -17,15 +18,38 @@ CR.Controllers.ProductSelection = P(function(c) {
                 return null;
             }
 
+            var paragraphOfferTwoProductsSameOrder = null;
+            var paragraphOfferThreeProductsSameOrder = null;
+
+            if (CR.cart.getProducts().length === 2) {
+                var reductionPriceThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
+                if (reductionPriceThreeProductsSameOrder) {
+                    paragraphOfferThreeProductsSameOrder = (
+                        <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(this.state.i18nMessages["productSelection.productsSection.textOfferThreeProductsSameOrder"], "reductionPrice", reductionPriceThreeProductsSameOrder.price.amount + " " + reductionPriceThreeProductsSameOrder.price.currencyCode)}} />
+                        );
+                }
+            } else if (CR.cart.getProducts().length !== 3) {
+                var reductionPriceTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
+                if (reductionPriceTwoProductsSameOrder) {
+                    paragraphOfferTwoProductsSameOrder = (
+                        <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(this.state.i18nMessages["productSelection.productsSection.textOfferTwoProductsSameOrder"], "reductionPrice", reductionPriceTwoProductsSameOrder.price.amount + " " + reductionPriceTwoProductsSameOrder.price.currencyCode)}} />
+                        );
+                }
+            }
+
             return (
-                <div>
-                    <div className="page-header-bar">
+                <div id="content">
+                    <div id="page-header-bar">
                         <h1>{this.state.i18nMessages["productSelection.title"]}</h1>
                     </div>
-                    <div>
+                    <div className="with-circles">
                         <span>{this.state.i18nMessages["productSelection.subtitle"]}</span>
-                        <section>
+                        <section id="products-section">
                             <h2>{this.state.i18nMessages["productSelection.productsSection.title"]}</h2>
+
+                            {paragraphOfferTwoProductsSameOrder}
+                            {paragraphOfferThreeProductsSameOrder}
+
                             <ul className="styleless">
                             {this.state.products.map(function(item, index) {
                                 var reactItemId = "product-" + index;
@@ -34,15 +58,49 @@ CR.Controllers.ProductSelection = P(function(c) {
                             }.bind(this))}
                             </ul>
                         </section>
+                        <section>
+                            <h2>{this.state.i18nMessages["productSelection.editionsSection.title"]}</h2>
+
+                            <p>{this.state.i18nMessages["productSelection.editionsSection.subtitle"]}</p>
+
+                            <ul className="styleless">
+                            {this.state.editions.map(function(item, index) {
+                                var reactItemId = "edition-" + index;
+
+                                return <CR.Controllers.EditionListItem key={reactItemId} edition={item} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
+                            }.bind(this))}
+                            </ul>
+                        </section>
+                        <section id="cart-section">
+                            <h2>{this.state.i18nMessages["productSelection.cartSection.title"]}</h2>
+
+                            <div>
+                                <span>{this.state.i18nMessages["productSelection.cartSection.productsHeader.products"]}</span>
+                                <span>{this.state.i18nMessages["productSelection.cartSection.productsHeader.defaultPrice"]}</span>
+                            </div>
+
+                            <ul className="styleless">
+                            {CR.cart.getProducts().map(function(item, index) {
+                                var reactItemId = "cart-product-" + index;
+
+                                return <CR.Controllers.CartProductListItem key={reactItemId} product={item} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
+                            }.bind(this))}
+                            </ul>
+
+                            <div>
+
+                            </div>
+                        </section>
                     </div>
                 </div>
                 );
         }
     });
 
-    c.init = function(i18nMessages, products, reductions) {
+    c.init = function(i18nMessages, products, reductions, editions) {
         this.i18nMessages = i18nMessages;
         this.products = products;
+        this.editions = editions;
 
         CR.reductions = reductions;
         CR.cart = CR.Models.Cart(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart));
@@ -58,37 +116,26 @@ CR.Controllers.ProductSelection = P(function(c) {
     c.reRender = function() {
         this.reactInstance.replaceState({
             i18nMessages: this.i18nMessages,
-            products: this._getProductsWithReductions(),
+            products: this._getProducts(),
+            editions: this.editions,
             controller: this
         });
     };
 
-    c._getProductsWithReductions = function() {
-        var productsWithReductions = this._initProductsWithReductions();
+    c._getProducts = function() {
+        var products = this.products ? _.cloneDeep(this.products) : [];
         var cartProducts = CR.cart.getProducts();
 
-        for (var i = 0; i < productsWithReductions.length; i++) {
+        for (var i = 0; i < products.length; i++) {
             var sameProductInCart = _.find(cartProducts, function(cartProduct) {
-                return productsWithReductions[i].id === cartProduct.id;
+                return products[i].id === cartProduct.id;
             });
 
             if (sameProductInCart) {
-                productsWithReductions[i] = _.cloneDeep(sameProductInCart);
+                products[i] = _.cloneDeep(sameProductInCart);
             }
         }
 
-        return productsWithReductions;
-    };
-
-    c._initProductsWithReductions = function() {
-        var productsWithReductions = this.products ? _.cloneDeep(this.products) : [];
-
-        productsWithReductions.forEach(function(product) {
-            product.defaultPrice = product.price;
-            product.currentPrice = product.defaultPrice;
-            delete product.price;
-        });
-
-        return productsWithReductions;
+        return products;
     };
 });

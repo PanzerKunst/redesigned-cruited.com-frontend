@@ -8,15 +8,15 @@
 a.btn-default {
   @include styleless-btn;
 
-  color: $grey-text-color;
-  border: 2px solid $grey-text-color;
+  color: $grey;
+  border: 2px solid $grey;
 
   &:active,
   &:focus,
   &:hover {
     color: $background-body-color;
-    background-color: darken($grey-text-color, 15%);
-    border-color: darken($grey-text-color, 25%);
+    background-color: darken($grey, 15%);
+    border-color: darken($grey, 25%);
   }
 }
 

@@ -1,14 +1,15 @@
 $sprite-url: '../images/sprite';
 
-$action-color: rgb(38, 169, 224);  // #26A9E0
-$background-body-color: rgb(255, 255, 255);  // #FFF
+$action-color: rgb(28, 127, 168);  // #1C7FA8
+$lighter-grey: rgb(248, 249, 251); // #F8F9FB
+$background-body-color: $lighter-grey;
 $secondary-action-color: rgb(247, 155, 96); // #F79B60
 $primary-btn-color: rgb(84, 195, 143); // #54C38F
-$grey-text-color: rgb(85, 105, 126);  // #55697E
-$dark-grey-text-color: rgb(76, 83, 101);  // #4c5365
-$darker-grey-text-color: rgb(42, 68, 94); // #2A445E
+$grey: rgb(85, 105, 126);  // #55697E
+$dark-grey: rgb(76, 83, 101);  // #4c5365
+$darker-grey: rgb(42, 68, 94); // #2A445E
 $light-grey-blue: rgb(98, 143, 187);   // #628FBB
-$lighter-grey: rgb(246, 247, 248); // #F6F7F8
+$well-border-color: rgb(189, 205, 216); // #BDCDD8
 
 $line-height-project: 1.75em;
 
