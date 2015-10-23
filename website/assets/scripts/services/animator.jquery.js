@@ -37,10 +37,9 @@
     $.fn.enableLoading = function(text) {
         if (this.prop("tagName") === "BUTTON") {
             var defaultText = this.html();
-
-            this.data("defaultText", defaultText);
             var loadingText = text || defaultText;
 
+            this.data("defaultText", defaultText);
             this.prop("disabled", true);
 
             this.html("<i class=\"fa fa-spinner fa-pulse\"></i>" + loadingText);

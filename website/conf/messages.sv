@@ -36,5 +36,6 @@ productSelection.cartSection.coupon.label=Have a valid Promotion code or a Gift 
 productSelection.cartSection.coupon.field.placeholder=Coupon Code
 productSelection.cartSection.coupon.addButton.text=Apply coupon
 productSelection.cartSection.coupon.addButton.loadingText=Applying coupon...
+productSelection.cartSection.coupon.notFoundError=Coupon not found or expired
 productSelection.cartSection.subTotal=Sub-total
 productSelection.cartSection.total=Total You Pay

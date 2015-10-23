@@ -1,6 +1,6 @@
 "use strict";
 
-CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
+CR.Controllers.Common = P(function(c) {
     c.menuOpacityTweenDuration = 0.3;
 
     c.init = function() {

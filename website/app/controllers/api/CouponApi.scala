@@ -9,6 +9,9 @@ import play.api.mvc.{Action, Controller}
 @Singleton
 class CouponApi extends Controller {
   def get(code: String) = Action { request =>
-    Ok(Json.toJson(CouponDto.getOfCode(code)))
+    CouponDto.getOfCode(code) match {
+      case None => NoContent
+      case Some(coupon) => Ok(Json.toJson(CouponDto.getOfCode(code)))
+    }
   }
 }

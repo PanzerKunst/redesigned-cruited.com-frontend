@@ -8,6 +8,7 @@ CR.Controllers.CouponForm = React.createClass({
                     <label htmlFor="coupon-code">{this.props.i18nMessages["productSelection.cartSection.coupon.label"]}</label>
                     <input type="text" className="form-control" id="coupon-code" placeholder={this.props.i18nMessages["productSelection.cartSection.coupon.field.placeholder"]} />
                     <p className="field-error" data-check="empty" />
+                    <p className="field-error" id="coupon-not-found-error">{this.props.i18nMessages["productSelection.cartSection.coupon.notFoundError"]}</p>
                 </div>
                 <button type="submit" className="btn btn-default">{this.props.i18nMessages["productSelection.cartSection.coupon.addButton.text"]}</button>
             </form>
@@ -23,6 +24,7 @@ CR.Controllers.CouponForm = React.createClass({
         this.$form = $(React.findDOMNode(this.refs.form));
         this.$couponCodeField = this.$form.find("#coupon-code");
         this.$addCouponBtn = this.$form.children("button");
+        this.$couponNotFoundError = this.$form.find("#coupon-not-found-error");
     },
 
     _initValidation: function() {
@@ -36,6 +38,7 @@ CR.Controllers.CouponForm = React.createClass({
 
         if (this.validator.isValid()) {
             this.$addCouponBtn.enableLoading(this.props.i18nMessages["productSelection.cartSection.coupon.addButton.loadingText"]);
+            this.$couponNotFoundError.hide();
 
             var type = "GET";
             var url = "/api/coupons/" + this.$couponCodeField.val();
@@ -44,13 +47,16 @@ CR.Controllers.CouponForm = React.createClass({
                 url: url,
                 type: type,
                 contentType: "application/json",
-                success: function(coupon) {
+                success: function(coupon, textStatus, jqXHR) {
                     this.$addCouponBtn.disableLoading();
-                    this.$form[0].reset();
 
-                    CR.cart.setCoupon(coupon);
-
-                    this.props.controller.reRender();
+                    if (jqXHR.status === CR.httpStatusCodes.noContent) {
+                        this.$couponNotFoundError.show();
+                    } else if (coupon) {
+                        this.$form[0].reset();
+                        CR.cart.setCoupon(coupon);
+                        this.props.controller.reRender();
+                    }
                 }.bind(this),
                 error: function() {
                     this.$addCouponBtn.disableLoading();
