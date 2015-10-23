@@ -64,12 +64,12 @@ object AccountDto {
 
           Some(
             Account(
-              accountId,
-              row[String]("email"),
-              None,
-              row[Option[String]]("linkedin_id"),
-              linkedinBasicProfileOpt,
-              row[Date]("registered_at").getTime
+              id = accountId,
+              emailAddress = row[String]("email"),
+              password = None,
+              linkedinAccountId = row[Option[String]]("linkedin_id"),
+              linkedinBasicProfile = linkedinBasicProfileOpt,
+              creationTimestamp = row[Date]("registered_at").getTime
             )
           )
       }
@@ -96,12 +96,12 @@ object AccountDto {
 
           Some(
             Account(
-              row[Long]("id"),
-              row[String]("email"),
-              None,
-              Some(linkedInAccountId),
-              linkedinBasicProfileOpt,
-              row[Date]("registered_at").getTime
+              id = row[Long]("id"),
+              emailAddress = row[String]("email"),
+              password = None,
+              linkedinAccountId = Some(linkedInAccountId),
+              linkedinBasicProfile = linkedinBasicProfileOpt,
+              creationTimestamp = row[Date]("registered_at").getTime
             )
           )
       }

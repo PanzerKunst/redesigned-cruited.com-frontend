@@ -10,6 +10,8 @@ edition.name.PRO=Professional
 edition.name.YOUNG_PRO=Young Professional
 edition.name.EXEC=Executive
 
+reduction.name.2_PRODUCTS_SAME_ORDER=2-item
+reduction.name.3_PRODUCTS_SAME_ORDER=3-item
 
 
 # Product selection page
@@ -30,3 +32,9 @@ productSelection.cartSection.title=Your Order
 productSelection.cartSection.productsHeader.products=Products
 productSelection.cartSection.productsHeader.defaultPrice=Price
 productSelection.cartSection.edition=Edition
+productSelection.cartSection.coupon.label=Have a valid Promotion code or a Gift Card from one of our partners?
+productSelection.cartSection.coupon.field.placeholder=Coupon Code
+productSelection.cartSection.coupon.addButton.text=Apply coupon
+productSelection.cartSection.coupon.addButton.loadingText=Applying coupon...
+productSelection.cartSection.subTotal=Sub-total
+productSelection.cartSection.total=Total You Pay

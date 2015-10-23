@@ -103,6 +103,7 @@ globals:
     CR: true
     P: true
     $: true
+    jQuery: true
     _: true
     Modernizr: true
     FastClick: true

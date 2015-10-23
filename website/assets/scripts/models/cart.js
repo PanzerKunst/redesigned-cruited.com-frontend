@@ -2,9 +2,10 @@
 
 CR.Models.Cart = P(function(c) {
     c.init = function(cart) {
-        this._products = cart ? _.cloneDeep(cart.products) : [];
-        this._reductions = cart ? _.cloneDeep(cart.reductions) : [];
-        this._edition = cart ? _.cloneDeep(cart.edition) : null;
+        this._products = cart && cart.products ? _.cloneDeep(cart.products) : [];
+        this._reductions = cart && cart.reductions ? _.cloneDeep(cart.reductions) : [];
+        this._edition = cart && cart.edition ? _.cloneDeep(cart.edition) : null;
+        this._coupon = cart && cart.coupon ? _.cloneDeep(cart.coupon) : null;
     };
 
     c.getProducts = function() {
@@ -50,6 +51,15 @@ CR.Models.Cart = P(function(c) {
 
     c.setEdition = function(edition) {
         this._edition = edition;
+        this._saveCartInLocalStorage();
+    };
+
+    c.getCoupon = function() {
+        return this._coupon;
+    };
+
+    c.setCoupon = function(coupon) {
+        this._coupon = coupon;
         this._saveCartInLocalStorage();
     };
 
@@ -102,10 +112,8 @@ CR.Models.Cart = P(function(c) {
         CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.cart, {
             products: this._products,
             reductions: this._reductions,
-            edition: this._edition
+            edition: this._edition,
+            coupon: this._coupon
         });
-
-        // TODO: remove
-        console.log("Cart saved", CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart));
     };
 });

@@ -12,3 +12,4 @@ GET     /auth/linkedin/callback                     controllers.Application.link
 
 # API
 POST    /api/db/re-create-tables                    controllers.api.DbAdminApi.reCreateTables
+GET     /api/coupons/:code                          controllers.api.CouponApi.get(code: String)

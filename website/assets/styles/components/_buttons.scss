@@ -2,6 +2,10 @@
   padding: 0.7em 2em;
 
   @include transition(all $default-animation-duration ease);
+
+  > .fa-spinner {
+    margin: 0 0.5em 0 -1.25em;
+  }
 }
 
 .btn-default,

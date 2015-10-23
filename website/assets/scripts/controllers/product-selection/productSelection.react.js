@@ -14,27 +14,8 @@ CR.Controllers.ProductSelection = P(function(c) {
         },
 
         render: function() {
-            if (!this.state.i18nMessages) {
+            if (!this.state.i18nMessages || _.isEmpty(this.state.products) || _.isEmpty(this.state.editions)) {
                 return null;
-            }
-
-            var paragraphOfferTwoProductsSameOrder = null;
-            var paragraphOfferThreeProductsSameOrder = null;
-
-            if (CR.cart.getProducts().length === 2) {
-                var reductionPriceThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
-                if (reductionPriceThreeProductsSameOrder) {
-                    paragraphOfferThreeProductsSameOrder = (
-                        <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(this.state.i18nMessages["productSelection.productsSection.textOfferThreeProductsSameOrder"], "reductionPrice", reductionPriceThreeProductsSameOrder.price.amount + " " + reductionPriceThreeProductsSameOrder.price.currencyCode)}} />
-                        );
-                }
-            } else if (CR.cart.getProducts().length !== 3) {
-                var reductionPriceTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
-                if (reductionPriceTwoProductsSameOrder) {
-                    paragraphOfferTwoProductsSameOrder = (
-                        <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(this.state.i18nMessages["productSelection.productsSection.textOfferTwoProductsSameOrder"], "reductionPrice", reductionPriceTwoProductsSameOrder.price.amount + " " + reductionPriceTwoProductsSameOrder.price.currencyCode)}} />
-                        );
-                }
             }
 
             return (
@@ -47,14 +28,14 @@ CR.Controllers.ProductSelection = P(function(c) {
                         <section id="products-section">
                             <h2>{this.state.i18nMessages["productSelection.productsSection.title"]}</h2>
 
-                            {paragraphOfferTwoProductsSameOrder}
-                            {paragraphOfferThreeProductsSameOrder}
+                            {this._getParagraphOfferTwoProductsSameOrder()}
+                            {this._getParagraphOfferThreeProductsSameOrder()}
 
                             <ul className="styleless">
-                            {this.state.products.map(function(item, index) {
+                            {this.state.products.map(function(product, index) {
                                 var reactItemId = "product-" + index;
 
-                                return <CR.Controllers.ProductListItem key={reactItemId} product={item} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
+                                return <CR.Controllers.ProductListItem key={reactItemId} product={product} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
                             }.bind(this))}
                             </ul>
                         </section>
@@ -64,15 +45,18 @@ CR.Controllers.ProductSelection = P(function(c) {
                             <p>{this.state.i18nMessages["productSelection.editionsSection.subtitle"]}</p>
 
                             <ul className="styleless">
-                            {this.state.editions.map(function(item, index) {
+                            {this.state.editions.map(function(edition, index) {
                                 var reactItemId = "edition-" + index;
 
-                                return <CR.Controllers.EditionListItem key={reactItemId} edition={item} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
+                                return <CR.Controllers.EditionListItem key={reactItemId} edition={edition} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
                             }.bind(this))}
                             </ul>
                         </section>
                         <section id="cart-section">
-                            <h2>{this.state.i18nMessages["productSelection.cartSection.title"]}</h2>
+                            <div>
+                                <h2>{this.state.i18nMessages["productSelection.cartSection.title"]}</h2>
+                                <span>{CR.cart.getProducts().length}</span>
+                            </div>
 
                             <div>
                                 <span>{this.state.i18nMessages["productSelection.cartSection.productsHeader.products"]}</span>
@@ -80,19 +64,115 @@ CR.Controllers.ProductSelection = P(function(c) {
                             </div>
 
                             <ul className="styleless">
-                            {CR.cart.getProducts().map(function(item, index) {
+                            {CR.cart.getProducts().map(function(product, index) {
                                 var reactItemId = "cart-product-" + index;
 
-                                return <CR.Controllers.CartProductListItem key={reactItemId} product={item} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
+                                return <CR.Controllers.CartProductListItem key={reactItemId} product={product} i18nMessages={this.state.i18nMessages} controller={this.state.controller} />;
                             }.bind(this))}
                             </ul>
 
-                            <div>
+                            <CR.Controllers.CouponForm i18nMessages={this.state.i18nMessages} controller={this.state.controller} />
 
-                            </div>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>{this.state.i18nMessages["productSelection.cartSection.subTotal"]}:</td>
+                                        <td>{this._getCartSubTotal()} {this.state.products[0].price.currencyCode}</td>
+                                    </tr>
+                                    {CR.cart.getReductions().map(function(reduction, index) {
+                                        var reactItemId = "cart-reduction-" + index;
+
+                                        return (
+                                            <tr key={reactItemId}>
+                                                <td>{this.state.i18nMessages["reduction.name." + reduction.code]}:</td>
+                                                <td>- {reduction.price.amount} {reduction.price.currencyCode}</td>
+                                            </tr>
+                                            );
+                                    }.bind(this))}
+
+                                    {this._getCouponRow()}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>{this.state.i18nMessages["productSelection.cartSection.total"]}:</td>
+                                        <td>{this._getCartTotal()}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </section>
                     </div>
                 </div>
+                );
+        },
+
+        _getParagraphOfferTwoProductsSameOrder: function() {
+            if (CR.cart.getProducts().length < 2) {
+                var reductionPriceTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
+                if (reductionPriceTwoProductsSameOrder) {
+                    return (
+                        <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(this.state.i18nMessages["productSelection.productsSection.textOfferTwoProductsSameOrder"], "reductionPrice", reductionPriceTwoProductsSameOrder.price.amount + " " + reductionPriceTwoProductsSameOrder.price.currencyCode)}} />
+                        );
+                }
+            }
+            return null;
+        },
+
+        _getParagraphOfferThreeProductsSameOrder: function() {
+            if (CR.cart.getProducts().length === 2) {
+                var reductionPriceThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
+                if (reductionPriceThreeProductsSameOrder) {
+                    return (
+                        <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(this.state.i18nMessages["productSelection.productsSection.textOfferThreeProductsSameOrder"], "reductionPrice", reductionPriceThreeProductsSameOrder.price.amount + " " + reductionPriceThreeProductsSameOrder.price.currencyCode)}} />
+                        );
+                }
+            }
+            return null;
+        },
+
+        _getCartSubTotal: function() {
+            var cartSubTotal = 0;
+
+            CR.cart.getProducts().forEach(function(product) {
+                cartSubTotal += product.price.amount;
+            });
+
+            return cartSubTotal;
+        },
+
+        _getCartTotal: function() {
+            var cartTotal = this._getCartSubTotal();
+
+            CR.cart.getReductions().forEach(function(reduction) {
+                cartTotal -= reduction.price.amount;
+            });
+
+            var cartCoupon = CR.cart.getCoupon();
+            if (cartCoupon) {
+                if (cartCoupon.discountPercentage) {
+                    cartTotal = Math.round(cartTotal - cartTotal * cartCoupon.discountPercentage / 100);
+                } else {
+                    cartTotal -= cartCoupon.discountPrice.amount;
+                }
+            }
+
+            return cartTotal;
+        },
+
+        _getCouponRow: function() {
+            var cartCoupon = CR.cart.getCoupon();
+
+            if (!cartCoupon) {
+                return null;
+            }
+
+            var amount = cartCoupon.discountPercentage || cartCoupon.discountPrice.amount;
+            var unit = cartCoupon.discountPercentage ? "%" : " " + cartCoupon.discountPrice.currencyCode;
+
+            return (
+                <tr>
+                    <td>{cartCoupon.campaignName}:</td>
+                    <td>- {amount}{unit}</td>
+                </tr>
                 );
         }
     });
@@ -103,7 +183,13 @@ CR.Controllers.ProductSelection = P(function(c) {
         this.editions = editions;
 
         CR.reductions = reductions;
-        CR.cart = CR.Models.Cart(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart));
+
+        var cartFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart);
+        if (cartFromLocalStorage) {
+            CR.cart = CR.Models.Cart(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.cart));
+        } else {
+            CR.cart = CR.Models.Cart({edition: editions[0]});
+        }
 
         this.reactInstance = React.render(
             React.createElement(this.reactClass),
