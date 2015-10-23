@@ -18,6 +18,8 @@ reduction.name.3_PRODUCTS_SAME_ORDER=3-item
 
 productSelection.title=Product Selection
 productSelection.subtitle=How can we help you?
+productSelection.nextStepBtn.text=Proceed to next step
+
 productSelection.productsSection.title=Products
 productSelection.productsSection.textOfferTwoProductsSameOrder=Save <strong>{reductionPrice}</strong> off your order when you select 2 items!
 productSelection.productsSection.textOfferThreeProductsSameOrder=Save <strong>{reductionPrice}</strong> off your order when you select all 3 items!

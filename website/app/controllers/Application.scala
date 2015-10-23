@@ -18,12 +18,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinApi: Linke
     if (headerData.isSignedIn) {
       Ok(views.html.dashboard(headerData, None, JsNull))
     } else {
-      Ok(views.html.productSelection(getI18nMessages(request), headerData, CruitedProductDto.all, ReductionDto.getAll, EditionDto.all))
+      Ok(views.html.orderStep1(getI18nMessages(request), headerData, CruitedProductDto.all, ReductionDto.getAll, EditionDto.all))
     }
   }
 
-  def productSelection = Action { request =>
-    Ok(views.html.productSelection(getI18nMessages(request), getHeaderData(request.session), CruitedProductDto.all, ReductionDto.getAll, EditionDto.all))
+  def orderStep1 = Action { request =>
+    Ok(views.html.orderStep1(getI18nMessages(request), getHeaderData(request.session), CruitedProductDto.all, ReductionDto.getAll, EditionDto.all))
   }
 
   def linkedinCallback = Action { request =>

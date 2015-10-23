@@ -100,6 +100,9 @@ CR.Controllers.ProductSelection = P(function(c) {
                                 </tfoot>
                             </table>
                         </section>
+                        <div className="centered-contents">
+                            <a className="btn btn-lg btn-primary" href="/order/2">{this.state.i18nMessages["productSelection.nextStepBtn.text"]}</a>
+                        </div>
                     </div>
                 </div>
                 );

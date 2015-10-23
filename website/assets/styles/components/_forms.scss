@@ -1,4 +1,8 @@
 form {
+  .form-group {
+    margin-bottom: $content-element-margin-bottom;
+  }
+
   .field-error {
     display: none;
     color: $brand-danger;

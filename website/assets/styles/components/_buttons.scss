@@ -1,10 +1,21 @@
 .btn {
-  padding: 0.7em 2em;
-
   @include transition(all $default-animation-duration ease);
+  border-radius: 0.25em;
+
+  padding: 0.4em 1em;
 
   > .fa-spinner {
-    margin: 0 0.5em 0 -1.25em;
+    margin: 0 0.5em 0 -0.6em;
+  }
+
+  &.btn-lg {
+    padding: 0.8em 2em;
+
+    > .fa-spinner {
+      margin-left: -1.25em;
+    }
+
+    text-transform: uppercase;
   }
 }
 
@@ -29,7 +40,6 @@ a.btn-primary {
   color: $background-body-color;
   background-color: $primary-btn-color;
   border-color: $primary-btn-color;
-  opacity: 0.9;
 
   &:active,
   &:focus,
@@ -37,7 +47,6 @@ a.btn-primary {
   &:active:focus {
     background-color: darken($primary-btn-color, 15%);
     border-color: darken($primary-btn-color, 25%);
-    opacity: 1;
   }
 }
 

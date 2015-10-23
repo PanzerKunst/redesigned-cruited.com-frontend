@@ -7,7 +7,7 @@ GET     /assets/*file                               controllers.Assets.versioned
 
 # Pages
 GET     /                                           controllers.Application.index
-GET     /products                                   controllers.Application.productSelection
+GET     /order                                      controllers.Application.orderStep1
 GET     /auth/linkedin/callback                     controllers.Application.linkedinCallback
 
 # API
