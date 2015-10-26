@@ -1,6 +1,6 @@
 "use strict";
 
-CR.Controllers.ProductSelection = P(function(c) {
+CR.Controllers.OrderStep1 = P(function(c) {
     c.$el = $("[role=main]");
 
     c.reactClass = React.createClass({
