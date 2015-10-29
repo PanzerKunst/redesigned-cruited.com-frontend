@@ -1,4 +1,4 @@
-package controllers.api
+package services
 
 import javax.inject.{Inject, Singleton}
 
@@ -6,40 +6,40 @@ import play.api.Play
 import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
-import play.api.mvc.Controller
-import services.ConfigHelper
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 
 @Singleton
-class LinkedinApi @Inject()(val ws: WSClient) extends Controller {
+class LinkedinService @Inject()(val ws: WSClient) {
   val linkedinClientId = Play.configuration.getString("linkedin.client.id").get
   val linkedinClientSecret = Play.configuration.getString("linkedin.client.secret").get
   val linkedinRequestedPermissions = Play.configuration.getString("linkedin.requestedPermissions").get
-  val linkedinState = ConfigHelper.applicationSecret
+  val linkedinState = ConfigService.applicationSecret
   val linkedinAuthUri = Play.configuration.getString("linkedin.authUri").get
-  val linkedinRedirectUri = Play.configuration.getString("linkedin.redirectUri").get
+  val linkedinRedirectUriOrderStep2 = Play.configuration.getString("linkedin.redirectUri.orderStep2").get
   val linkedinAccessTokenUri = Play.configuration.getString("linkedin.accessTokenUri").get
   val linkedinProfileDataUri = Play.configuration.getString("linkedin.profileDataUri").get
 
   var authCode: Option[String] = None
   var accessToken: Option[String] = None
 
-  val linkedinAuthCodeRequestUrl = linkedinAuthUri +
-    """?response_type=code""" +
-    """&client_id=""" + linkedinClientId +
-    """&redirect_uri=""" + linkedinRedirectUri +
-    """&state=""" + linkedinState +
-    """&scope=""" + linkedinRequestedPermissions
+  def getAuthCodeRequestUrl(redirectUri: String): String = {
+    linkedinAuthUri +
+      """?response_type=code""" +
+      """&client_id=""" + linkedinClientId +
+      """&redirect_uri=""" + redirectUri +
+      """&state=""" + linkedinState +
+      """&scope=""" + linkedinRequestedPermissions
+  }
 
-  def requestAccessToken() {
+  def requestAccessToken(redirectUri: String) {
     val linkedinAccessTokenCallParams = Map(
       "grant_type" -> Seq("authorization_code"),
       "code" -> Seq(authCode.get),
-      "redirect_uri" -> Seq(linkedinRedirectUri),
+      "redirect_uri" -> Seq(redirectUri),
       "client_id" -> Seq(linkedinClientId),
       "client_secret" -> Seq(linkedinClientSecret))
 

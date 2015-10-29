@@ -1,23 +1,19 @@
 "use strict";
 
 CR.Controllers.Dashboard = P(function(c) {
-    c.$el = $(document.getElementById("content"));
-
     c.reactClass = React.createClass({
         render: function() {
             return (
-                <div ref="wrapper">
+                <div id="content">
                 </div>
                 );
         }
     });
 
-    c.init = function(products) {
-        this.products = products;
-
+    c.init = function() {
         this.reactInstance = React.render(
             React.createElement(this.reactClass),
-            this.$el[0]
+            $("[role=main]")[0]
         );
 
         this.reRender();
@@ -25,7 +21,6 @@ CR.Controllers.Dashboard = P(function(c) {
 
     c.reRender = function() {
         this.reactInstance.replaceState({
-            products: this.products
         });
     };
 });

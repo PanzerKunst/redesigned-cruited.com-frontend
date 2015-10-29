@@ -4,8 +4,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, Writes}
 
 case class Account(id: Long,
-                   emailAddress: String,
+                   firstName: Option[String],
+                   lastName: Option[String],
+                   emailAddress: Option[String],
                    password: Option[String],
+                   pictureUrl: Option[String],
                    linkedinAccountId: Option[String],
                    linkedinBasicProfile: Option[JsValue],
                    creationTimestamp: Long)
@@ -13,8 +16,11 @@ case class Account(id: Long,
 object Account {
   implicit val writes: Writes[Account] = (
     (JsPath \ "id").write[Long] and
-      (JsPath \ "emailAddress").write[String] and
+      (JsPath \ "firstName").writeNullable[String] and
+      (JsPath \ "lastName").writeNullable[String] and
+      (JsPath \ "emailAddress").writeNullable[String] and
       (JsPath \ "password").writeNullable[String] and
+      (JsPath \ "pictureUrl").writeNullable[String] and
       (JsPath \ "linkedinAccountId").writeNullable[String] and
       (JsPath \ "linkedinBasicProfile").writeNullable[JsValue] and
       (JsPath \ "creationTimestamp").write[Long]

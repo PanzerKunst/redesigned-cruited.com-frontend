@@ -5,8 +5,8 @@ CR.Controllers.CartProductListItem = React.createClass({
         return (
             <li ref="li">
                 <span>
-                    <p>{this.props.i18nMessages["product.name." + this.props.product.code]}</p>
-                    {this.props.i18nMessages["productSelection.cartSection.edition"]}: <span>{this.props.i18nMessages["edition.name." + CR.cart.getEdition().code]}</span>
+                    <p>{CR.i18nMessages["product.name." + this.props.product.code]}</p>
+                    {CR.i18nMessages["orderStep1.cartSection.edition"]}: <span>{CR.i18nMessages["edition.name." + CR.order.getEdition().code]}</span>
                 </span>
                 <span>{this.props.product.price.amount} {this.props.product.price.currencyCode}</span>
                 <button className="styleless fa fa-times" onClick={this._handleClick}></button>
@@ -15,7 +15,7 @@ CR.Controllers.CartProductListItem = React.createClass({
     },
 
     _handleClick: function() {
-        CR.cart.removeProduct(this.props.product);
+        CR.order.removeProduct(this.props.product);
         this.props.controller.reRender();
     }
 });

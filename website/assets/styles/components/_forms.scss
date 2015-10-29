@@ -1,11 +1,51 @@
 form {
   .form-group {
     margin-bottom: $content-element-margin-bottom;
+
+    &.fg-file-upload {
+      > label {
+        display: block;
+      }
+
+      > div {
+        display: flex;
+
+        > .btn {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+
+        > input[type=text] {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+
+          flex-grow: 1;
+        }
+      }
+    }
   }
 
   .field-error {
-    display: none;
+    height: 0;
+    overflow: hidden;
+
+    font-style: italic;
     color: $brand-danger;
-    margin-left: 0.85em;
+
+    margin: 0 0 0 0.75em;
+  }
+
+  label > [type=file] {
+    display: none;
+  }
+
+  .for-required-field {
+    &:after {
+      @include icon-font($fa-var-asterisk);
+      font-size: $font-size-xs;
+      color: $brand-danger;
+      vertical-align: super;
+      margin-left: 0.5em;
+    }
   }
 }

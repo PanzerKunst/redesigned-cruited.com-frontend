@@ -64,3 +64,49 @@ a.btn-primary {
     border-color: darken($secondary-action-color, 25%);
   }
 }
+
+.btn-file-upload {
+  padding: 0.18em 0.95em;
+}
+
+.btn.sign-in-with-linkedin {
+  $sign-in-with-linked-in-button-image-location-x: 0;
+  $sign-in-with-linked-in-button-image-location-y: 0;
+
+  @include hdpi-sprite;
+  background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+  @include hidpi {
+    background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+  }
+
+  width: 146px;
+  height: 21px;
+
+  padding: 0 0 0 22px;
+
+  @include medium-screen {
+    $sign-in-with-linked-in-button-image-location-x: -300px;
+
+    background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+    @include hidpi {
+      background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+    }
+
+    width: 215px;
+    height: 41px;
+
+    padding: 7px 0 0 41px;
+  }
+  @include large-screen {
+    padding-top: 2px;
+  }
+
+  > span {
+    color: white;
+
+    font-size: 11px;
+    @include medium-screen {
+      font-size: 15px;
+    }
+  }
+}

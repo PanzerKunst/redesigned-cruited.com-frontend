@@ -18,9 +18,9 @@ CR.Controllers.ProductListItem = React.createClass({
 
         return (
             <li ref="li">
-                <div className="checkbox checkbox-success">
-                    <input type="checkbox" id={checkboxId} checked={this._isInCart()} onChange={this._handleProductToggle} />
-                    <label htmlFor={checkboxId}>{this.props.i18nMessages["productSelection.productsSection.productName." + this.props.product.code]}</label>
+                <div className="checkbox checkbox-primary">
+                    <input type="checkbox" id={checkboxId} checked={this._isInOrder()} onChange={this._handleProductToggle} />
+                    <label htmlFor={checkboxId}>{CR.i18nMessages["orderStep1.productsSection.productName." + this.props.product.code]}</label>
                 </div>
                 <div className={priceWrapperClasses}>
                     <p className="price">{this.props.product.price.currencyCode} {this.props.product.price.amount}</p>
@@ -39,8 +39,8 @@ CR.Controllers.ProductListItem = React.createClass({
         this.$checkbox = this.$listItem.find("input[type=\"checkbox\"]");
     },
 
-    _isInCart: function() {
-        var foundProduct = _.find(CR.cart.getProducts(), function(product) {
+    _isInOrder: function() {
+        var foundProduct = _.find(CR.order.getProducts(), function(product) {
             return product.id === this.props.product.id;
         }.bind(this));
 
@@ -49,9 +49,9 @@ CR.Controllers.ProductListItem = React.createClass({
 
     _handleProductToggle: function() {
         if (this.$checkbox.prop("checked")) {
-            CR.cart.addProduct(this.props.product);
+            CR.order.addProduct(this.props.product);
         } else {
-            CR.cart.removeProduct(this.props.product);
+            CR.order.removeProduct(this.props.product);
         }
         this.props.controller.reRender();
     }

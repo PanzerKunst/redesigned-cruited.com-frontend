@@ -17,7 +17,7 @@ CR.httpStatusCodes = {
 };
 
 CR.localStorageKeys = {
-    cart: "cart"
+    order: "order"
 };
 
 

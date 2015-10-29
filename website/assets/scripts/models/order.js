@@ -1,11 +1,11 @@
 "use strict";
 
-CR.Models.Cart = P(function(c) {
-    c.init = function(cart) {
-        this._products = cart && cart.products ? _.cloneDeep(cart.products) : [];
-        this._reductions = cart && cart.reductions ? _.cloneDeep(cart.reductions) : [];
-        this._edition = cart && cart.edition ? _.cloneDeep(cart.edition) : null;
-        this._coupon = cart && cart.coupon ? _.cloneDeep(cart.coupon) : null;
+CR.Models.Order = P(function(c) {
+    c.init = function(order) {
+        this._products = order && order.products ? _.cloneDeep(order.products) : [];
+        this._reductions = order && order.reductions ? _.cloneDeep(order.reductions) : [];
+        this._edition = order && order.edition ? _.cloneDeep(order.edition) : null;
+        this._coupon = order && order.coupon ? _.cloneDeep(order.coupon) : null;
     };
 
     c.getProducts = function() {
@@ -13,14 +13,14 @@ CR.Models.Cart = P(function(c) {
     };
 
     c.addProduct = function(product) {
-        var foundProduct = _.find(this._products, function(cartProduct) {
-            return cartProduct.id === product.id;
+        var foundProduct = _.find(this._products, function(orderProduct) {
+            return orderProduct.id === product.id;
         });
 
         if (!foundProduct) {
             this._products.push(product);
             this._calculateReductions();
-            this._saveCartInLocalStorage();
+            this._saveOrderInLocalStorage();
         }
     };
 
@@ -37,7 +37,7 @@ CR.Models.Cart = P(function(c) {
         if (!_.isNull(productIndex)) {
             this._products.splice(productIndex, 1);
             this._calculateReductions();
-            this._saveCartInLocalStorage();
+            this._saveOrderInLocalStorage();
         }
     };
 
@@ -51,7 +51,7 @@ CR.Models.Cart = P(function(c) {
 
     c.setEdition = function(edition) {
         this._edition = edition;
-        this._saveCartInLocalStorage();
+        this._saveOrderInLocalStorage();
     };
 
     c.getCoupon = function() {
@@ -60,7 +60,7 @@ CR.Models.Cart = P(function(c) {
 
     c.setCoupon = function(coupon) {
         this._coupon = coupon;
-        this._saveCartInLocalStorage();
+        this._saveOrderInLocalStorage();
     };
 
     c._calculateReductions = function() {
@@ -108,8 +108,8 @@ CR.Models.Cart = P(function(c) {
         }
     };
 
-    c._saveCartInLocalStorage = function() {
-        CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.cart, {
+    c._saveOrderInLocalStorage = function() {
+        CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.order, {
             products: this._products,
             reductions: this._reductions,
             edition: this._edition,

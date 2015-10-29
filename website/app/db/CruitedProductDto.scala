@@ -7,9 +7,7 @@ import play.api.Play.current
 import play.api.db.DB
 
 object CruitedProductDto {
-  val all = getAll
-
-  private def getAll: List[CruitedProduct] = {
+  def getAll: List[CruitedProduct] = {
     DB.withConnection { implicit c =>
       val query = """
         select id, code, price_amount

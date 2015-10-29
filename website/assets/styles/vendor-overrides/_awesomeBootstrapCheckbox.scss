@@ -17,7 +17,7 @@
   }
 }
 
-.checkbox {
+.checkbox-primary {
   > input[type=checkbox]:checked + label::before {
     background-color: $primary-btn-color;
     border-color: $primary-btn-color;
