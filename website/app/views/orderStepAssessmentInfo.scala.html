@@ -7,24 +7,22 @@
 @header(isSignedIn, "order-step-assessment-info")
 
 } {
-<!--
+/*
     Javascript
--->
-<script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-        var linkedinErrorMessage = null;
-        @if(linkedinErrorMessage.isDefined) {
-            linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
-        }
+*/
+document.addEventListener("DOMContentLoaded", function() {
+    var linkedinErrorMessage = null;
+    @if(linkedinErrorMessage.isDefined) {
+        linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
+    }
 
-        var linkedinProfile = @Html(linkedinProfile.toString.replaceAll("\\\\n", " ")) || null; // Because there is a problem when JSON.parse()ing the new lines contained in the summary
+    var linkedinProfile = @Html(linkedinProfile.toString.replaceAll("\\\\n", " ")) || null; // Because there is a problem when JSON.parse()ing the new lines contained in the summary
 
-        CR.Controllers.OrderStep2(
-            @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
-            "@Html(linkedinAuthCodeRequestUrl)",
-            linkedinProfile,
-            linkedinErrorMessage
-        );
-    });
-</script>
+    CR.Controllers.OrderStepAssessmentInfo(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
+        "@Html(linkedinAuthCodeRequestUrl)",
+        linkedinProfile,
+        linkedinErrorMessage
+    );
+});
 }

@@ -64,10 +64,16 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           case None => throw new Exception("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
             if (AccountService.isTemporary(accountId)) {
-              // TODO: upgrade the account to non-temp, then retrieve order details from query parameters and save it
+              val linkedinBasicProfile = AccountDto.getOfId(accountId) match {
+                case None => JsNull
+                case Some(account) => account.linkedinBasicProfile.getOrElse(JsNull)
+              }
 
+              Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request.session), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinBasicProfile, None))
+                .withHeaders(doNotCachePage: _*)
+            } else {
+              Redirect("/") // TODO: reditect instead to Step Payment once payment is coded
             }
-            Redirect("/") // TODO: reditect instead to Step 4 once payment is coded
         }
     }
   }
@@ -79,7 +85,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         AccountDto.getOfId(accountId) match {
           case None => throw new Exception("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
-            Ok
+            if (AccountService.isTemporary(accountId)) {
+              // TODO: upgrade the account to non-temp, then retrieve order details from query parameters and save it
+
+            }
+            Redirect("/") // TODO: display instead Step Payment once payment is coded
         }
     }
   }

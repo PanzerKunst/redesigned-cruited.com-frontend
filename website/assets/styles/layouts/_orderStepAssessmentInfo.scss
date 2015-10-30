@@ -5,6 +5,13 @@
     }
   }
 
+  .sign-in-with-linkedin {
+    padding-left: 22px;
+    @include medium-screen {
+      padding-left: 41px;
+    }
+  }
+
   #not-signed-in-with-linkedin {
     margin-left: 0;
   }

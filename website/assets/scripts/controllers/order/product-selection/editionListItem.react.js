@@ -5,7 +5,7 @@ CR.Controllers.EditionListItem = React.createClass({
         var radioId = "edition-" + this.props.edition.id;
 
         return (
-            <li ref="li">
+            <li>
                 <div className="radio radio-primary">
                     <input type="radio" name="editions" id={radioId} value={this.props.edition.id} checked={this._isThisEditionSelected()} onChange={this._handleEditionChanged} />
                     <label htmlFor={radioId}>{CR.i18nMessages["edition.name." + this.props.edition.code]}</label>

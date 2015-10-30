@@ -3,25 +3,25 @@
 CR.Controllers.CouponForm = React.createClass({
     render: function() {
         return (
-            <form ref="form" onSubmit={this._handleSubmit}>
+            <form ref={this._init} onSubmit={this._handleSubmit}>
                 <div className="form-group">
-                    <label htmlFor="coupon-code">{CR.i18nMessages["orderStepProductSelection.cartSection.coupon.label"]}</label>
-                    <input type="text" className="form-control" id="coupon-code" placeholder={CR.i18nMessages["orderStepProductSelection.cartSection.coupon.field.placeholder"]} />
+                    <label htmlFor="coupon-code">{CR.i18nMessages["order.productSelection.cartSection.coupon.label"]}</label>
+                    <input type="text" className="form-control" id="coupon-code" placeholder={CR.i18nMessages["order.productSelection.cartSection.coupon.field.placeholder"]} />
                     <p className="field-error" data-check="empty" />
-                    <p className="field-error" id="coupon-not-found-error">{CR.i18nMessages["orderStepProductSelection.cartSection.coupon.notFoundError"]}</p>
+                    <p className="field-error" id="coupon-not-found-error">{CR.i18nMessages["order.productSelection.cartSection.coupon.notFoundError"]}</p>
                 </div>
-                <button type="submit" className="btn btn-default">{CR.i18nMessages["orderStepProductSelection.cartSection.coupon.addBtn.text"]}</button>
+                <button type="submit" className="btn btn-default">{CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.text"]}</button>
             </form>
             );
     },
 
-    componentDidMount: function() {
-        this._initElements();
+    _init: function(form) {
+        this._initElements(form);
         this._initValidation();
     },
 
-    _initElements: function() {
-        this.$form = $(React.findDOMNode(this.refs.form));
+    _initElements: function(form) {
+        this.$form = $(form);
         this.$couponCodeField = this.$form.find("#coupon-code");
         this.$addCouponBtn = this.$form.children("button");
         this.$couponNotFoundError = this.$form.find("#coupon-not-found-error");
@@ -40,7 +40,7 @@ CR.Controllers.CouponForm = React.createClass({
 
 
         if (this.validator.isValid()) {
-            this.$addCouponBtn.enableLoading(CR.i18nMessages["orderStepProductSelection.cartSection.coupon.addBtn.loadingText"]);
+            this.$addCouponBtn.enableLoading(CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.loadingText"]);
 
             var type = "GET";
             var url = "/api/coupons/" + this.$couponCodeField.val();

@@ -82,7 +82,7 @@ a.btn-primary {
   width: 146px;
   height: 21px;
 
-  padding: 0 0 0 22px;
+  padding: 0;
 
   @include medium-screen {
     $sign-in-with-linked-in-button-image-location-x: -300px;
@@ -95,7 +95,7 @@ a.btn-primary {
     width: 215px;
     height: 41px;
 
-    padding: 7px 0 0 41px;
+    padding-top: 7px;
   }
   @include large-screen {
     padding-top: 2px;

@@ -1,6 +1,6 @@
 "use strict";
 
-CR.Controllers.OrderStep1 = P(function(c) {
+CR.Controllers.OrderStepProductSelection = P(function(c) {
     c.reactClass = React.createClass({
         getInitialState: function() {
             return {
@@ -13,12 +13,12 @@ CR.Controllers.OrderStep1 = P(function(c) {
             return (
                 <div id="content">
                     <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["orderStepProductSelection.title"]}</h1>
+                        <h1>{CR.i18nMessages["order.productSelection.title"]}</h1>
                     </div>
                     <div className="with-circles">
-                        <span>{CR.i18nMessages["orderStepProductSelection.subtitle"]}</span>
+                        <span>{CR.i18nMessages["order.productSelection.subtitle"]}</span>
                         <section id="products-section">
-                            <h2>{CR.i18nMessages["orderStepProductSelection.productsSection.title"]}</h2>
+                            <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
 
                             {this._getParagraphOfferTwoProductsSameOrder()}
                             {this._getParagraphOfferThreeProductsSameOrder()}
@@ -32,9 +32,9 @@ CR.Controllers.OrderStep1 = P(function(c) {
                             </ul>
                         </section>
                         <section>
-                            <h2>{CR.i18nMessages["orderStepProductSelection.editionsSection.title"]}</h2>
+                            <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
 
-                            <p>{CR.i18nMessages["orderStepProductSelection.editionsSection.subtitle"]}</p>
+                            <p>{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
 
                             <ul className="styleless">
                             {CR.editions.map(function(edition, index) {
@@ -46,13 +46,13 @@ CR.Controllers.OrderStep1 = P(function(c) {
                         </section>
                         <section id="cart-section">
                             <div>
-                                <h2>{CR.i18nMessages["orderStepProductSelection.cartSection.title"]}</h2>
+                                <h2>{CR.i18nMessages["order.productSelection.cartSection.title"]}</h2>
                                 <span>{CR.order.getProducts().length}</span>
                             </div>
 
                             <div>
-                                <span>{CR.i18nMessages["orderStepProductSelection.cartSection.productsHeader.products"]}</span>
-                                <span>{CR.i18nMessages["orderStepProductSelection.cartSection.productsHeader.defaultPrice"]}</span>
+                                <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.products"]}</span>
+                                <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.defaultPrice"]}</span>
                             </div>
 
                             <ul className="styleless">
@@ -68,7 +68,7 @@ CR.Controllers.OrderStep1 = P(function(c) {
                             {this._getCartTable()}
                         </section>
                         <div className="centered-contents">
-                            <a className="btn btn-lg btn-primary" href="/order/assessment-info">{CR.i18nMessages["orderStepProductSelection.nextStepBtn.text"]}</a>
+                            <a className="btn btn-lg btn-primary" href="/order/assessment-info">{CR.i18nMessages["order.productSelection.nextStepBtn.text"]}</a>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ CR.Controllers.OrderStep1 = P(function(c) {
             if (CR.order.getProducts().length < 2) {
                 var reductionPriceTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
                 if (reductionPriceTwoProductsSameOrder) {
-                    return (<p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["orderStepProductSelection.productsSection.offerTwoProductsSameOrder.text"], "reductionPrice", reductionPriceTwoProductsSameOrder.price.amount + " " + reductionPriceTwoProductsSameOrder.price.currencyCode)}} />);
+                    return (<p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerTwoProductsSameOrder.text"], "reductionPrice", reductionPriceTwoProductsSameOrder.price.amount + " " + reductionPriceTwoProductsSameOrder.price.currencyCode)}} />);
                 }
             }
             return null;
@@ -89,7 +89,7 @@ CR.Controllers.OrderStep1 = P(function(c) {
             if (CR.order.getProducts().length === 2) {
                 var reductionPriceThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
                 if (reductionPriceThreeProductsSameOrder) {
-                    return (<p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["orderStepProductSelection.productsSection.offerThreeProductsSameOrder.text"], "reductionPrice", reductionPriceThreeProductsSameOrder.price.amount + " " + reductionPriceThreeProductsSameOrder.price.currencyCode)}} />);
+                    return (<p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerThreeProductsSameOrder.text"], "reductionPrice", reductionPriceThreeProductsSameOrder.price.amount + " " + reductionPriceThreeProductsSameOrder.price.currencyCode)}} />);
                 }
             }
             return null;
@@ -133,7 +133,7 @@ CR.Controllers.OrderStep1 = P(function(c) {
                 <table>
                     <tbody>
                         <tr>
-                            <td>{CR.i18nMessages["orderStepProductSelection.cartSection.subTotal"]}:</td>
+                            <td>{CR.i18nMessages["order.productSelection.cartSection.subTotal"]}:</td>
                             <td>{this._getOrderSubTotal()} {this.state.products[0].price.currencyCode}</td>
                         </tr>
                         {CR.order.getReductions().map(function(reduction, index) {
@@ -151,7 +151,7 @@ CR.Controllers.OrderStep1 = P(function(c) {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td>{CR.i18nMessages["orderStepProductSelection.cartSection.total"]}:</td>
+                            <td>{CR.i18nMessages["order.productSelection.cartSection.total"]}:</td>
                             <td>{this._getOrderTotal()} {this.state.products[0].price.currencyCode}</td>
                         </tr>
                     </tfoot>

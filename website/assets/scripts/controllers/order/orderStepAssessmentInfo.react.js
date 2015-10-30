@@ -1,6 +1,6 @@
 "use strict";
 
-CR.Controllers.OrderStep2 = P(function(c) {
+CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
     c.reactClass = React.createClass({
         getInitialState: function() {
             return {
@@ -18,21 +18,21 @@ CR.Controllers.OrderStep2 = P(function(c) {
             return (
                 <div id="content">
                     <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["orderStepAssessmentInfo.title"]}</h1>
+                        <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
                     </div>
                     <div className="with-circles">
-                        <span>{CR.i18nMessages["orderStepAssessmentInfo.subtitle"]}</span>
-                        <form ref="form" onSubmit={this._handleSubmit}>
+                        <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
+                        <form onSubmit={this._handleSubmit}>
                             {this._getSignInWithLinkedinFormGroup()}
                             {this._getCvFormGroup()}
                             {this._getCoverLetterFormGroup()}
                             <div className="checkbox checkbox-primary">
                                 <input type="checkbox" id="accept-tos" />
-                                <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["orderStepAssessmentInfo.form.tos.text"]}} />
+                                <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
                             </div>
                             <p className="field-error" data-check="empty" />
                             <div className="centered-contents">
-                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["orderStepAssessmentInfo.nextStepBtn.text"]}</button>
+                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.nextStepBtn.text"]}</button>
                             </div>
                         </form>
                     </div>
@@ -67,12 +67,12 @@ CR.Controllers.OrderStep2 = P(function(c) {
                                 <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                             </article>
                             <ol>
-                                <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["orderStepAssessmentInfo.form.field.linkedinProfile.check.step1.text"]}} />
-                                <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["orderStepAssessmentInfo.form.field.linkedinProfile.check.step2.text"]}} />
+                                <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
+                                <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
                             </ol>
                             <div className="checkbox checkbox-primary">
                                 <input type="checkbox" id="linkedin-profile-checked" />
-                                <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["orderStepAssessmentInfo.form.field.linkedinProfile.check.checkbox.label"]}</label>
+                                <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.checkbox.label"]}</label>
                             </div>
                             <p className="field-error" data-check="empty" />
                         </div>
@@ -81,7 +81,7 @@ CR.Controllers.OrderStep2 = P(function(c) {
                     formGroupContents = (
                         <div>
                             <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
-                                <span>{CR.i18nMessages["orderStepAssessmentInfo.form.field.linkedinProfile.signInBtn.text"]}</span>
+                                <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                             </a>
                         </div>
                         );
@@ -89,10 +89,10 @@ CR.Controllers.OrderStep2 = P(function(c) {
 
                 return (
                     <div className="form-group" id="linkedin-profile-form-group">
-                        <label className="for-required-field">{CR.i18nMessages["orderStepAssessmentInfo.form.field.linkedinProfile.label"]}</label>
+                        <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.label"]}</label>
 
-                    {formGroupContents}
-                        <p className="field-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["orderStepAssessmentInfo.form.field.linkedinProfile.validation.notSignedIn"]}</p>
+                        {formGroupContents}
+                        <p className="field-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.validation.notSignedIn"]}</p>
                     </div>
                     );
             }
@@ -109,14 +109,14 @@ CR.Controllers.OrderStep2 = P(function(c) {
 
             return (
                 <div className="form-group fg-file-upload" id="cv-form-group">
-                    <label className="for-required-field">{CR.i18nMessages["orderStepAssessmentInfo.form.field.cvFile.label"]}</label>
+                    <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.cvFile.label"]}</label>
 
                     <div>
                         <label className="btn btn-default btn-file-upload" htmlFor="cv">
                             <input id="cv" type="file" accept=".doc, .docx, .pdf, .odt" onChange={this._handleCvFileSelected} />
-                            {CR.i18nMessages["orderStepAssessmentInfo.form.field.browseBtn.text"]}
+                            {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" placeholder={CR.i18nMessages["orderStepAssessmentInfo.form.field.cvFile.placeHolder"]} disabled />
+                        <input type="text" className="form-control" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -134,14 +134,14 @@ CR.Controllers.OrderStep2 = P(function(c) {
 
             return (
                 <div className="form-group fg-file-upload" id="cover-letter-form-group">
-                    <label className="for-required-field">{CR.i18nMessages["orderStepAssessmentInfo.form.field.coverLetterFile.label"]}</label>
+                    <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.label"]}</label>
 
                     <div>
                         <label className="btn btn-default btn-file-upload" htmlFor="cover-letter">
                             <input id="cover-letter" type="file" accept=".doc, .docx, .pdf, .odt" onChange={this._handleCoverLetterFileSelected} />
-                            {CR.i18nMessages["orderStepAssessmentInfo.form.field.browseBtn.text"]}
+                            {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" placeholder={CR.i18nMessages["orderStepAssessmentInfo.form.field.coverLetterFile.placeHolder"]} disabled />
+                        <input type="text" className="form-control" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -149,7 +149,7 @@ CR.Controllers.OrderStep2 = P(function(c) {
         },
 
         _initElements: function() {
-            this.$form = $(React.findDOMNode(this.refs.form));
+            this.$form = $("#content").find("form");
 
             this.$linkedinProfileFormGroup = this.$form.children("#linkedin-profile-form-group");
             this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin");
