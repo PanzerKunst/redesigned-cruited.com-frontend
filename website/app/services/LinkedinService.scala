@@ -19,7 +19,8 @@ class LinkedinService @Inject()(val ws: WSClient) {
   val linkedinRequestedPermissions = Play.configuration.getString("linkedin.requestedPermissions").get
   val linkedinState = ConfigService.applicationSecret
   val linkedinAuthUri = Play.configuration.getString("linkedin.authUri").get
-  val linkedinRedirectUriOrderStep2 = Play.configuration.getString("linkedin.redirectUri.orderStep2").get
+  val linkedinRedirectUriOrderStepAssessmentInfo = Play.configuration.getString("linkedin.redirectUri.order.assessmentInfo").get
+  val linkedinRedirectUriOrderStepAccountCreation = Play.configuration.getString("linkedin.redirectUri.order.accountCreation").get
   val linkedinAccessTokenUri = Play.configuration.getString("linkedin.accessTokenUri").get
   val linkedinProfileDataUri = Play.configuration.getString("linkedin.profileDataUri").get
 

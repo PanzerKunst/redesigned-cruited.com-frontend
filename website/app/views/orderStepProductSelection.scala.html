@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], headerData: HeaderData, products: List[CruitedProduct], reductions: List[Reduction], editions: List[Edition])(implicit messages: Messages)
+@(i18nMessages: Map[String, String], isSignedIn: Boolean, products: List[CruitedProduct], reductions: List[Reduction], editions: List[Edition])(implicit messages: Messages)
 
-@main("Cruited", "order-step-1") {
+@main("Cruited - Order", "order-step-product-selection") {
 <!--
     Header
 -->
-@header(headerData, "order-step-1")
+@header(isSignedIn, "order-step-product-selection")
 
 } {
 <!--

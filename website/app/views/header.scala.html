@@ -1,4 +1,4 @@
-@(headerData: HeaderData, pageId: String)(implicit messages: Messages)
+@(isSignedIn: Boolean, pageId: String)(implicit messages: Messages)
 
 <div id="small-medium-screen-menu" class="container">
     <div>
@@ -17,8 +17,8 @@
             </ul -->
 
             <div class="other-nav-ux">
-                @if(!headerData.isSignedIn) {
-                <a href="@headerData.linkedinAuthCodeRequestUrl">@Messages("signIn")</a>
+                @if(!isSignedIn) {
+                <a>@Messages("signIn")</a>
                 }
             </div>
         </div>
@@ -38,8 +38,8 @@
                 </ul -->
 
                 <div class="other-nav-ux">
-                    @if(!headerData.isSignedIn) {
-                    <a href="@headerData.linkedinAuthCodeRequestUrl">@Messages("signIn")</a>
+                    @if(!isSignedIn) {
+                    <a>@Messages("signIn")</a>
                     }
                 </div>
             </div>

@@ -22,6 +22,6 @@ class OrderApi extends Controller {
       case Some(coverLetterFile) => coverLetterFile.ref.moveTo(new File(documentRootDirForAccount + coverLetterFile.filename))
     }
 
-    Ok
+    Created
   }
 }

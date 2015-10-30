@@ -17,4 +17,10 @@ object SessionService {
       case Some(linkedinProfile) => Json.parse(linkedinProfile)
     }
   }
+
+  def isSignedIn(session: Session): Boolean = {
+    val accountId = getAccountId(session: Session)
+
+    accountId.isDefined && !AccountService.isTemporary(accountId.get)
+  }
 }

@@ -1,0 +1,30 @@
+@(i18nMessages: Map[String, String], isSignedIn: Boolean, linkedinAuthCodeRequestUrl: String, linkedinProfile: play.api.libs.json.JsValue, linkedinErrorMessage: Option[String])(implicit messages: Messages)
+
+@main("Cruited - Order", "order-step-account-creation") {
+<!--
+    Header
+-->
+@header(isSignedIn, "order-step-account-creation")
+
+} {
+<!--
+    Javascript
+-->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var linkedinErrorMessage = null;
+        @if(linkedinErrorMessage.isDefined) {
+            linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
+        }
+
+        var linkedinProfile = @Html(linkedinProfile.toString.replaceAll("\\\\n", " ")) || null; // Because there is a problem when JSON.parse()ing the new lines contained in the summary
+
+        CR.Controllers.OrderStep3(
+            @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
+            "@Html(linkedinAuthCodeRequestUrl)",
+            linkedinProfile,
+            linkedinErrorMessage
+        );
+    });
+</script>
+}

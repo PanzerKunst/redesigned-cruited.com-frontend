@@ -11,6 +11,7 @@ CR.defaultAnimationDuration = 0.5;
 
 CR.httpStatusCodes = {
     ok: 200,
+    created: 201,
     noContent: 204,
     emailAlreadyRegistered: 230,
     linkedInAccountIdAlreadyRegistered: 231

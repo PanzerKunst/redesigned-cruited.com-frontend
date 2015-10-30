@@ -1,10 +1,10 @@
-@(headerData: HeaderData, linkedinErrorMessage: Option[String], linkedinProfile: play.api.libs.json.JsValue)(implicit messages: Messages)
+@(isSignedIn: Boolean, linkedinErrorMessage: Option[String], linkedinProfile: play.api.libs.json.JsValue)(implicit messages: Messages)
 
 @main("Cruited", "dashboard") {
 <!--
     Header
 -->
-@header(headerData, "dashboard")
+@header(isSignedIn, "dashboard")
 
 } {
 <!--
