@@ -71,6 +71,7 @@ order.assessmentInfo.form.tos.text=I have read and accept the <a>Terms of Servic
 order.accountCreation.title=Create your account
 order.accountCreation.subtitle=Save your order
 order.accountCreation.nextStepBtn.text=Register and continue
+order.accountCreation.nextStepBtn.withEmailPrefix=Register with
 
 order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
 order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin

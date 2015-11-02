@@ -41,13 +41,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this._initElements();
             this._initValidation();
             this._showRelevantElements();
+            this._updateSubmitBtnText();
         },
 
         _getRegisterWithLinkedinFormSection: function() {
-
-            // TODO: remove
-            console.log("_getRegisterWithLinkedinFormSection");
-
             if (!this.state.linkedinAuthCodeRequestUrl) {
                 return null;
             }
@@ -65,7 +62,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         </article>
                         <div className="form-group">
                             <label htmlFor="email-from-linkedin">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.email.label"]}</label>
-                            <input type="text" className="form-control" id="email-from-linkedin" defaultValue={this.state.linkedinProfile.emailAddress} />
+                            <input type="text" className="form-control" id="email-from-linkedin" defaultValue={this.state.linkedinProfile.emailAddress} onChange={this._handleLinkedinEmailChanged} />
                             <p className="field-error" data-check="empty" />
                             <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.incorrectEmail"]}</p>
                         </div>
@@ -93,7 +90,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                     </div>
                     <div className="form-group">
                         <label htmlFor="email-address">{CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.label"]}</label>
-                        <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.field.placeholder"]} />
+                        <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.field.placeholder"]} onChange={this._handleEmailAddressChanged} />
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.incorrectEmail"]}</p>
                     </div>
@@ -113,9 +110,13 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this.$form = this.$contentWrapper.find("form");
             this.$registerWithLinkedinSection = this.$form.children("#register-with-linkedin-section");
             this.$registerWithLinkedinBtn = this.$registerWithLinkedinSection.find(".sign-in-with-linkedin");
+            this.$linkedinEmailField = this.$registerWithLinkedinSection.find("#email-from-linkedin");
             this.$notSignedInWithLinkedinErrorMsg = this.$registerWithLinkedinSection.find("#not-signed-in-with-linkedin");
 
             this.$registerWithEmailSection = this.$form.children("#register-with-email-section");
+            this.$emailAddressField = this.$registerWithEmailSection.find("#email-address");
+
+            this.$submitBtn = this.$form.find("[type=submit]");
         },
 
         _initValidation: function() {
@@ -140,7 +141,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _toggleSectionsRegisterWith: function() {
-            if (this.$registerWithLinkedinSection.is(":visible")) {
+            if (this._isRegisterWithLinkedinSectionVisible()) {
                 var $registerWithEmailSection = this.$registerWithEmailSection;
 
                 this.$registerWithLinkedinSection.fadeOut({
@@ -149,7 +150,9 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         $registerWithEmailSection.fadeIn({
                             animationDuration: 0.2
                         });
-                    }
+
+                        this._handleEmailAddressChanged();
+                    }.bind(this)
                 });
             } else {
                 var $registerWithLinkedinSection = this.$registerWithLinkedinSection;
@@ -160,8 +163,34 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         $registerWithLinkedinSection.fadeIn({
                             animationDuration: 0.2
                         });
-                    }
+
+                        this._handleLinkedinEmailChanged();
+                    }.bind(this)
                 });
+            }
+        },
+
+        _handleEmailAddressChanged: function() {
+            this._changeSubmitBtnText(this.$emailAddressField.val());
+        },
+
+        _handleLinkedinEmailChanged: function() {
+            this._changeSubmitBtnText(this.$linkedinEmailField.val());
+        },
+
+        _changeSubmitBtnText: function(emailAddress) {
+            if (emailAddress) {
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.nextStepBtn.withEmailPrefix"] + " " + emailAddress);
+            } else {
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.nextStepBtn.text"]);
+            }
+        },
+
+        _updateSubmitBtnText: function() {
+            if (this._isRegisterWithLinkedinSectionVisible()) {
+                this._handleLinkedinEmailChanged();
+            } else {
+                this._handleEmailAddressChanged();
             }
         },
 
@@ -187,6 +216,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
         _submitAccountCreation: function() {
 
+        },
+
+        _isRegisterWithLinkedinSectionVisible: function() {
+            return this.$registerWithLinkedinSection.is(":visible");
         },
 
         _isSignInWithLinkedinBtnValid: function() {
