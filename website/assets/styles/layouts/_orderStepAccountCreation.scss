@@ -1,8 +1,13 @@
 #order-step-account-creation {
-  #register-with-linkedin-form {
-    article,
-    .form-group {
-      display: none;
+  #register-with-linkedin-section,
+  #register-with-email-section {
+    display: none;
+  }
+
+  .sign-in-with-linkedin {
+    padding-left: 22px;
+    @include medium-screen {
+      padding-left: 41px;
     }
   }
 }

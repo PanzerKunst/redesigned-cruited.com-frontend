@@ -72,17 +72,18 @@ order.accountCreation.title=Create your account
 order.accountCreation.subtitle=Save your order
 order.accountCreation.nextStepBtn.text=Register and continue
 
-# order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
-order.accountCreation.registerWithLinkedin.checkbox.label=Register with Linkedin
+order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
+order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
 order.accountCreation.registerWithLinkedin.email.label=Preferred email
-# order.accountCreation.registerWithLinkedin.validation.notSignedIn=You need to sign in if you want to register with Linkedin
+order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
+order.accountCreation.registerWithLinkedin.validation.notSignedIn=You need to sign in if you want to register with Linkedin
 
-order.accountCreation.registerWithEmail.checkbox.label=Register with email
+order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your Linkedin account?
 order.accountCreation.registerWithEmail.firstName.label=First name
 order.accountCreation.registerWithEmail.firstName.field.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=Email address
 order.accountCreation.registerWithEmail.emailAddress.field.placeholder=your@mail.com
 order.accountCreation.registerWithEmail.password.label=Password
-order.accountCreation.registerWithEmail.password.field.placeholder=8 chars min
+order.accountCreation.registerWithEmail.password.field.placeholder=8 chars minimum
 order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 8 characters

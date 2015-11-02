@@ -17,7 +17,7 @@ CR.Controllers.ProductListItem = React.createClass({
         }
 
         return (
-            <li ref={this._initElements}>
+            <li ref="li">
                 <div className="checkbox checkbox-primary">
                     <input type="checkbox" id={checkboxId} checked={this._isInOrder()} onChange={this._handleProductToggle} />
                     <label htmlFor={checkboxId}>{CR.i18nMessages["order.productSelection.productsSection.productName." + this.props.product.code]}</label>
@@ -30,8 +30,12 @@ CR.Controllers.ProductListItem = React.createClass({
             );
     },
 
-    _initElements: function(li) {
-        this.$listItem = $(li);
+    componentDidMount: function() {
+        this._initElements();
+    },
+
+    _initElements: function() {
+        this.$listItem = $(React.findDOMNode(this.refs.li));
         this.$checkbox = this.$listItem.find("input[type=\"checkbox\"]");
     },
 

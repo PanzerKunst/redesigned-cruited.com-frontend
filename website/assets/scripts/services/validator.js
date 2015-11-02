@@ -84,19 +84,19 @@ CR.Services.Validator = P(function(c) {
     c._validateField = function($field, isOnBlur) {
         // Empty?
         if (this._isToCheckIfEmpty($field)) {
-            if (this._isFieldTypeCheckbox($field) && !$field.prop("checked")) {
-                this.flagInvalid($field);
-                this.showErrorMessage(this._get$empty($field));
-                return false;
-            }
-
-            if (this._isFieldTypeFile($field) && !$field[0].files[0]) {
-                this.flagInvalid($field);
-                this.showErrorMessage(this._get$empty($field));
-                return false;
-            }
-
-            if (!$field.val().trim()) {
+            if (this._isFieldTypeCheckbox($field)) {
+                if (!$field.prop("checked")) {
+                    this.flagInvalid($field);
+                    this.showErrorMessage(this._get$empty($field));
+                    return false;
+                }
+            } else if (this._isFieldTypeFile($field)) {
+                if (!$field[0].files[0]) {
+                    this.flagInvalid($field);
+                    this.showErrorMessage(this._get$empty($field));
+                    return false;
+                }
+            } else if (!$field.val().trim()) {
                 if (!isOnBlur) {
                     this.flagInvalid($field);
                     this.showErrorMessage(this._get$empty($field));

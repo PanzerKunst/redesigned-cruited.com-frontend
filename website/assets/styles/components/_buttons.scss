@@ -1,5 +1,5 @@
 .btn {
-  @include transition(all $default-animation-duration ease);
+  @include transition(color $default-animation-duration ease, background-color $default-animation-duration ease, border-color $default-animation-duration ease);
   border-radius: 0.25em;
 
   padding: 0.4em 1em;
@@ -30,8 +30,17 @@ a.btn-default {
   &:focus,
   &:hover {
     color: $background-body-color;
-    background-color: darken($grey, 15%);
     border-color: darken($grey, 25%);
+    background-color: darken($grey, 15%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    color: $grey;
+    border-color: $grey;
+    background-color: $background-body-color;
   }
 }
 
@@ -48,6 +57,14 @@ a.btn-primary {
     background-color: darken($primary-btn-color, 15%);
     border-color: darken($primary-btn-color, 25%);
   }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background-color: $primary-btn-color;
+    border-color: $primary-btn-color;
+  }
 }
 
 .btn.secondary {
@@ -60,8 +77,17 @@ a.btn-primary {
   &:focus,
   &:hover {
     color: $background-body-color;
-    background-color: darken($secondary-action-color, 15%);
     border-color: darken($secondary-action-color, 25%);
+    background-color: darken($secondary-action-color, 15%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    color: $secondary-action-color;
+    border-color: $secondary-action-color;
+    background-color: $background-body-color;
   }
 }
 

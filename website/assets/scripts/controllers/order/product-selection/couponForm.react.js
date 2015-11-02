@@ -3,7 +3,7 @@
 CR.Controllers.CouponForm = React.createClass({
     render: function() {
         return (
-            <form ref={this._init} onSubmit={this._handleSubmit}>
+            <form ref="form" onSubmit={this._handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="coupon-code">{CR.i18nMessages["order.productSelection.cartSection.coupon.label"]}</label>
                     <input type="text" className="form-control" id="coupon-code" placeholder={CR.i18nMessages["order.productSelection.cartSection.coupon.field.placeholder"]} />
@@ -15,13 +15,13 @@ CR.Controllers.CouponForm = React.createClass({
             );
     },
 
-    _init: function(form) {
-        this._initElements(form);
+    componentDidMount: function() {
+        this._initElements();
         this._initValidation();
     },
 
-    _initElements: function(form) {
-        this.$form = $(form);
+    _initElements: function() {
+        this.$form = $(React.findDOMNode(this.refs.form));
         this.$couponCodeField = this.$form.find("#coupon-code");
         this.$addCouponBtn = this.$form.children("button");
         this.$couponNotFoundError = this.$form.find("#coupon-not-found-error");

@@ -1,7 +1,7 @@
 package services
 
 import play.api.libs.json.{JsNull, JsValue, Json}
-import play.api.mvc.Session
+import play.api.mvc.{AnyContent, Request, Session}
 
 object SessionService {
   def getAccountId(session: Session): Option[Long] = {
@@ -11,15 +11,8 @@ object SessionService {
     }
   }
 
-  def getLinkedinProfile(session: Session): JsValue = {
-    session.get("linkedinProfile") match {
-      case None => JsNull
-      case Some(linkedinProfile) => Json.parse(linkedinProfile)
-    }
-  }
-
-  def isSignedIn(session: Session): Boolean = {
-    val accountId = getAccountId(session: Session)
+  def isSignedIn(request: Request[AnyContent]): Boolean = {
+    val accountId = getAccountId(request.session)
 
     accountId.isDefined && !AccountService.isTemporary(accountId.get)
   }

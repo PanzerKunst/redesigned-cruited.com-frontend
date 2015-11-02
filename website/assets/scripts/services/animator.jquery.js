@@ -3,7 +3,7 @@
 (function($) {
     $.fn.fadeIn = function(params) {
         if (!this.is(":visible")) {
-            var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDuration.default;
+            var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
             var alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
 
             TweenLite.set(this, {display: "block", alpha: 0});
@@ -20,7 +20,7 @@
 
     $.fn.fadeOut = function(params) {
         if (this.is(":visible")) {
-            var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDuration.default;
+            var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
 
             TweenLite.to(this, animationDuration, {
                 alpha: 0,
@@ -29,7 +29,7 @@
                     if (params && _.isFunction(params.onComplete)) {
                         params.onComplete();
                     }
-                }
+                }.bind(this)
             });
         }
     };

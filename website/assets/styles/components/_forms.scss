@@ -30,7 +30,7 @@ form {
     overflow: hidden;
 
     font-style: italic;
-    color: $brand-danger;
+    color: $state-danger-text;
 
     margin: 0 0 0 0.75em;
   }
@@ -43,7 +43,7 @@ form {
     &:after {
       @include icon-font($fa-var-asterisk);
       font-size: $font-size-xs;
-      color: $brand-danger;
+      color: $state-danger-text;
       vertical-align: super;
       margin-left: 0.5em;
     }

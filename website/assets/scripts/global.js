@@ -7,7 +7,9 @@ CR.Controllers = {};
 CR.Services = {};
 CR.Models = {};
 
-CR.defaultAnimationDuration = 0.5;
+CR.animationDurations = {
+    default: 0.5
+};
 
 CR.httpStatusCodes = {
     ok: 200,

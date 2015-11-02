@@ -26,11 +26,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             {this._getSignInWithLinkedinFormGroup()}
                             {this._getCvFormGroup()}
                             {this._getCoverLetterFormGroup()}
-                            <div className="checkbox checkbox-primary">
-                                <input type="checkbox" id="accept-tos" />
-                                <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
+                            <div>
+                                <div className="checkbox checkbox-primary">
+                                    <input type="checkbox" id="accept-tos" />
+                                    <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
+                                </div>
+                                <p className="field-error" data-check="empty" />
                             </div>
-                            <p className="field-error" data-check="empty" />
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.nextStepBtn.text"]}</button>
                             </div>
@@ -62,7 +64,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 if (this.state.linkedinProfile) {
                     formGroupContents = (
                         <div>
-                            <article>
+                            <article className="linkedin-profile-sneak-peek">
                                 <img src={this.state.linkedinProfile.pictureUrl} />
                                 <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                             </article>
@@ -190,37 +192,41 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             this.validator.hideErrorMessage(this.$notSignedInWithLinkedinErrorMsg);
 
-            if (this.validator.isValid() && this._isSignInWithLinkedinBtnValid()) {
-                this.$submitBtn.enableLoading();
+            if (this._isSignInWithLinkedinBtnValid()) {
+                if (this.validator.isValid()) {
+                    this.$submitBtn.enableLoading();
 
-                var formData = new FormData();
-                if (this.cvFile) {
-                    formData.append("cvFile", this.cvFile, this.cvFile.name);
-                }
-                if (this.coverLetterFile) {
-                    formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
-                }
-
-                var type = "POST";
-                var url = "/api/orders";
-
-                var httpRequest = new XMLHttpRequest();
-                httpRequest.onreadystatechange = function() {
-                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                        this.$submitBtn.disableLoading();
-
-                        if (httpRequest.status === CR.httpStatusCodes.created) {
-                            location.href = "/order/create-account";
-                        } else {
-                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-                        }
+                    var formData = new FormData();
+                    if (this.cvFile) {
+                        formData.append("cvFile", this.cvFile, this.cvFile.name);
                     }
-                }.bind(this);
-                httpRequest.open(type, url);
-                httpRequest.send(formData);
+                    if (this.coverLetterFile) {
+                        formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
+                    }
 
-            } else if (!this._isSignInWithLinkedinBtnValid()) {
+                    var type = "POST";
+                    var url = "/api/orders";
+
+                    var httpRequest = new XMLHttpRequest();
+                    httpRequest.onreadystatechange = function() {
+                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                            this.$submitBtn.disableLoading();
+
+                            if (httpRequest.status === CR.httpStatusCodes.created) {
+                                location.href = "/order/create-account";
+                            } else {
+                                alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                            }
+                        }
+                    }.bind(this);
+                    httpRequest.open(type, url);
+                    httpRequest.send(formData);
+                }
+            } else {
                 this.validator.showErrorMessage(this.$notSignedInWithLinkedinErrorMsg);
+
+                // We want to display other potential validation messages too
+                this.validator.isValid();
             }
         },
 

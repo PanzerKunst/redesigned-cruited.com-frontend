@@ -23,7 +23,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def orderStepProductSelection = Action { request =>
-    Ok(views.html.orderStepProductSelection(getI18nMessages(request), SessionService.isSignedIn(request.session), CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
+    Ok(views.html.orderStepProductSelection(getI18nMessages(request), SessionService.isSignedIn(request), CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
   }
 
   def orderStepAssessmentInfo = Action { request =>
@@ -51,7 +51,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case Some(account) => account.linkedinBasicProfile.getOrElse(JsNull)
     }
 
-    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request.session), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinBasicProfile, None))
+    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinBasicProfile, None))
       .withSession(newSession)
       .withHeaders(doNotCachePage: _*)
   }
@@ -69,7 +69,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                 case Some(account) => account.linkedinBasicProfile.getOrElse(JsNull)
               }
 
-              Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request.session), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinBasicProfile, None))
+              Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinBasicProfile, None))
                 .withHeaders(doNotCachePage: _*)
             } else {
               Redirect("/") // TODO: reditect instead to Step Payment once payment is coded
@@ -95,48 +95,19 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def linkedinCallbackOrderStepAssessmentInfo = Action { request =>
-    SessionService.getAccountId(request.session) match {
-      case None => BadRequest("linkedinCallbackOrderStepAssessmentInfo without account ID in session")
-      case Some(accountId) =>
-        if (request.queryString.contains("error")) {
-          Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request.session), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
-        } else if (!request.queryString.contains("state") ||
-          request.queryString.get("state").get.head != linkedinService.linkedinState) {
-          BadRequest("Linkedin Auth returned wrong value for 'state'!")
-        } else if (!request.queryString.contains("code")) {
-          BadRequest("Linkedin Auth did not return any value for 'code'!")
-        } else {
-          linkedinService.authCode = Some(request.queryString.get("code").get.head)
-          linkedinService.requestAccessToken(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo)
-
-          val linkedinProfile = linkedinService.getProfile
-
-          AccountDto.getOfId(accountId) match {
-            case None => throw new Exception("No account found in database for ID '" + accountId + "'")
-            case Some(account) =>
-              val updatedAccount = account.copy(
-                firstName = Some((linkedinProfile \ "firstName").as[String]),
-                lastName = Some((linkedinProfile \ "lastName").as[String]),
-                emailAddress = Some((linkedinProfile \ "emailAddress").as[String]),
-                pictureUrl = Some((linkedinProfile \ "pictureUrl").as[String]),
-                linkedinAccountId = Some((linkedinProfile \ "id").as[String]),
-                linkedinBasicProfile = Some(linkedinProfile)
-              )
-
-              AccountDto.update(updatedAccount)
-
-              Redirect("/order/assessment-info")
-          }
-        }
-    }
+    linkedinCallback(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
   }
 
   def linkedinCallbackOrderStepAccountCreation = Action { request =>
+    linkedinCallback(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
+  }
+
+  private def linkedinCallback(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
     SessionService.getAccountId(request.session) match {
-      case None => BadRequest("linkedinCallbackOrderStepAccountCreation without account ID in session")
+      case None => BadRequest("linkedinCallback without account ID in session")
       case Some(accountId) =>
         if (request.queryString.contains("error")) {
-          Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request.session), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+          Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
         } else if (!request.queryString.contains("state") ||
           request.queryString.get("state").get.head != linkedinService.linkedinState) {
           BadRequest("Linkedin Auth returned wrong value for 'state'!")
@@ -144,7 +115,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           BadRequest("Linkedin Auth did not return any value for 'code'!")
         } else {
           linkedinService.authCode = Some(request.queryString.get("code").get.head)
-          linkedinService.requestAccessToken(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo)
+          linkedinService.requestAccessToken(linkedinRedirectUri)
 
           val linkedinProfile = linkedinService.getProfile
 
@@ -162,7 +133,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
               AccountDto.update(updatedAccount)
 
-              Redirect("/order/assessment-info")
+              Redirect(appRedirectUri)
           }
         }
     }
