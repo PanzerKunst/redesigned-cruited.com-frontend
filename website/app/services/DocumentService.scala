@@ -20,6 +20,22 @@ object DocumentService {
     }
   }
 
+  def renameAccountDir(oldAccountId: Long, newAccountId: Long) {
+    val oldAccountRootDir = getRootDirForAccountId(oldAccountId)
+    val oldAccountRootDirFile = new File(oldAccountRootDir)
+    if (!oldAccountRootDirFile.exists) {
+      throw new Exception("Try to rename account dir for " + oldAccountId + " to " + newAccountId + " but the old one doesn't exist!")
+    }
+
+    val newAccountRootDir = getRootDirForAccountId(newAccountId)
+    val newAccountRootDirFile = new File(newAccountRootDir)
+    if (newAccountRootDirFile.exists) {
+      throw new Exception("Impossible to rename account dir to new ID " + newAccountId + " because such a directory already exists!")
+    }
+
+    oldAccountRootDirFile.renameTo(newAccountRootDirFile)
+  }
+
   def getRootDirForAccountSession(session: Session): String = {
     getRootDirForAccountId(SessionService.getAccountId(session).get)
   }

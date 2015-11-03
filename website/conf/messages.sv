@@ -72,6 +72,8 @@ order.accountCreation.title=Create your account
 order.accountCreation.subtitle=Save your order
 order.accountCreation.nextStepBtn.text=Register and continue
 order.accountCreation.nextStepBtn.withEmailPrefix=Register with
+order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered in our system
+order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered in our system
 
 order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
 order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin

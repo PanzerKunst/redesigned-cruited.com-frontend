@@ -20,6 +20,7 @@ GET     /order/pay                                      controllers.Application.
 POST    /api/db/re-create-tables                        controllers.api.DbAdminApi.reCreateTables
 GET     /api/coupons/:code                              controllers.api.CouponApi.get(code: String)
 POST    /api/orders                                     controllers.api.OrderApi.create
+POST    /api/accounts                                   controllers.api.AccountApi.create
 
 # Auth
 GET     /auth/linkedin/callback/order/assessment-info   controllers.Application.linkedinCallbackOrderStepAssessmentInfo

@@ -94,7 +94,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.label"]}</label>
 
                         {formGroupContents}
-                        <p className="field-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.validation.notSignedIn"]}</p>
+                        <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.validation.notSignedIn"]}</p>
                     </div>
                     );
             }
@@ -155,7 +155,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             this.$linkedinProfileFormGroup = this.$form.children("#linkedin-profile-form-group");
             this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin");
-            this.$notSignedInWithLinkedinErrorMsg = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
+            this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
 
             this.$cvFormGroup = this.$form.children("#cv-form-group");
             this.$cvFileInput = this.$cvFormGroup.find("#cv");
@@ -190,9 +190,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         _handleSubmit: function(e) {
             e.preventDefault();
 
-            this.validator.hideErrorMessage(this.$notSignedInWithLinkedinErrorMsg);
+            this.validator.hideErrorMessage(this.$notSignedInWithLinkedinError);
 
-            if (this._isSignInWithLinkedinBtnValid()) {
+            if (this._isSignInWithLinkedinBtnThere()) {
                 if (this.validator.isValid()) {
                     this.$submitBtn.enableLoading();
 
@@ -210,11 +210,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     var httpRequest = new XMLHttpRequest();
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                            this.$submitBtn.disableLoading();
-
                             if (httpRequest.status === CR.httpStatusCodes.created) {
                                 location.href = "/order/create-account";
                             } else {
+                                this.$submitBtn.disableLoading();
                                 alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                             }
                         }
@@ -223,14 +222,14 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     httpRequest.send(formData);
                 }
             } else {
-                this.validator.showErrorMessage(this.$notSignedInWithLinkedinErrorMsg);
+                this.validator.showErrorMessage(this.$notSignedInWithLinkedinError);
 
                 // We want to display other potential validation messages too
                 this.validator.isValid();
             }
         },
 
-        _isSignInWithLinkedinBtnValid: function() {
+        _isSignInWithLinkedinBtnThere: function() {
             return this.$signInWithLinkedinBtn.length === 0;
         }
     });

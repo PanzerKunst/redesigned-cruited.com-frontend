@@ -18,9 +18,10 @@ object AccountService {
       rand
     }
 
-    AccountDto.createTemporary(tempAccoundId)
-
-    tempAccoundId
+    AccountDto.createTemporary(tempAccoundId) match {
+      case None => throw new Exception("AccountDto.createTemporary() didn't return an ID")
+      case Some(accountId) => accountId
+    }
   }
 
   def isTemporary(accountId: Long): Boolean = {

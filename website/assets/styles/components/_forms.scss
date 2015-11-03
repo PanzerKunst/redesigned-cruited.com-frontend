@@ -25,14 +25,19 @@ form {
     }
   }
 
-  .field-error {
+  .field-error,
+  .other-form-error {
     height: 0;
     overflow: hidden;
 
     font-style: italic;
     color: $state-danger-text;
 
-    margin: 0 0 0 0.75em;
+    margin: 0;
+  }
+
+  .field-error {
+    margin-left: 0.75em;
   }
 
   label > [type=file] {

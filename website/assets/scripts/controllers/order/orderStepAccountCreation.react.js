@@ -23,12 +23,15 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                             <section id="register-with-linkedin-section">
                                 <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switchLink.text"]}</a>
                                 {this._getRegisterWithLinkedinFormSection()}
+                                <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.notSignedIn"]}</p>
                             </section>
                             <section id="register-with-email-section">
                                 <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switchLink.text"]}</a>
                                 {this._getRegisterWithEmailFormSection()}
                             </section>
                             <div className="centered-contents">
+                                <p className="other-form-error" id="email-already-registered">{CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}</p>
+                                <p className="other-form-error" id="linkedin-account-already-registered">{CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}</p>
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.nextStepBtn.text"]}</button>
                             </div>
                         </form>
@@ -75,7 +78,6 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                     <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
                         <span>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.btn.text"]}</span>
                     </a>
-                    <p className="field-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.notSignedIn"]}</p>
                 </div>
                 );
         },
@@ -111,10 +113,15 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this.$registerWithLinkedinSection = this.$form.children("#register-with-linkedin-section");
             this.$registerWithLinkedinBtn = this.$registerWithLinkedinSection.find(".sign-in-with-linkedin");
             this.$linkedinEmailField = this.$registerWithLinkedinSection.find("#email-from-linkedin");
-            this.$notSignedInWithLinkedinErrorMsg = this.$registerWithLinkedinSection.find("#not-signed-in-with-linkedin");
+            this.$notSignedInWithLinkedinError = this.$registerWithLinkedinSection.find("#not-signed-in-with-linkedin");
 
             this.$registerWithEmailSection = this.$form.children("#register-with-email-section");
+            this.$firstNameField = this.$registerWithEmailSection.find("#first-name");
             this.$emailAddressField = this.$registerWithEmailSection.find("#email-address");
+            this.$passwordField = this.$registerWithEmailSection.find("#password");
+
+            this.$emailAlreadyRegisteredError = this.$form.find("#email-already-registered");
+            this.$linkedinAccountAlreadyRegisteredError = this.$form.find("#linkedin-account-already-registered");
 
             this.$submitBtn = this.$form.find("[type=submit]");
         },
@@ -131,7 +138,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _showRelevantElements: function() {
-            if (this.$registerWithLinkedinBtn.length || this.state.isRegisterWithLinkedinDefault) {
+            if (this._isSignInWithLinkedinBtnThere() || this.state.isRegisterWithLinkedinDefault) {
                 this.$registerWithLinkedinSection.show();
                 this.$registerWithEmailSection.hide();
             } else {
@@ -141,6 +148,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _toggleSectionsRegisterWith: function() {
+            this._hideOtherFormErrors();
+
             if (this._isRegisterWithLinkedinSectionVisible()) {
                 var $registerWithEmailSection = this.$registerWithEmailSection;
 
@@ -197,15 +206,15 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _handleSubmit: function(e) {
             e.preventDefault();
 
-            if (this.$registerWithLinkedinSection.is(":visible")) {
-                this.registerWithLinkedinValidator.hideErrorMessage(this.$notSignedInWithLinkedinErrorMsg);
+            this._hideOtherFormErrors();
 
-                if (this._isSignInWithLinkedinBtnValid()) {
+            if (this._isRegisterWithLinkedinSectionVisible()) {
+                if (!this._isSignInWithLinkedinBtnThere()) {
                     if (this.registerWithLinkedinValidator.isValid()) {
                         this._submitAccountCreation();
                     }
                 } else {
-                    this.registerWithEmailValidator.showErrorMessage(this.$notSignedInWithLinkedinErrorMsg);
+                    this.registerWithEmailValidator.showErrorMessage(this.$notSignedInWithLinkedinError);
                 }
             } else {
                 if (this.registerWithEmailValidator.isValid()) {
@@ -215,15 +224,51 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _submitAccountCreation: function() {
+            this.$submitBtn.enableLoading();
 
+            var type = "POST";
+            var url = "/api/accounts";
+
+            var httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === CR.httpStatusCodes.created) {
+                        location.href = "/order/pay";
+                    } else {
+                        this.$submitBtn.disableLoading();
+
+                        if (httpRequest.status === CR.httpStatusCodes.emailAlreadyRegistered) {
+                            this.registerWithEmailValidator.showErrorMessage(this.$emailAlreadyRegisteredError);
+                        } else if (httpRequest.status === CR.httpStatusCodes.linkedinAccountIdAlreadyRegistered) {
+                            this.registerWithLinkedinValidator.showErrorMessage(this.$linkedinAccountAlreadyRegisteredError);
+                        } else {
+                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        }
+                    }
+                }
+            }.bind(this);
+            httpRequest.open(type, url);
+            httpRequest.setRequestHeader("Content-Type", "application/json");
+            httpRequest.send(JSON.stringify({
+                emailAddress: this._isRegisterWithLinkedinSectionVisible() ? this.$linkedinEmailField.val() : this.$emailAddressField.val(),
+                firstName: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile.firstName : this.$firstNameField.val(),
+                password: this._isRegisterWithLinkedinSectionVisible() ? null : this.$passwordField.val(),
+                linkedinAccountId: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile.id : null
+            }));
+        },
+
+        _hideOtherFormErrors: function() {
+            this.registerWithLinkedinValidator.hideErrorMessage(this.$notSignedInWithLinkedinError);
+            this.registerWithLinkedinValidator.hideErrorMessage(this.$linkedinAccountAlreadyRegisteredError);
+            this.registerWithEmailValidator.hideErrorMessage(this.$emailAlreadyRegisteredError);
         },
 
         _isRegisterWithLinkedinSectionVisible: function() {
             return this.$registerWithLinkedinSection.is(":visible");
         },
 
-        _isSignInWithLinkedinBtnValid: function() {
-            return this.$registerWithLinkedinBtn.length === 0;
+        _isSignInWithLinkedinBtnThere: function() {
+            return this.$registerWithLinkedinBtn.length === 1;
         }
     });
 

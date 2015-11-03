@@ -16,7 +16,7 @@ CR.httpStatusCodes = {
     created: 201,
     noContent: 204,
     emailAlreadyRegistered: 230,
-    linkedInAccountIdAlreadyRegistered: 231
+    linkedinAccountIdAlreadyRegistered: 231
 };
 
 CR.localStorageKeys = {
