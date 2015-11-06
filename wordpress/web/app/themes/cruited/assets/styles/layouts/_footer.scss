@@ -90,7 +90,10 @@ footer.content-info {
       .widget {
         width: auto;
 
-        margin: 0;
+        margin: 0 1em 0 0;
+        &:last-child {
+          margin-right: 0;
+        }
       }
     }
 
