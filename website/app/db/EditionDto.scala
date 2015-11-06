@@ -12,7 +12,7 @@ object EditionDto {
   private def getAll: List[Edition] = {
     DB.withConnection { implicit c =>
       val query = """
-        select id, code
+        select id, edition
         from product_edition
         order by id;"""
 
@@ -21,7 +21,7 @@ object EditionDto {
       SQL(query)().map { row =>
         Edition(
           id = row[Long]("id"),
-          code = row[String]("code")
+          code = row[String]("edition")
         )
       }.toList
     }

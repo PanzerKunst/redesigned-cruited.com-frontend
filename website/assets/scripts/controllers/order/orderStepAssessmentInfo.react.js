@@ -197,6 +197,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     this.$submitBtn.enableLoading();
 
                     var formData = new FormData();
+                    formData.append("editionId", CR.order.getEdition().id);
+                    formData.append("containedProductIds", _.map(CR.order.getProducts(), "id"));
+                    formData.append("couponCode", CR.order.getCoupon().code);
                     if (this.cvFile) {
                         formData.append("cvFile", this.cvFile, this.cvFile.name);
                     }

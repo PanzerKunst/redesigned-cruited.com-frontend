@@ -11,7 +11,7 @@ class CouponApi extends Controller {
   def get(code: String) = Action { request =>
     CouponDto.getOfCode(code) match {
       case None => NoContent
-      case Some(coupon) => Ok(Json.toJson(CouponDto.getOfCode(code)))
+      case Some(coupon) => Ok(Json.toJson(coupon))
     }
   }
 }

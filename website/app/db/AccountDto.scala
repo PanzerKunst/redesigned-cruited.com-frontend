@@ -13,10 +13,10 @@ object AccountDto {
     DB.withConnection { implicit c =>
       val query = """
       insert into useri(id, registered_at, /* useful fields */
-        code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
+        code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
       values(""" + accountId + """,
         now(),
-        '', '', '', 0, '', '', '', now(), now(), 0, 0, '');"""
+        '', 0, '', '', '', now(), now(), 0, 0, '');"""
 
       Logger.info("AccountDto.createTemporary():" + query)
 
@@ -33,12 +33,12 @@ object AccountDto {
 
       val query = """
       insert into useri(prenume, email, pass, registered_at, /* useful fields */
-        code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
+        code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
         DbUtil.safetize(emailAddress) + """', """ +
         passwordClause + """,
         now(),
-        '', '', '', 0, '', '', '', now(), now(), 0, 0, '');"""
+        '', 0, '', '', '', now(), now(), 0, 0, '');"""
 
       // This log is commented since it displays the password
       // Logger.info("AccountDto.create():" + query)
@@ -64,16 +64,6 @@ object AccountDto {
         case Some(pass) => ", pass = '" + DbUtil.safetize(pass) + "'"
       }
 
-      val pictureUrlClause = account.pictureUrl match {
-        case None => ""
-        case Some(pictureUrl) => ", img = '" + DbUtil.safetize(pictureUrl) + "'"
-      }
-
-      val linkedinAccountIdClause = account.linkedinAccountId match {
-        case None => ""
-        case Some(id) => ", linkedin_id = '" + DbUtil.safetize(id) + "'"
-      }
-
       val linkedinBasicProfileClause = account.linkedinBasicProfile match {
         case None => ""
         case Some(basicProfile) => ", linkedin_basic_profile_fields = '" + basicProfile + "'"
@@ -85,8 +75,6 @@ object AccountDto {
         firstNameClause +
         lastNameClause +
         passwordClause +
-        pictureUrlClause +
-        linkedinAccountIdClause +
         linkedinBasicProfileClause + """
         where id = """ + account.id + """;"""
 
@@ -112,24 +100,14 @@ object AccountDto {
   def getOfId(accountId: Long): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """
-        select prenume, nume, email, img, linkedin_id, linkedin_basic_profile_fields, registered_at
+        select prenume, nume, email, linkedin_basic_profile_fields, registered_at
         from useri
         where id = """ + accountId + """;"""
 
       Logger.info("AccountDto.getOfId():" + query)
 
-      val accountOptionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("img") ~ str("linkedin_id") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
-        case firstName ~ lastName ~ emailAddress ~ pictureUrl ~ linkedinAccountId ~ linkedinBasicProfile ~ creationDate =>
-          val pictureUrlOpt = pictureUrl match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
-          val linkedinAccountIdOpt = linkedinAccountId match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
+      val accountOptionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+        case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
             case otherString => Some(Json.toJson(otherString))
@@ -141,8 +119,6 @@ object AccountDto {
             lastName = lastName,
             emailAddress = emailAddress,
             password = None,
-            pictureUrl = pictureUrlOpt,
-            linkedinAccountId = linkedinAccountIdOpt,
             linkedinBasicProfile = linkedinBasicProfileOpt,
             creationTimestamp = creationDate.getTime
           )
@@ -155,25 +131,15 @@ object AccountDto {
   def getOfEmailAddress(emailAddress: String): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """
-        select id, prenume, nume, img, linkedin_id, linkedin_basic_profile_fields, registered_at
+        select id, prenume, nume, linkedin_basic_profile_fields, registered_at
         from useri
         where email = '""" + DbUtil.safetize(emailAddress) + """'
         limit 1;"""
 
       Logger.info("AccountDto.getOfEmailAddress():" + query)
 
-      val accountOptionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("img") ~ str("linkedin_id") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
-        case id ~ firstName ~ lastName ~ pictureUrl ~ linkedinAccountId ~ linkedinBasicProfile ~ creationDate =>
-          val pictureUrlOpt = pictureUrl match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
-          val linkedinAccountIdOpt = linkedinAccountId match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
+      val accountOptionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
             case otherString => Some(Json.toJson(otherString))
@@ -185,8 +151,6 @@ object AccountDto {
             lastName = lastName,
             emailAddress = Some(emailAddress),
             password = None,
-            pictureUrl = pictureUrlOpt,
-            linkedinAccountId = linkedinAccountIdOpt,
             linkedinBasicProfile = linkedinBasicProfileOpt,
             creationTimestamp = creationDate.getTime
           )
@@ -206,13 +170,8 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
 
-      val accountOptionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("img") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
-        case id ~ firstName ~ lastName ~ emailAddress ~ pictureUrl ~ linkedinBasicProfile ~ creationDate =>
-          val pictureUrlOpt = pictureUrl match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
+      val accountOptionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+        case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
             case otherString => Some(Json.toJson(otherString))
@@ -224,8 +183,6 @@ object AccountDto {
             lastName = lastName,
             emailAddress = emailAddress,
             password = None,
-            pictureUrl = pictureUrlOpt,
-            linkedinAccountId = Some(linkedInAccountId),
             linkedinBasicProfile = linkedinBasicProfileOpt,
             creationTimestamp = creationDate.getTime
           )

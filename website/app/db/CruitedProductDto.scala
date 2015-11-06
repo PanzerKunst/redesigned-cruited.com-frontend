@@ -1,5 +1,6 @@
 package db
 
+import anorm.SqlParser._
 import anorm._
 import models.{CruitedProduct, Price}
 import play.api.Logger
@@ -27,6 +28,32 @@ object CruitedProductDto {
           )
         )
       }.toList
+    }
+  }
+
+  def getOfId(id: Long): Option[CruitedProduct] = {
+    DB.withConnection { implicit c =>
+      val query = """select code, price_amount
+      from product
+      where price_currency_code = 'SEK'
+        and id = """ + id + """
+      limit 1;"""
+
+      Logger.info("CruitedProductDto.getOfId():" + query)
+
+      val productOptionRowParser = str("code") ~ double("price_amount") map {
+        case code ~ priceAmount =>
+          CruitedProduct(
+            id = id,
+            code = code,
+            price = Price(
+              amount = priceAmount,
+              currencyCode = "SEK"
+            )
+          )
+      }
+
+      SQL(query).as(productOptionRowParser.singleOpt)
     }
   }
 }

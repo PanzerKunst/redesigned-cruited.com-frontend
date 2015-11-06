@@ -8,8 +8,6 @@ case class Account(id: Long,
                    lastName: Option[String],
                    emailAddress: Option[String],
                    password: Option[String],
-                   pictureUrl: Option[String],
-                   linkedinAccountId: Option[String],
                    linkedinBasicProfile: Option[JsValue],
                    creationTimestamp: Long)
 
@@ -20,8 +18,6 @@ object Account {
       (JsPath \ "lastName").writeNullable[String] and
       (JsPath \ "emailAddress").writeNullable[String] and
       (JsPath \ "password").writeNullable[String] and
-      (JsPath \ "pictureUrl").writeNullable[String] and
-      (JsPath \ "linkedinAccountId").writeNullable[String] and
       (JsPath \ "linkedinBasicProfile").writeNullable[JsValue] and
       (JsPath \ "creationTimestamp").write[Long]
     )(unlift(Account.unapply))

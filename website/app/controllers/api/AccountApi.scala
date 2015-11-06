@@ -43,20 +43,16 @@ class AccountApi extends Controller {
                             lastName = oldAccount.lastName,
                             emailAddress = Some(frontendAccount.emailAddress),
                             password = frontendAccount.password,
-                            pictureUrl = oldAccount.pictureUrl,
-                            linkedinAccountId = oldAccount.linkedinAccountId,
                             linkedinBasicProfile = oldAccount.linkedinBasicProfile,
                             creationTimestamp = new Date().getTime
                           )
                           AccountDto.update(newAccount)
 
-                          DocumentService.renameAccountDir(accountId, newAccountId)
-
                           AccountDto.deleteOfId(accountId)
 
                           // TODO: send welcome email
 
-                          Created.withSession(request.session + ("accountId" -> newAccountId.toString))
+                          Created.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> newAccountId.toString))
                       }
                   }
                 }

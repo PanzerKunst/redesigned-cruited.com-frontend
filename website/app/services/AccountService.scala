@@ -8,10 +8,9 @@ import play.api.mvc.Session
 import scala.util.Random
 
 object AccountService {
-  def generateTempAccountIdAndInitialiseTables(session: Session): Long = {
-    val rand = Random.nextLong()
-
+  def generateTempAccountIdAndStoreAccount(session: Session): Long = {
     // We only want to generate negative IDs, because positive ones are for non-temp accounts
+    val rand = Random.nextLong()
     val tempAccoundId = if (rand >= 0) {
       -rand
     } else {
