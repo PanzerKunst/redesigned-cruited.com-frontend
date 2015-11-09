@@ -27,7 +27,6 @@ class OrderApi extends Controller {
     // Saving files in "documents" folder
     val cvFileNameOpt = requestBody.file("cvFile") match {
       case None => None
-
       case Some(cvFile) =>
         val fileName = tempOrderId + "-" + cvFile.filename
         cvFile.ref.moveTo(new File(DocumentService.assessmentDocumentsRootDir + fileName))
@@ -36,7 +35,6 @@ class OrderApi extends Controller {
 
     val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
       case None => None
-
       case Some(coverLetterFile) =>
         val fileName = tempOrderId + "-" + coverLetterFile.filename
         coverLetterFile.ref.moveTo(new File(DocumentService.assessmentDocumentsRootDir + fileName))

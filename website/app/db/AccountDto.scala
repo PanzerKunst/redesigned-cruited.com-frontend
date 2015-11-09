@@ -86,11 +86,11 @@ object AccountDto {
     }
   }
 
-  def deleteOfId(accountId: Long) {
+  def deleteOfId(id: Long) {
     DB.withConnection { implicit c =>
       val query = """
         delete from useri
-        where id = """ + accountId + """;"""
+        where id = """ + id + """;"""
 
       Logger.info("AccountDto.deleteOfId():" + query)
 

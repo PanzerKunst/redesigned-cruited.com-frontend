@@ -4,7 +4,7 @@ import db.CruitedProductDto
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Writes}
 
-case class Order(id: Long,
+case class Order(id: Option[Long],
                  editionId: Long,
                  containedProductIds: List[Long],
                  couponId: Option[Long],
@@ -15,7 +15,7 @@ case class Order(id: Long,
 
 object Order {
   implicit val writes: Writes[Order] = (
-    (JsPath \ "id").write[Long] and
+    (JsPath \ "id").writeNullable[Long] and
       (JsPath \ "editionId").write[Long] and
       (JsPath \ "containedProductIds").write[List[Long]] and
       (JsPath \ "couponId").writeNullable[Long] and

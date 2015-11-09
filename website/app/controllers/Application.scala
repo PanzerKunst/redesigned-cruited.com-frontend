@@ -27,7 +27,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def orderStepAssessmentInfo = Action { request =>
-    val linkedinBasicProfile = SessionService.getAccountId(request.session) match {
+    val linkedinProfile = SessionService.getAccountId(request.session) match {
       case None => JsNull
       case Some(accountId) => AccountDto.getOfId(accountId) match {
         case None => JsNull
@@ -35,7 +35,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       }
     }
 
-    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinBasicProfile, None))
+    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
       .withHeaders(doNotCachePage: _*)
   }
 
@@ -52,12 +52,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             if (!AccountService.isTemporary(accountId)) {
               Redirect("/") // TODO: reditect instead to Step Payment once payment is coded
             } else {
-              val linkedinBasicProfile = AccountDto.getOfId(accountId) match {
+              val linkedinProfile = AccountDto.getOfId(accountId) match {
                 case None => JsNull
-                case Some(account) => account.linkedinProfile.getOrElse(JsNull)
+                case Some(existingAccount) => existingAccount.linkedinProfile.getOrElse(JsNull)
               }
 
-              Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinBasicProfile, None))
+              Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
                 .withHeaders(doNotCachePage: _*)
             }
         }
@@ -71,11 +71,20 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         AccountDto.getOfId(accountId) match {
           case None => throw new Exception("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
-            if (AccountService.isTemporary(accountId)) {
-              // TODO: upgrade the account to non-temp, then retrieve order details from query parameters and save it
+            // TODO: only upgrade order to real order after payment is completed
+            if (AccountService.isTemporary(account.id)) {
+              throw new Exception("Impossible to upgrade a temp order for a temporary account")
+            } else {
+              for (tempOrder <- OrderDto.getTemporaryOrdersForAccountId(account.id)) {
+                // 1. Create new order, with data from the old one
+                OrderDto.create(tempOrder)
 
+                // 2. Delete old order
+                OrderDto.deleteOfId(tempOrder.id.get)
+              }
+
+              Redirect("/")
             }
-            Redirect("/") // TODO: display instead Step Payment once payment is coded
         }
     }
   }

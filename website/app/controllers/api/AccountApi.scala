@@ -19,7 +19,6 @@ class AccountApi extends Controller {
 
         AccountDto.getOfEmailAddress(frontendAccount.emailAddress) match {
           case Some(accountWithSameEmail) => Status(HttpService.httpStatusEmailAlreadyRegistered)
-
           case None =>
             if (frontendAccount.linkedinProfile.isDefined && AccountDto.getOfLinkedinAccountId((frontendAccount.linkedinProfile.get \ "id").as[String]).isDefined) {
               Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
@@ -28,7 +27,6 @@ class AccountApi extends Controller {
 
               SessionService.getAccountId(request.session) match {
                 case None =>
-
                 case Some(accountId) =>
                   AccountDto.getOfId(accountId) match {
                     case None =>
@@ -63,7 +61,6 @@ class AccountApi extends Controller {
   private def createAccountAndUpdateOrder(frontendAccount: AccountReceivedFromFrontend, request: Request[JsValue]): Long = {
     AccountDto.create(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password, frontendAccount.linkedinProfile) match {
       case None => throw new Exception("AccountDto.create() didn't return an ID")
-
       case Some(accountId) =>
         // In case there is an order ID in session, we update the order.added_by
         SessionService.getOrderId(request.session) match {
