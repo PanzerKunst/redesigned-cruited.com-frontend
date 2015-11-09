@@ -25,6 +25,8 @@ object Order {
       (JsPath \ "creationTimestamp").write[Long]
     )(unlift(Order.unapply))
 
+  val typeStringSeparator = ","
+
   def getTypeForDb(containedProductIds: List[Long]): String = {
     containedProductIds.length match {
       case 0 => ""
@@ -42,11 +44,17 @@ object Order {
 
             for (i <- 1 to nbAboveOne - 1) {
               val product = allProducts.filter(p => p.id == containedProductIds(i)).head
-              result = result + "," + product.getTypeForDb
+              result = result + typeStringSeparator + product.getTypeForDb
             }
 
             result
         }
     }
+  }
+
+  def getContainedProductIdsFromTypes(docTypes: String): List[Long] = {
+    docTypes.split(typeStringSeparator)
+      .map(typeForDb => CruitedProduct.getFromType(typeForDb).id)
+      .toList
   }
 }

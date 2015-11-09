@@ -31,7 +31,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case None => JsNull
       case Some(accountId) => AccountDto.getOfId(accountId) match {
         case None => JsNull
-        case Some(account) => account.linkedinBasicProfile.getOrElse(JsNull)
+        case Some(account) => account.linkedinProfile.getOrElse(JsNull)
       }
     }
 
@@ -54,7 +54,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             } else {
               val linkedinBasicProfile = AccountDto.getOfId(accountId) match {
                 case None => JsNull
-                case Some(account) => account.linkedinBasicProfile.getOrElse(JsNull)
+                case Some(account) => account.linkedinProfile.getOrElse(JsNull)
               }
 
               Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinBasicProfile, None))
@@ -114,7 +114,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             firstName = Some((linkedinProfile \ "firstName").as[String]),
             lastName = Some((linkedinProfile \ "lastName").as[String]),
             emailAddress = Some((linkedinProfile \ "emailAddress").as[String]),
-            linkedinBasicProfile = Some(linkedinProfile)
+            linkedinProfile = Some(linkedinProfile)
           )
 
           AccountDto.update(updatedAccount)

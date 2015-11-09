@@ -1,63 +1,79 @@
 package controllers.api
 
-import java.util.Date
 import javax.inject.Singleton
 
-import db.AccountDto
-import models.Account
+import db.{AccountDto, OrderDto}
 import models.frontend.AccountReceivedFromFrontend
-import play.api.libs.json.{JsError, JsSuccess}
-import play.api.mvc.{Action, Controller}
-import services.{DocumentService, HttpService, SessionService}
+import play.api.libs.json.{JsError, JsSuccess, JsValue}
+import play.api.mvc.{Action, Controller, Request}
+import services.{HttpService, SessionService}
 
 @Singleton
 class AccountApi extends Controller {
   def create = Action(parse.json) { request =>
-    SessionService.getAccountId(request.session) match {
-      case None => BadRequest("Account ID not found in session")
+    request.body.validate[AccountReceivedFromFrontend] match {
+      case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
 
-      case Some(accountId) =>
-        request.body.validate[AccountReceivedFromFrontend] match {
-          case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
+      case s: JsSuccess[AccountReceivedFromFrontend] =>
+        val frontendAccount = s.get
 
-          case s: JsSuccess[AccountReceivedFromFrontend] =>
-            val frontendAccount = s.get
+        AccountDto.getOfEmailAddress(frontendAccount.emailAddress) match {
+          case Some(accountWithSameEmail) => Status(HttpService.httpStatusEmailAlreadyRegistered)
 
-            AccountDto.getOfEmailAddress(frontendAccount.emailAddress) match {
-              case Some(accountWithSameEmail) => Status(HttpService.httpStatusEmailAlreadyRegistered)
+          case None =>
+            if (frontendAccount.linkedinProfile.isDefined && AccountDto.getOfLinkedinAccountId((frontendAccount.linkedinProfile.get \ "id").as[String]).isDefined) {
+              Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
+            } else {
+              val newAccountId = createAccountAndUpdateOrder(frontendAccount, request)
 
-              case None =>
-                if (frontendAccount.linkedinAccountId.isDefined && AccountDto.getOfLinkedinAccountId(frontendAccount.linkedinAccountId.get).isDefined) {
-                  Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
-                } else {
-                  AccountDto.create(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password) match {
-                    case None => throw new Exception("AccountDto.create() didn't return an ID")
+              SessionService.getAccountId(request.session) match {
+                case None =>
 
-                    case Some(newAccountId) =>
-                      AccountDto.getOfId(accountId) match {
-                        case None => throw new Exception("No account found in database for ID '" + accountId + "'")
-                        case Some(oldAccount) =>
-                          val newAccount = Account(
-                            id = newAccountId,
-                            firstName = Some(frontendAccount.firstName),
-                            lastName = oldAccount.lastName,
-                            emailAddress = Some(frontendAccount.emailAddress),
-                            password = frontendAccount.password,
-                            linkedinBasicProfile = oldAccount.linkedinBasicProfile,
-                            creationTimestamp = new Date().getTime
+                case Some(accountId) =>
+                  AccountDto.getOfId(accountId) match {
+                    case None =>
+
+                    // If exists in DB
+                    case Some(account) =>
+                      // 1. If the old one has linkedIn info that the new one doesn't, we set it
+                      if (account.linkedinProfile.isDefined) {
+                        val newAccount = AccountDto.getOfId(newAccountId).get
+
+                        if (!newAccount.linkedinProfile.isDefined) {
+                          val updatedAccount = newAccount.copy(
+                            linkedinProfile = account.linkedinProfile
                           )
-                          AccountDto.update(newAccount)
-
-                          AccountDto.deleteOfId(accountId)
-
-                          // TODO: send welcome email
-
-                          Created.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> newAccountId.toString))
+                          AccountDto.update(updatedAccount)
+                        }
                       }
+
+                      // 2. We delete the old account
+                      AccountDto.deleteOfId(accountId)
                   }
-                }
+              }
+
+              // TODO: send welcome email
+
+              Created.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> newAccountId.toString))
             }
         }
+    }
+  }
+
+  private def createAccountAndUpdateOrder(frontendAccount: AccountReceivedFromFrontend, request: Request[JsValue]): Long = {
+    AccountDto.create(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password, frontendAccount.linkedinProfile) match {
+      case None => throw new Exception("AccountDto.create() didn't return an ID")
+
+      case Some(accountId) =>
+        // In case there is an order ID in session, we update the order.added_by
+        SessionService.getOrderId(request.session) match {
+          case None =>
+          case Some(tempOrderId) =>
+            val orderWithUpdatedAccountId = OrderDto.getOfId(tempOrderId).get.copy(accountId = Some(accountId))
+            OrderDto.update(orderWithUpdatedAccountId)
+        }
+
+        accountId
     }
   }
 }

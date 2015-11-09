@@ -41,7 +41,7 @@ object CruitedProductDto {
 
       Logger.info("CruitedProductDto.getOfId():" + query)
 
-      val productOptionRowParser = str("code") ~ double("price_amount") map {
+      val optionRowParser = str("code") ~ double("price_amount") map {
         case code ~ priceAmount =>
           CruitedProduct(
             id = id,
@@ -53,7 +53,7 @@ object CruitedProductDto {
           )
       }
 
-      SQL(query).as(productOptionRowParser.singleOpt)
+      SQL(query).as(optionRowParser.singleOpt)
     }
   }
 }

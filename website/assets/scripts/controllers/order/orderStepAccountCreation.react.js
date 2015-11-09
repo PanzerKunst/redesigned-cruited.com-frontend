@@ -253,7 +253,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 emailAddress: this._isRegisterWithLinkedinSectionVisible() ? this.$linkedinEmailField.val() : this.$emailAddressField.val(),
                 firstName: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile.firstName : this.$firstNameField.val(),
                 password: this._isRegisterWithLinkedinSectionVisible() ? null : this.$passwordField.val(),
-                linkedinAccountId: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile.id : null
+                linkedinProfile: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile : null
             }));
         },
 

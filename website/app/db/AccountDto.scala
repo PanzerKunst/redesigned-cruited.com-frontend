@@ -6,7 +6,7 @@ import models.Account
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 
 object AccountDto {
   def createTemporary(accountId: Long): Option[Long] = {
@@ -24,7 +24,7 @@ object AccountDto {
     }
   }
 
-  def create(emailAddress: String, firstName: String, password: Option[String]): Option[Long] = {
+  def create(emailAddress: String, firstName: String, password: Option[String], linkedinProfile: Option[JsValue]): Option[Long] = {
     DB.withConnection { implicit c =>
       val passwordClause = password match {
         case None => "NULL"
@@ -32,13 +32,14 @@ object AccountDto {
       }
 
       val query = """
-      insert into useri(prenume, email, pass, registered_at, /* useful fields */
-        code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
+      insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, /* useful fields */
+        code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
         DbUtil.safetize(emailAddress) + """', """ +
         passwordClause + """,
         now(),
-        '', 0, '', '', '', now(), now(), 0, 0, '');"""
+        '""" + linkedinProfile.getOrElse("") + """',
+        '', 0, '', '', '', now(), now(), 0, 0);"""
 
       // This log is commented since it displays the password
       // Logger.info("AccountDto.create():" + query)
@@ -64,9 +65,9 @@ object AccountDto {
         case Some(pass) => ", pass = '" + DbUtil.safetize(pass) + "'"
       }
 
-      val linkedinBasicProfileClause = account.linkedinBasicProfile match {
+      val linkedinProfileClause = account.linkedinProfile match {
         case None => ""
-        case Some(basicProfile) => ", linkedin_basic_profile_fields = '" + basicProfile + "'"
+        case Some(linkedinProfile) => ", linkedin_basic_profile_fields = '" + linkedinProfile + "'"
       }
 
       val query = """
@@ -75,7 +76,7 @@ object AccountDto {
         firstNameClause +
         lastNameClause +
         passwordClause +
-        linkedinBasicProfileClause + """
+        linkedinProfileClause + """
         where id = """ + account.id + """;"""
 
       // This log is commented since it displays the password
@@ -97,16 +98,16 @@ object AccountDto {
     }
   }
 
-  def getOfId(accountId: Long): Option[Account] = {
+  def getOfId(id: Long): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """
         select prenume, nume, email, linkedin_basic_profile_fields, registered_at
         from useri
-        where id = """ + accountId + """;"""
+        where id = """ + id + """;"""
 
       Logger.info("AccountDto.getOfId():" + query)
 
-      val accountOptionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val optionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
@@ -114,17 +115,17 @@ object AccountDto {
           }
 
           Account(
-            id = accountId,
+            id = id,
             firstName = firstName,
             lastName = lastName,
             emailAddress = emailAddress,
             password = None,
-            linkedinBasicProfile = linkedinBasicProfileOpt,
+            linkedinProfile = linkedinBasicProfileOpt,
             creationTimestamp = creationDate.getTime
           )
       }
 
-      SQL(query).as(accountOptionRowParser.singleOpt)
+      SQL(query).as(optionRowParser.singleOpt)
     }
   }
 
@@ -138,7 +139,7 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfEmailAddress():" + query)
 
-      val accountOptionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
@@ -151,12 +152,12 @@ object AccountDto {
             lastName = lastName,
             emailAddress = Some(emailAddress),
             password = None,
-            linkedinBasicProfile = linkedinBasicProfileOpt,
+            linkedinProfile = linkedinBasicProfileOpt,
             creationTimestamp = creationDate.getTime
           )
       }
 
-      SQL(query).as(accountOptionRowParser.singleOpt)
+      SQL(query).as(optionRowParser.singleOpt)
     }
   }
 
@@ -170,7 +171,7 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
 
-      val accountOptionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
@@ -183,12 +184,12 @@ object AccountDto {
             lastName = lastName,
             emailAddress = emailAddress,
             password = None,
-            linkedinBasicProfile = linkedinBasicProfileOpt,
+            linkedinProfile = linkedinBasicProfileOpt,
             creationTimestamp = creationDate.getTime
           )
       }
 
-      SQL(query).as(accountOptionRowParser.singleOpt)
+      SQL(query).as(optionRowParser.singleOpt)
     }
   }
 }
