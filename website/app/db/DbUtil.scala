@@ -1,5 +1,7 @@
 package db
 
+import java.sql.Timestamp
+
 object DbUtil {
   def safetize(string: String): String = {
     string.replaceAll("'", "''")
@@ -11,5 +13,9 @@ object DbUtil {
     arrayOfString.map { item =>
       item.asInstanceOf[T]
     }.toList
+  }
+
+  def formatTimestampForInsertOrUpdate(timestamp: Long): String = {
+    new Timestamp(timestamp).toString
   }
 }

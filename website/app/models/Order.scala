@@ -11,7 +11,25 @@ case class Order(id: Option[Long],
                  cvFileName: Option[String],
                  coverLetterFileName: Option[String],
                  accountId: Option[Long],
-                 creationTimestamp: Long)
+                 creationTimestamp: Long) {
+
+  def getCvFileNameWithoutPrefix: Option[String] = {
+    getFileNameWithoutPrefix(cvFileName)
+  }
+
+  def getCoverLetterFileNameWithoutPrefix: Option[String] = {
+    getFileNameWithoutPrefix(coverLetterFileName)
+  }
+
+  private def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
+    fileName match {
+      case None => None
+      case Some(fileNameWithPrefix) =>
+        val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
+        Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
+    }
+  }
+}
 
 object Order {
   implicit val writes: Writes[Order] = (
@@ -25,6 +43,7 @@ object Order {
       (JsPath \ "creationTimestamp").write[Long]
     )(unlift(Order.unapply))
 
+  val fileNamePrefixSeparator = "-"
   val typeStringSeparator = ","
 
   def getTypeForDb(containedProductIds: List[Long]): String = {

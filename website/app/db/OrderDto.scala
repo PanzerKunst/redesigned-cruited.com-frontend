@@ -68,17 +68,18 @@ object OrderDto {
       }
 
       val query = """
-      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, /* useful fields */
-        paid_on, position, employer, hireability, open_application, li_url, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, paid_on, /* useful fields */
+        position, employer, hireability, open_application, li_url, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
       values(""" + order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
         cvFileNameClause + """',
-        '', """ +
-        new Date(order.creationTimestamp) + """, '""" +
+        '', '""" +
+        DbUtil.formatTimestampForInsertOrUpdate(order.creationTimestamp) + """', '""" +
         couponCodeClause + """', """ +
         order.accountId.getOrElse(0) + """, '""" +
         Order.getTypeForDb(order.containedProductIds) + """',
-        '0000-00-00 00:00:00', '', '', 0, 0, '', '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+        now(),
+        '', '', 0, 0, '', '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
 
       Logger.info("OrderDto.create():" + query)
 
@@ -93,11 +94,23 @@ object OrderDto {
         case Some(accountId) => ", added_by = " + accountId
       }
 
+      val cvFileNameClause = order.cvFileName match {
+        case None => ""
+        case Some(fileName) => ", file_cv = '" + DbUtil.safetize(fileName) + "'"
+      }
+
+      val coverLetterFileNameClause = order.coverLetterFileName match {
+        case None => ""
+        case Some(fileName) => ", file = '" + DbUtil.safetize(fileName) + "'"
+      }
+
       val query = """
         update documents set
         edition_id = """ + order.editionId +
-        accountIdClause + """
-        where id = """ + order.id + """;"""
+        accountIdClause +
+        cvFileNameClause +
+        coverLetterFileNameClause + """
+        where id = """ + order.id.get + """;"""
 
       Logger.info("OrderDto.update():" + query)
 
@@ -169,7 +182,7 @@ object OrderDto {
     DB.withConnection { implicit c =>
       val query = """
         select id, edition_id, file, file_cv, added_at, code, added_by, type
-        from product
+        from documents
         where added_by = """ + accountId + """
           and id < 0
         order by id;"""

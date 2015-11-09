@@ -17,43 +17,50 @@ class AccountApi extends Controller {
       case s: JsSuccess[AccountReceivedFromFrontend] =>
         val frontendAccount = s.get
 
-        AccountDto.getOfEmailAddress(frontendAccount.emailAddress) match {
-          case Some(accountWithSameEmail) => Status(HttpService.httpStatusEmailAlreadyRegistered)
-          case None =>
-            if (frontendAccount.linkedinProfile.isDefined && AccountDto.getOfLinkedinAccountId((frontendAccount.linkedinProfile.get \ "id").as[String]).isDefined) {
-              Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
-            } else {
-              val newAccountId = createAccountAndUpdateOrder(frontendAccount, request)
+        val accountWithSameEmailAddressOpt = AccountDto.getOfEmailAddress(frontendAccount.emailAddress)
+        val accountIdInSession = SessionService.getAccountId(request.session)
+        if (accountWithSameEmailAddressOpt.isDefined && accountIdInSession.isDefined && accountWithSameEmailAddressOpt.get.id != accountIdInSession.get) {
+          Status(HttpService.httpStatusEmailAlreadyRegistered)
+        } else {
+          val accountWithSameLinkedinIdOpt = frontendAccount.linkedinProfile match {
+            case None => None
+            case Some(linkedinProfile) => AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String])
+          }
 
-              SessionService.getAccountId(request.session) match {
+          if (accountWithSameLinkedinIdOpt.isDefined && accountIdInSession.isDefined && accountWithSameLinkedinIdOpt.get.id != accountIdInSession.get) {
+            Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
+          } else {
+            val newAccountId = createAccountAndUpdateOrder(frontendAccount, request)
+
+            if (accountIdInSession.isDefined) {
+              val accountId = accountIdInSession.get
+
+              AccountDto.getOfId(accountId) match {
                 case None =>
-                case Some(accountId) =>
-                  AccountDto.getOfId(accountId) match {
-                    case None =>
 
-                    // If exists in DB
-                    case Some(account) =>
-                      // 1. If the old one has linkedIn info that the new one doesn't, we set it
-                      if (account.linkedinProfile.isDefined) {
-                        val newAccount = AccountDto.getOfId(newAccountId).get
+                // If exists in DB
+                case Some(account) =>
+                  // 1. If the old one has linkedIn info that the new one doesn't, we set it
+                  if (account.linkedinProfile.isDefined) {
+                    val newAccount = AccountDto.getOfId(newAccountId).get
 
-                        if (!newAccount.linkedinProfile.isDefined) {
-                          val updatedAccount = newAccount.copy(
-                            linkedinProfile = account.linkedinProfile
-                          )
-                          AccountDto.update(updatedAccount)
-                        }
-                      }
-
-                      // 2. We delete the old account
-                      AccountDto.deleteOfId(accountId)
+                    if (!newAccount.linkedinProfile.isDefined) {
+                      val updatedAccount = newAccount.copy(
+                        linkedinProfile = account.linkedinProfile
+                      )
+                      AccountDto.update(updatedAccount)
+                    }
                   }
+
+                  // 2. We delete the old account
+                  AccountDto.deleteOfId(accountId)
               }
-
-              // TODO: send welcome email
-
-              Created.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> newAccountId.toString))
             }
+
+            // TODO: send welcome email
+
+            Created.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> newAccountId.toString))
+          }
         }
     }
   }

@@ -1,10 +1,25 @@
 package services
 
+import java.io.File
+
 import play.api.Play
 import play.api.Play.current
 
 object DocumentService {
   val assessmentDocumentsRootDir = Play.configuration.getString("assessmentDocuments.RootDir").get
+
+  def renameFile(oldName: String, newName: String) {
+    val oldFile = new File(assessmentDocumentsRootDir + oldName)
+    if (!oldFile.exists) {
+      throw new Exception("Trying to rename file " + oldName + " but it doesn't exist!")
+    }
+    val newFile = new File(assessmentDocumentsRootDir + newName)
+    if (newFile.exists) {
+      throw new Exception("Can't rename file " + oldName + " to " + newFile + " because the destination already exists!")
+    }
+
+    oldFile.renameTo(newFile)
+  }
 
   /* TODO
   def getCvFile(order: Order): Option[File] = {

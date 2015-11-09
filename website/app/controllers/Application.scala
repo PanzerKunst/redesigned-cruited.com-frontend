@@ -77,10 +77,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             } else {
               for (tempOrder <- OrderDto.getTemporaryOrdersForAccountId(account.id)) {
                 // 1. Create new order, with data from the old one
-                OrderDto.create(tempOrder)
+                val finalisedOrderId = OrderDto.create(tempOrder).get
 
                 // 2. Delete old order
                 OrderDto.deleteOfId(tempOrder.id.get)
+
+                OrderService.finaliseFileNames(finalisedOrderId)
               }
 
               Redirect("/")

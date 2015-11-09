@@ -4,6 +4,7 @@ import java.io.File
 import javax.inject.Singleton
 
 import db.OrderDto
+import models.Order
 import models.frontend.OrderReceivedFromFrontend
 import play.api.mvc.{Action, Controller}
 import services.{DocumentService, SessionService}
@@ -28,7 +29,7 @@ class OrderApi extends Controller {
     val cvFileNameOpt = requestBody.file("cvFile") match {
       case None => None
       case Some(cvFile) =>
-        val fileName = tempOrderId + "-" + cvFile.filename
+        val fileName = tempOrderId + Order.fileNamePrefixSeparator + cvFile.filename
         cvFile.ref.moveTo(new File(DocumentService.assessmentDocumentsRootDir + fileName))
         Some(fileName)
     }
@@ -36,7 +37,7 @@ class OrderApi extends Controller {
     val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
       case None => None
       case Some(coverLetterFile) =>
-        val fileName = tempOrderId + "-" + coverLetterFile.filename
+        val fileName = tempOrderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
         coverLetterFile.ref.moveTo(new File(DocumentService.assessmentDocumentsRootDir + fileName))
         Some(fileName)
     }

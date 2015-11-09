@@ -28,7 +28,7 @@ object AccountDto {
     DB.withConnection { implicit c =>
       val passwordClause = password match {
         case None => "NULL"
-        case Some(pass) => "'" + DbUtil.safetize(pass) + "'"
+        case Some(pass) => "password('" + pass + "')"
       }
 
       val query = """
@@ -62,7 +62,7 @@ object AccountDto {
 
       val passwordClause = account.password match {
         case None => ""
-        case Some(pass) => ", pass = '" + DbUtil.safetize(pass) + "'"
+        case Some(pass) => ", pass = password('" + pass + "')"
       }
 
       val linkedinProfileClause = account.linkedinProfile match {
@@ -164,9 +164,9 @@ object AccountDto {
   def getOfLinkedinAccountId(linkedInAccountId: String): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """
-        select id, prenume, nume, email, img, linkedin_basic_profile_fields, registered_at
+        select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at
         from useri
-        where linkedin_id = '""" + DbUtil.safetize(linkedInAccountId) + """'
+        where linkedin_basic_profile_fields like '%"id":"""" + DbUtil.safetize(linkedInAccountId) + """"%'
         limit 1;"""
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
