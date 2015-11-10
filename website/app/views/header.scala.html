@@ -17,8 +17,10 @@
             </ul -->
 
             <div class="other-nav-ux">
-                @if(!isSignedIn) {
-                <a>@Messages("signIn")</a>
+                @if(isSignedIn) {
+                <a href="/logout">@Messages("signOut")</a>
+                } else {
+                <a href="/login">@Messages("signIn")</a>
                 }
             </div>
         </div>
@@ -38,8 +40,10 @@
                 </ul -->
 
                 <div class="other-nav-ux">
-                    @if(!isSignedIn) {
-                    <a>@Messages("signIn")</a>
+                    @if(isSignedIn) {
+                    <a href="/logout">@Messages("signOut")</a>
+                    } else {
+                    <a href="/login">@Messages("signIn")</a>
                     }
                 </div>
             </div>

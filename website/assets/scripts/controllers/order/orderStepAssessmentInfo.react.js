@@ -12,7 +12,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
         render: function() {
             if (!window.FormData) {
-                return (<p style="color: red">Your browser is too old, it's not supported by our application</p>);  // TODO
+                return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);  // TODO
             }
 
             return (
@@ -49,7 +49,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
         _getSignInWithLinkedinFormGroup: function() {
             if (this.state.linkedinErrorMessage) {
-                return (<p style="color: red">{this.state.linkedinErrorMessage}</p>);   // TODO
+                return (<p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>);
             } else {
                 var orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
                     return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
@@ -199,7 +199,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     var formData = new FormData();
                     formData.append("editionId", CR.order.getEdition().id);
                     formData.append("containedProductIds", _.map(CR.order.getProducts(), "id"));
-                    formData.append("couponCode", CR.order.getCoupon().code);
+                    if (CR.order.getCoupon()) {
+                        formData.append("couponCode", CR.order.getCoupon().code);
+                    }
                     if (this.cvFile) {
                         formData.append("cvFile", this.cvFile, this.cvFile.name);
                     }

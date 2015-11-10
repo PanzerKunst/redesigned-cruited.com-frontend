@@ -4,8 +4,15 @@ CR.Models.Order = P(function(c) {
     c.init = function(order) {
         this._products = order && order.products ? _.cloneDeep(order.products) : [];
         this._reductions = order && order.reductions ? _.cloneDeep(order.reductions) : [];
-        this._edition = order && order.edition ? _.cloneDeep(order.edition) : null;
         this._coupon = order && order.coupon ? _.cloneDeep(order.coupon) : null;
+
+        if (order && order.edition) {
+            this._edition = _.cloneDeep(order.edition);
+        } else if (!_.isEmpty(CR.editions)) {
+            this._edition = CR.editions[0];
+        }
+
+        this._saveOrderInLocalStorage();
     };
 
     c.getProducts = function() {

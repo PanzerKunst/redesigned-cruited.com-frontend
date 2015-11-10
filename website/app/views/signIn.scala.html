@@ -1,0 +1,26 @@
+@(i18nMessages: Map[String, String], isSignedIn: Boolean, linkedinAuthCodeRequestUrl: String, linkedinErrorMessage: Option[String], isLinkedinAccountUnregistered: Boolean)(implicit messages: Messages)
+
+@main("Cruited", "sign-in") {
+<!--
+    Header
+-->
+@header(isSignedIn, "sign-in")
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function () {
+    var linkedinErrorMessage = null;
+    @if(linkedinErrorMessage.isDefined) {
+        linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
+    }
+
+    CR.Controllers.SignIn(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
+        "@Html(linkedinAuthCodeRequestUrl)",
+        linkedinErrorMessage,
+        @isLinkedinAccountUnregistered
+    );
+});
+}

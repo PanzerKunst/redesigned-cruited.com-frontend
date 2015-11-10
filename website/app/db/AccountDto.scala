@@ -192,4 +192,39 @@ object AccountDto {
       SQL(query).as(optionRowParser.singleOpt)
     }
   }
+
+  def getOfEmailAndPassword(emailAddress: String, password: String): Option[Account] = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select id, prenume, nume, linkedin_basic_profile_fields, registered_at
+        from useri
+        where email = '""" + DbUtil.safetize(emailAddress) + """'
+          and pass = password('""" + password + """')
+          and id > 0
+        limit 1;"""
+
+      // This log is commented since it displays the password
+      // Logger.info("AccountDto.getOfEmailAndPassword():" + query)
+
+      val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
+          val linkedinBasicProfileOpt = linkedinBasicProfile match {
+            case "" => None
+            case otherString => Some(Json.toJson(otherString))
+          }
+
+          Account(
+            id = id,
+            firstName = firstName,
+            lastName = lastName,
+            emailAddress = Some(emailAddress),
+            password = None,
+            linkedinProfile = linkedinBasicProfileOpt,
+            creationTimestamp = creationDate.getTime
+          )
+      }
+
+      SQL(query).as(optionRowParser.singleOpt)
+    }
+  }
 }

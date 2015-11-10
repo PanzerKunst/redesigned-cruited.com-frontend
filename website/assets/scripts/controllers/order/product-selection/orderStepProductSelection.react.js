@@ -17,6 +17,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     </div>
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.productSelection.subtitle"]}</span>
+
                         <section id="products-section">
                             <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
 
@@ -67,12 +68,30 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                             {this._getCartTable()}
                         </section>
-                        <div className="centered-contents">
-                            <a className="btn btn-lg btn-primary" href="/order/assessment-info">{CR.i18nMessages["order.productSelection.nextStepBtn.text"]}</a>
-                        </div>
+                        <form onSubmit={this._handleSubmit} className="centered-contents">
+                            <p className="other-form-error" id="empty-cart">{CR.i18nMessages["order.productSelection.validation.emptyCart"]}</p>
+                            <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.productSelection.nextStepBtn.text"]}</button>
+                        </form>
                     </div>
                 </div>
                 );
+        },
+
+        componentDidUpdate: function() {
+            this._initElements();
+            this._initValidation();
+
+            if (!_.isEmpty(CR.order.getProducts())) {
+                this.validator.hideErrorMessage(this.$emptyCartError);
+            }
+        },
+
+        _initElements: function() {
+            this.$emptyCartError = $(".with-circles").children("form").children("#empty-cart");
+        },
+
+        _initValidation: function() {
+            this.validator = CR.Services.Validator();
         },
 
         _getParagraphOfferTwoProductsSameOrder: function() {
@@ -175,6 +194,18 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     <td>- {amount}{unit}</td>
                 </tr>
                 );
+        },
+
+        _handleSubmit: function(e) {
+            e.preventDefault();
+
+            this.validator.hideErrorMessage(this.$emptyCartError);
+
+            if (_.isEmpty(CR.order.getProducts())) {
+                this.validator.showErrorMessage(this.$emptyCartError);
+            } else {
+                location.href = "/order/assessment-info";
+            }
         }
     });
 
@@ -185,11 +216,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         CR.reductions = reductions;
 
         var orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
-        if (orderFromLocalStorage) {
-            CR.order = CR.Models.Order(orderFromLocalStorage);
-        } else {
-            CR.order = CR.Models.Order({edition: editions[0]});
-        }
+        CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this.reactInstance = React.render(
             React.createElement(this.reactClass),

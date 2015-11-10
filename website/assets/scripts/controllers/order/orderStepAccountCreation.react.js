@@ -53,7 +53,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             }
 
             if (this.state.linkedinErrorMessage) {
-                return (<p style="color: red">{this.state.linkedinErrorMessage}</p>);   // TODO
+                return (<p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>);
             }
 
             if (this.state.linkedinProfile) {

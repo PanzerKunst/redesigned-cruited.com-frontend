@@ -18,7 +18,7 @@ CR.Services.Validator = P(function(c) {
     c.errorMessageAnimationDuration = 0.5;
 
     c.init = function(fieldIds) {
-        this.fieldIds = fieldIds;
+        this.fieldIds = fieldIds || [];
 
         for (var i = 0; i < this.fieldIds.length; i++) {
             var $field = $("#" + this.fieldIds[i]);

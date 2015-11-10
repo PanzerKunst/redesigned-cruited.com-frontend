@@ -45,12 +45,18 @@ class OrderApi extends Controller {
 
     val requestData = requestBody.dataParts
 
+    val couponCode = if (!requestData.contains("couponCode")) {
+      None
+    } else {
+      Some(requestData("couponCode").head)
+    }
+
     // Create temporary order
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
       editionId = requestData("editionId").head.toLong,
       containedProductIds = requestData("containedProductIds").head.split(",").toList.map(productId => productId.toLong),
-      couponCode = requestData("couponCode").headOption,
+      couponCode = couponCode,
       cvFileName = cvFileNameOpt,
       coverLetterFileName = coverLetterFileNameOpt,
       accountId = SessionService.getAccountId(request.session)

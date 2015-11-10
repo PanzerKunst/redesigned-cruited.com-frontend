@@ -21,27 +21,7 @@ object DocumentService {
     oldFile.renameTo(newFile)
   }
 
-  /* TODO
-  def getCvFile(order: Order): Option[File] = {
-    val cvDirFile = new File(getCvDirForAccountId(accountId))
-    cvDirFile.listFiles().headOption
-  }
 
-  private def getCvDirForAccountId(accountId: Long): String = {
-    getRootDirForAccountId(accountId) + "\\" + assessmentDocumentsCvSubdir
-  }
-
-  private def getCoverLetterDirForAccountId(accountId: Long): String = {
-    getRootDirForAccountId(accountId) + "\\" + assessmentDocumentsCoverLetterSubdir
-  }
-
-  private def getLinkedinProfileDirForAccountId(accountId: Long): String = {
-    getRootDirForAccountId(accountId) + "\\" + assessmentDocumentsLinkedinProfileSubdir
-  }
-
-  private def getRootDirForAccountId(accountId: Long): String = {
-    assessmentDocumentsRootDir + accountId + "\\"
-  } */
 
   /* PHP code to convert Word to PDF. Both should be stored in the documents folder
   function createWordtoPdf($fileToConvert, $pathToSaveOutputFile, $apiKey=200003736, $message, $name) {

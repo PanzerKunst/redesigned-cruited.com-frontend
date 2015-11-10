@@ -34,6 +34,10 @@ form {
     color: $state-danger-text;
 
     margin: 0;
+
+    &.shown-by-default {
+      height: auto;
+    }
   }
 
   .field-error {

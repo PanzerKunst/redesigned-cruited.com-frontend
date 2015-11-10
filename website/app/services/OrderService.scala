@@ -31,4 +31,12 @@ object OrderService {
       DocumentService.renameFile(orderToFinalise.coverLetterFileName.get, orderWithFinalisedFileNames.coverLetterFileName.get)
     }
   }
+
+  def convertDocsToPdf(orderId: Long) {
+
+  }
+
+  def generateDocThumbnails(orderId: Long) {
+
+  }
 }

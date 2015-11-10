@@ -1,4 +1,4 @@
-@(isSignedIn: Boolean, linkedinErrorMessage: Option[String], linkedinProfile: play.api.libs.json.JsValue)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], isSignedIn: Boolean)(implicit messages: Messages)
 
 @main("Cruited", "dashboard") {
 <!--
@@ -11,6 +11,6 @@
     Javascript
 */
 document.addEventListener("DOMContentLoaded", function () {
-    CR.Controllers.Dashboard();
+    CR.Controllers.Dashboard(@Html(play.api.libs.json.Json.toJson(i18nMessages).toString));
 });
 }
