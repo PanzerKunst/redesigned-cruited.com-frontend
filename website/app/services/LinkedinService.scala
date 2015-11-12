@@ -38,7 +38,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
   }
 
   def requestAccessToken(redirectUri: String) {
-    val linkedinAccessTokenCallParams = Map(
+    val wsCallParams = Map(
       "grant_type" -> Seq("authorization_code"),
       "code" -> Seq(authCode.get),
       "redirect_uri" -> Seq(redirectUri),
@@ -47,7 +47,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
 
     val futureAccessToken: Future[String] = ws.url(linkedinAccessTokenUri)
       .withHeaders("Content-Type" -> "application/x-www-form-urlencoded")
-      .post(linkedinAccessTokenCallParams)
+      .post(wsCallParams)
       .map {
       response => (response.json \ "access_token").as[String]
     }

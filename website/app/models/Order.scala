@@ -10,6 +10,7 @@ case class Order(id: Option[Long],
                  couponId: Option[Long],
                  cvFileName: Option[String],
                  coverLetterFileName: Option[String],
+                 linkedinProfileFileName: Option[String],
                  accountId: Option[Long],
                  creationTimestamp: Long) {
 
@@ -39,6 +40,7 @@ object Order {
       (JsPath \ "couponId").writeNullable[Long] and
       (JsPath \ "cvFileName").writeNullable[String] and
       (JsPath \ "coverLetterFileName").writeNullable[String] and
+      (JsPath \ "linkedinProfileFileName").writeNullable[String] and
       (JsPath \ "accountId").writeNullable[Long] and
       (JsPath \ "creationTimestamp").write[Long]
     )(unlift(Order.unapply))

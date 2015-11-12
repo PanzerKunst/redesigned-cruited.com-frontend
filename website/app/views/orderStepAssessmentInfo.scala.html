@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
         linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
     }
 
-    var linkedinProfile = @Html(linkedinProfile.toString.replaceAll("\\\\n", " ")) || null; // Because there is a problem when JSON.parse()ing the new lines contained in the summary
+    var linkedinProfile = @Html(linkedinProfile.toString) || null;
 
     CR.Controllers.OrderStepAssessmentInfo(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),

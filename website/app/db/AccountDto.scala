@@ -31,6 +31,11 @@ object AccountDto {
         case Some(pass) => "password('" + pass + "')"
       }
 
+      val linkedinProfileClause = linkedinProfile match {
+        case None => ""
+        case Some(jsValue) => DbUtil.safetize(jsValue.toString())
+      }
+
       val query = """
       insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, /* useful fields */
         code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
@@ -38,7 +43,7 @@ object AccountDto {
         DbUtil.safetize(emailAddress) + """', """ +
         passwordClause + """,
         now(),
-        '""" + linkedinProfile.getOrElse("") + """',
+        '""" + linkedinProfileClause + """',
         '', 0, '', '', '', now(), now(), 0, 0);"""
 
       // This log is commented since it displays the password
@@ -67,7 +72,7 @@ object AccountDto {
 
       val linkedinProfileClause = account.linkedinProfile match {
         case None => ""
-        case Some(linkedinProfile) => ", linkedin_basic_profile_fields = '" + linkedinProfile + "'"
+        case Some(jsValue) => ", linkedin_basic_profile_fields = '" + DbUtil.safetize(jsValue.toString()) + "'"
       }
 
       val query = """
@@ -111,7 +116,9 @@ object AccountDto {
         case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
-            case otherString => Some(Json.toJson(otherString))
+            case otherString =>
+              val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
+              Some(Json.parse(readyToParse))
           }
 
           Account(
@@ -143,7 +150,9 @@ object AccountDto {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
-            case otherString => Some(Json.toJson(otherString))
+            case otherString =>
+              val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
+              Some(Json.parse(readyToParse))
           }
 
           Account(
@@ -175,7 +184,9 @@ object AccountDto {
         case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
-            case otherString => Some(Json.toJson(otherString))
+            case otherString =>
+              val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
+              Some(Json.parse(readyToParse))
           }
 
           Account(
@@ -210,7 +221,9 @@ object AccountDto {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => None
-            case otherString => Some(Json.toJson(otherString))
+            case otherString =>
+              val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
+              Some(Json.parse(readyToParse))
           }
 
           Account(

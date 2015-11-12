@@ -1,12 +1,35 @@
 package services
 
-import java.io.File
+import java.io.{FileOutputStream, File, FilenameFilter}
+import javax.inject.{Inject, Singleton}
 
+import models.Order
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.mime.{HttpMultipartMode, MultipartEntityBuilder}
+import org.apache.http.impl.client.HttpClientBuilder
 import play.api.Play
 import play.api.Play.current
+import play.api.libs.ws.WSClient
 
-object DocumentService {
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
+
+@Singleton
+class DocumentService @Inject()(val ws: WSClient) {
   val assessmentDocumentsRootDir = Play.configuration.getString("assessmentDocuments.RootDir").get
+  val convertApiDotComToPdfFromWordUrl = Play.configuration.getString("convertapi.com.toPdf.fromWord.url").get
+  val convertApiDotComToPdfFromOpenOfficeUrl = Play.configuration.getString("convertapi.com.toPdf.fromOpenOffice.url").get
+  val convertApiDotComToPdfFromRichTextUrl = Play.configuration.getString("convertapi.com.toPdf.fromRichText.url").get
+  val convertApiDotComToPdfFromWebUrl = Play.configuration.getString("convertapi.com.toPdf.fromWeb.url").get
+  val convertApiDotComApiKey = Play.configuration.getString("convertapi.com.apiKey").get
+  val linkedinProfilePdfFileNameWithoutPrefix = Play.configuration.getString("linkedinProfile.pdfFileName.withoutPrefix").get
+
+  val extensionDoc = "doc"
+  val extensionDocx = "docx"
+  val extensionPdf = "pdf"
+  val extensionOdt = "odt"
+  val extensionRtf = "rtf"
 
   def renameFile(oldName: String, newName: String) {
     val oldFile = new File(assessmentDocumentsRootDir + oldName)
@@ -21,87 +44,93 @@ object DocumentService {
     oldFile.renameTo(newFile)
   }
 
+  def isFilePresent(fileName: String): Boolean = {
+    new File(assessmentDocumentsRootDir + fileName).exists
+  }
 
-
-  /* PHP code to convert Word to PDF. Both should be stored in the documents folder
-  function createWordtoPdf($fileToConvert, $pathToSaveOutputFile, $apiKey=200003736, $message, $name) {
-    try {
-        $rand = time();
-        $ext = ".pdf";
-       // $fileName = $name;
- $fileName = pathinfo($name, PATHINFO_FILENAME);
-        $postdata = array('OutputFileName' => 'MyFile.pdf', 'ApiKey' => $apiKey, 'file' => "@" . $fileToConvert);
-        $ch = curl_init("https://do.convertapi.com/Word2Pdf");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        $result = curl_exec($ch);
-        $headers = curl_getinfo($ch);
-
-       $header = ParseHeader(substr($result, 0, $headers["header_size"]));
-        $body = substr($result, $headers["header_size"]);
-
-        curl_close($ch);
-        if (0 < $headers['http_code'] && $headers['http_code'] < 400) {
-            // Check for Result = true
-
-            if (in_array('Result', array_keys($header)) ? !$header['Result'] == "True" : true) {
-          echo      $message = "Something went wrong with request, did not reach ConvertApi service.<br />";
-                return false;
-            }
-            // Check content type
-            switch ($headers['content_type']) {
-                case "application/pdf":
-                    $ext = ".pdf";
-                    break;
-                /*case "application/x-zip-compressed":
-                    $ext = ".zip";
-                    break;*/
-                default :
-                    $message = "Exception Message : returned content is not correct.<br />";
-                    return false;
-            }
-
-            $fp = fopen($pathToSaveOutputFile . $fileName . $ext, "w");
-
-            fwrite($fp, $body);
-
-            $message = "The conversion was successful! The pdf file $fileToConvert converted to JPEG and saved at $pathToSaveOutputFile$fileName$ext";
-            return true;
-        } else {
-            $message = "Exception Message : " . $result . ".<br />Status Code :" . $headers['http_code'] . ".<br />";
-            echo $message;
-            return false;
-        }
-    } catch (Exception $e) {
-        $message = "Exception Message :" . $e . Message . "</br>";
-        return false;
+  def convertDocsToPdf(orderId: Long) {
+    for (wordFile <- filesOfExtensionsForOrder(extensionDoc + "|" + extensionDocx, orderId)) {
+      convertFileToPdf(wordFile, convertApiDotComToPdfFromWordUrl)
     }
-} */
 
-  /* PHP code to convert web page to PDF
-  if ($file!=""  && $_POST['productCheckPost'] == 'block;')
- {
-   if (strpos($file, "http://") !== false)
-   {}
-   else
-   {
-    if (strpos($file, "https://") !== false)  {}
-    else
-    $file= "http://" . $file;
-   }
-   $fp = fopen ("documents/".$id."-LinkedIn_Profile.pdf", "w");
-   $ch = curl_init ("https://do.convertapi.com/Web2Pdf/inline?ApiKey=$convertApiKey&curl=$file?PrintView=Pdf");
-   curl_setopt ($ch, CURLOPT_FILE, $fp);
-   curl_setopt ($ch, CURLOPT_HEADER, 0);
-   curl_exec ($ch);
-   curl_close ($ch);
-   $li_pdf_name=$id."-LinkedIn_Profile.pdf";
-   $db->SetValue("Update documents set file_li='".$li_pdf_name."' where id='".$id."';");
-   $db->SetValue("Update documents set li_url='".$file."' where id='".$id."';");
-   fclose ($fp);
-   createImage($id."-LinkedIn_Profile.pdf");
- }
-   */
+    for (openOfficeFile <- filesOfExtensionsForOrder(extensionOdt, orderId)) {
+      convertFileToPdf(openOfficeFile, convertApiDotComToPdfFromOpenOfficeUrl)
+    }
+
+    for (richTextFile <- filesOfExtensionsForOrder(extensionRtf, orderId)) {
+      convertFileToPdf(richTextFile, convertApiDotComToPdfFromRichTextUrl)
+    }
+  }
+
+  def convertLinkedinProfilePageToPdf(orderId: Long, linkedinPublicProfileUrl: String) {
+    val wsCallParams = Map(
+      "ApiKey" -> Seq(convertApiDotComApiKey),
+      "CUrl" -> Seq(linkedinPublicProfileUrl))
+
+    val futureByteArray: Future[Array[Byte]] = ws.url(convertApiDotComToPdfFromWebUrl)
+      .post(wsCallParams)
+      .map {
+      response => response.bodyAsBytes
+    }
+
+    futureByteArray onComplete {
+      case Failure(e) => throw e
+      case Success(byteArray) =>
+        val outputStream = new FileOutputStream(assessmentDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + linkedinProfilePdfFileNameWithoutPrefix)
+        try {
+          outputStream.write(byteArray)
+        } finally {
+          outputStream.close()
+        }
+    }
+  }
+
+  def getFileExtension(fileName: String): String = {
+    val lastDotIndex = fileName.lastIndexOf(".")
+    fileName.substring(lastDotIndex + 1)
+  }
+
+  def generateDocThumbnails(orderId: Long) {
+
+  }
+
+  private def filesOfExtensionsForOrder(extensions: String, orderId: Long): List[File] = {
+    val rootDir = new File(assessmentDocumentsRootDir)
+    rootDir.listFiles(new FilenameFilter() {
+      @Override
+      def accept(dir: File, name: String): Boolean = {
+        name.matches("^" + orderId + Order.fileNamePrefixSeparator + ".+\\.(" + extensions + ")$")
+      }
+    }).toList
+  }
+
+  private def convertFileToPdf(file: File, converterUrl: String) {
+    val builder = MultipartEntityBuilder.create()
+    builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
+    builder.addBinaryBody("file", file)
+    val httpEntity = builder.build()
+
+    val httpPost = new HttpPost(converterUrl + "?ApiKey=" + convertApiDotComApiKey)
+    httpPost.setEntity(httpEntity)
+
+    val httpClient = HttpClientBuilder.create().build()
+
+    try {
+      val response = httpClient.execute(httpPost)
+      val rcHeader = response.getFirstHeader("result")
+
+      if (rcHeader.getValue != "True") {
+        throw new Exception("Failure while calling " + httpPost.getURI + " for document " + file.getAbsolutePath)
+      } else {
+        val outputStream = new FileOutputStream(file.getAbsolutePath + ".pdf")
+        try {
+          response.getEntity.writeTo(outputStream)
+        } finally {
+          outputStream.close()
+        }
+      }
+    } finally {
+      httpClient.close()
+    }
+  }
 }

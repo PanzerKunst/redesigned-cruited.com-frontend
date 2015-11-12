@@ -275,7 +275,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
     c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage) {
         CR.i18nMessages = i18nMessages;
         this.linkedinAuthCodeRequestUrl = linkedinAuthCodeRequestUrl;
-        this.linkedinProfile = JSON.parse(linkedinProfile);
+        this.linkedinProfile = linkedinProfile;
 
         this.linkedinErrorMessage = linkedinErrorMessage;
 

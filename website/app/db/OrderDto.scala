@@ -104,12 +104,18 @@ object OrderDto {
         case Some(fileName) => ", file = '" + DbUtil.safetize(fileName) + "'"
       }
 
+      val linkedinProfileFileNameClause = order.linkedinProfileFileName match {
+        case None => ""
+        case Some(fileName) => ", file_li = '" + DbUtil.safetize(fileName) + "'"
+      }
+
       val query = """
         update documents set
         edition_id = """ + order.editionId +
         accountIdClause +
         cvFileNameClause +
-        coverLetterFileNameClause + """
+        coverLetterFileNameClause +
+        linkedinProfileFileNameClause + """
         where id = """ + order.id.get + """;"""
 
       Logger.info("OrderDto.update():" + query)
@@ -133,14 +139,14 @@ object OrderDto {
   def getOfId(id: Long): Option[Order] = {
     DB.withConnection { implicit c =>
       val query = """
-        select edition_id, file, file_cv, added_at, code, added_by, type
+        select edition_id, file, file_cv, file_li, added_at, code, added_by, type
         from documents
         where id = """ + id + """;"""
 
       Logger.info("OrderDto.getOfId():" + query)
 
-      val optionRowParser = long("edition_id") ~ str("file") ~ str("file_cv") ~ date("added_at") ~ str("code") ~ long("added_by") ~ str("type") map {
-        case editionId ~ coverLetterFileName ~ cvFileName ~ creationDate ~ couponCode ~ accountId ~ docTypes =>
+      val optionRowParser = long("edition_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("code") ~ long("added_by") ~ str("type") map {
+        case editionId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ couponCode ~ accountId ~ docTypes =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -148,6 +154,11 @@ object OrderDto {
           }
 
           val cvFileNameOpt = cvFileName match {
+            case "" => None
+            case otherString => Some(otherString)
+          }
+
+          val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
             case otherString => Some(otherString)
           }
@@ -169,6 +180,7 @@ object OrderDto {
             couponId = couponIdOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
+            linkedinProfileFileName = linkedinProfileFileNameOpt,
             accountId = accountIdOpt,
             creationTimestamp = creationDate.getTime
           )
@@ -181,7 +193,7 @@ object OrderDto {
   def getTemporaryOrdersForAccountId(accountId: Long): List[Order] = {
     DB.withConnection { implicit c =>
       val query = """
-        select id, edition_id, file, file_cv, added_at, code, added_by, type
+        select id, edition_id, file, file_cv, file_li, added_at, code, added_by, type
         from documents
         where added_by = """ + accountId + """
           and id < 0
@@ -196,6 +208,11 @@ object OrderDto {
         }
 
         val cvFileNameOpt = row[String]("file_cv") match {
+          case "" => None
+          case otherString => Some(otherString)
+        }
+
+        val linkedinProfileFileNameOpt = row[String]("file_li") match {
           case "" => None
           case otherString => Some(otherString)
         }
@@ -218,6 +235,7 @@ object OrderDto {
           couponId = couponIdOpt,
           cvFileName = cvFileNameOpt,
           coverLetterFileName = coverLetterFileNameOpt,
+          linkedinProfileFileName = linkedinProfileFileNameOpt,
           accountId = accountIdOpt,
           creationTimestamp = row[Date]("added_at").getTime
         )

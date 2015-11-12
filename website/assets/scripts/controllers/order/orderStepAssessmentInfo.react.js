@@ -115,7 +115,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     <div>
                         <label className="btn btn-default btn-file-upload" htmlFor="cv">
-                            <input id="cv" type="file" accept=".doc, .docx, .pdf, .odt" onChange={this._handleCvFileSelected} />
+                            <input id="cv" type="file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
                         <input type="text" className="form-control" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} disabled />
@@ -140,7 +140,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     <div>
                         <label className="btn btn-default btn-file-upload" htmlFor="cover-letter">
-                            <input id="cover-letter" type="file" accept=".doc, .docx, .pdf, .odt" onChange={this._handleCoverLetterFileSelected} />
+                            <input id="cover-letter" type="file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
                         <input type="text" className="form-control" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} disabled />
@@ -242,7 +242,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
     c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage) {
         CR.i18nMessages = i18nMessages;
         this.linkedinAuthCodeRequestUrl = linkedinAuthCodeRequestUrl;
-        this.linkedinProfile = JSON.parse(linkedinProfile);
+        this.linkedinProfile = linkedinProfile;
 
         this.linkedinErrorMessage = linkedinErrorMessage;
         CR.order = CR.Models.Order(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order));

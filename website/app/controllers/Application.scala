@@ -9,7 +9,7 @@ import play.api.libs.json.JsNull
 import play.api.mvc._
 import services._
 
-class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService) extends Controller with I18nSupport {
+class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
 
   def index = Action { request =>
@@ -30,7 +30,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def signIn = Action { request =>
-    Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, false))
+    val isLinkedinAccountUnregistered = false
+    Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
   }
 
   def orderStepProductSelection = Action { request =>
@@ -92,9 +93,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                 // 2. Delete old order
                 OrderDto.deleteOfId(tempOrder.id.get)
 
-                OrderService.finaliseFileNames(finalisedOrderId)
-                OrderService.convertDocsToPdf(finalisedOrderId)
-                OrderService.generateDocThumbnails(finalisedOrderId)
+                orderService.finaliseFileNames(finalisedOrderId)
+                orderService.convertDocsToPdf(finalisedOrderId)
+                // TODO orderService.generateDocThumbnails(finalisedOrderId)
               }
 
               Redirect("/")
@@ -105,7 +106,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def linkedinCallbackSignIn = Action { request =>
     if (request.queryString.contains("error")) {
-      Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), false))
+      val isLinkedinAccountUnregistered = false
+      Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
@@ -129,8 +131,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       }
 
       if (!accountId.isDefined || AccountService.isTemporary(accountId.get)) {
+        val isLinkedinAccountUnregistered = true
+
         // We display the error that this user isn't registered
-        Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, true))
+        Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
       } else {
         // We update the LI fields in DB, except maybe the email and first name if they are already set
         AccountDto.getOfId(accountId.get) match {

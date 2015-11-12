@@ -1,7 +1,7 @@
 package controllers.api
 
 import java.io.File
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 
 import db.OrderDto
 import models.Order
@@ -12,7 +12,7 @@ import services.{DocumentService, SessionService}
 import scala.util.Random
 
 @Singleton
-class OrderApi extends Controller {
+class OrderApi @Inject()(val documentService: DocumentService) extends Controller {
   def create = Action(parse.multipartFormData) { request =>
     // We only want to generate negative IDs, because positive ones are for non-temp orders
     val rand = Random.nextLong()
@@ -30,7 +30,7 @@ class OrderApi extends Controller {
       case None => None
       case Some(cvFile) =>
         val fileName = tempOrderId + Order.fileNamePrefixSeparator + cvFile.filename
-        cvFile.ref.moveTo(new File(DocumentService.assessmentDocumentsRootDir + fileName))
+        cvFile.ref.moveTo(new File(documentService.assessmentDocumentsRootDir + fileName))
         Some(fileName)
     }
 
@@ -38,7 +38,7 @@ class OrderApi extends Controller {
       case None => None
       case Some(coverLetterFile) =>
         val fileName = tempOrderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
-        coverLetterFile.ref.moveTo(new File(DocumentService.assessmentDocumentsRootDir + fileName))
+        coverLetterFile.ref.moveTo(new File(documentService.assessmentDocumentsRootDir + fileName))
         Some(fileName)
     }
 
