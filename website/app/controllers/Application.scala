@@ -9,6 +9,9 @@ import play.api.libs.json.JsNull
 import play.api.mvc._
 import services._
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
 
@@ -93,11 +96,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                 // 2. Delete old order
                 OrderDto.deleteOfId(tempOrder.id.get)
 
-                orderService.finaliseFileNames(finalisedOrderId)
-                orderService.convertDocsToPdf(finalisedOrderId)
-                // TODO orderService.generateDocThumbnails(finalisedOrderId)
+                Future {
+                  orderService.finaliseFileNames(finalisedOrderId)
+                  orderService.convertDocsToPdf(finalisedOrderId)
+                  orderService.generateDocThumbnails(finalisedOrderId)
+                }
               }
-
               Redirect("/")
             }
         }

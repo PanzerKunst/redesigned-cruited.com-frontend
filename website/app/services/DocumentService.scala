@@ -1,29 +1,38 @@
 package services
 
-import java.io.{FileOutputStream, File, FilenameFilter}
+import java.awt.image.BufferedImage
+import java.io.{File, FileOutputStream, FilenameFilter}
 import javax.inject.{Inject, Singleton}
 
 import models.Order
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.mime.{HttpMultipartMode, MultipartEntityBuilder}
 import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.pdfbox.pdmodel.{PDDocument, PDPage}
+import org.apache.pdfbox.util.ImageIOUtil
+import org.imgscalr.Scalr
 import play.api.Play
 import play.api.Play.current
 import play.api.libs.ws.WSClient
 
+import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success, Try}
 
 @Singleton
 class DocumentService @Inject()(val ws: WSClient) {
-  val assessmentDocumentsRootDir = Play.configuration.getString("assessmentDocuments.RootDir").get
+  val assessedDocumentsRootDir = Play.configuration.getString("assessedDocuments.rootDir").get
+  val assessedDocumentsThumbnailsRootDir = Play.configuration.getString("assessedDocuments.thumbnails.rootDir").get
   val convertApiDotComToPdfFromWordUrl = Play.configuration.getString("convertapi.com.toPdf.fromWord.url").get
   val convertApiDotComToPdfFromOpenOfficeUrl = Play.configuration.getString("convertapi.com.toPdf.fromOpenOffice.url").get
   val convertApiDotComToPdfFromRichTextUrl = Play.configuration.getString("convertapi.com.toPdf.fromRichText.url").get
   val convertApiDotComToPdfFromWebUrl = Play.configuration.getString("convertapi.com.toPdf.fromWeb.url").get
   val convertApiDotComApiKey = Play.configuration.getString("convertapi.com.apiKey").get
   val linkedinProfilePdfFileNameWithoutPrefix = Play.configuration.getString("linkedinProfile.pdfFileName.withoutPrefix").get
+  val docThumbnailFileExtension = Play.configuration.getString("docThumbnail.fileExtension").get
+  val docThumbnailWidthPxHdpi = Play.configuration.getInt("docThumbnail.widthPxHdpi").get
 
   val extensionDoc = "doc"
   val extensionDocx = "docx"
@@ -32,11 +41,11 @@ class DocumentService @Inject()(val ws: WSClient) {
   val extensionRtf = "rtf"
 
   def renameFile(oldName: String, newName: String) {
-    val oldFile = new File(assessmentDocumentsRootDir + oldName)
+    val oldFile = new File(assessedDocumentsRootDir + oldName)
     if (!oldFile.exists) {
       throw new Exception("Trying to rename file " + oldName + " but it doesn't exist!")
     }
-    val newFile = new File(assessmentDocumentsRootDir + newName)
+    val newFile = new File(assessedDocumentsRootDir + newName)
     if (newFile.exists) {
       throw new Exception("Can't rename file " + oldName + " to " + newFile + " because the destination already exists!")
     }
@@ -45,7 +54,17 @@ class DocumentService @Inject()(val ws: WSClient) {
   }
 
   def isFilePresent(fileName: String): Boolean = {
-    new File(assessmentDocumentsRootDir + fileName).exists
+    new File(assessedDocumentsRootDir + fileName).exists
+  }
+
+  def getFileExtension(fileName: String): String = {
+    val lastDotIndex = fileName.lastIndexOf(".")
+    fileName.substring(lastDotIndex + 1)
+  }
+
+  def getFileNameWithoutExtension(fileName: String): String = {
+    val lastDotIndex = fileName.lastIndexOf(".")
+    fileName.substring(0, lastDotIndex)
   }
 
   def convertDocsToPdf(orderId: Long) {
@@ -73,10 +92,13 @@ class DocumentService @Inject()(val ws: WSClient) {
       response => response.bodyAsBytes
     }
 
-    futureByteArray onComplete {
+    // We wait for the call to be complete before continuing the program, because we need the file to be there for thumbnail generation
+    val byteArrayResult: Try[Array[Byte]] = Await.ready(futureByteArray, Duration.Inf).value.get
+
+    byteArrayResult match {
       case Failure(e) => throw e
       case Success(byteArray) =>
-        val outputStream = new FileOutputStream(assessmentDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + linkedinProfilePdfFileNameWithoutPrefix)
+        val outputStream = new FileOutputStream(assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + linkedinProfilePdfFileNameWithoutPrefix)
         try {
           outputStream.write(byteArray)
         } finally {
@@ -85,17 +107,24 @@ class DocumentService @Inject()(val ws: WSClient) {
     }
   }
 
-  def getFileExtension(fileName: String): String = {
-    val lastDotIndex = fileName.lastIndexOf(".")
-    fileName.substring(lastDotIndex + 1)
-  }
+  def generateThumbnail(fileName: String) {
+    val pdfPath = assessedDocumentsRootDir + fileName
+    val imgPath = assessedDocumentsThumbnailsRootDir + getFileNameWithoutExtension(fileName) + "." + docThumbnailFileExtension
 
-  def generateDocThumbnails(orderId: Long) {
+    val document = PDDocument.loadNonSeq(new File(pdfPath), null)
+    val pdPages = document.getDocumentCatalog.getAllPages.asScala
+    val img = pdPages.head.asInstanceOf[PDPage].convertToImage(BufferedImage.TYPE_INT_RGB, 300)
 
+    val resizedImg = Scalr.resize(img, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, docThumbnailWidthPxHdpi, 0, Scalr.OP_ANTIALIAS)
+    ImageIOUtil.writeImage(resizedImg, imgPath, 300)
+
+    resizedImg.flush()
+    img.flush()
+    document.close()
   }
 
   private def filesOfExtensionsForOrder(extensions: String, orderId: Long): List[File] = {
-    val rootDir = new File(assessmentDocumentsRootDir)
+    val rootDir = new File(assessedDocumentsRootDir)
     rootDir.listFiles(new FilenameFilter() {
       @Override
       def accept(dir: File, name: String): Boolean = {

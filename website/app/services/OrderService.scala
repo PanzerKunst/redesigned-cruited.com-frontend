@@ -41,6 +41,24 @@ class OrderService @Inject()(val documentService: DocumentService) {
     updateFileNamesInDb(orderId)
   }
 
+  def generateDocThumbnails(orderId: Long) {
+    val order = OrderDto.getOfId(orderId).get
+
+    generateThumbnailForFile(order.cvFileName)
+    generateThumbnailForFile(order.coverLetterFileName)
+    generateThumbnailForFile(order.linkedinProfileFileName)
+  }
+
+  private def generateThumbnailForFile(fileNameOpt: Option[String]) {
+    fileNameOpt match {
+      case None =>
+      case Some(fileName) =>
+        if (documentService.isFilePresent(fileName)) {
+          documentService.generateThumbnail(fileName)
+        }
+    }
+  }
+
   private def convertLinkedinPublicProfilePageToPdf(orderId: Long) {
     val accountId = OrderDto.getOfId(orderId).get.accountId.get
     AccountDto.getOfId(accountId).get.linkedinProfile match {

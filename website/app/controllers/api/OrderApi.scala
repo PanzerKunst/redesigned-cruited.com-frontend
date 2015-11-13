@@ -30,7 +30,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       case None => None
       case Some(cvFile) =>
         val fileName = tempOrderId + Order.fileNamePrefixSeparator + cvFile.filename
-        cvFile.ref.moveTo(new File(documentService.assessmentDocumentsRootDir + fileName))
+        cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
         Some(fileName)
     }
 
@@ -38,7 +38,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       case None => None
       case Some(coverLetterFile) =>
         val fileName = tempOrderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
-        coverLetterFile.ref.moveTo(new File(documentService.assessmentDocumentsRootDir + fileName))
+        coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
         Some(fileName)
     }
 
