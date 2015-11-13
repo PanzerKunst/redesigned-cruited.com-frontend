@@ -6,12 +6,8 @@ body {
 
 #container {
   min-height: 100%;
-  position: relative; // Because of absolutely-positioning footer
-}
 
-[role="main"] {
-  // TODO padding-bottom: $footer-height;
-}
-
-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
