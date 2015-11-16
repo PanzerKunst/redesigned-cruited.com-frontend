@@ -141,7 +141,8 @@ object AccountDto {
       val query = """
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at
         from useri
-        where email = '""" + DbUtil.safetize(emailAddress) + """'
+        where id > 0
+          and email = '""" + DbUtil.safetize(emailAddress) + """'
         limit 1;"""
 
       Logger.info("AccountDto.getOfEmailAddress():" + query)
@@ -175,7 +176,8 @@ object AccountDto {
       val query = """
         select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at
         from useri
-        where linkedin_basic_profile_fields like '%"id":"""" + DbUtil.safetize(linkedInAccountId) + """"%'
+        where id > 0
+          and linkedin_basic_profile_fields like '%"id":"""" + DbUtil.safetize(linkedInAccountId) + """"%'
         limit 1;"""
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
@@ -209,9 +211,9 @@ object AccountDto {
       val query = """
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at
         from useri
-        where email = '""" + DbUtil.safetize(emailAddress) + """'
+        where id > 0
+          and email = '""" + DbUtil.safetize(emailAddress) + """'
           and pass = password('""" + password + """')
-          and id > 0
         limit 1;"""
 
       // This log is commented since it displays the password

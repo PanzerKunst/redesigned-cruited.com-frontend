@@ -2,7 +2,7 @@
 
 CR.Controllers.EditionListItem = React.createClass({
     render: function() {
-        var radioId = "edition-" + this.props.edition.id;
+        let radioId = "edition-" + this.props.edition.id;
 
         return (
             <li>

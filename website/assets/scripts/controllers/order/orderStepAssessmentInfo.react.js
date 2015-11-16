@@ -51,7 +51,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             if (this.state.linkedinErrorMessage) {
                 return (<p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>);
             } else {
-                var orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
+                let orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
                     return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
                 });
 
@@ -59,7 +59,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     return null;
                 }
 
-                var formGroupContents = null;
+                let formGroupContents = null;
 
                 if (this.state.linkedinProfile) {
                     formGroupContents = (
@@ -101,7 +101,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCvFormGroup: function() {
-            var orderedCv = _.find(CR.order.getProducts(), function(product) {
+            let orderedCv = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.CV_REVIEW;
             });
 
@@ -126,7 +126,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCoverLetterFormGroup: function() {
-            var orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
+            let orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
             });
 
@@ -196,9 +196,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 if (this.validator.isValid()) {
                     this.$submitBtn.enableLoading();
 
-                    var formData = new FormData();
+                    let formData = new FormData();
                     formData.append("editionId", CR.order.getEdition().id);
-                    formData.append("containedProductIds", _.map(CR.order.getProducts(), "id"));
+                    formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));
                     if (CR.order.getCoupon()) {
                         formData.append("couponCode", CR.order.getCoupon().code);
                     }
@@ -209,10 +209,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
                     }
 
-                    var type = "POST";
-                    var url = "/api/orders";
+                    let type = "POST";
+                    let url = "/api/orders";
 
-                    var httpRequest = new XMLHttpRequest();
+                    let httpRequest = new XMLHttpRequest();
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             if (httpRequest.status === CR.httpStatusCodes.created) {

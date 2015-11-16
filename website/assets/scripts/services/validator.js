@@ -20,8 +20,8 @@ CR.Services.Validator = P(function(c) {
     c.init = function(fieldIds) {
         this.fieldIds = fieldIds || [];
 
-        for (var i = 0; i < this.fieldIds.length; i++) {
-            var $field = $("#" + this.fieldIds[i]);
+        for (let i = 0; i < this.fieldIds.length; i++) {
+            let $field = $("#" + this.fieldIds[i]);
 
             this._addBlurEvent($field);
             this._addValueChangedEvent($field);
@@ -29,11 +29,11 @@ CR.Services.Validator = P(function(c) {
     };
 
     c.isValid = function() {
-        var result = true;
-        var isFocusOnFirstInvalidFieldDone = false;
-        var $field;
+        let result = true;
+        let isFocusOnFirstInvalidFieldDone = false;
+        let $field;
 
-        for (var i = 0; i < this.fieldIds.length; i++) {
+        for (let i = 0; i < this.fieldIds.length; i++) {
             $field = $("#" + this.fieldIds[i]);
 
             if (!this._validateField($field, false)) {
@@ -64,7 +64,7 @@ CR.Services.Validator = P(function(c) {
 
     c.showErrorMessage = function($errorMsg) {
         if ($errorMsg.html()) {
-            var height = this.errorMessageHeight;
+            let height = this.errorMessageHeight;
             if (CR.Services.Browser.isMediumScreen()) {
                 height = this.errorMessageHeightMediumScreen;
             } else if (CR.Services.Browser.isLargeScreen()) {
@@ -284,26 +284,26 @@ CR.Services.Validator = P(function(c) {
             return true;
         }
 
-        var reg = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
+        let reg = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
         return reg.test(email);
     };
 
     c._isUsername = function(username) {
-        var reg = /^([a-z0-9_\-])+$/i;
+        let reg = /^([a-z0-9_\-])+$/i;
         return reg.test(username);
     };
 
     c._isInFuture = function(dateStr) {
-        var yearMonthDay = dateStr.split("-");
-        var year = parseInt(yearMonthDay[0], 10);
-        var month = parseInt(yearMonthDay[1], 10);
-        var day = parseInt(yearMonthDay[2], 10);
+        let yearMonthDay = dateStr.split("-");
+        let year = parseInt(yearMonthDay[0], 10);
+        let month = parseInt(yearMonthDay[1], 10);
+        let day = parseInt(yearMonthDay[2], 10);
 
-        var date = new Date(year, month - 1, day);
-        var now = new Date();
+        let date = new Date(year, month - 1, day);
+        let now = new Date();
 
-        var oneDayInMillis = 1000 * 60 * 60 * 24;
-        var nbDaysDifference = Math.ceil((date - now) / oneDayInMillis);
+        let oneDayInMillis = 1000 * 60 * 60 * 24;
+        let nbDaysDifference = Math.ceil((date - now) / oneDayInMillis);
 
         return nbDaysDifference > 0;
     };
@@ -325,17 +325,17 @@ CR.Services.Validator = P(function(c) {
     };
 
     c._isInteger = function(value) {
-        var reg = /^\d*$/;
+        let reg = /^\d*$/;
         return reg.test(value);
     };
 
     c._isDecimal = function(value) {
-        var reg = /^\d*\.?\d*$/;
+        let reg = /^\d*\.?\d*$/;
         return reg.test(value);
     };
 
     c._isUrl = function(url) {
-        var reg = /^((https?|ftp|irc):\/\/)?(www\d?|[a-z0-9]+)?\.[a-z0-9-]+(\:|\.)([a-z0-9.]+|(\d+)?)([/?:].*)?$/i;
+        let reg = /^((https?|ftp|irc):\/\/)?(www\d?|[a-z0-9]+)?\.[a-z0-9-]+(\:|\.)([a-z0-9.]+|(\d+)?)([/?:].*)?$/i;
         return reg.test(url);
     };
 

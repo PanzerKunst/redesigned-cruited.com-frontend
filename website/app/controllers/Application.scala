@@ -3,6 +3,8 @@ package controllers
 import javax.inject.Inject
 
 import db._
+import models.frontend.FrontendOrder
+import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.JsNull
@@ -22,7 +24,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         if (AccountService.isTemporary(accountId)) {
           Redirect("/order")
         } else {
-          Ok(views.html.dashboard(getI18nMessages(request), SessionService.isSignedIn(request)))
+          val account = AccountDto.getOfId(accountId).get
+          val accountOrders = OrderDto.getOfAccountIdForFrontend(accountId)
+
+          Ok(views.html.dashboard(getI18nMessages(request), SessionService.isSignedIn(request), account, accountOrders))
         }
     }
   }
@@ -89,9 +94,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             if (AccountService.isTemporary(account.id)) {
               throw new Exception("Impossible to upgrade a temp order for a temporary account")
             } else {
-              for (tempOrder <- OrderDto.getTemporaryOrdersForAccountId(account.id)) {
-                // 1. Create new order, with data from the old one
-                val finalisedOrderId = OrderDto.create(tempOrder).get
+              val tempOrders = OrderDto.getOfAccountId(account.id).filter(order => order.id.get < 0)
+
+              for (tempOrder <- tempOrders) {
+                // 1. Create finalised order, with data from the old one
+                val finalisedOrderId = OrderDto.createFinalised(tempOrder).get
 
                 // 2. Delete old order
                 OrderDto.deleteOfId(tempOrder.id.get)
@@ -123,16 +130,57 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
       val linkedinProfile = linkedinService.getProfile
 
-      val accountId = SessionService.getAccountId(request.session) match {
-        case Some(id) => Some(id)
-        case None => AccountDto.getOfEmailAddress((linkedinProfile \ "emailAddress").as[String]) match {
-          case Some(accountWithSameEmail) => Some(accountWithSameEmail.id)
-          case None => AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
-            case None => None
-            case Some(accountWithSameLinkedinId) => Some(accountWithSameLinkedinId.id)
-          }
+      val accountId = AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
+        case Some(account) =>
+
+          // TODO: remove
+          Logger.info("linkedinCallbackSignIn > Some(account.id)")
+
+          Some(account.id)
+        case None => SessionService.getAccountId(request.session) match {
+          case Some(id) =>
+
+            // TODO: remove
+            Logger.info("linkedinCallbackSignIn > Some(id)")
+
+            Some(id)
+          case None =>
+
+            // TODO: remove
+            Logger.info("linkedinCallbackSignIn > None 1")
+
+            AccountDto.getOfEmailAddress((linkedinProfile \ "emailAddress").as[String]) match {
+              case Some(accountWithSameEmail) =>
+
+                // TODO: remove
+                Logger.info("linkedinCallbackSignIn > Some(accountWithSameEmail.id)")
+
+                Some(accountWithSameEmail.id)
+              case None =>
+
+                // TODO: remove
+                Logger.info("linkedinCallbackSignIn > None 2")
+
+                AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
+                  case None =>
+
+                    // TODO: remove
+                    Logger.info("linkedinCallbackSignIn > None 3")
+
+                    None
+                  case Some(accountWithSameLinkedinId) =>
+
+                    // TODO: remove
+                    Logger.info("linkedinCallbackSignIn > Some(accountWithSameLinkedinId.id)")
+
+                    Some(accountWithSameLinkedinId.id)
+                }
+            }
         }
       }
+
+      // TODO: remove
+      Logger.info("linkedinCallbackSignIn > request.session: " + request.session)
 
       if (!accountId.isDefined || AccountService.isTemporary(accountId.get)) {
         val isLinkedinAccountUnregistered = true

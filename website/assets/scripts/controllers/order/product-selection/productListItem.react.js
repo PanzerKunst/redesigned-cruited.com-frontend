@@ -2,13 +2,13 @@
 
 CR.Controllers.ProductListItem = React.createClass({
     render: function() {
-        var checkboxId = "product-" + this.props.product.id;
+        let checkboxId = "product-" + this.props.product.id;
 
-        var priceWrapperClasses = classNames({
+        let priceWrapperClasses = classNames({
             "with-reduced-price": this.props.product.reducedPrice !== undefined
         });
 
-        var reducedPriceParagraph = null;
+        let reducedPriceParagraph = null;
 
         if (this.props.product.reducedPrice) {
             reducedPriceParagraph = (
@@ -40,7 +40,7 @@ CR.Controllers.ProductListItem = React.createClass({
     },
 
     _isInOrder: function() {
-        var foundProduct = _.find(CR.order.getProducts(), function(product) {
+        let foundProduct = _.find(CR.order.getProducts(), function(product) {
             return product.id === this.props.product.id;
         }.bind(this));
 

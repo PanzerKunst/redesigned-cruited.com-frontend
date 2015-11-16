@@ -1,17 +1,16 @@
 package models
 
 import db.CruitedProductDto
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Writes}
 
 case class Order(id: Option[Long],
                  editionId: Long,
-                 containedProductIds: List[Long],
+                 containedProductCodes: List[String],
                  couponId: Option[Long],
                  cvFileName: Option[String],
                  coverLetterFileName: Option[String],
                  linkedinProfileFileName: Option[String],
                  accountId: Option[Long],
+                 status: Int,
                  creationTimestamp: Long) {
 
   def getCvFileNameWithoutPrefix: Option[String] = {
@@ -33,38 +32,33 @@ case class Order(id: Option[Long],
 }
 
 object Order {
-  implicit val writes: Writes[Order] = (
-    (JsPath \ "id").writeNullable[Long] and
-      (JsPath \ "editionId").write[Long] and
-      (JsPath \ "containedProductIds").write[List[Long]] and
-      (JsPath \ "couponId").writeNullable[Long] and
-      (JsPath \ "cvFileName").writeNullable[String] and
-      (JsPath \ "coverLetterFileName").writeNullable[String] and
-      (JsPath \ "linkedinProfileFileName").writeNullable[String] and
-      (JsPath \ "accountId").writeNullable[Long] and
-      (JsPath \ "creationTimestamp").write[Long]
-    )(unlift(Order.unapply))
-
   val fileNamePrefixSeparator = "-"
   val typeStringSeparator = ","
 
-  def getTypeForDb(containedProductIds: List[Long]): String = {
-    containedProductIds.length match {
+  val statusIdNotPaid = -1
+  val statusIdPaid = 0
+  val statusIdInProgress = 1
+  val statusIdAwaitingFeedback = 4
+  val statusIdScheduled = 3
+  val statusIdComplete = 2
+
+  def getTypeForDb(containedProductCodes: List[String]): String = {
+    containedProductCodes.length match {
       case 0 => ""
       case nbAboveZero =>
         val allProducts = CruitedProductDto.getAll
         nbAboveZero match {
           case 1 =>
-            allProducts.filter(p => p.id == containedProductIds.head).head
+            allProducts.filter(p => p.code == containedProductCodes.head).head
               .getTypeForDb
           case nbAboveOne =>
             // First item handled differently - no comma prefix
-            val firstProduct = allProducts.filter(p => p.id == containedProductIds.head).head
+            val firstProduct = allProducts.filter(p => p.code == containedProductCodes.head).head
 
             var result = firstProduct.getTypeForDb
 
             for (i <- 1 to nbAboveOne - 1) {
-              val product = allProducts.filter(p => p.id == containedProductIds(i)).head
+              val product = allProducts.filter(p => p.code == containedProductCodes(i)).head
               result = result + typeStringSeparator + product.getTypeForDb
             }
 
@@ -73,9 +67,9 @@ object Order {
     }
   }
 
-  def getContainedProductIdsFromTypes(docTypes: String): List[Long] = {
+  def getContainedProductCodesFromTypes(docTypes: String): List[String] = {
     docTypes.split(typeStringSeparator)
-      .map(typeForDb => CruitedProduct.getFromType(typeForDb).id)
+      .map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
       .toList
   }
 }

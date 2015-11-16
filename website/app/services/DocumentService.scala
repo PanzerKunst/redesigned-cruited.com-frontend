@@ -11,7 +11,7 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.pdfbox.pdmodel.{PDDocument, PDPage}
 import org.apache.pdfbox.util.ImageIOUtil
 import org.imgscalr.Scalr
-import play.api.Play
+import play.api.{Logger, Play}
 import play.api.Play.current
 import play.api.libs.ws.WSClient
 
@@ -88,9 +88,7 @@ class DocumentService @Inject()(val ws: WSClient) {
 
     val futureByteArray: Future[Array[Byte]] = ws.url(convertApiDotComToPdfFromWebUrl)
       .post(wsCallParams)
-      .map {
-      response => response.bodyAsBytes
-    }
+      .map { response => response.bodyAsBytes }
 
     // We wait for the call to be complete before continuing the program, because we need the file to be there for thumbnail generation
     val byteArrayResult: Try[Array[Byte]] = Await.ready(futureByteArray, Duration.Inf).value.get
@@ -108,6 +106,10 @@ class DocumentService @Inject()(val ws: WSClient) {
   }
 
   def generateThumbnail(fileName: String) {
+
+    // TODO: remove
+    Logger.info("DocumentService > generating thumbnail for file: " + fileName)
+
     val pdfPath = assessedDocumentsRootDir + fileName
     val imgPath = assessedDocumentsThumbnailsRootDir + getFileNameWithoutExtension(fileName) + "." + docThumbnailFileExtension
 
@@ -121,6 +123,9 @@ class DocumentService @Inject()(val ws: WSClient) {
     resizedImg.flush()
     img.flush()
     document.close()
+
+    // TODO: remove
+    Logger.info("DocumentService > Thumbnail for file: " + fileName + " generated successfully")
   }
 
   private def filesOfExtensionsForOrder(extensions: String, orderId: Long): List[File] = {

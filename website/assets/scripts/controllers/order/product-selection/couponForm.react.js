@@ -42,10 +42,10 @@ CR.Controllers.CouponForm = React.createClass({
         if (this.validator.isValid()) {
             this.$addCouponBtn.enableLoading(CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.loadingText"]);
 
-            var type = "GET";
-            var url = "/api/coupons/" + this.$couponCodeField.val();
+            let type = "GET";
+            let url = "/api/coupons/" + this.$couponCodeField.val();
 
-            var httpRequest = new XMLHttpRequest();
+            let httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     this.$addCouponBtn.disableLoading();
@@ -53,7 +53,7 @@ CR.Controllers.CouponForm = React.createClass({
                     if (httpRequest.status === CR.httpStatusCodes.noContent) {
                         this.validator.showErrorMessage(this.$couponNotFoundError);
                     } else if (httpRequest.status === CR.httpStatusCodes.ok) {
-                        var coupon = JSON.parse(httpRequest.responseText);
+                        let coupon = JSON.parse(httpRequest.responseText);
                         if (coupon) {
                             this.$form[0].reset();
                             CR.order.setCoupon(coupon);

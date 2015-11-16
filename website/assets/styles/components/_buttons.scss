@@ -45,8 +45,21 @@ a.btn-default {
 }
 
 .btn-primary,
+a.btn-primary,
+.btn-success,
+a.btn-success,
+.btn-info,
+a.btn-info,
+.btn-warning,
+a.btn-warning,
+.btn-danger,
+a.btn-danger,
+.btn.sign-in-with-linkedin {
+  color: white;
+}
+
+.btn-primary,
 a.btn-primary {
-  color: $background-body-color;
   background-color: $primary-btn-color;
   border-color: $primary-btn-color;
 
@@ -128,8 +141,6 @@ a.btn-primary {
   }
 
   > span {
-    color: white;
-
     font-size: 11px;
     @include medium-screen {
       font-size: 15px;

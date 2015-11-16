@@ -8,11 +8,13 @@ import play.api.db.DB
 
 object DbAdmin {
   def reCreateTables() {
+    dropUniqueConstraintsOnEdition()
     dropTable("reduction")
     dropTable("product")
 
     createTableProduct()
     createTableReduction()
+    createUniqueConstraintsOnEdition()
   }
 
   private def createTableProduct() {
@@ -23,7 +25,8 @@ object DbAdmin {
             code varchar(32) not null,
             price_amount decimal(5,2) not null,
             price_currency_code varchar(3) not null,
-            primary key(id)
+            primary key(id),
+            constraint unique_code unique(code)
           ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
 
       Logger.info("DbAdmin.createTableProduct():" + query)
@@ -40,10 +43,23 @@ object DbAdmin {
             code varchar(32) not null,
             reduction_amount decimal(5,2) not null,
             reduction_currency_code varchar(3) not null,
-            primary key(id)
+            primary key(id),
+            constraint unique_code unique(code)
           ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
 
       Logger.info("DbAdmin.createTableReduction():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def createUniqueConstraintsOnEdition() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table product_edition
+        add constraint unique_code unique(edition);"""
+
+      Logger.info("DbAdmin.createUniqueConstraintsOnEdition():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -57,6 +73,18 @@ object DbAdmin {
     }
   }
 
+  private def dropUniqueConstraintsOnEdition() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table product_edition
+        drop index unique_code;"""
+
+      Logger.info("DbAdmin.dropUniqueConstraintsOnEdition():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
   def initData() {
     initDataProduct()
     initDataReduction()
@@ -64,9 +92,9 @@ object DbAdmin {
 
   private def initDataProduct() {
     DB.withConnection { implicit c =>
-        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.CODE_CV_REVIEW + "', 299, 'SEK');").execute()
-        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.CODE_COVER_LETTER_REVIEW + "', 299, 'SEK');").execute()
-        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.CODE_LINKEDIN_PROFILE_REVIEW + "', 299, 'SEK');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCvReview + "', 299, 'SEK');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCoverLetterReview + "', 299, 'SEK');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeLinkedinProfileReview + "', 299, 'SEK');").execute()
     }
   }
 

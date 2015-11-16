@@ -26,7 +26,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                             <ul className="styleless">
                             {this.state.products.map(function(product, index) {
-                                var reactItemId = "product-" + index;
+                                let reactItemId = "product-" + index;
 
                                 return <CR.Controllers.ProductListItem key={reactItemId} product={product} controller={this.state.controller} />;
                             }.bind(this))}
@@ -39,7 +39,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                             <ul className="styleless">
                             {CR.editions.map(function(edition, index) {
-                                var reactItemId = "edition-" + index;
+                                let reactItemId = "edition-" + index;
 
                                 return <CR.Controllers.EditionListItem key={reactItemId} edition={edition} controller={this.state.controller} />;
                             }.bind(this))}
@@ -58,7 +58,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                             <ul className="styleless">
                             {CR.order.getProducts().map(function(product, index) {
-                                var reactItemId = "cart-product-" + index;
+                                let reactItemId = "cart-product-" + index;
 
                                 return <CR.Controllers.CartProductListItem key={reactItemId} product={product} controller={this.state.controller} />;
                             }.bind(this))}
@@ -96,7 +96,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
         _getParagraphOfferTwoProductsSameOrder: function() {
             if (CR.order.getProducts().length < 2) {
-                var reductionPriceTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
+                let reductionPriceTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
                 if (reductionPriceTwoProductsSameOrder) {
                     return (<p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerTwoProductsSameOrder.text"], "reductionPrice", reductionPriceTwoProductsSameOrder.price.amount + " " + reductionPriceTwoProductsSameOrder.price.currencyCode)}} />);
                 }
@@ -106,7 +106,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
         _getParagraphOfferThreeProductsSameOrder: function() {
             if (CR.order.getProducts().length === 2) {
-                var reductionPriceThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
+                let reductionPriceThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
                 if (reductionPriceThreeProductsSameOrder) {
                     return (<p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerThreeProductsSameOrder.text"], "reductionPrice", reductionPriceThreeProductsSameOrder.price.amount + " " + reductionPriceThreeProductsSameOrder.price.currencyCode)}} />);
                 }
@@ -115,7 +115,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         _getOrderSubTotal: function() {
-            var orderSubTotal = 0;
+            let orderSubTotal = 0;
 
             CR.order.getProducts().forEach(function(product) {
                 orderSubTotal += product.price.amount;
@@ -125,13 +125,13 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         _getOrderTotal: function() {
-            var orderTotal = this._getOrderSubTotal();
+            let orderTotal = this._getOrderSubTotal();
 
             CR.order.getReductions().forEach(function(reduction) {
                 orderTotal -= reduction.price.amount;
             });
 
-            var orderCoupon = CR.order.getCoupon();
+            let orderCoupon = CR.order.getCoupon();
             if (orderCoupon) {
                 if (orderCoupon.discountPercentage) {
                     orderTotal = Math.round(orderTotal - orderTotal * orderCoupon.discountPercentage / 100);
@@ -156,7 +156,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             <td>{this._getOrderSubTotal()} {this.state.products[0].price.currencyCode}</td>
                         </tr>
                         {CR.order.getReductions().map(function(reduction, index) {
-                            var reactItemId = "cart-reduction-" + index;
+                            let reactItemId = "cart-reduction-" + index;
 
                             return (
                                 <tr key={reactItemId}>
@@ -179,14 +179,14 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         _getCouponRow: function() {
-            var orderCoupon = CR.order.getCoupon();
+            let orderCoupon = CR.order.getCoupon();
 
             if (!orderCoupon) {
                 return null;
             }
 
-            var amount = orderCoupon.discountPercentage || orderCoupon.discountPrice.amount;
-            var unit = orderCoupon.discountPercentage ? "%" : " " + orderCoupon.discountPrice.currencyCode;
+            let amount = orderCoupon.discountPercentage || orderCoupon.discountPrice.amount;
+            let unit = orderCoupon.discountPercentage ? "%" : " " + orderCoupon.discountPrice.currencyCode;
 
             return (
                 <tr>
@@ -215,7 +215,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         CR.editions = editions;
         CR.reductions = reductions;
 
-        var orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+        let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this.reactInstance = React.render(
@@ -234,11 +234,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
     };
 
     c._getProducts = function() {
-        var products = CR.products ? _.cloneDeep(CR.products) : [];
-        var orderProducts = CR.order.getProducts();
+        let products = CR.products ? _.cloneDeep(CR.products) : [];
+        let orderProducts = CR.order.getProducts();
 
-        for (var i = 0; i < products.length; i++) {
-            var sameProductInOrder = _.find(orderProducts, function(orderProduct) {
+        for (let i = 0; i < products.length; i++) {
+            let sameProductInOrder = _.find(orderProducts, function(orderProduct) {
                 return products[i].id === orderProduct.id;
             });
 

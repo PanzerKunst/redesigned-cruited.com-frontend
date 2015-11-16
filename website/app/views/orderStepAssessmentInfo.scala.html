@@ -16,10 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
         linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
     }
 
-    var linkedinProfile = @Html(linkedinProfile.toString) || null;
+    var linkedinProfile = @Html(linkedinProfile.toString()) || null;
 
     CR.Controllers.OrderStepAssessmentInfo(
-        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         "@Html(linkedinAuthCodeRequestUrl)",
         linkedinProfile,
         linkedinErrorMessage

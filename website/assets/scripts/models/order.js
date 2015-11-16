@@ -1,5 +1,16 @@
 "use strict";
 
+CR.Models.OrderStaticProps = {
+    statusIds: {
+        notPaid: -1,
+        paid: 0,
+        inProgress: 1,
+        awaitingFeedback: 4,
+        scheduled: 3,
+        completed: 2
+    }
+};
+
 CR.Models.Order = P(function(c) {
     c.init = function(order) {
         this._products = order && order.products ? _.cloneDeep(order.products) : [];
@@ -20,7 +31,7 @@ CR.Models.Order = P(function(c) {
     };
 
     c.addProduct = function(product) {
-        var foundProduct = _.find(this._products, function(orderProduct) {
+        let foundProduct = _.find(this._products, function(orderProduct) {
             return orderProduct.id === product.id;
         });
 
@@ -32,9 +43,9 @@ CR.Models.Order = P(function(c) {
     };
 
     c.removeProduct = function(product) {
-        var productIndex = null;
+        let productIndex = null;
 
-        for (var i = 0; i < this._products.length; i++) {
+        for (let i = 0; i < this._products.length; i++) {
             if (this._products[i].id === product.id) {
                 productIndex = i;
                 break;
@@ -73,11 +84,11 @@ CR.Models.Order = P(function(c) {
     c._calculateReductions = function() {
         this._resetReductions();
 
-        var reductionFor2ProductsSameOrder = _.find(CR.reductions, function(reduction) {
+        let reductionFor2ProductsSameOrder = _.find(CR.reductions, function(reduction) {
             return reduction.code === CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER;
         });
 
-        var reductionFor3ProductsSameOrder = _.find(CR.reductions, function(reduction) {
+        let reductionFor3ProductsSameOrder = _.find(CR.reductions, function(reduction) {
             return reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER;
         });
 
@@ -110,7 +121,7 @@ CR.Models.Order = P(function(c) {
     };
 
     c._resetReductions = function() {
-        for (var i = 0; i < this._products.length; i++) {
+        for (let i = 0; i < this._products.length; i++) {
             delete this._products[i].reducedPrice;
         }
     };

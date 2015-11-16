@@ -55,7 +55,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
       editionId = requestData("editionId").head.toLong,
-      containedProductIds = requestData("containedProductIds").head.split(",").toList.map(productId => productId.toLong),
+      containedProductCodes = requestData("containedProductCodes").head.split(",").toList,
       couponCode = couponCode,
       cvFileName = cvFileNameOpt,
       coverLetterFileName = coverLetterFileNameOpt,

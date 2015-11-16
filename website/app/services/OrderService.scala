@@ -4,6 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
 import models.{CruitedProduct, Order}
+import play.api.Logger
 
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
@@ -42,6 +43,10 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   def generateDocThumbnails(orderId: Long) {
+
+    // TODO: remove
+    Logger.info("OrderService > generateDocThumbnails: " + orderId)
+
     val order = OrderDto.getOfId(orderId).get
 
     generateThumbnailForFile(order.cvFileName)
@@ -50,6 +55,10 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def generateThumbnailForFile(fileNameOpt: Option[String]) {
+
+    // TODO: remove
+    Logger.info("OrderService > generateThumbnailForFile: " + fileNameOpt)
+
     fileNameOpt match {
       case None =>
       case Some(fileName) =>
@@ -102,7 +111,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
-    if (order.containedProductIds.contains(CruitedProduct.getFromType(CruitedProduct.DB_TYPE_LINKEDIN_PROFILE_REVIEW).id)) {
+    if (order.containedProductCodes.contains(CruitedProduct.getCodeFromType(CruitedProduct.dbTypeLinkedinProfileReview))) {
       // Fail epically if the Linkedin profile doesn't exist
       AccountDto.getOfId(order.accountId.get).get.linkedinProfile.get
 

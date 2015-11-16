@@ -1,6 +1,6 @@
 "use strict";
 
-var CR = {};
+let CR = {};
 
 // Additional namespaces
 CR.Controllers = {};

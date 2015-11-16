@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], isSignedIn: Boolean)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], isSignedIn: Boolean, account: Account, orders: List[models.frontend.FrontendOrder])(implicit messages: Messages)
 
 @main("Cruited", "dashboard") {
 <!--
@@ -11,6 +11,10 @@
     Javascript
 */
 document.addEventListener("DOMContentLoaded", function () {
-    CR.Controllers.Dashboard(@Html(play.api.libs.json.Json.toJson(i18nMessages).toString));
+    CR.Controllers.Dashboard(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
+        @Html(play.api.libs.json.Json.toJson(account).toString()),
+        @Html(play.api.libs.json.Json.toJson(orders).toString())
+    );
 });
 }

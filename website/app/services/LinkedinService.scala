@@ -7,9 +7,9 @@ import play.api.Play.current
 import play.api.libs.json.JsValue
 import play.api.libs.ws.WSClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success, Try}
 
 @Singleton
@@ -48,9 +48,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
     val futureAccessToken: Future[String] = ws.url(linkedinAccessTokenUri)
       .withHeaders("Content-Type" -> "application/x-www-form-urlencoded")
       .post(wsCallParams)
-      .map {
-      response => (response.json \ "access_token").as[String]
-    }
+      .map { response => (response.json \ "access_token").as[String] }
 
     val accessTokenResult: Try[String] = Await.ready(futureAccessToken, Duration.Inf).value.get
 
@@ -68,9 +66,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
           .withHeaders("Connection" -> "Keep-Alive")
           .withHeaders("Authorization" -> ("Bearer " + token))
           .get()
-          .map {
-          response => response.json
-        }
+          .map { response => response.json }
 
         val profileResult: Try[JsValue] = Await.ready(futureProfile, Duration.Inf).value.get
 

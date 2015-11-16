@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     CR.Controllers.SignIn(
-        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString),
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         "@Html(linkedinAuthCodeRequestUrl)",
         linkedinErrorMessage,
         @isLinkedinAccountUnregistered

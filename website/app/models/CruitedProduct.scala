@@ -10,9 +10,9 @@ case class CruitedProduct(id: Long,
 
   def getTypeForDb: String = {
     code match {
-      case CruitedProduct.CODE_CV_REVIEW => CruitedProduct.DB_TYPE_CV_REVIEW
-      case CruitedProduct.CODE_COVER_LETTER_REVIEW => CruitedProduct.DB_TYPE_COVER_LETTER_REVIEW
-      case CruitedProduct.CODE_LINKEDIN_PROFILE_REVIEW => CruitedProduct.DB_TYPE_LINKEDIN_PROFILE_REVIEW
+      case CruitedProduct.codeCvReview => CruitedProduct.dbTypeCvReview
+      case CruitedProduct.codeCoverLetterReview => CruitedProduct.dbTypeCoverLetterReview
+      case CruitedProduct.codeLinkedinProfileReview => CruitedProduct.dbTypeLinkedinProfileReview
     }
   }
 }
@@ -24,21 +24,19 @@ object CruitedProduct {
       (JsPath \ "price").write[Price]
     )(unlift(CruitedProduct.unapply))
 
-  val CODE_CV_REVIEW = "CV_REVIEW"
-  val CODE_COVER_LETTER_REVIEW = "COVER_LETTER_REVIEW"
-  val CODE_LINKEDIN_PROFILE_REVIEW = "LINKEDIN_PROFILE_REVIEW"
+  val codeCvReview = "CV_REVIEW"
+  val codeCoverLetterReview = "COVER_LETTER_REVIEW"
+  val codeLinkedinProfileReview = "LINKEDIN_PROFILE_REVIEW"
 
-  val DB_TYPE_CV_REVIEW = "cv"
-  val DB_TYPE_COVER_LETTER_REVIEW = "letter"
-  val DB_TYPE_LINKEDIN_PROFILE_REVIEW = "li"
+  val dbTypeCvReview = "cv"
+  val dbTypeCoverLetterReview = "letter"
+  val dbTypeLinkedinProfileReview = "li"
 
-  def getFromType(typeForDb: String): CruitedProduct = {
-    val allProducts = CruitedProductDto.getAll
-
+  def getCodeFromType(typeForDb: String): String = {
     typeForDb match {
-      case DB_TYPE_CV_REVIEW => allProducts.filter(p => p.code == CODE_CV_REVIEW).head
-      case DB_TYPE_COVER_LETTER_REVIEW => allProducts.filter(p => p.code == CODE_COVER_LETTER_REVIEW).head
-      case DB_TYPE_LINKEDIN_PROFILE_REVIEW => allProducts.filter(p => p.code == CODE_LINKEDIN_PROFILE_REVIEW).head
+      case `dbTypeCvReview` => codeCvReview
+      case `dbTypeCoverLetterReview` => codeCoverLetterReview
+      case `dbTypeLinkedinProfileReview` => codeLinkedinProfileReview
     }
   }
 }

@@ -31,14 +31,14 @@ CR.Controllers.Common = P(function(c) {
     };
 
     c._onScroll = function() {
-        var isScrolledDownEnough = this.$window.scrollTop() > 0;
+        let isScrolledDownEnough = this.$window.scrollTop() > 0;
 
         this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
     };
 
     c._toggleMenu = function() {
         if (this.$siteHeader.hasClass("menu-open")) {
-            var tween = TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
+            let tween = TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
 
             tween.eventCallback("onComplete", function() {
                 this.$smallAndMediumScreenNav.css({"display": "none"});
@@ -58,12 +58,12 @@ CR.Controllers.Common = P(function(c) {
     c._scrollToSection = function(e) {
         e.preventDefault();
 
-        var $target = $(e.currentTarget);
-        var hash = $target.attr("href");
-        var sectionId = hash.substring(1);
-        var $section = $(document.getElementById(sectionId));
+        let $target = $(e.currentTarget);
+        let hash = $target.attr("href");
+        let sectionId = hash.substring(1);
+        let $section = $(document.getElementById(sectionId));
 
-        var scrollYPos = $section.offset().top - this.$siteHeader.height();
+        let scrollYPos = $section.offset().top - this.$siteHeader.height();
         TweenLite.to(window, 1, {scrollTo: scrollYPos, ease: Power4.easeOut});
     };
 });

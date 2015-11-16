@@ -98,10 +98,10 @@ CR.Controllers.SignIn = P(function(c) {
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
-                var type = "POST";
-                var url = "/api/auth";
+                let type = "POST";
+                let url = "/api/auth";
 
-                var httpRequest = new XMLHttpRequest();
+                let httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === CR.httpStatusCodes.ok) {

@@ -30,8 +30,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                                 {this._getRegisterWithEmailFormSection()}
                             </section>
                             <div className="centered-contents">
-                                <p className="other-form-error" id="email-already-registered">{CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}</p>
-                                <p className="other-form-error" id="linkedin-account-already-registered">{CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}</p>
+                                <p className="other-form-error" id="email-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}}></p>
+                                <p className="other-form-error" id="linkedin-account-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}}></p>
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.nextStepBtn.text"]}</button>
                             </div>
                         </form>
@@ -151,7 +151,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this._hideOtherFormErrors();
 
             if (this._isRegisterWithLinkedinSectionVisible()) {
-                var $registerWithEmailSection = this.$registerWithEmailSection;
+                let $registerWithEmailSection = this.$registerWithEmailSection;
 
                 this.$registerWithLinkedinSection.fadeOut({
                     animationDuration: 0.2,
@@ -164,7 +164,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                     }.bind(this)
                 });
             } else {
-                var $registerWithLinkedinSection = this.$registerWithLinkedinSection;
+                let $registerWithLinkedinSection = this.$registerWithLinkedinSection;
 
                 this.$registerWithEmailSection.fadeOut({
                     animationDuration: 0.2,
@@ -226,10 +226,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _submitAccountCreation: function() {
             this.$submitBtn.enableLoading();
 
-            var type = "POST";
-            var url = "/api/accounts";
+            let type = "POST";
+            let url = "/api/accounts";
 
-            var httpRequest = new XMLHttpRequest();
+            let httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === CR.httpStatusCodes.created) {
