@@ -51,6 +51,24 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       Some(requestData("couponCode").head)
     }
 
+    val positionSought = if (!requestData.contains("positionSought")) {
+      None
+    } else {
+      Some(requestData("positionSought").head)
+    }
+
+    val employerSought = if (!requestData.contains("employerSought")) {
+      None
+    } else {
+      Some(requestData("employerSought").head)
+    }
+
+    val jobAdUrl = if (!requestData.contains("jobAdUrl")) {
+      None
+    } else {
+      Some(requestData("jobAdUrl").head)
+    }
+
     // Create temporary order
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
@@ -59,6 +77,9 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       couponCode = couponCode,
       cvFileName = cvFileNameOpt,
       coverLetterFileName = coverLetterFileNameOpt,
+      positionSought = positionSought,
+      employerSought = employerSought,
+      jobAdUrl = jobAdUrl,
       accountId = SessionService.getAccountId(request.session)
     )
 

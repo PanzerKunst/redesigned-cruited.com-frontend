@@ -6,4 +6,7 @@ case class OrderReceivedFromFrontend(tempId: Long,
                                      couponCode: Option[String],
                                      cvFileName: Option[String],
                                      coverLetterFileName: Option[String],
+                                     positionSought: Option[String],
+                                     employerSought: Option[String],
+                                     jobAdUrl: Option[String],
                                      accountId: Option[Long])

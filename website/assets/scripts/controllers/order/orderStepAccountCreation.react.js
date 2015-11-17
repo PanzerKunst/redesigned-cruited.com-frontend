@@ -37,7 +37,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         </form>
                     </div>
                 </div>
-                );
+            );
         },
 
         componentDidUpdate: function() {
@@ -70,7 +70,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                             <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.incorrectEmail"]}</p>
                         </div>
                     </div>
-                    );
+                );
             }
 
             return (
@@ -79,7 +79,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         <span>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.btn.text"]}</span>
                     </a>
                 </div>
-                );
+            );
         },
 
         _getRegisterWithEmailFormSection: function() {
@@ -103,7 +103,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         <p className="field-error" data-check="min-length">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.passwordTooShort"]}</p>
                     </div>
                 </div>
-                );
+            );
         },
 
         _initElements: function() {
@@ -150,14 +150,16 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _toggleSectionsRegisterWith: function() {
             this._hideOtherFormErrors();
 
+            let animationDuration = 0.2;
+
             if (this._isRegisterWithLinkedinSectionVisible()) {
                 let $registerWithEmailSection = this.$registerWithEmailSection;
 
                 this.$registerWithLinkedinSection.fadeOut({
-                    animationDuration: 0.2,
+                    animationDuration: animationDuration,
                     onComplete: function() {
                         $registerWithEmailSection.fadeIn({
-                            animationDuration: 0.2
+                            animationDuration: animationDuration
                         });
 
                         this._handleEmailAddressChanged();
@@ -167,10 +169,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 let $registerWithLinkedinSection = this.$registerWithLinkedinSection;
 
                 this.$registerWithEmailSection.fadeOut({
-                    animationDuration: 0.2,
+                    animationDuration: animationDuration,
                     onComplete: function() {
                         $registerWithLinkedinSection.fadeIn({
-                            animationDuration: 0.2
+                            animationDuration: animationDuration
                         });
 
                         this._handleLinkedinEmailChanged();
@@ -209,12 +211,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this._hideOtherFormErrors();
 
             if (this._isRegisterWithLinkedinSectionVisible()) {
-                if (!this._isSignInWithLinkedinBtnThere()) {
-                    if (this.registerWithLinkedinValidator.isValid()) {
-                        this._submitAccountCreation();
-                    }
-                } else {
+                if (this._isSignInWithLinkedinBtnThere()) {
                     this.registerWithEmailValidator.showErrorMessage(this.$notSignedInWithLinkedinError);
+                } else if (this.registerWithLinkedinValidator.isValid()) {
+                    this._submitAccountCreation();
                 }
             } else {
                 if (this.registerWithEmailValidator.isValid()) {

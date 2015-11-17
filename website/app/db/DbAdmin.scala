@@ -8,13 +8,15 @@ import play.api.db.DB
 
 object DbAdmin {
   def reCreateTables() {
-    dropUniqueConstraintsOnEdition()
+    removeAlterationOnTableDocuments()
+    removeAlterationOnTableEdition()
     dropTable("reduction")
     dropTable("product")
 
     createTableProduct()
     createTableReduction()
-    createUniqueConstraintsOnEdition()
+    alterTableEdition()
+    alterTableDocuments()
   }
 
   private def createTableProduct() {
@@ -53,13 +55,26 @@ object DbAdmin {
     }
   }
 
-  private def createUniqueConstraintsOnEdition() {
+  private def alterTableEdition() {
     DB.withConnection { implicit c =>
       val query = """
         alter table product_edition
         add constraint unique_code unique(edition);"""
 
-      Logger.info("DbAdmin.createUniqueConstraintsOnEdition():" + query)
+      Logger.info("DbAdmin.alterTableEdition():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def alterTableDocuments() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table documents
+        add job_ad_url varchar(255)
+        after employer;"""
+
+      Logger.info("DbAdmin.alterTableDocuments():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -73,13 +88,25 @@ object DbAdmin {
     }
   }
 
-  private def dropUniqueConstraintsOnEdition() {
+  private def removeAlterationOnTableEdition() {
     DB.withConnection { implicit c =>
       val query = """
         alter table product_edition
         drop index unique_code;"""
 
-      Logger.info("DbAdmin.dropUniqueConstraintsOnEdition():" + query)
+      Logger.info("DbAdmin.removeAlterationOnTableEdition():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def removeAlterationOnTableDocuments() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table documents
+        drop column job_ad_url;"""
+
+      Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
 
       SQL(query).executeUpdate()
     }

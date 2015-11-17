@@ -335,7 +335,11 @@ CR.Services.Validator = P(function(c) {
     };
 
     c._isUrl = function(url) {
-        let reg = /^((https?|ftp|irc):\/\/)?(www\d?|[a-z0-9]+)?\.[a-z0-9-]+(\:|\.)([a-z0-9.]+|(\d+)?)([/?:].*)?$/i;
+        if (url === "") {
+            return true;
+        }
+
+        let reg = /^(https?|ftp):\/\/(-\.)?([^\s/?\.#-]+\.?)+(\/[^\s]*)?$/i;
         return reg.test(url);
     };
 

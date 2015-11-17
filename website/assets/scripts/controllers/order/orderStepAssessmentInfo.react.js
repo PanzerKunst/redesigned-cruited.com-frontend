@@ -26,6 +26,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             {this._getSignInWithLinkedinFormGroup()}
                             {this._getCvFormGroup()}
                             {this._getCoverLetterFormGroup()}
+                            {this._getOptionalInfoFormGroup()}
                             <div>
                                 <div className="checkbox checkbox-primary">
                                     <input type="checkbox" id="accept-tos" />
@@ -39,7 +40,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         </form>
                     </div>
                 </div>
-                );
+            );
         },
 
         componentDidUpdate: function() {
@@ -78,7 +79,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             </div>
                             <p className="field-error" data-check="empty" />
                         </div>
-                        );
+                    );
                 } else {
                     formGroupContents = (
                         <div>
@@ -86,7 +87,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                             </a>
                         </div>
-                        );
+                    );
                 }
 
                 return (
@@ -94,9 +95,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.label"]}</label>
 
                         {formGroupContents}
-                        <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.validation.notSignedIn"]}</p>
+                        <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.notSignedIn"]}</p>
                     </div>
-                    );
+                );
             }
         },
 
@@ -122,7 +123,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
-                );
+            );
         },
 
         _getCoverLetterFormGroup: function() {
@@ -147,7 +148,27 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
-                );
+            );
+        },
+
+        _getOptionalInfoFormGroup: function() {
+            return (
+                <fieldset>
+                    <div className="form-group">
+                        <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
+                        <input type="text" className="form-control" id="position-sought" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
+                        <input type="text" className="form-control" id="employer-sought" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
+                        <input type="text" className="form-control" id="job-ad-url" />
+                        <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
+                    </div>
+                </fieldset>
+            );
         },
 
         _initElements: function() {
@@ -165,6 +186,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$coverLetterFileInput = this.$coverLetterFormGroup.find("#cover-letter");
             this.$coverLetterFileNameInput = this.$coverLetterFormGroup.find("input[type=text]");
 
+            this.$positionSoughtInput = this.$form.find("#position-sought");
+            this.$employerSoughtInput = this.$form.find("#employer-sought");
+            this.$jobAdUrlInput = this.$form.find("#job-ad-url");
+
             this.$submitBtn = this.$form.find("button[type=submit]");
         },
 
@@ -173,6 +198,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 "linkedin-profile-checked",
                 "cv",
                 "cover-letter",
+                "job-ad-url",
                 "accept-tos"
             ]);
         },
@@ -207,6 +233,20 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
                     if (this.coverLetterFile) {
                         formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
+                    }
+
+                    let positionSought = this.$positionSoughtInput.val();
+                    let employerSought = this.$employerSoughtInput.val();
+                    let jobAdUrl = this.$jobAdUrlInput.val();
+
+                    if (positionSought) {
+                        formData.append("positionSought", positionSought);
+                    }
+                    if (employerSought) {
+                        formData.append("employerSought", employerSought);
+                    }
+                    if (jobAdUrl) {
+                        formData.append("jobAdUrl", jobAdUrl);
                     }
 
                     let type = "POST";

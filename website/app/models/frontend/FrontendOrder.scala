@@ -11,6 +11,9 @@ case class FrontendOrder(id: Long,
                          cvFileName: Option[String],
                          coverLetterFileName: Option[String],
                          linkedinProfileFileName: Option[String],
+                         positionSought: Option[String],
+                         employerSought: Option[String],
+                         jobAdUrl: Option[String],
                          accountId: Long,
                          status: Int,
                          creationTimestamp: Long)
@@ -24,6 +27,9 @@ object FrontendOrder {
       (JsPath \ "cvFileName").writeNullable[String] and
       (JsPath \ "coverLetterFileName").writeNullable[String] and
       (JsPath \ "linkedinProfileFileName").writeNullable[String] and
+      (JsPath \ "positionSought").writeNullable[String] and
+      (JsPath \ "employerSought").writeNullable[String] and
+      (JsPath \ "jobAdUrl").writeNullable[String] and
       (JsPath \ "accountId").write[Long] and
       (JsPath \ "status").write[Int] and
       (JsPath \ "creationTimestamp").write[Long]
