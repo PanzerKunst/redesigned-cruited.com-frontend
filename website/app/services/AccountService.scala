@@ -1,8 +1,6 @@
 package services
 
 import db.AccountDto
-import models.Account
-import play.api.libs.json.{JsNull, JsValue, Json}
 import play.api.mvc.Session
 
 import scala.util.Random

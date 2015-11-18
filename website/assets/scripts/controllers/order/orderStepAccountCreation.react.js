@@ -98,7 +98,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">{CR.i18nMessages["order.accountCreation.registerWithEmail.password.label"]}</label>
-                        <input type="password" className="form-control" id="password" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.password.field.placeholder"]} data-min-length="8" />
+                        <input type="password" className="form-control" id="password" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.password.field.placeholder"]} data-min-length="5" />
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="min-length">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.passwordTooShort"]}</p>
                     </div>

@@ -5,6 +5,7 @@ import javax.inject.{Inject, Singleton}
 import db.{AccountDto, OrderDto}
 import models.{CruitedProduct, Order}
 import play.api.Logger
+import play.api.libs.json.JsUndefined
 
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
@@ -42,37 +43,12 @@ class OrderService @Inject()(val documentService: DocumentService) {
     updateFileNamesInDb(orderId)
   }
 
-  def generateDocThumbnails(orderId: Long) {
-
-    // TODO: remove
-    Logger.info("OrderService > generateDocThumbnails: " + orderId)
-
-    val order = OrderDto.getOfId(orderId).get
-
-    generateThumbnailForFile(order.cvFileName)
-    generateThumbnailForFile(order.coverLetterFileName)
-    generateThumbnailForFile(order.linkedinProfileFileName)
-  }
-
-  private def generateThumbnailForFile(fileNameOpt: Option[String]) {
-
-    // TODO: remove
-    Logger.info("OrderService > generateThumbnailForFile: " + fileNameOpt)
-
-    fileNameOpt match {
-      case None =>
-      case Some(fileName) =>
-        if (documentService.isFilePresent(fileName)) {
-          documentService.generateThumbnail(fileName)
-        }
-    }
-  }
-
   private def convertLinkedinPublicProfilePageToPdf(orderId: Long) {
     val accountId = OrderDto.getOfId(orderId).get.accountId.get
-    AccountDto.getOfId(accountId).get.linkedinProfile match {
-      case None =>
-      case Some(linkedinProfile) => documentService.convertLinkedinProfilePageToPdf(orderId, (linkedinProfile \ "publicProfileUrl").as[String])
+    val linkedinProfile = AccountDto.getOfId(accountId).get.linkedinProfile
+
+    if (!linkedinProfile.isInstanceOf[JsUndefined]) {
+      documentService.convertLinkedinProfilePageToPdf(orderId, (linkedinProfile \ "publicProfileUrl").as[String])
     }
   }
 
@@ -113,11 +89,39 @@ class OrderService @Inject()(val documentService: DocumentService) {
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
     if (order.containedProductCodes.contains(CruitedProduct.getCodeFromType(CruitedProduct.dbTypeLinkedinProfileReview))) {
       // Fail epically if the Linkedin profile doesn't exist
-      AccountDto.getOfId(order.accountId.get).get.linkedinProfile.get
+      if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile.isInstanceOf[JsUndefined]) {
+        throw new Exception("OrderService.getNewLinkedinProfileFileName() > Fatal error: linkedinProfile is JsNull for order ID " + order.id)
+      }
 
       Some(order.id.get + Order.fileNamePrefixSeparator + documentService.linkedinProfilePdfFileNameWithoutPrefix)
     } else {
       None
+    }
+  }
+
+  def generateDocThumbnails(orderId: Long) {
+
+    // TODO: remove
+    Logger.info("OrderService > generateDocThumbnails: " + orderId)
+
+    val order = OrderDto.getOfId(orderId).get
+
+    generateThumbnailForFile(order.cvFileName)
+    generateThumbnailForFile(order.coverLetterFileName)
+    generateThumbnailForFile(order.linkedinProfileFileName)
+  }
+
+  private def generateThumbnailForFile(fileNameOpt: Option[String]) {
+
+    // TODO: remove
+    Logger.info("OrderService > generateThumbnailForFile: " + fileNameOpt)
+
+    fileNameOpt match {
+      case None =>
+      case Some(fileName) =>
+        if (documentService.isFilePresent(fileName)) {
+          documentService.generateThumbnail(fileName)
+        }
     }
   }
 }

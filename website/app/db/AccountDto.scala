@@ -6,7 +6,7 @@ import models.Account
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsNull, JsValue, Json}
 
 object AccountDto {
   def createTemporary(accountId: Long): Option[Long] = {
@@ -24,7 +24,7 @@ object AccountDto {
     }
   }
 
-  def create(emailAddress: String, firstName: String, password: Option[String], linkedinProfile: Option[JsValue]): Option[Long] = {
+  def create(emailAddress: String, firstName: String, password: Option[String], linkedinProfile: JsValue): Option[Long] = {
     DB.withConnection { implicit c =>
       val passwordClause = password match {
         case None => "NULL"
@@ -32,8 +32,8 @@ object AccountDto {
       }
 
       val linkedinProfileClause = linkedinProfile match {
-        case None => ""
-        case Some(jsValue) => DbUtil.safetize(jsValue.toString())
+        case JsNull => ""
+        case jsObject => DbUtil.safetize(jsObject.toString())
       }
 
       val query = """
@@ -71,8 +71,8 @@ object AccountDto {
       }
 
       val linkedinProfileClause = account.linkedinProfile match {
-        case None => ""
-        case Some(jsValue) => ", linkedin_basic_profile_fields = '" + DbUtil.safetize(jsValue.toString()) + "'"
+        case JsNull => ""
+        case jsObject => ", linkedin_basic_profile_fields = '" + DbUtil.safetize(jsObject.toString()) + "'"
       }
 
       val query = """
@@ -115,10 +115,10 @@ object AccountDto {
       val optionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => None
+            case "" => JsNull
             case otherString =>
               val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
-              Some(Json.parse(readyToParse))
+              Json.parse(readyToParse)
           }
 
           Account(
@@ -150,10 +150,10 @@ object AccountDto {
       val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => None
+            case "" => JsNull
             case otherString =>
               val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
-              Some(Json.parse(readyToParse))
+              Json.parse(readyToParse)
           }
 
           Account(
@@ -185,10 +185,10 @@ object AccountDto {
       val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => None
+            case "" => JsNull
             case otherString =>
               val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
-              Some(Json.parse(readyToParse))
+              Json.parse(readyToParse)
           }
 
           Account(
@@ -222,10 +222,10 @@ object AccountDto {
       val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => None
+            case "" => JsNull
             case otherString =>
               val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
-              Some(Json.parse(readyToParse))
+              Json.parse(readyToParse)
           }
 
           Account(

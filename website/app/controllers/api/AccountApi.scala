@@ -4,7 +4,7 @@ import javax.inject.Singleton
 
 import db.{AccountDto, OrderDto}
 import models.frontend.AccountReceivedFromFrontend
-import play.api.libs.json.{JsError, JsSuccess, JsValue}
+import play.api.libs.json._
 import play.api.mvc.{Action, Controller, Request}
 import services.{HttpService, SessionService}
 
@@ -23,8 +23,8 @@ class AccountApi extends Controller {
           Status(HttpService.httpStatusEmailAlreadyRegistered)
         } else {
           val accountWithSameLinkedinIdOpt = frontendAccount.linkedinProfile match {
-            case None => None
-            case Some(linkedinProfile) => AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String])
+            case JsNull => None
+            case jsObject => AccountDto.getOfLinkedinAccountId((jsObject \ "id").as[String])
           }
 
           if (accountWithSameLinkedinIdOpt.isDefined && accountIdInSession.isDefined && accountWithSameLinkedinIdOpt.get.id != accountIdInSession.get) {
@@ -41,10 +41,10 @@ class AccountApi extends Controller {
                 // If exists in DB
                 case Some(account) =>
                   // 1. If the old one has linkedIn info that the new one doesn't, we set it
-                  if (account.linkedinProfile.isDefined) {
+                  if (!account.linkedinProfile.isInstanceOf[JsUndefined]) {
                     val newAccount = AccountDto.getOfId(newAccountId).get
 
-                    if (!newAccount.linkedinProfile.isDefined) {
+                    if (newAccount.linkedinProfile.isInstanceOf[JsUndefined]) {
                       val updatedAccount = newAccount.copy(
                         linkedinProfile = account.linkedinProfile
                       )

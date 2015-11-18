@@ -3,7 +3,6 @@ package controllers
 import javax.inject.Inject
 
 import db._
-import models.frontend.FrontendOrder
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
@@ -51,7 +50,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case None => JsNull
       case Some(accountId) => AccountDto.getOfId(accountId) match {
         case None => JsNull
-        case Some(account) => account.linkedinProfile.getOrElse(JsNull)
+        case Some(account) => account.linkedinProfile
       }
     }
 
@@ -74,7 +73,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             } else {
               val linkedinProfile = AccountDto.getOfId(accountId) match {
                 case None => JsNull
-                case Some(existingAccount) => existingAccount.linkedinProfile.getOrElse(JsNull)
+                case Some(existingAccount) => existingAccount.linkedinProfile
               }
 
               Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
@@ -196,7 +195,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
               firstName = Some(account.firstName.getOrElse((linkedinProfile \ "firstName").as[String])),
               lastName = Some((linkedinProfile \ "lastName").as[String]),
               emailAddress = Some(account.emailAddress.getOrElse((linkedinProfile \ "emailAddress").as[String])),
-              linkedinProfile = Some(linkedinProfile)
+              linkedinProfile = linkedinProfile
             )
 
             AccountDto.update(updatedAccount)
@@ -206,6 +205,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         }
       }
     }
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def linkedinCallbackOrderStepAssessmentInfo = Action { request =>
@@ -242,7 +245,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             firstName = Some(account.firstName.getOrElse((linkedinProfile \ "firstName").as[String])),
             lastName = Some((linkedinProfile \ "lastName").as[String]),
             emailAddress = Some(account.emailAddress.getOrElse((linkedinProfile \ "emailAddress").as[String])),
-            linkedinProfile = Some(linkedinProfile)
+            linkedinProfile = linkedinProfile
           )
 
           AccountDto.update(updatedAccount)
@@ -251,9 +254,5 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> accountId.toString))
       }
     }
-  }
-
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 }
