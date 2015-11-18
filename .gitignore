@@ -1,5 +1,4 @@
 .sass-cache
-/website/node_modules
 .idea
 /design/LiveYourDreamsBg.ai
 /design/dark-bg.ai
@@ -7,3 +6,5 @@
 /website/conf/application.conf
 /website/public
 *.log
+node_modules
+/document-web-service/conf/application.conf
