@@ -51,3 +51,35 @@ a.btn-primary {
     border-color: darken($secondary-action-color, 25%);
   }
 }
+
+.social-icon {
+  $fb-icon-image-location-x: -1200px;
+  $icon-image-location-y: -500px;
+
+  @include hdpi-sprite();
+  background-position: $fb-icon-image-location-x $icon-image-location-y;
+  @include hidpi {
+    background-position: half-pos($fb-icon-image-location-x, $icon-image-location-y);
+  }
+
+  height: 30px;
+  width: 30px;
+
+  &.linkedin {
+    $li-icon-image-location-x: -1300px;
+
+    background-position: $li-icon-image-location-x $icon-image-location-y;
+    @include hidpi {
+      background-position: half-pos($li-icon-image-location-x, $icon-image-location-y);
+    }
+  }
+
+  &.twitter {
+    $tw-icon-image-location-x: -1400px;
+
+    background-position: $tw-icon-image-location-x $icon-image-location-y;
+    @include hidpi {
+      background-position: half-pos($tw-icon-image-location-x, $icon-image-location-y);
+    }
+  }
+}

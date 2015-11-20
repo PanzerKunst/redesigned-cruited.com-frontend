@@ -47,14 +47,29 @@ footer.content-info {
     padding-top: $footer-padding-top;
     padding-bottom: 2em;
 
-    > h2 {
-      margin: 0;
-      font-size: 34px;
+    > #brand-and-social-icons {
+      > h2 {
+        margin: 0;
+        font-size: 34px;
 
-      text-align: center;
+        text-align: center;
+      }
+
+      > div {
+        text-align: center;
+      }
     }
 
-    > div {
+    .social-icon {
+      display: inline-block;
+      margin: 5px 0 0 10px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    > #widgets {
       font-size: #{$font-size-base-px}px;
     }
 
@@ -77,11 +92,16 @@ footer.content-info {
       padding-top: $footer-padding-top * $medium-screen-ratio-l;
       padding-bottom: 2em;
 
-      > h2 {
-        text-align: left;
+      #brand-and-social-icons {
+        display: flex;
+        justify-content: space-between;
+
+        > h2 {
+          text-align: left;
+        }
       }
 
-      > div {
+      > #widgets {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;

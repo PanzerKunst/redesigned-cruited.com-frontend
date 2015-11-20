@@ -504,14 +504,14 @@ body.home {
         padding-left: 6px;
       }
 
+      $secondary-testimonial-img-location-x: -1200px;
+      $secondary-testimonial-img-location-y: -300px;
       div {
-        $secondary-testimonial-1-img-location-x: -1200px;
-        $secondary-testimonial-1-img-location-y: -300px;
 
         @include hdpi-sprite();
-        background-position: $secondary-testimonial-1-img-location-x $secondary-testimonial-1-img-location-y;
+        background-position: $secondary-testimonial-img-location-x $secondary-testimonial-img-location-y;
         @include hidpi {
-          background-position: half-pos($secondary-testimonial-1-img-location-x, $secondary-testimonial-1-img-location-y);
+          background-position: half-pos($secondary-testimonial-img-location-x, $secondary-testimonial-img-location-y);
         }
 
         width: 85px;
@@ -521,11 +521,10 @@ body.home {
       &:nth-child(2) {
         div {
           $secondary-testimonial-2-img-location-x: -1400px;
-          $secondary-testimonial-2-img-location-y: -300px;
 
-          background-position: $secondary-testimonial-2-img-location-x $secondary-testimonial-2-img-location-y;
+          background-position: $secondary-testimonial-2-img-location-x $secondary-testimonial-img-location-y;
           @include hidpi {
-            background-position: half-pos($secondary-testimonial-2-img-location-x, $secondary-testimonial-2-img-location-y);
+            background-position: half-pos($secondary-testimonial-2-img-location-x, $secondary-testimonial-img-location-y);
           }
         }
       }
@@ -533,11 +532,10 @@ body.home {
       &:last-child {
         div {
           $secondary-testimonial-3-img-location-x: -1600px;
-          $secondary-testimonial-3-img-location-y: -300px;
 
-          background-position: $secondary-testimonial-3-img-location-x $secondary-testimonial-3-img-location-y;
+          background-position: $secondary-testimonial-3-img-location-x $secondary-testimonial-img-location-y;
           @include hidpi {
-            background-position: half-pos($secondary-testimonial-3-img-location-x, $secondary-testimonial-3-img-location-y);
+            background-position: half-pos($secondary-testimonial-3-img-location-x, $secondary-testimonial-img-location-y);
           }
         }
       }
