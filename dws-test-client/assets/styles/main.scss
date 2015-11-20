@@ -1,0 +1,29 @@
+// Automatically injected Bower dependencies via wiredep (never manually edit this block)
+// bower:scss
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "../../bower_components/bourbon/app/assets/stylesheets/_bourbon.scss";
+// endbower
+
+// Utils
+@import "common/_variables";
+@import "common/_mixins";
+
+// Vendor overrides
+@import "vendor-overrides/_bootstrap";
+
+// Global
+@import "common/_global";
+@import "common/_fonts";
+@import "common/_projectGlobal";
+
+// UX components
+@import "components/_buttons";
+@import "components/_forms";
+@import "components/_headings";
+@import "components/_type";
+
+// Layouts/partials
+@import "layouts/_index";
+
+// Browser hacks
+@import "_browser-specific";

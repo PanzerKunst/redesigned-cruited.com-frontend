@@ -1,10 +1,10 @@
 .sass-cache
 .idea
+*.log
+bower_components
+node_modules
 /design/LiveYourDreamsBg.ai
 /design/dark-bg.ai
-/website/bower_components
 /website/conf/application.conf
 /website/public
-*.log
-node_modules
 /document-web-service/conf/application.conf

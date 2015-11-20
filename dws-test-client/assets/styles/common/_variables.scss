@@ -1,0 +1,44 @@
+$sprite-url: '../images/sprite';
+
+$action-color: rgb(28, 127, 168);  // #1C7FA8
+$lighter-grey: rgb(248, 249, 251); // #F8F9FB
+$background-body-color: $lighter-grey;
+$secondary-action-color: rgb(247, 155, 96); // #F79B60
+$primary-btn-color: rgb(84, 195, 143); // #54C38F
+$grey: rgb(85, 105, 126);  // #55697E
+$dark-grey: rgb(76, 83, 101);  // #4c5365
+$darker-grey: rgb(42, 68, 94); // #2A445E
+$light-grey-blue: rgb(98, 143, 187);   // #628FBB
+$well-border-color: rgb(189, 205, 216); // #BDCDD8
+
+$line-height-project: 1.75em;
+
+$small-content-width: 320px;
+$medium-content-width: $small-content-width * 2;
+$large-content-width: $small-content-width * 3;
+
+$spacer-unit-size: 14px;
+
+$font-size-base-px: 14;
+$font-size-base-em: 1em;
+$font-size-sm: 0.75em;
+$font-size-xs: 0.5em;
+
+$medium-screen-ratio-s: 1.2;
+$large-screen-ratio-s: 1.4;
+
+$medium-screen-ratio-m: 1.3;
+$large-screen-ratio-m: 1.6;
+
+$medium-screen-ratio-l: 1.7;
+$large-screen-ratio-l: 2.5;
+
+$z-index-header: 10;
+
+$form-control-height: 2.4em;
+
+$default-animation-duration: 300ms;
+
+$content-element-margin-bottom: 1.2em;
+
+$well-padding: 1em;

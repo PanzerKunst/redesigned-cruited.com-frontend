@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+        <title>DWS test</title>
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("styles/main.css")">
+
+        <!-- TODO Favicon
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")"> -->
+    </head>
+    <body>
+    <div id="container">
+        <div role="main"></div>
+    </div>
+
+    <!-- Javascripts -->
+    <script type="text/javascript" src="@routes.Assets.versioned("scripts/main.js")"></script>
+
+    <script type="text/javascript">
+        ReactDOM.render(
+            React.createElement(CR.Controllers.Index),
+            document.querySelector("[role=main]")
+        );
+    </script>
+    </body>
+</html>

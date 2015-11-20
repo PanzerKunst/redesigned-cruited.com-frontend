@@ -1,0 +1,58 @@
+{
+  "name": "Cruited web app",
+  "version": "2.0.0",
+  "homepage": "https://github.com/PanzerKunst/redesigned-cruited.com-frontend/dws-test-client",
+  "authors": [
+    "Christophe Bram <christophe@8b.nu>"
+  ],
+  "license": "GPL V3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap-sass": "~3.3.5",
+    "bourbon": "~4.2.5",
+    "lodash": "~3.10.1",
+    "pjs": "jneen/pjs#~5.1.1",
+    "react": "~0.14.3",
+    "classnames": "~2.2.0"
+  },
+  "description": "App to test the Document Web Service",
+  "main": "",
+  "moduleType": [],
+  "private": true,
+  "overrides": {
+    "bootstrap-sass": {
+      "main": [
+        "./assets/stylesheets/_bootstrap.scss",
+        "./assets/javascripts/bootstrap.min.js"
+      ]
+    },
+    "jquery": {
+      "main": [
+        "./dist/jquery.min.js"
+      ]
+    },
+    "pjs": {
+      "main": [
+        "./src/p.js"
+      ]
+    },
+    "lodash": {
+      "main": [
+        "./lodash.min.js"
+      ]
+    },
+    "react": {
+      "main": [
+        "./react-with-addons.min.js",
+        "./react-dom.min.js"
+      ]
+    }
+  }
+}

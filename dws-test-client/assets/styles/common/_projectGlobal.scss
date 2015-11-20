@@ -1,0 +1,21 @@
+.with-circles {
+  $section-padding-top: $spacer-unit-size * 6;
+  $section-padding-bottom: $spacer-unit-size * 2.5;
+
+  padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+
+  @include medium-screen {
+    padding-top: $section-padding-top * $medium-screen-ratio-l;
+    padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+
+    width: $medium-content-width;
+
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
+  }
+
+  @include large-screen {
+    width: $large-content-width;
+  }
+}

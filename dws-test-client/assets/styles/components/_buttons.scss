@@ -1,0 +1,149 @@
+.btn {
+  @include transition(color $default-animation-duration ease, background-color $default-animation-duration ease, border-color $default-animation-duration ease);
+  border-radius: 0.25em;
+
+  padding: 0.4em 1em;
+
+  > .fa-spinner {
+    margin: 0 0.5em 0 -0.6em;
+  }
+
+  &.btn-lg {
+    padding: 0.8em 2em;
+
+    > .fa-spinner {
+      margin-left: -1.25em;
+    }
+
+    text-transform: uppercase;
+  }
+}
+
+.btn-default,
+a.btn-default {
+  @include styleless-btn;
+
+  color: $grey;
+  border: 2px solid $grey;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $background-body-color;
+    border-color: darken($grey, 25%);
+    background-color: darken($grey, 15%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    color: $grey;
+    border-color: $grey;
+    background-color: $background-body-color;
+  }
+}
+
+.btn-primary,
+a.btn-primary,
+.btn-success,
+a.btn-success,
+.btn-info,
+a.btn-info,
+.btn-warning,
+a.btn-warning,
+.btn-danger,
+a.btn-danger,
+.btn.sign-in-with-linkedin {
+  color: white;
+}
+
+.btn-primary,
+a.btn-primary {
+  background-color: $primary-btn-color;
+  border-color: $primary-btn-color;
+
+  &:active,
+  &:focus,
+  &:hover,
+  &:active:focus {
+    background-color: darken($primary-btn-color, 15%);
+    border-color: darken($primary-btn-color, 25%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background-color: $primary-btn-color;
+    border-color: $primary-btn-color;
+  }
+}
+
+.btn.secondary {
+  @include styleless-btn;
+
+  color: $secondary-action-color;
+  border: 2px solid $secondary-action-color;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $background-body-color;
+    border-color: darken($secondary-action-color, 25%);
+    background-color: darken($secondary-action-color, 15%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    color: $secondary-action-color;
+    border-color: $secondary-action-color;
+    background-color: $background-body-color;
+  }
+}
+
+.btn-file-upload {
+  padding: 0.18em 0.95em;
+}
+
+.btn.sign-in-with-linkedin {
+  $sign-in-with-linked-in-button-image-location-x: 0;
+  $sign-in-with-linked-in-button-image-location-y: 0;
+
+  @include hdpi-sprite;
+  background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+  @include hidpi {
+    background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+  }
+
+  width: 146px;
+  height: 21px;
+
+  padding: 0;
+
+  @include medium-screen {
+    $sign-in-with-linked-in-button-image-location-x: -300px;
+
+    background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+    @include hidpi {
+      background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+    }
+
+    width: 215px;
+    height: 41px;
+
+    padding-top: 7px;
+  }
+  @include large-screen {
+    padding-top: 2px;
+  }
+
+  > span {
+    font-size: 11px;
+    @include medium-screen {
+      font-size: 15px;
+    }
+  }
+}

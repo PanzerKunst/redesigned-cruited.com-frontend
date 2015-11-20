@@ -2,6 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /api/docs/:orderId/cv                           controllers.Application.getCvOfOrder(orderId: Long)
-GET     /api/docs/:orderId/cover-letter                 controllers.Application.getCoverLetterOfOrder(orderId: Long)
-GET     /api/docs/:orderId/linkedin-profile             controllers.Application.getLinkedinProfileOfOrder(orderId: Long)
+POST        /db/re-create-tables                    controllers.DbAdminApi.reCreateTables
+
+POST        /docs                                   controllers.Application.create
+PUT         /docs                                   controllers.Application.update
+OPTIONS     /docs                                   controllers.Application.preFlight
+
+GET         /docs/:orderId/cv                       controllers.Application.getCvOfOrder(orderId: Long)
+GET         /docs/:orderId/cover-letter             controllers.Application.getCoverLetterOfOrder(orderId: Long)
+GET         /docs/:orderId/linkedin-profile         controllers.Application.getLinkedinProfileOfOrder(orderId: Long)
