@@ -1,7 +1,14 @@
 "use strict";
 
 CR.Controllers.Index = React.createClass({
+    dwsUrlRoot: "http://localhost:9001/docs/",
+    orderId: 1699,
+
     render: function() {
+        let cvUrl = this.dwsUrlRoot + this.orderId + "/cv";
+        let coverLetterUrl = this.dwsUrlRoot + this.orderId + "/cover-letter";
+        let linkedinProfileUrl = this.dwsUrlRoot + this.orderId + "/linkedin-profile";
+
         return (
             <div id="content">
                 <div id="page-header-bar">
@@ -15,7 +22,7 @@ CR.Controllers.Index = React.createClass({
                             <div>
                                 <label className="btn btn-default btn-file-upload" htmlFor="cv">
                                     <input id="cv" type="file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
-                                    Browse
+                                Browse
                                 </label>
                                 <input type="text" className="form-control" disabled />
                             </div>
@@ -28,7 +35,7 @@ CR.Controllers.Index = React.createClass({
                             <div>
                                 <label className="btn btn-default btn-file-upload" htmlFor="cover-letter">
                                     <input id="cover-letter" type="file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
-                                    Browse
+                                Browse
                                 </label>
                                 <input type="text" className="form-control" disabled />
                             </div>
@@ -40,6 +47,9 @@ CR.Controllers.Index = React.createClass({
                             <button type="button" className="btn btn-lg btn-primary" onClick={this._editDocs}>Edit</button>
                         </div>
                     </form>
+                    <a href={cvUrl}>CV</a>
+                    <a href={coverLetterUrl}>Cover Letter</a>
+                    <a href={linkedinProfileUrl}>Linkedin profile</a>
                 </div>
             </div>
         );
@@ -80,29 +90,31 @@ CR.Controllers.Index = React.createClass({
     },
 
     _submit: function(method, expectedHttpStatusCode) {
-        let formData = new FormData();
-        formData.append("orderId", 1698);
-        if (this.cvFile) {
-            formData.append("cvFile", this.cvFile, this.cvFile.name);
-        }
-        if (this.coverLetterFile) {
-            formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
-        }
-
-        let type = method;
-        let url = "http://localhost:9001/docs";
-
-        let httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function() {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === expectedHttpStatusCode) {
-                    alert("success!");
-                } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-                }
+        if (this.cvFile || this.coverLetterFile) {
+            let formData = new FormData();
+            formData.append("orderId", this.orderId);
+            if (this.cvFile) {
+                formData.append("cvFile", this.cvFile, this.cvFile.name);
             }
-        };
-        httpRequest.open(type, url);
-        httpRequest.send(formData);
+            if (this.coverLetterFile) {
+                formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
+            }
+
+            let type = method;
+            let url = this.dwsUrlRoot;
+
+            let httpRequest = new XMLHttpRequest();
+            httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === expectedHttpStatusCode) {
+                        alert("success!");
+                    } else {
+                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    }
+                }
+            };
+            httpRequest.open(type, url);
+            httpRequest.send(formData);
+        }
     }
 });

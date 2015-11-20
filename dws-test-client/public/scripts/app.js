@@ -29,7 +29,14 @@ CR.localStorageKeys = {
 CR.Controllers.Index = React.createClass({
     displayName: "Index",
 
+    dwsUrlRoot: "http://localhost:9001/docs/",
+    orderId: 1699,
+
     render: function render() {
+        var cvUrl = this.dwsUrlRoot + this.orderId + "/cv";
+        var coverLetterUrl = this.dwsUrlRoot + this.orderId + "/cover-letter";
+        var linkedinProfileUrl = this.dwsUrlRoot + this.orderId + "/linkedin-profile";
+
         return React.createElement(
             "div",
             { id: "content" },
@@ -104,6 +111,21 @@ CR.Controllers.Index = React.createClass({
                             "Edit"
                         )
                     )
+                ),
+                React.createElement(
+                    "a",
+                    { href: cvUrl },
+                    "CV"
+                ),
+                React.createElement(
+                    "a",
+                    { href: coverLetterUrl },
+                    "Cover Letter"
+                ),
+                React.createElement(
+                    "a",
+                    { href: linkedinProfileUrl },
+                    "Linkedin profile"
                 )
             )
         );
@@ -144,30 +166,36 @@ CR.Controllers.Index = React.createClass({
     },
 
     _submit: function _submit(method, expectedHttpStatusCode) {
-        var formData = new FormData();
-        formData.append("orderId", 1698);
-        if (this.cvFile) {
-            formData.append("cvFile", this.cvFile, this.cvFile.name);
-        }
-        if (this.coverLetterFile) {
-            formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
-        }
+        var _this = this;
 
-        var type = method;
-        var url = "http://localhost:9001/docs";
-
-        var httpRequest = new XMLHttpRequest();
-        httpRequest.onreadystatechange = function () {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === expectedHttpStatusCode) {
-                    alert("success!");
-                } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+        if (this.cvFile || this.coverLetterFile) {
+            (function () {
+                var formData = new FormData();
+                formData.append("orderId", _this.orderId);
+                if (_this.cvFile) {
+                    formData.append("cvFile", _this.cvFile, _this.cvFile.name);
                 }
-            }
-        };
-        httpRequest.open(type, url);
-        httpRequest.send(formData);
+                if (_this.coverLetterFile) {
+                    formData.append("coverLetterFile", _this.coverLetterFile, _this.coverLetterFile.name);
+                }
+
+                var type = method;
+                var url = _this.dwsUrlRoot;
+
+                var httpRequest = new XMLHttpRequest();
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        if (httpRequest.status === expectedHttpStatusCode) {
+                            alert("success!");
+                        } else {
+                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        }
+                    }
+                };
+                httpRequest.open(type, url);
+                httpRequest.send(formData);
+            })();
+        }
     }
 });
 "use strict";

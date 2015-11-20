@@ -5,7 +5,6 @@ import javax.inject.Inject
 
 import _root_.db.OrderDto
 import models.Order
-import play.api.Logger
 import play.api.mvc._
 import services.{DocumentService, GlobalConfig, OrderService}
 
@@ -149,7 +148,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getCvOfOrder(orderId: Long) = Action {
+  def getCvOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
       case Some(order) => sendFile(order.cvFileName)
@@ -166,14 +165,14 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getCoverLetterOfOrder(orderId: Long) = Action {
+  def getCoverLetterOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
       case Some(order) => sendFile(order.coverLetterFileName)
     }
   }
 
-  def getLinkedinProfileOfOrder(orderId: Long) = Action {
+  def getLinkedinProfileOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
       case Some(order) => sendFile(order.linkedinProfileFileName)
