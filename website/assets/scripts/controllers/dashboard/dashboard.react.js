@@ -93,7 +93,7 @@ CR.Controllers.Dashboard = P(function(c) {
         this.account = account;
         this.orders = orders;
 
-        this.reactInstance = React.render(
+        this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
             document.querySelector("[role=main]")
         );

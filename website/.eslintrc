@@ -112,6 +112,7 @@ globals:
     Power4: true
     Breakpoints: true
     React: true
+    ReactDOM: true
     classNames: true
     moment: true
 

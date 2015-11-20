@@ -17,7 +17,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
   val linkedinClientId = Play.configuration.getString("linkedin.client.id").get
   val linkedinClientSecret = Play.configuration.getString("linkedin.client.secret").get
   val linkedinRequestedPermissions = Play.configuration.getString("linkedin.requestedPermissions").get
-  val linkedinState = ConfigService.applicationSecret
+  val linkedinState = GlobalConfig.applicationSecret
   val linkedinAuthUri = Play.configuration.getString("linkedin.authUri").get
   val linkedinRedirectUriSignIn = Play.configuration.getString("linkedin.redirectUri.signIn").get
   val linkedinRedirectUriOrderStepAssessmentInfo = Play.configuration.getString("linkedin.redirectUri.order.assessmentInfo").get
@@ -48,7 +48,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
     val futureAccessToken: Future[String] = ws.url(linkedinAccessTokenUri)
       .withHeaders("Content-Type" -> "application/x-www-form-urlencoded")
       .post(wsCallParams)
-      .map { response => (response.json \ "access_token").as[String] }
+      .map { response => (response.json \ "access_token").as[String]}
 
     val accessTokenResult: Try[String] = Await.ready(futureAccessToken, Duration.Inf).value.get
 
@@ -66,7 +66,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
           .withHeaders("Connection" -> "Keep-Alive")
           .withHeaders("Authorization" -> ("Bearer " + token))
           .get()
-          .map { response => response.json }
+          .map { response => response.json}
 
         val profileResult: Try[JsValue] = Await.ready(futureProfile, Duration.Inf).value.get
 

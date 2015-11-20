@@ -2,7 +2,6 @@
 var del = require("del");
 var gulp = require("gulp");
 var babel = require("gulp-babel");
-var changed = require("gulp-changed");
 var concat = require("gulp-concat");
 var eslint = require("gulp-eslint");
 var imagemin = require("gulp-imagemin");

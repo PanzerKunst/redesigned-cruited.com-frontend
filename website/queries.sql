@@ -24,3 +24,7 @@ order by id desc;
 
 delete from documents
 where id > 1577;
+
+
+select * from codes
+where valid_date > now();

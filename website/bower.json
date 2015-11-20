@@ -23,7 +23,7 @@
         "gsap": "~1.18.0",
         "lodash": "~3.10.1",
         "pjs": "jneen/pjs#~5.1.1",
-        "react": "~0.14.2",
+        "react": "~0.14.3",
         "awesome-bootstrap-checkbox": "~0.3.5",
         "classnames": "~2.2.0",
         "moment": "~2.10.6"
@@ -74,11 +74,12 @@
                 "./lodash.min.js"
             ]
         },
-        "react": {
-            "main": [
-                "./react-with-addons.js"
-            ]
-        },
+    "react": {
+      "main": [
+        "./react-with-addons.min.js",
+        "./react-dom.min.js"
+      ]
+    },
         "awesome-bootstrap-checkbox": {
             "main": [
                 "./awesome-bootstrap-checkbox.scss"

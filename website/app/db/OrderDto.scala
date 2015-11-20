@@ -178,14 +178,16 @@ object OrderDto {
   def getOfId(id: Long): Option[Order] = {
     DB.withConnection { implicit c =>
       val query = """
-        select edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url
-        from documents
-        where id = """ + id + """;"""
+        select edition_id, file, file_cv, file_li, added_at, added_by, type, status, position, employer, job_ad_url,
+          c.id as coupon_id
+        from documents d
+        left join codes c on c.name = d.code
+        where d.id = """ + id + """;"""
 
       Logger.info("OrderDto.getOfId():" + query)
 
-      val optionRowParser = long("edition_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("code") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) map {
-        case editionId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ couponCode ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrl =>
+      val optionRowParser = long("edition_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (long("coupon_id") ?) map {
+        case editionId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrl ~ couponId =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -200,11 +202,6 @@ object OrderDto {
           val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
             case otherString => Some(otherString)
-          }
-
-          val couponIdOpt = couponCode match {
-            case "" => None
-            case otherString => Some(CouponDto.getOfCode(otherString).get.id)
           }
 
           val accountIdOpt = accountId match {
@@ -226,7 +223,7 @@ object OrderDto {
             id = Some(id),
             editionId = editionId,
             containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
-            couponId = couponIdOpt,
+            couponId = couponId,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
             linkedinProfileFileName = linkedinProfileFileNameOpt,
