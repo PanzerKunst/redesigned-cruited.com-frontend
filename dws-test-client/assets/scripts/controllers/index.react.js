@@ -1,13 +1,17 @@
 "use strict";
 
 CR.Controllers.Index = React.createClass({
-    dwsUrlRoot: "http://localhost:9001/docs/",
-    orderId: 1699,
+    dwsUrlRoot: "http://api.cruited.com/docs/",
+    orderId: 1700,
 
     render: function() {
         let cvUrl = this.dwsUrlRoot + this.orderId + "/cv";
         let coverLetterUrl = this.dwsUrlRoot + this.orderId + "/cover-letter";
         let linkedinProfileUrl = this.dwsUrlRoot + this.orderId + "/linkedin-profile";
+
+        let cvThumbUrl = cvUrl + "/thumbnail";
+        let coverLetterThumbUrl = coverLetterUrl + "/thumbnail";
+        let linkedinProfileThumbUrl = linkedinProfileUrl + "/thumbnail";
 
         return (
             <div id="content">
@@ -47,9 +51,16 @@ CR.Controllers.Index = React.createClass({
                             <button type="button" className="btn btn-lg btn-primary" onClick={this._editDocs}>Edit</button>
                         </div>
                     </form>
-                    <a href={cvUrl}>CV</a>
-                    <a href={coverLetterUrl}>Cover Letter</a>
-                    <a href={linkedinProfileUrl}>Linkedin profile</a>
+                    <section>
+                        <a href={cvUrl}>CV</a>
+                        <a href={coverLetterUrl}>Cover Letter</a>
+                        <a href={linkedinProfileUrl}>Linkedin profile</a>
+                    </section>
+                    <section>
+                        <img src={cvThumbUrl} />
+                        <img src={coverLetterThumbUrl} />
+                        <img src={linkedinProfileThumbUrl} />
+                    </section>
                 </div>
             </div>
         );

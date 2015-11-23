@@ -289,13 +289,17 @@ CR.localStorageKeys = {
 CR.Controllers.Index = React.createClass({
     displayName: "Index",
 
-    dwsUrlRoot: "http://localhost:9001/docs/",
-    orderId: 1699,
+    dwsUrlRoot: "http://api.cruited.com/docs/",
+    orderId: 1700,
 
     render: function render() {
         var cvUrl = this.dwsUrlRoot + this.orderId + "/cv";
         var coverLetterUrl = this.dwsUrlRoot + this.orderId + "/cover-letter";
         var linkedinProfileUrl = this.dwsUrlRoot + this.orderId + "/linkedin-profile";
+
+        var cvThumbUrl = cvUrl + "/thumbnail";
+        var coverLetterThumbUrl = coverLetterUrl + "/thumbnail";
+        var linkedinProfileThumbUrl = linkedinProfileUrl + "/thumbnail";
 
         return React.createElement(
             "div",
@@ -373,19 +377,30 @@ CR.Controllers.Index = React.createClass({
                     )
                 ),
                 React.createElement(
-                    "a",
-                    { href: cvUrl },
-                    "CV"
+                    "section",
+                    null,
+                    React.createElement(
+                        "a",
+                        { href: cvUrl },
+                        "CV"
+                    ),
+                    React.createElement(
+                        "a",
+                        { href: coverLetterUrl },
+                        "Cover Letter"
+                    ),
+                    React.createElement(
+                        "a",
+                        { href: linkedinProfileUrl },
+                        "Linkedin profile"
+                    )
                 ),
                 React.createElement(
-                    "a",
-                    { href: coverLetterUrl },
-                    "Cover Letter"
-                ),
-                React.createElement(
-                    "a",
-                    { href: linkedinProfileUrl },
-                    "Linkedin profile"
+                    "section",
+                    null,
+                    React.createElement("img", { src: cvThumbUrl }),
+                    React.createElement("img", { src: coverLetterThumbUrl }),
+                    React.createElement("img", { src: linkedinProfileThumbUrl })
                 )
             )
         );

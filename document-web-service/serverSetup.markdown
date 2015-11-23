@@ -4,19 +4,19 @@ Check the server's IP address via `ifconfig`.
 
 `$ sudo vi /etc/hosts`
 
-Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
+Add line with the IP address and hostname: `188.40.99.15 api.cruited.com`
 
 
 # Web server
 
-`$ sudo cp /etc/nginx/sites-available/careerstudio /etc/nginx/sites-available/cruited-frontend`
+`$ sudo cp /etc/nginx/sites-available/careerstudio /etc/nginx/sites-available/cruited-api`
 
-`$ sudo vi /etc/nginx/sites-available/cruited-frontend`
+`$ sudo vi /etc/nginx/sites-available/cruited-api`
 
-    # Cruited frontend
+    # Cruited API
     server {
             listen 80;
-            server_name frontend.cruited.com;
+            server_name api.cruited.com;
 
             location / {
                     proxy_pass http://localhost:9005;
@@ -29,11 +29,11 @@ Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
             }
     }
 
-`$ sudo ln -s /etc/nginx/sites-available/cruited-frontend /etc/nginx/sites-enabled/cruited-frontend`
+`$ sudo ln -s /etc/nginx/sites-available/cruited-api /etc/nginx/sites-enabled/cruited-api`
 
 `$ sudo service nginx restart`
 
-Copy the following source files to `~/redesigned-cruited.com-frontend/website`:
+Copy the following source files to `~/redesigned-cruited.com-frontend/document-web-service`:
 
 * app
 * conf
@@ -45,7 +45,7 @@ Copy the following source files to `~/redesigned-cruited.com-frontend/website`:
 
 Make the `activator` script executable:
 
-    $ cd ~/redesigned-cruited.com-frontend/website
+    $ cd ~/redesigned-cruited.com-frontend/document-web-service
     $ dos2unix activator
     $ chmod u+x activator
 
@@ -54,7 +54,7 @@ Make the `activator` script executable:
 
     $ screen -dR
     Ctrl + a, c
-    $ cd ~/redesigned-cruited.com-frontend/website
+    $ cd ~/redesigned-cruited.com-frontend/document-web-service
     $ ./activator
     $ start -Dhttp.port=9005
 

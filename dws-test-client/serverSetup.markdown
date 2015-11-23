@@ -4,22 +4,22 @@ Check the server's IP address via `ifconfig`.
 
 `$ sudo vi /etc/hosts`
 
-Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
+Add line with the IP address and hostname: `188.40.99.15 app.cruited.com`
 
 
 # Web server
 
-`$ sudo cp /etc/nginx/sites-available/careerstudio /etc/nginx/sites-available/cruited-frontend`
+`$ sudo cp /etc/nginx/sites-available/cruited-api /etc/nginx/sites-available/cruited-app`
 
-`$ sudo vi /etc/nginx/sites-available/cruited-frontend`
+`$ sudo vi /etc/nginx/sites-available/cruited-app`
 
-    # Cruited frontend
+    # Cruited app
     server {
             listen 80;
-            server_name frontend.cruited.com;
+            server_name app.cruited.com;
 
             location / {
-                    proxy_pass http://localhost:9005;
+                    proxy_pass http://localhost:9006;
                     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
                     proxy_redirect off;
                     proxy_buffering off;
@@ -29,7 +29,7 @@ Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
             }
     }
 
-`$ sudo ln -s /etc/nginx/sites-available/cruited-frontend /etc/nginx/sites-enabled/cruited-frontend`
+`$ sudo ln -s /etc/nginx/sites-available/cruited-app /etc/nginx/sites-enabled/cruited-app`
 
 `$ sudo service nginx restart`
 
@@ -56,6 +56,6 @@ Make the `activator` script executable:
     Ctrl + a, c
     $ cd ~/redesigned-cruited.com-frontend/website
     $ ./activator
-    $ start -Dhttp.port=9005
+    $ start -Dhttp.port=9006
 
 (`run` for auto reload, `start` for better perf)
