@@ -121,7 +121,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} value={inputValue} disabled />
+                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={inputValue} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -137,7 +137,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            let inputValue = CR.order ? CR.order.getCvFileName() : null;
+            let inputValue = CR.order ? CR.order.getCoverLetterFileName() : null;
 
             return (
                 <div className="form-group fg-file-upload" id="cover-letter-form-group">
@@ -148,7 +148,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} value={inputValue} disabled />
+                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={inputValue} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -164,15 +164,15 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 <fieldset>
                     <div className="form-group">
                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                        <input type="text" className="form-control" id="position-sought" value={positionSoughtInputValue} />
+                        <input type="text" className="form-control" id="position-sought" defaultValue={positionSoughtInputValue} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                        <input type="text" className="form-control" id="employer-sought" value={employerSoughtInputValue} />
+                        <input type="text" className="form-control" id="employer-sought" defaultValue={employerSoughtInputValue} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                        <input type="text" className="form-control" id="job-ad-url" value={jobAdUrlInputValue} />
+                        <input type="text" className="form-control" id="job-ad-url" defaultValue={jobAdUrlInputValue} />
                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                     </div>
                 </fieldset>
