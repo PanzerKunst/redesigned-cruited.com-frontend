@@ -6,7 +6,7 @@ import db._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.libs.json.JsNull
+import play.api.libs.json.{JsUndefined, JsValue, JsNull}
 import play.api.mvc._
 import services._
 

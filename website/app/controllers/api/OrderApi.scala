@@ -6,6 +6,7 @@ import javax.inject.{Inject, Singleton}
 import db.OrderDto
 import models.Order
 import models.frontend.OrderReceivedFromFrontend
+import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import services.{DocumentService, SessionService}
 
@@ -83,8 +84,11 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       accountId = SessionService.getAccountId(request.session)
     )
 
-    OrderDto.createTemporary(tempOrder)
-
-    Created.withSession(request.session + (SessionService.SESSION_KEY_ORDER_ID -> tempOrderId.toString))
+    OrderDto.createTemporary(tempOrder) match {
+      case None => throw new Exception("OrderDto.createTemporary didn't return an ID!")
+      case Some(createdOrderId) =>
+        Created(Json.toJson(OrderDto.getOfIdForFrontend(createdOrderId)))
+          .withSession(request.session + (SessionService.SESSION_KEY_ORDER_ID -> tempOrderId.toString))
+    }
   }
 }

@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import db.{AccountDto, OrderDto}
 import models.{CruitedProduct, Order}
 import play.api.Logger
-import play.api.libs.json.JsUndefined
+import play.api.libs.json.JsNull
 
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
@@ -47,7 +47,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
     val accountId = OrderDto.getOfId(orderId).get.accountId.get
     val linkedinProfile = AccountDto.getOfId(accountId).get.linkedinProfile
 
-    if (!linkedinProfile.isInstanceOf[JsUndefined]) {
+    if (linkedinProfile != JsNull) {
       documentService.convertLinkedinProfilePageToPdf(orderId, (linkedinProfile \ "publicProfileUrl").as[String])
     }
   }
@@ -89,7 +89,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
     if (order.containedProductCodes.contains(CruitedProduct.getCodeFromType(CruitedProduct.dbTypeLinkedinProfileReview))) {
       // Fail epically if the Linkedin profile doesn't exist
-      if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile.isInstanceOf[JsUndefined]) {
+      if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile == JsNull) {
         throw new Exception("OrderService.getNewLinkedinProfileFileName() > Fatal error: linkedinProfile is JsNull for order ID " + order.id)
       }
 

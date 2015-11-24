@@ -3,6 +3,7 @@ package controllers.api
 import javax.inject.Singleton
 
 import db.{AccountDto, OrderDto}
+import models.Order
 import models.frontend.AccountReceivedFromFrontend
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller, Request}
@@ -41,10 +42,10 @@ class AccountApi extends Controller {
                 // If exists in DB
                 case Some(account) =>
                   // 1. If the old one has linkedIn info that the new one doesn't, we set it
-                  if (!account.linkedinProfile.isInstanceOf[JsUndefined]) {
+                  if (account.linkedinProfile != JsNull) {
                     val newAccount = AccountDto.getOfId(newAccountId).get
 
-                    if (newAccount.linkedinProfile.isInstanceOf[JsUndefined]) {
+                    if (newAccount.linkedinProfile == JsNull) {
                       val updatedAccount = newAccount.copy(
                         linkedinProfile = account.linkedinProfile
                       )

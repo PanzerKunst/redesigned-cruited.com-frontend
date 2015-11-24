@@ -176,18 +176,24 @@ object OrderDto {
   }
 
   def getOfId(id: Long): Option[Order] = {
+    getOfIdForFrontend(id).map { fo => new Order(fo)}
+  }
+
+  def getOfIdForFrontend(id: Long): Option[FrontendOrder] = {
     DB.withConnection { implicit c =>
       val query = """
-        select edition_id, file, file_cv, file_li, added_at, added_by, type, status, position, employer, job_ad_url,
+        select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url,
+          e.id as edition_id, edition,
           c.id as coupon_id
         from documents d
-        left join codes c on c.name = d.code
+          inner join product_edition e on e.id = d.edition_id
+          left join codes c on c.name = d.code
         where d.id = """ + id + """;"""
 
-      Logger.info("OrderDto.getOfId():" + query)
+      Logger.info("OrderDto.getOfIdForFrontend():" + query)
 
-      val optionRowParser = long("edition_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (long("coupon_id") ?) map {
-        case editionId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrl ~ couponId =>
+      val optionRowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ long("edition_id") ~ str("edition") ~ (long("coupon_id") ?) map {
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrl ~ editionId ~ editionCode ~ couponId =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -219,9 +225,12 @@ object OrderDto {
             case otherString => Some(otherString)
           }
 
-          Order(
-            id = Some(id),
-            editionId = editionId,
+          FrontendOrder(
+            id = id,
+            edition = Edition(
+              id = editionId,
+              code = editionCode
+            ),
             containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
             couponId = couponId,
             cvFileName = cvFileNameOpt,
@@ -241,80 +250,18 @@ object OrderDto {
   }
 
   def getOfAccountId(accountId: Long): List[Order] = {
-    DB.withConnection { implicit c =>
-      val query = """
-        select id, edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url
-        from documents
-        where added_by = """ + accountId + """
-        order by id desc;"""
-
-      Logger.info("OrderDto.getOfAccountId():" + query)
-
-      SQL(query)().map { row =>
-        val coverLetterFileNameOpt = row[String]("file") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
-
-        val cvFileNameOpt = row[String]("file_cv") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
-
-        val linkedinProfileFileNameOpt = row[String]("file_li") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
-
-        val couponIdOpt = row[String]("code") match {
-          case "" => None
-          case otherString => Some(CouponDto.getOfCode(otherString).get.id)
-        }
-
-        val accountIdOpt = row[Long]("added_by") match {
-          case 0 => None
-          case otherNb => Some(otherNb)
-        }
-
-        val positionSoughtOpt = row[String]("position") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
-
-        val employerSoughtOpt = row[String]("employer") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
-
-
-        Order(
-          id = Some(row[Long]("id")),
-          editionId = row[Long]("edition_id"),
-          containedProductCodes = Order.getContainedProductCodesFromTypes(row[String]("type")),
-          couponId = couponIdOpt,
-          cvFileName = cvFileNameOpt,
-          coverLetterFileName = coverLetterFileNameOpt,
-          linkedinProfileFileName = linkedinProfileFileNameOpt,
-          positionSought = positionSoughtOpt,
-          employerSought = employerSoughtOpt,
-          jobAdUrl = row[Option[String]]("job_ad_url"),
-          accountId = accountIdOpt,
-          status = row[Int]("status"),
-          creationTimestamp = row[Date]("added_at").getTime
-        )
-      }.toList
-    }
+    getOfAccountIdForFrontend(accountId).map { fo => new Order(fo)}
   }
 
   def getOfAccountIdForFrontend(accountId: Long): List[FrontendOrder] = {
     DB.withConnection { implicit c =>
       val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url,
+        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url,
           e.id as edition_id, edition,
           c.id as coupon_id
         from documents d
-        inner join product_edition e on e.id = d.edition_id
-        left join codes c on c.name = d.code
+          inner join product_edition e on e.id = d.edition_id
+          left join codes c on c.name = d.code
         where added_by = """ + accountId + """
         order by d.id desc;"""
 
@@ -336,11 +283,6 @@ object OrderDto {
           case otherString => Some(otherString)
         }
 
-        val accountId = row[Long]("added_by") match {
-          case 0 => throw new Exception("OrderDto.getOfAccountIdForFrontend > added_by is zero, this should never happen!")
-          case otherNb => otherNb
-        }
-
         val positionSoughtOpt = row[String]("position") match {
           case "" => None
           case otherString => Some(otherString)
@@ -350,7 +292,6 @@ object OrderDto {
           case "" => None
           case otherString => Some(otherString)
         }
-
 
         FrontendOrder(
           id = row[Long]("order_id"),
@@ -366,7 +307,7 @@ object OrderDto {
           positionSought = positionSoughtOpt,
           employerSought = employerSoughtOpt,
           jobAdUrl = row[Option[String]]("job_ad_url"),
-          accountId = accountId,
+          accountId = Some(accountId),
           status = row[Int]("status"),
           creationTimestamp = row[Date]("added_at").getTime
         )

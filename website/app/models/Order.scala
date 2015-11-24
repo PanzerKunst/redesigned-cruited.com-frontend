@@ -1,6 +1,7 @@
 package models
 
 import db.CruitedProductDto
+import models.frontend.FrontendOrder
 
 case class Order(id: Option[Long],
                  editionId: Long,
@@ -16,12 +17,24 @@ case class Order(id: Option[Long],
                  status: Int,
                  creationTimestamp: Long) {
 
+  def this(frontendOrder: FrontendOrder) = this(
+    id = Some(frontendOrder.id),
+    editionId = frontendOrder.edition.id,
+    containedProductCodes = frontendOrder.containedProductCodes,
+    couponId = frontendOrder.couponId,
+    cvFileName = frontendOrder.cvFileName,
+    coverLetterFileName = frontendOrder.coverLetterFileName,
+    linkedinProfileFileName = frontendOrder.linkedinProfileFileName,
+    positionSought = frontendOrder.positionSought,
+    employerSought = frontendOrder.employerSought,
+    jobAdUrl = frontendOrder.jobAdUrl,
+    accountId = frontendOrder.accountId,
+    status = frontendOrder.status,
+    creationTimestamp = frontendOrder.creationTimestamp
+  )
+
   def getCvFileNameWithoutPrefix: Option[String] = {
     getFileNameWithoutPrefix(cvFileName)
-  }
-
-  def getCoverLetterFileNameWithoutPrefix: Option[String] = {
-    getFileNameWithoutPrefix(coverLetterFileName)
   }
 
   private def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
@@ -31,6 +44,10 @@ case class Order(id: Option[Long],
         val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
         Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
     }
+  }
+
+  def getCoverLetterFileNameWithoutPrefix: Option[String] = {
+    getFileNameWithoutPrefix(coverLetterFileName)
   }
 }
 

@@ -110,16 +110,18 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
+            let inputValue = CR.order ? CR.order.getCvFileName() : null;
+
             return (
                 <div className="form-group fg-file-upload" id="cv-form-group">
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.cvFile.label"]}</label>
 
                     <div>
                         <label className="btn btn-default btn-file-upload" htmlFor="cv">
-                            <input id="cv" type="file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
+                            <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} disabled />
+                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} value={inputValue} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -135,16 +137,18 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
+            let inputValue = CR.order ? CR.order.getCvFileName() : null;
+
             return (
                 <div className="form-group fg-file-upload" id="cover-letter-form-group">
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.label"]}</label>
 
                     <div>
                         <label className="btn btn-default btn-file-upload" htmlFor="cover-letter">
-                            <input id="cover-letter" type="file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
+                            <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} disabled />
+                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} value={inputValue} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -152,19 +156,23 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getOptionalInfoFormGroup: function() {
+            let positionSoughtInputValue = CR.order ? CR.order.getSoughtPosition() : null;
+            let employerSoughtInputValue = CR.order ? CR.order.getSoughtEmployer() : null;
+            let jobAdUrlInputValue = CR.order ? CR.order.getJobAdUrl() : null;
+
             return (
                 <fieldset>
                     <div className="form-group">
                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                        <input type="text" className="form-control" id="position-sought" />
+                        <input type="text" className="form-control" id="position-sought" value={positionSoughtInputValue} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                        <input type="text" className="form-control" id="employer-sought" />
+                        <input type="text" className="form-control" id="employer-sought" value={employerSoughtInputValue} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                        <input type="text" className="form-control" id="job-ad-url" />
+                        <input type="text" className="form-control" id="job-ad-url" value={jobAdUrlInputValue} />
                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                     </div>
                 </fieldset>
@@ -180,11 +188,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             this.$cvFormGroup = this.$form.children("#cv-form-group");
             this.$cvFileInput = this.$cvFormGroup.find("#cv");
-            this.$cvFileNameInput = this.$cvFormGroup.find("input[type=text]");
+            this.$cvFileNameInput = this.$cvFormGroup.find("#cv-file-name");
 
             this.$coverLetterFormGroup = this.$form.children("#cover-letter-form-group");
             this.$coverLetterFileInput = this.$coverLetterFormGroup.find("#cover-letter");
-            this.$coverLetterFileNameInput = this.$coverLetterFormGroup.find("input[type=text]");
+            this.$coverLetterFileNameInput = this.$coverLetterFormGroup.find("#cover-letter-file-name");
 
             this.$positionSoughtInput = this.$form.find("#position-sought");
             this.$employerSoughtInput = this.$form.find("#employer-sought");
@@ -196,8 +204,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         _initValidation: function() {
             this.validator = CR.Services.Validator([
                 "linkedin-profile-checked",
-                "cv",
-                "cover-letter",
+                "cv-file-name",
+                "cover-letter-file-name",
                 "job-ad-url",
                 "accept-tos"
             ]);
@@ -206,11 +214,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         _handleCvFileSelected: function() {
             this.cvFile = this.$cvFileInput[0].files[0];
             this.$cvFileNameInput.val(this.cvFile.name);
+            this.$cvFormGroup.removeClass("has-error");
         },
 
         _handleCoverLetterFileSelected: function() {
             this.coverLetterFile = this.$coverLetterFileInput[0].files[0];
             this.$coverLetterFileNameInput.val(this.coverLetterFile.name);
+            this.$coverLetterFormGroup.removeClass("has-error");
         },
 
         _handleSubmit: function(e) {
@@ -256,6 +266,14 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             if (httpRequest.status === CR.httpStatusCodes.created) {
+                                let order = JSON.parse(httpRequest.responseText);
+                                CR.order.setId(order.id);
+                                CR.order.setCvFileName(order.cvFileName);
+                                CR.order.setCoverLetterFileName(order.coverLetterFileName);
+                                CR.order.setSoughtPosition(order.positionSought);
+                                CR.order.setSoughtEmployer(order.employerSought);
+                                CR.order.setJobAdUrl(order.jobAdUrl);
+
                                 location.href = "/order/create-account";
                             } else {
                                 this.$submitBtn.disableLoading();

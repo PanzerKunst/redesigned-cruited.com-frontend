@@ -3,30 +3,30 @@
 # ~~~~
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                                   controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)
 
 # Pages
-GET     /                                               controllers.Application.index
-GET     /logout                                         controllers.Application.signOut
-GET     /sign-out                                       controllers.Application.signOut
-GET     /signout                                        controllers.Application.signOut
-GET     /login                                          controllers.Application.signIn
-GET     /sign-in                                        controllers.Application.signIn
-GET     /signin                                         controllers.Application.signIn
+GET         /                                                     controllers.Application.index
+GET         /logout                                               controllers.Application.signOut
+GET         /sign-out                                             controllers.Application.signOut
+GET         /signout                                              controllers.Application.signOut
+GET         /login                                                controllers.Application.signIn
+GET         /sign-in                                              controllers.Application.signIn
+GET         /signin                                               controllers.Application.signIn
 
-GET     /order                                          controllers.Application.orderStepProductSelection
-GET     /order/assessment-info                          controllers.Application.orderStepAssessmentInfo
-GET     /order/create-account                           controllers.Application.orderStepAccountCreation
-GET     /order/pay                                      controllers.Application.orderStepPayment
+GET         /order                                                controllers.Application.orderStepProductSelection
+GET         /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
+GET         /order/create-account                                 controllers.Application.orderStepAccountCreation
+GET         /order/pay                                            controllers.Application.orderStepPayment
 
 # API
-POST    /api/db/re-create-tables                        controllers.api.DbAdminApi.reCreateTables
-GET     /api/coupons/:code                              controllers.api.CouponApi.get(code: String)
-POST    /api/orders                                     controllers.api.OrderApi.create
-POST    /api/accounts                                   controllers.api.AccountApi.create
-POST    /api/auth                                       controllers.api.AuthApi.signIn
+POST        /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables
+GET         /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
+POST        /api/orders                                           controllers.api.OrderApi.create
+POST        /api/accounts                                         controllers.api.AccountApi.create
+POST        /api/auth                                             controllers.api.AuthApi.signIn
 
 # 3rd party auth
-GET     /auth/linkedin/callback/sign-in                 controllers.Application.linkedinCallbackSignIn
-GET     /auth/linkedin/callback/order/assessment-info   controllers.Application.linkedinCallbackOrderStepAssessmentInfo
-GET     /auth/linkedin/callback/order/account-creation  controllers.Application.linkedinCallbackOrderStepAccountCreation
+GET         /auth/linkedin/callback/sign-in                       controllers.Application.linkedinCallbackSignIn
+GET         /auth/linkedin/callback/order/assessment-info         controllers.Application.linkedinCallbackOrderStepAssessmentInfo
+GET         /auth/linkedin/callback/order/account-creation        controllers.Application.linkedinCallbackOrderStepAccountCreation
