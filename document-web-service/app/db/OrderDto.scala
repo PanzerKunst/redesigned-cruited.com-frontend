@@ -1,13 +1,88 @@
 package db
 
+import java.util.Date
+
 import anorm.SqlParser._
 import anorm._
 import models.Order
+import models.frontend.OrderReceivedFromFrontend
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
 
 object OrderDto {
+  val unknownUserId = 1053
+
+  // TODO: delete when the new App pages are released
+  def create(order: OrderReceivedFromFrontend): Option[Long] = {
+    DB.withConnection { implicit c =>
+      val nameClause = if (order.positionSought.isDefined && order.employerSought.isDefined) {
+        order.positionSought.get + " - " + order.employerSought.get
+      } else if (order.positionSought.isDefined) {
+        order.positionSought.get
+      } else if (order.employerSought.isDefined) {
+        order.employerSought.get
+      } else {
+        "Bedömning"
+      }
+
+      val cvFileNameClause = order.cvFileName match {
+        case None => ""
+        case Some(fileName) => DbUtil.safetize(fileName)
+      }
+
+      val coverLetterFileNameClause = order.coverLetterFileName match {
+        case None => ""
+        case Some(fileName) => DbUtil.safetize(fileName)
+      }
+
+      val couponCodeClause = order.couponCode match {
+        case None => ""
+        case Some(couponCode) =>
+          DbUtil.safetize(couponCode)
+      }
+
+      val positionSoughtClause = order.positionSought match {
+        case None => ""
+        case Some(positionSought) => DbUtil.safetize(positionSought)
+      }
+
+      val employerSoughtClause = order.employerSought match {
+        case None => ""
+        case Some(employerSought) => DbUtil.safetize(employerSought)
+      }
+
+      val paidOnClause = if (order.isPaid || order.status == Order.statusIdPaid) {
+        DbUtil.formatTimestampForInsertOrUpdate(new Date().getTime)
+      } else {
+        "0000-00-00"
+      }
+
+      val query = """
+      insert into documents(name, edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, paid_on, session_id, /* useful fields */
+        hireability, open_application, li_url, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+      values('""" + nameClause + """', """ +
+        order.editionId + """, '""" +
+        coverLetterFileNameClause + """', '""" +
+        cvFileNameClause + """',
+        '',
+        now(), '""" +
+        couponCodeClause + """', """ +
+        order.accountId.getOrElse(unknownUserId) + """, '""" +
+        Order.getTypeForDbLegacy(order.containedDocTypes) + """', """ +
+        order.status + """, '""" +
+        positionSoughtClause + """', '""" +
+        employerSoughtClause + """', '""" +
+        paidOnClause + """', '""" +
+        order.sessionId + """',
+        0, 0, '', '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+
+      Logger.info("OrderDto.create():" + query)
+
+      SQL(query).executeInsert()
+    }
+  }
+
   def update(order: Order) {
     DB.withConnection { implicit c =>
       val accountIdClause = order.accountId match {
@@ -105,7 +180,7 @@ object OrderDto {
           Order(
             id = Some(id),
             editionId = editionId,
-            containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
+            containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             couponId = couponId,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
@@ -115,7 +190,7 @@ object OrderDto {
             jobAdUrl = jobAdUrl,
             accountId = accountIdOpt,
             status = status,
-            creationTimestamp = creationDate.getTime
+            creationTimestamp = Some(creationDate.getTime)
           )
       }
 

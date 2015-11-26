@@ -1,6 +1,7 @@
 package models
 
-import db.CruitedProductDto
+import db.{CouponDto, CruitedProductDto}
+import models.frontend.OrderReceivedFromFrontend
 
 case class Order(id: Option[Long],
                  editionId: Long,
@@ -14,7 +15,29 @@ case class Order(id: Option[Long],
                  jobAdUrl: Option[String],
                  accountId: Option[Long],
                  status: Int,
-                 creationTimestamp: Long) {
+                 creationTimestamp: Option[Long]) {
+
+  def this(orderReceivedFromFrontend: OrderReceivedFromFrontend, id: Long) = this(
+    id = Some(id),
+    editionId = orderReceivedFromFrontend.editionId,
+    containedProductCodes = Order.getContainedProductCodesFromTypesArray(orderReceivedFromFrontend.containedDocTypes),
+    couponId = orderReceivedFromFrontend.couponCode match {
+      case None => None
+      case Some(couponCode) => CouponDto.getOfCode(couponCode) match {
+        case None => None
+        case Some(coupon) => Some(coupon.id)
+      }
+    },
+    cvFileName = orderReceivedFromFrontend.cvFileName,
+    coverLetterFileName = orderReceivedFromFrontend.coverLetterFileName,
+    linkedinProfileFileName = None,
+    positionSought = orderReceivedFromFrontend.positionSought,
+    employerSought = orderReceivedFromFrontend.employerSought,
+    jobAdUrl = None,
+    accountId = orderReceivedFromFrontend.accountId,
+    status = orderReceivedFromFrontend.status,
+    creationTimestamp = None
+  )
 
   def getCvFileNameWithoutPrefix: Option[String] = {
     getFileNameWithoutPrefix(cvFileName)
@@ -70,9 +93,19 @@ object Order {
     }
   }
 
-  def getContainedProductCodesFromTypes(docTypes: String): List[String] = {
-    docTypes.split(typeStringSeparator)
-      .map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
+  def getTypeForDbLegacy(docTypes: List[String]): String = {
+    docTypes.length match {
+      case 0 => ""
+      case nbAboveZero => docTypes.mkString(typeStringSeparator)
+    }
+  }
+
+  def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
+    getContainedProductCodesFromTypesArray(docTypes.split(typeStringSeparator).toList)
+  }
+
+  def getContainedProductCodesFromTypesArray(docTypes: List[String]): List[String] = {
+    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
       .toList
   }
 }

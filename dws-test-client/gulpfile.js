@@ -24,6 +24,7 @@ var styleMainSrcFiles = styleSrcDir + "main.scss";
 var distDir = "public/";
 var scriptDistDir = distDir + "scripts/";
 var styleDistDir = distDir + "styles/";
+var fontDistDir = distDir + "fonts/";
 
 var srcScriptsDistFileName = "app.js";
 var srcScriptsDistFilePath = scriptDistDir + srcScriptsDistFileName;
@@ -72,6 +73,13 @@ gulp.task("cleanSrcScriptsDistFile", function() {
     return del(srcScriptsDistFilePath);
 });
 
+// ### Icon fonts
+// `gulp fontAwesomeFonts`
+gulp.task("fontAwesomeFonts", function() {
+    return gulp.src("bower_components/font-awesome/fonts/*")
+        .pipe(gulp.dest(fontDistDir));
+});
+
 // ### ESLint
 // `gulp lint` - Lints project JS.
 gulp.task("lint", function() {
@@ -112,6 +120,7 @@ gulp.task("build", function(callback) {
     runSequence("styles",
         "scripts",
         "cleanSrcScriptsDistFile",
+        "fontAwesomeFonts",
         callback);
 });
 

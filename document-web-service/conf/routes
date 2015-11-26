@@ -8,6 +8,9 @@ POST           /docs                                            controllers.Appl
 PUT            /docs                                            controllers.Application.update
 OPTIONS        /docs                                            controllers.Application.preFlight
 
+POST           /order                                           controllers.Application.createOrder
+OPTIONS        /order                                           controllers.Application.preFlight
+
 GET            /docs/:orderId/cv                                controllers.Application.getCvOfOrder(orderId: Long)
 GET            /docs/:orderId/cover-letter                      controllers.Application.getCoverLetterOfOrder(orderId: Long)
 GET            /docs/:orderId/linkedin-profile                  controllers.Application.getLinkedinProfileOfOrder(orderId: Long)

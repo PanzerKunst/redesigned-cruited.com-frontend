@@ -109,6 +109,7 @@ globals:
     React: true
     ReactDOM: true
     classNames: true
+    TweenLite: true
 
 ecmaFeatures:
     jsx: true

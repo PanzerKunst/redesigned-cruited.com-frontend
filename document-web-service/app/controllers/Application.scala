@@ -3,8 +3,10 @@ package controllers
 import java.io.File
 import javax.inject.Inject
 
-import _root_.db.OrderDto
-import models.Order
+import db.{TermAcceptationDto, AccountDto, CouponDto, OrderDto}
+import models.frontend.OrderReceivedFromFrontend
+import models.{Coupon, Order}
+import play.api.Logger
 import play.api.mvc._
 import services.{DocumentService, GlobalConfig, OrderService}
 
@@ -148,11 +150,160 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getCvOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) => sendDocument(order.cvFileName)
+  // TODO: delete when the new App pages are released
+  def createOrder = CorsAction() {
+    Action(parse.multipartFormData) { request =>
+      val requestBody = request.body
+      val requestData = requestBody.dataParts
+
+      if (!requestData.contains("docTypes")) {
+        BadRequest("'docTypes' required")
+      } else if (!requestData.contains("editionId")) {
+        BadRequest("'editionId' required")
+      } else if (!requestData.contains("sessionId")) {
+        BadRequest("'sessionId' required")
+      } else {
+        val containedDocTypes = requestData("docTypes").head.split(",").toList
+
+        val positionSoughtOpt = if (requestData.contains("positionSought")) {
+          Some(requestData("positionSought").head)
+        } else {
+          None
+        }
+
+        val employerSoughtOpt = if (requestData.contains("employerSought")) {
+          Some(requestData("employerSought").head)
+        } else {
+          None
+        }
+
+        val accountIdOpt = if (requestData.contains("userId")) {
+          val userId = requestData("userId").head.toLong
+
+          if (!AccountDto.getOfId(userId).isDefined) {
+            throw new Exception("No account found for ID " + userId)
+          }
+
+          Some(userId)
+        } else {
+          None
+        }
+
+        val (couponCodeOpt, couponOpt) = if (requestData.contains("couponCode")) {
+          val couponCode = requestData("couponCode").head
+
+          CouponDto.getOfCode(couponCode) match {
+            case None => throw new Exception("No coupon found for code " + couponCode)
+            case Some(coupon) => (Some(couponCode), Some(coupon))
+          }
+        } else {
+          (None, None)
+        }
+
+        val isPaid = if (requestData.contains("isPaid")) {
+          requestData("isPaid").head.toBoolean
+        } else {
+          false
+        }
+
+        val orderStatus = getStatusFromOrderInfo(containedDocTypes, couponOpt)
+
+        // Create order and get ID
+        val orderReceivedFromFrontend = OrderReceivedFromFrontend(
+          editionId = requestData("editionId").head.toLong,
+          containedDocTypes = containedDocTypes,
+          couponCode = couponCodeOpt,
+          cvFileName = None,
+          coverLetterFileName = None,
+          positionSought = positionSoughtOpt,
+          employerSought = employerSoughtOpt,
+          accountId = accountIdOpt,
+          status = orderStatus,
+          isPaid = isPaid,
+          sessionId = requestData("sessionId").head
+        )
+
+        val orderId = OrderDto.create(orderReceivedFromFrontend).get
+
+        val newCvFileName = requestBody.file("cvFile") match {
+          case None => None
+          case Some(cvFile) =>
+            val fileName = orderId + Order.fileNamePrefixSeparator + cvFile.filename
+            cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+            Some(fileName)
+        }
+
+        val newCoverLetterFileName = requestBody.file("coverLetterFile") match {
+          case None => None
+          case Some(coverLetterFile) =>
+            val fileName = orderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
+            coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+            Some(fileName)
+        }
+
+        val updatedOrder = new Order(orderReceivedFromFrontend, orderId).copy(
+          cvFileName = newCvFileName,
+          coverLetterFileName = newCoverLetterFileName
+        )
+
+        OrderDto.update(updatedOrder)
+
+        Future {
+          orderService.convertDocsToPdf(orderId)
+          orderService.generateDocThumbnails(orderId)
+        }
+
+        if (accountIdOpt.isDefined) {
+          TermAcceptationDto.create(orderId, accountIdOpt.get)
+        }
+
+        Created(orderId.toString)
+      }
     }
+  }
+
+  private def getStatusFromOrderInfo(containedDocTypes: List[String], couponOpt: Option[Coupon]): Int = {
+    couponOpt match {
+      case None => Order.statusIdNotPaid
+      case Some(coupon) =>
+        if (coupon.discountPercentage.isDefined && coupon.discountPercentage.get == 100) {
+          Order.statusIdPaid
+        } else {
+          val couponAmount = coupon.discountPrice.get.amount
+
+          if ((containedDocTypes.length == 1 && couponAmount == 299) ||
+            (containedDocTypes.length == 2 && couponAmount == 539) ||
+            (containedDocTypes.length == 2 && couponAmount == 749)) {
+            Order.statusIdPaid
+          } else {
+            Order.statusIdNotPaid
+          }
+        }
+    }
+  }
+
+  def getCvOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) => sendDocument(order.cvFileName)
+      }
+  }
+
+  def getCoverLetterOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) => sendDocument(order.coverLetterFileName)
+      }
+  }
+
+  def getLinkedinProfileOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) => sendDocument(order.linkedinProfileFileName)
+      }
   }
 
   private def sendDocument(fileNameOpt: Option[String]) = {
@@ -165,42 +316,22 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getCoverLetterOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) => sendDocument(order.coverLetterFileName)
-    }
+  def getCvThumbnailOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) =>
+          sendThumbnail(order.cvFileName)
+      }
   }
 
-  def getLinkedinProfileOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) => sendDocument(order.linkedinProfileFileName)
-    }
-  }
-
-  def getCvThumbnailOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) =>
-        sendThumbnail(order.cvFileName)
-    }
-  }
-
-  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) =>
-        sendThumbnail(order.coverLetterFileName)
-    }
-  }
-
-  def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) =>
-        sendThumbnail(order.linkedinProfileFileName)
-    }
+  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) =>
+          sendThumbnail(order.coverLetterFileName)
+      }
   }
 
   private def sendThumbnail(docFileNameOpt: Option[String]) = {
@@ -214,6 +345,15 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           inline = true
         )
     }
+  }
+
+  def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) =>
+          sendThumbnail(order.linkedinProfileFileName)
+      }
   }
 
   // Not used, but to keep

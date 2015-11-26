@@ -1,0 +1,42 @@
+@mixin checkbox-top-margin {
+  margin-top: 3px;
+
+  @include medium-screen {
+    margin-top: 7px;
+  }
+
+  @include large-screen {
+    margin-top: 12px;
+  }
+}
+
+.checkbox,
+.radio {
+  > label::before {
+    @include checkbox-top-margin;
+  }
+}
+
+.checkbox-primary {
+  > input[type=checkbox]:checked + label::before {
+    background-color: $primary-btn-color;
+    border-color: $primary-btn-color;
+  }
+}
+
+.radio {
+  > input[type=radio]:checked {
+    + label {
+      &::before {
+        border-color: $btn-default-border;
+      }
+      &::after {
+        background-color: $action-color;
+      }
+    }
+  }
+
+  > label::after {
+    @include checkbox-top-margin;
+  }
+}

@@ -20,7 +20,10 @@
     "lodash": "~3.10.1",
     "pjs": "jneen/pjs#~5.1.1",
     "react": "~0.14.3",
-    "classnames": "~2.2.0"
+    "classnames": "~2.2.0",
+    "font-awesome": "~4.5.0",
+    "awesome-bootstrap-checkbox": "~0.3.5",
+    "gsap": "~1.18.0"
   },
   "description": "App to test the Document Web Service",
   "main": "",
@@ -52,6 +55,25 @@
       "main": [
         "./react-with-addons.min.js",
         "./react-dom.min.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "./scss/font-awesome.scss",
+        "./fonts/*"
+      ]
+    },
+    "awesome-bootstrap-checkbox": {
+      "main": [
+        "./awesome-bootstrap-checkbox.scss"
+      ]
+    },
+    "gsap": {
+      "main": [
+        "./src/minified/TweenLite.min.js",
+        "./src/minified/easing/EasePack.min.js",
+        "./src/minified/plugins/CSSPlugin.min.js",
+        "./src/minified/plugins/ScrollToPlugin.min.js"
       ]
     }
   }
