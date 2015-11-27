@@ -2,16 +2,26 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
-import db.OrderDto
+import db.{AccountDto, OrderDto}
 import models.{CruitedProduct, Order}
 import play.api.Logger
-import play.api.libs.json.JsUndefined
+import play.api.libs.json.JsNull
 
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
   def convertDocsToPdf(orderId: Long) {
     documentService.convertDocsToPdf(orderId)
+    convertLinkedinPublicProfilePageToPdf(orderId)
     updateFileNamesInDb(orderId)
+  }
+
+  private def convertLinkedinPublicProfilePageToPdf(orderId: Long) {
+    val accountId = OrderDto.getOfId(orderId).get.accountId.get
+    val linkedinProfile = AccountDto.getOfId(accountId).get.linkedinProfile
+
+    if (linkedinProfile != JsNull) {
+      documentService.convertLinkedinProfilePageToPdf(orderId, (linkedinProfile \ "publicProfileUrl").as[String])
+    }
   }
 
   private def updateFileNamesInDb(orderId: Long) {
@@ -19,7 +29,8 @@ class OrderService @Inject()(val documentService: DocumentService) {
 
     val orderWithPdfFileNames = order.copy(
       cvFileName = getNewCvFileName(order),
-      coverLetterFileName = getNewCoverLetterFileName(order)
+      coverLetterFileName = getNewCoverLetterFileName(order),
+      linkedinProfileFileName = getNewLinkedinProfileFileName(order)
     )
 
     OrderDto.update(orderWithPdfFileNames)
@@ -42,6 +53,19 @@ class OrderService @Inject()(val documentService: DocumentService) {
         throw new Exception("OrderService.updateFileNamesInDb() > Cover letter file name found in DB for order " + order.id.get + " but no corresponding file found")
       }
       Some(order.coverLetterFileName.get + "." + documentService.extensionPdf)
+    } else {
+      None
+    }
+  }
+
+  private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
+    if (order.containedProductCodes.contains(CruitedProduct.getCodeFromType(CruitedProduct.dbTypeLinkedinProfileReview))) {
+      // Fail epically if the Linkedin profile doesn't exist
+      if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile == JsNull) {
+        throw new Exception("OrderService.getNewLinkedinProfileFileName() > Fatal error: linkedinProfile is JsNull for order ID " + order.id)
+      }
+
+      Some(order.id.get + Order.fileNamePrefixSeparator + documentService.linkedinProfilePdfFileNameWithoutPrefix)
     } else {
       None
     }

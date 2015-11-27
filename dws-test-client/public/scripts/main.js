@@ -448,16 +448,6 @@ CR.Controllers.Index = React.createClass({
             ),
             React.createElement(
                 "div",
-                { className: "checkbox checkbox-primary" },
-                React.createElement("input", { type: "checkbox", id: "paid" }),
-                React.createElement(
-                    "label",
-                    { htmlFor: "paid" },
-                    "Paid"
-                )
-            ),
-            React.createElement(
-                "div",
                 { className: "form-group fg-file-upload", "data-id": "cv-form-group" },
                 React.createElement(
                     "label",
@@ -622,7 +612,6 @@ CR.Controllers.Index = React.createClass({
         this.$employerSoughtInput = $("#employer-sought");
         this.$userIdInput = $("#user-id");
         this.$couponCodeInput = $("#coupon-code");
-        this.$paidCheckbox = $("#paid");
 
         this.$cofCvFormGroup = this.$createOrderForm.children().filter("[data-id=\"cv-form-group\"]");
         this.$cofCvFileInput = this.$cofCvFormGroup.find("input[type=file]");
@@ -725,8 +714,6 @@ CR.Controllers.Index = React.createClass({
                     formData.append("couponCode", couponCode);
                 }
 
-                formData.append("isPaid", _this.$paidCheckbox.prop("checked"));
-
                 if (_this.cofCvFile) {
                     formData.append("cvFile", _this.cofCvFile, _this.cofCvFile.name);
                 }
@@ -741,7 +728,7 @@ CR.Controllers.Index = React.createClass({
                 httpRequest.onreadystatechange = function () {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === CR.httpStatusCodes.created) {
-                            alert("success!");
+                            alert("success! Order ID is '" + httpRequest.responseText + "'");
                         } else {
                             alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                         }

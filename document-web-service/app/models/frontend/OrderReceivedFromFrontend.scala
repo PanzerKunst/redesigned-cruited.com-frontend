@@ -9,5 +9,4 @@ case class OrderReceivedFromFrontend(editionId: Long,
                                      employerSought: Option[String],
                                      accountId: Option[Long],
                                      status: Int,
-                                     isPaid: Boolean,
                                      sessionId: String)

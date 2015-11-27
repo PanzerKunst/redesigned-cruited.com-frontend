@@ -3,10 +3,10 @@ package controllers
 import java.io.File
 import javax.inject.Inject
 
-import db.{TermAcceptationDto, AccountDto, CouponDto, OrderDto}
+import db.{AccountDto, CouponDto, OrderDto, TermAcceptationDto}
 import models.frontend.OrderReceivedFromFrontend
 import models.{Coupon, Order}
-import play.api.Logger
+import play.api.libs.json.{JsNull, Json}
 import play.api.mvc._
 import services.{DocumentService, GlobalConfig, OrderService}
 
@@ -200,12 +200,6 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           (None, None)
         }
 
-        val isPaid = if (requestData.contains("isPaid")) {
-          requestData("isPaid").head.toBoolean
-        } else {
-          false
-        }
-
         val orderStatus = getStatusFromOrderInfo(containedDocTypes, couponOpt)
 
         // Create order and get ID
@@ -219,7 +213,6 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           employerSought = employerSoughtOpt,
           accountId = accountIdOpt,
           status = orderStatus,
-          isPaid = isPaid,
           sessionId = requestData("sessionId").head
         )
 
@@ -290,6 +283,16 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       }
   }
 
+  private def sendDocument(fileNameOpt: Option[String]) = {
+    fileNameOpt match {
+      case None => NoContent
+      case Some(fileName) => Ok.sendFile(
+        content = new File(documentService.assessedDocumentsRootDir + fileName),
+        inline = true
+      )
+    }
+  }
+
   def getCoverLetterOfOrder(orderId: Long) = Action {
     request =>
       OrderDto.getOfId(orderId) match {
@@ -306,31 +309,12 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       }
   }
 
-  private def sendDocument(fileNameOpt: Option[String]) = {
-    fileNameOpt match {
-      case None => NoContent
-      case Some(fileName) => Ok.sendFile(
-        content = new File(documentService.assessedDocumentsRootDir + fileName),
-        inline = true
-      )
-    }
-  }
-
   def getCvThumbnailOfOrder(orderId: Long) = Action {
     request =>
       OrderDto.getOfId(orderId) match {
         case None => BadRequest("No order found for ID " + orderId)
         case Some(order) =>
           sendThumbnail(order.cvFileName)
-      }
-  }
-
-  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) =>
-          sendThumbnail(order.coverLetterFileName)
       }
   }
 
@@ -345,6 +329,15 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           inline = true
         )
     }
+  }
+
+  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) =>
+          sendThumbnail(order.coverLetterFileName)
+      }
   }
 
   def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action {

@@ -65,11 +65,6 @@ CR.Controllers.Index = React.createClass({
                     <input type="text" id="coupon-code" className="form-control" />
                 </div>
 
-                <div className="checkbox checkbox-primary">
-                    <input type="checkbox" id="paid" />
-                    <label htmlFor="paid">Paid</label>
-                </div>
-
                 <div className="form-group fg-file-upload" data-id="cv-form-group">
                     <label>Your CV</label>
 
@@ -168,7 +163,6 @@ CR.Controllers.Index = React.createClass({
         this.$employerSoughtInput = $("#employer-sought");
         this.$userIdInput = $("#user-id");
         this.$couponCodeInput = $("#coupon-code");
-        this.$paidCheckbox = $("#paid");
 
         this.$cofCvFormGroup = this.$createOrderForm.children().filter("[data-id=\"cv-form-group\"]");
         this.$cofCvFileInput = this.$cofCvFormGroup.find("input[type=file]");
@@ -273,8 +267,6 @@ CR.Controllers.Index = React.createClass({
                 formData.append("couponCode", couponCode);
             }
 
-            formData.append("isPaid", this.$paidCheckbox.prop("checked"));
-
             if (this.cofCvFile) {
                 formData.append("cvFile", this.cofCvFile, this.cofCvFile.name);
             }
@@ -289,7 +281,7 @@ CR.Controllers.Index = React.createClass({
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === CR.httpStatusCodes.created) {
-                        alert("success!");
+                        alert("success! Order ID is '" + httpRequest.responseText + "'");
                     } else {
                         alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                     }
