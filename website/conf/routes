@@ -13,6 +13,7 @@ GET         /signout                                              controllers.Ap
 GET         /login                                                controllers.Application.signIn
 GET         /sign-in                                              controllers.Application.signIn
 GET         /signin                                               controllers.Application.signIn
+GET         /reports/:orderId                                     controllers.Application.report(orderId: Long)
 
 GET         /order                                                controllers.Application.orderStepProductSelection
 GET         /order/assessment-info                                controllers.Application.orderStepAssessmentInfo

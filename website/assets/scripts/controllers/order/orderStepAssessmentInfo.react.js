@@ -305,7 +305,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         this.linkedinErrorMessage = linkedinErrorMessage;
         CR.order = CR.Models.Order(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order));
 
-        this.reactInstance = React.render(
+        this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
             document.querySelector("[role=main]")
         );

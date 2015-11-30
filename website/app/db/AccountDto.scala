@@ -13,10 +13,10 @@ object AccountDto {
     DB.withConnection { implicit c =>
       val query = """
       insert into useri(id, registered_at, /* useful fields */
-        code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
+        code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
       values(""" + accountId + """,
         now(),
-        '', 0, '', '', '', now(), now(), 0, 0, '');"""
+        '', '', '', 0, '', '', '', now(), now(), 0, 0, '');"""
 
       Logger.info("AccountDto.createTemporary():" + query)
 
@@ -38,13 +38,13 @@ object AccountDto {
 
       val query = """
       insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, /* useful fields */
-        code, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
+        code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
         DbUtil.safetize(emailAddress) + """', """ +
         passwordClause + """,
         now(),
         '""" + linkedinProfileClause + """',
-        '', 0, '', '', '', now(), now(), 0, 0);"""
+        '', '', '', 0, '', '', '', now(), now(), 0, 0);"""
 
       // This log is commented since it displays the password
       // Logger.info("AccountDto.create():" + query)
@@ -112,7 +112,7 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfId():" + query)
 
-      val optionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val rowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
@@ -132,7 +132,7 @@ object AccountDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 
@@ -147,7 +147,7 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfEmailAddress():" + query)
 
-      val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
@@ -167,7 +167,7 @@ object AccountDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 
@@ -182,7 +182,7 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
 
-      val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
@@ -202,7 +202,7 @@ object AccountDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 
@@ -219,7 +219,7 @@ object AccountDto {
       // This log is commented since it displays the password
       // Logger.info("AccountDto.getOfEmailAndPassword():" + query)
 
-      val optionRowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
@@ -239,7 +239,7 @@ object AccountDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 }

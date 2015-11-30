@@ -17,6 +17,7 @@ object ReductionDto {
 
       Logger.info("ReductionDto.getAll():" + query)
 
+      // TODO: undeprecate
       SQL(query)().map { row =>
         Reduction(
           id = row[Long]("id"),

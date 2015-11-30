@@ -15,6 +15,12 @@ CR.Models.OrderStaticProps = {
 CR.Models.Order = P(function(c) {
     c.init = function(order) {
         this._products = order && order.products ? _.cloneDeep(order.products) : [];
+        if (_.isEmpty(this._products) && order && !_.isEmpty(order.containedProductCodes)) {
+            this._products = order.containedProductCodes.map(function(productCode) {
+                return {code: productCode};
+            });
+        }
+
         this._reductions = order && order.reductions ? _.cloneDeep(order.reductions) : [];
         this._coupon = order && order.coupon ? _.cloneDeep(order.coupon) : null;
 
@@ -30,6 +36,8 @@ CR.Models.Order = P(function(c) {
         this._positionSought = order && order.positionSought ? order.positionSought : null;
         this._employerSought = order && order.employerSought ? order.employerSought : null;
         this._jobAdUrl = order && order.jobAdUrl ? order.jobAdUrl : null;
+        this._status = order && order.status ? order.status : null;
+        this._creationTimestamp = order && order.creationTimestamp ? order.creationTimestamp : null;
 
         this._saveOrderInLocalStorage();
     };
@@ -143,6 +151,48 @@ CR.Models.Order = P(function(c) {
         this._saveOrderInLocalStorage();
     };
 
+    c.getStatus = function() {
+        return this._status;
+    };
+
+    c.getCreationTimestamp = function() {
+        return this._creationTimestamp;
+    };
+
+    c.getTitleForHtml = function() {
+        if (this._positionSought && this._employerSought) {
+            return this._positionSought + " - " + this._employerSought;
+        }
+        if (this._positionSought) {
+            return this._positionSought;
+        }
+        if (this._employerSought) {
+            return this._employerSought;
+        }
+        return CR.i18nMessages.defaultAssessmentTitle;
+    };
+
+    c.getStatusForHtml = function() {
+        switch (this._status) {
+            case CR.Models.OrderStaticProps.statusIds.notPaid:
+                return CR.i18nMessages["order.status.notPaid.text"];
+            case CR.Models.OrderStaticProps.statusIds.paid:
+                return CR.i18nMessages["order.status.paid.text"];
+            case CR.Models.OrderStaticProps.statusIds.completed:
+                return CR.i18nMessages["order.status.completed.text"];
+            default:
+                return CR.i18nMessages["order.status.inProgress.text"];
+        }
+    };
+
+    c.getEditionForHtml = function() {
+        if (!this._edition) {
+            return null;
+        }
+
+        return CR.i18nMessages["edition.name." + this._edition.code];
+    };
+
     c._getFileNameStrippedFromPrefix = function(fileNameWithPrefix) {
         if (!fileNameWithPrefix) {
             return null;
@@ -208,7 +258,8 @@ CR.Models.Order = P(function(c) {
             coverLetterFileName: this._coverLetterFileName,
             positionSought: this._positionSought,
             employerSought: this._employerSought,
-            jobAdUrl: this._jobAdUrl
+            jobAdUrl: this._jobAdUrl,
+            status: this._status
         });
     };
 });

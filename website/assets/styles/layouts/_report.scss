@@ -1,0 +1,23 @@
+#report {
+  .nav {
+    text-align: center;
+
+    > li {
+      display: inline-block;
+    }
+  }
+
+  .nav-pills > li {
+    float: none;
+  }
+
+  .tab-pane {
+    section {
+      background-color: white;
+    }
+  }
+
+  .red-comment {
+    margin-bottom: 1em;
+  }
+}

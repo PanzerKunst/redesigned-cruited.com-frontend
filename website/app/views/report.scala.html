@@ -1,0 +1,20 @@
+@(i18nMessages: Map[String, String], isSignedIn: Boolean, assessmentReport: AssessmentReport, dwsRootUrl: String)(implicit messages: Messages)
+
+@main("Cruited - Report", "report") {
+<!--
+    Header
+-->
+@header(isSignedIn, "report")
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function () {
+    CR.Controllers.Report(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
+        @Html(play.api.libs.json.Json.toJson(assessmentReport).toString()),
+        "@dwsRootUrl"
+    );
+});
+}

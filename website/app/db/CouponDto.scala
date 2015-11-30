@@ -17,7 +17,7 @@ object CouponDto {
 
       Logger.info("CouponDto.getOfId():" + query)
 
-      val optionRowParser = str("name") ~ int("discount") ~ str("discount_type") ~ date("valid_date") ~ str("campaign_name") map {
+      val rowParser = str("name") ~ int("discount") ~ str("discount_type") ~ date("valid_date") ~ str("campaign_name") map {
         case code ~ amount ~ discountType ~ expirationDate ~ campaignName =>
           val (discountPercentageOpt, discountPriceOpt) = discountType match {
             case "by_percent" => (Some(amount), None)
@@ -37,7 +37,7 @@ object CouponDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 
@@ -52,7 +52,7 @@ object CouponDto {
 
       Logger.info("CouponDto.getOfCode():" + query)
 
-      val optionRowParser = long("id") ~ int("discount") ~ str("discount_type") ~ date("valid_date") ~ str("campaign_name") map {
+      val rowParser = long("id") ~ int("discount") ~ str("discount_type") ~ date("valid_date") ~ str("campaign_name") map {
         case id ~ amount ~ discountType ~ expirationDate ~ campaignName =>
           val (discountPercentageOpt, discountPriceOpt) = discountType match {
             case "by_percent" => (Some(amount), None)
@@ -72,7 +72,7 @@ object CouponDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 }

@@ -18,6 +18,7 @@ object CruitedProductDto {
 
       Logger.info("CruitedProductDto.getAll():" + query)
 
+      // TODO: undeprecate
       SQL(query)().map { row =>
         CruitedProduct(
           id = row[Long]("id"),
@@ -41,7 +42,7 @@ object CruitedProductDto {
 
       Logger.info("CruitedProductDto.getOfId():" + query)
 
-      val optionRowParser = str("code") ~ double("price_amount") map {
+      val rowParser = str("code") ~ double("price_amount") map {
         case code ~ priceAmount =>
           CruitedProduct(
             id = id,
@@ -53,7 +54,7 @@ object CruitedProductDto {
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 }

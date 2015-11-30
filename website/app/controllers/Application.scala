@@ -3,10 +3,11 @@ package controllers
 import javax.inject.Inject
 
 import db._
-import play.api.Logger
+import models.CruitedProduct
+import play.api.{Play, Logger}
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.libs.json.{JsUndefined, JsValue, JsNull}
+import play.api.libs.json.JsNull
 import play.api.mvc._
 import services._
 
@@ -15,6 +16,7 @@ import scala.concurrent.Future
 
 class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
+  val dwsRootUrl = Play.configuration.getString("dws.rootUrl").get
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
@@ -83,6 +85,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
+  }
+
   def orderStepPayment = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/order/assessment-info")
@@ -114,6 +120,23 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
+  def report(orderId: Long) = Action { request =>
+    val productCode = if (request.queryString.contains("productCode")) {
+      request.queryString.get("productCode").get.head
+    } else {
+      CruitedProduct.codeCvReview
+    }
+
+    OrderDto.getOfIdForFrontend(orderId) match {
+      case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
+      case Some(order) =>
+        ReportDto.getOfOrderId(orderId) match {
+          case None => BadRequest("No report available for order ID " + orderId)
+          case Some(assessmentReport) => Ok(views.html.report(getI18nMessages(request), SessionService.isSignedIn(request), assessmentReport, dwsRootUrl))
+        }
+    }
+  }
+
   def linkedinCallbackSignIn = Action { request =>
     if (request.queryString.contains("error")) {
       val isLinkedinAccountUnregistered = false
@@ -128,6 +151,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       linkedinService.requestAccessToken(linkedinService.linkedinRedirectUriSignIn)
 
       val linkedinProfile = linkedinService.getProfile
+
+      // TODO: remove
+      Logger.info("linkedinProfile: " + linkedinProfile)
 
       val accountId = AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
         case Some(account) =>
@@ -207,16 +233,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
-  }
-
   def linkedinCallbackOrderStepAssessmentInfo = Action { request =>
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
-  }
-
-  def linkedinCallbackOrderStepAccountCreation = Action { request =>
-    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
@@ -254,5 +272,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> accountId.toString))
       }
     }
+  }
+
+  def linkedinCallbackOrderStepAccountCreation = Action { request =>
+    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 }

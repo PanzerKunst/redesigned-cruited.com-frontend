@@ -1,5 +1,7 @@
 # Global
 
+defaultAssessmentTitle=Assessment
+
 product.name.CV_REVIEW=CV [Resume]
 product.name.COVER_LETTER_REVIEW=Cover Letter
 product.name.LINKEDIN_PROFILE_REVIEW=Linkedin Profile
@@ -10,6 +12,37 @@ edition.name.EXEC=Executive
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2-item
 reduction.name.3_PRODUCTS_SAME_ORDER=3-item
+
+order.status.label=Status
+order.status.notPaid.text=Not Paid
+order.status.paid.text=Paid
+order.status.inProgress.text=In progress
+order.status.completed.text=Completed
+
+order.creationDate.label=Created
+
+category.CV_REVIEW.12.title=Redovisa resultat och skapa trovärdighet
+category.CV_REVIEW.12.shortDesc=En cv handlar i stor utsträckning om att bekräfta sin kompetens. Det är därför mycket viktigt att redovisa de resultat man uppnått.
+category.CV_REVIEW.13.title=Översiktligt och korrekt
+category.CV_REVIEW.13.shortDesc=Din cv ska ge arbetsgivaren en snabb översikt över dina erfarenheter och meriter. Den ska vara korrekt skriven, kort och koncis. Det finns även ett antal faktorer i språk och upplägget som påverkar hur du uppfattas som person.
+category.CV_REVIEW.14.title=Rikta och var relevant
+category.CV_REVIEW.14.shortDesc=I en effektiv cv är varje del relevant för det aktuella jobbet och den aktuella arbetsgivaren. Det kräver att cvn har en tydlig röd linje och att alla delar pekar i samma riktning.
+category.COVER_LETTER_REVIEW.7.title=Framhäv potential
+category.COVER_LETTER_REVIEW.7.shortDesc=Fokusera mer på din potential och vad du kan åstadkomma i framtiden, än på historia och vad du gjort tidigare.
+category.COVER_LETTER_REVIEW.8.title=Fokusera på arbetsgivaren
+category.COVER_LETTER_REVIEW.8.shortDesc=Förklara varför du valt just den här arbetsgivaren och tjänsten.
+category.COVER_LETTER_REVIEW.10.title=Redovisa resultat och skapa trovärdighet
+category.COVER_LETTER_REVIEW.10.shortDesc=Visa på ett trovärdigt sätt att du har kunskapen och förmågan att åstadkomma resultat för arbetsgivaren.
+category.COVER_LETTER_REVIEW.11.title=Aktivt, kort och korrekt
+category.COVER_LETTER_REVIEW.11.shortDesc=En dåligt skriven ansökan placerar dig som sökande ofta direkt längst ner i högen.
+category.LINKEDIN_PROFILE_REVIEW.16.title=Rikta och var relevant
+category.LINKEDIN_PROFILE_REVIEW.16.shortDesc=Nyckeln till framgång bland miljontals profiler på LinkedIn är att vara relevant. Du behöver visa en röd linje, få fram en bild av vart du är på väg och vad du söker. I vår granskning tittar vi på flera faktorer som rör relevans och riktning.
+category.LINKEDIN_PROFILE_REVIEW.17.title=Skapa effekt och bygg räckvidd
+category.LINKEDIN_PROFILE_REVIEW.17.shortDesc=Att finnas på LinkedIn är grundläggande när man söker jobb. Men för att nå framgång med LinkedIn behöver man synas och underlätta kontaktskapande. Den här kategorin handlar om hur du lyckas skapa effekt och nå ut med din profil.
+category.LINKEDIN_PROFILE_REVIEW.18.title=Översiktligt och korrekt
+category.LINKEDIN_PROFILE_REVIEW.18.shortDesc=Din LinkedIn-profil ska vara korrekt skriven och lätt att ta till sig. För att bli hittad av rekryterare och andra som vill nå dig, är det också viktigt att profilen är komplett och att du fyllt i rätt uppgifter på rätt plats.
+category.LINKEDIN_PROFILE_REVIEW.20.title=Redovisa resultat och skapa trovärdighet
+category.LINKEDIN_PROFILE_REVIEW.20.shortDesc=LinkedIn är världens största cv-bank och att berätta om sina erfarenheter och utbildningar är grundläggande. För att få kontakter och skapa möjligheter till jobb behöver du ge trovärdig bild av din bakgrund.
 
 
 # Header menu
@@ -30,19 +63,21 @@ signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
 signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during your first <a href="/order">order</a>
 
+
 # Dashboard page
 
 dashboard.title=My Assessments Dashboard
 dashboard.subtitle=Welcome to your Assessments Dashboard, {firstName}!
 dashboard.newAssessmentBtn.text=Get a new assessment
-dashboard.defaultListItem.title=Assessment
-dashboard.creationDate.label=Created
 
-dashboard.status.label=Status
-dashboard.status.notPaid.text=Not Paid
-dashboard.status.paid.text=Paid
-dashboard.status.inProgress.text=In progress
-dashboard.status.completed.text=Completed
+
+# Report page
+
+report.title=Your Report
+report.summary.title=Report Summary
+report.analysis.title=Expert Report Analysis
+report.document.link.text=Download Original File
+report.document.score.label=Your C-Score
 
 
 # Order Step Product Selection page

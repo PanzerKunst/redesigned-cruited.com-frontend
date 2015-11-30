@@ -76,8 +76,8 @@
         },
     "react": {
       "main": [
-        "./react-with-addons.min.js",
-        "./react-dom.min.js"
+        "./react.js",
+        "./react-dom.js"
       ]
     },
         "awesome-bootstrap-checkbox": {

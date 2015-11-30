@@ -35,6 +35,7 @@ object EditionDto {
 
       Logger.info("EditionDto.getAll():" + query)
 
+      // TODO: undeprecate
       SQL(query)().map { row =>
         Edition(
           id = row[Long]("id"),

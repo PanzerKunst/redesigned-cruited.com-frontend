@@ -35,7 +35,7 @@ CR.Controllers.ProductListItem = React.createClass({
     },
 
     _initElements: function() {
-        this.$listItem = $(React.findDOMNode(this.refs.li));
+        this.$listItem = $(ReactDOM.findDOMNode(this.refs.li));
         this.$checkbox = this.$listItem.find("input[type=\"checkbox\"]");
     },
 

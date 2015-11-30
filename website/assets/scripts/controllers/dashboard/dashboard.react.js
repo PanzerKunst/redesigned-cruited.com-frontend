@@ -32,18 +32,18 @@ CR.Controllers.Dashboard = P(function(c) {
                                     <li key={reactItemId}>
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
                                         <p>
-                                            <span>{CR.i18nMessages["dashboard.creationDate.label"]}:</span> {moment(order.creationTimestamp).format("lll")}
+                                            <span>{CR.i18nMessages["order.creationDate.label"]}:</span> {moment(order.getCreationTimestamp()).format("lll")}
                                         </p>
                                         <p>
-                                            <span>{CR.i18nMessages["dashboard.status.label"]}:</span> {this._getOrderStatus(order)}
-                                            <span>{CR.i18nMessages["edition.name." + order.edition.code]}</span>
+                                            <span>{CR.i18nMessages["order.status.label"]}:</span> {order.getStatusForHtml()}
+                                            <span>{order.getEditionForHtml()}</span>
                                         </p>
 
                                         <ul className="styleless">
-                                            {order.containedProductCodes.map(function(productCode, i) {
-                                                let reactItmId = "product-code-" + i;
+                                            {order.getProducts().map(function(product, i) {
+                                                let reactItmId = "product-" + i;
 
-                                                return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} order={order} productCode={productCode} />;
+                                                return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} orderId={order.getId()} productCode={product.code} />;
                                             })}
                                         </ul>
                                     </li>
@@ -56,15 +56,7 @@ CR.Controllers.Dashboard = P(function(c) {
         },
 
         _getOrderTitle: function(order) {
-            let inner = CR.i18nMessages["dashboard.defaultListItem.title"];
-
-            if (order.positionSought && order.employerSought) {
-                inner = order.positionSought + " - " + order.employerSought;
-            } else if (order.positionSought) {
-                inner = order.positionSought;
-            } else if (order.employerSought) {
-                inner = order.employerSought;
-            }
+            let inner = order.getTitleForHtml();
 
             if (!order.jobAdUrl) {
                 return inner;
@@ -72,26 +64,15 @@ CR.Controllers.Dashboard = P(function(c) {
 
             let outer = "<a href=\"" + order.jobAdUrl + "\" target=\"_blank\">{inner}</a>";
             return CR.Services.String.template(outer, "inner", inner);
-        },
-
-        _getOrderStatus: function(order) {
-            switch (order.status) {
-                case CR.Models.OrderStaticProps.statusIds.notPaid:
-                    return CR.i18nMessages["dashboard.status.notPaid.text"];
-                case CR.Models.OrderStaticProps.statusIds.paid:
-                    return CR.i18nMessages["dashboard.status.paid.text"];
-                case CR.Models.OrderStaticProps.statusIds.completed:
-                    return CR.i18nMessages["dashboard.status.completed.text"];
-                default:
-                    return CR.i18nMessages["dashboard.status.inProgress.text"];
-            }
         }
     });
 
     c.init = function(i18nMessages, account, orders) {
         CR.i18nMessages = i18nMessages;
         this.account = account;
-        this.orders = orders;
+        this.orders = orders.map(function(order) {
+            return CR.Models.Order(order);
+        });
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),

@@ -133,7 +133,7 @@ CR.Controllers.SignIn = P(function(c) {
         this.linkedinErrorMessage = linkedinErrorMessage;
         this.isLinkedinAccountUnregistered = isLinkedinAccountUnregistered;
 
-        this.reactInstance = React.render(
+        this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
             document.querySelector("[role=main]")
         );

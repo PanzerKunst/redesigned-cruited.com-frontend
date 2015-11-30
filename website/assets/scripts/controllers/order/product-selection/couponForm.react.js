@@ -21,7 +21,7 @@ CR.Controllers.CouponForm = React.createClass({
     },
 
     _initElements: function() {
-        this.$form = $(React.findDOMNode(this.refs.form));
+        this.$form = $(ReactDOM.findDOMNode(this.refs.form));
         this.$couponCodeField = this.$form.find("#coupon-code");
         this.$addCouponBtn = this.$form.children("button");
         this.$couponNotFoundError = this.$form.find("#coupon-not-found-error");

@@ -218,7 +218,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
-        this.reactInstance = React.render(
+        this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
             document.querySelector("[role=main]")
         );
