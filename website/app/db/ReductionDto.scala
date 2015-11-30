@@ -1,5 +1,6 @@
 package db
 
+import anorm.SqlParser._
 import anorm._
 import models.{Price, Reduction}
 import play.api.Logger
@@ -17,17 +18,20 @@ object ReductionDto {
 
       Logger.info("ReductionDto.getAll():" + query)
 
-      // TODO: undeprecate
-      SQL(query)().map { row =>
-        Reduction(
-          id = row[Long]("id"),
-          code = row[String]("code"),
-          price = Price(
-            amount = row[Double]("reduction_amount"),
-            currencyCode = "SEK"
+      val rowParser = long("id") ~ str("code") ~ double("reduction_amount") map {
+        case id ~ code ~ reductionAmount =>
+
+          Reduction(
+            id = id,
+            code = code,
+            price = Price(
+              amount = reductionAmount,
+              currencyCode = "SEK"
+            )
           )
-        )
-      }.toList
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 }

@@ -194,8 +194,12 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfIdForFrontend():" + query)
 
-      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ long("edition_id") ~ str("edition") ~ (long("coupon_id") ?) map {
-        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrl ~ editionId ~ editionCode ~ couponId =>
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~
+        long("edition_id") ~ str("edition") ~
+        (long("coupon_id") ?) map {
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~
+          editionId ~ editionCode ~
+          couponIdOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -234,13 +238,13 @@ object OrderDto {
               code = editionCode
             ),
             containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
-            couponId = couponId,
+            couponId = couponIdOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
             linkedinProfileFileName = linkedinProfileFileNameOpt,
             positionSought = positionSoughtOpt,
             employerSought = employerSoughtOpt,
-            jobAdUrl = jobAdUrl,
+            jobAdUrl = jobAdUrlOpt,
             accountId = accountIdOpt,
             status = status,
             creationTimestamp = creationDate.getTime
@@ -269,52 +273,59 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfAccountIdForFrontend():" + query)
 
-      // TODO: undeprecate
-      SQL(query)().map { row =>
-        val coverLetterFileNameOpt = row[String]("file") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
+      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~
+        long("edition_id") ~ str("edition") ~
+        (long("coupon_id") ?) map {
+        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~
+          editionId ~ editionCode ~
+          couponIdOpt =>
 
-        val cvFileNameOpt = row[String]("file_cv") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
+          val coverLetterFileNameOpt = coverLetterFileName match {
+            case "" => None
+            case otherString => Some(otherString)
+          }
 
-        val linkedinProfileFileNameOpt = row[String]("file_li") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
+          val cvFileNameOpt = cvFileName match {
+            case "" => None
+            case otherString => Some(otherString)
+          }
 
-        val positionSoughtOpt = row[String]("position") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
+          val linkedinProfileFileNameOpt = linkedinProfileFileName match {
+            case "" => None
+            case otherString => Some(otherString)
+          }
 
-        val employerSoughtOpt = row[String]("employer") match {
-          case "" => None
-          case otherString => Some(otherString)
-        }
+          val positionSoughtOpt = positionSought match {
+            case "" => None
+            case otherString => Some(otherString)
+          }
 
-        FrontendOrder(
-          id = row[Long]("order_id"),
-          edition = Edition(
-            id = row[Long]("edition_id"),
-            code = row[String]("edition")
-          ),
-          containedProductCodes = Order.getContainedProductCodesFromTypes(row[String]("type")),
-          couponId = row[Option[Long]]("coupon_id"),
-          cvFileName = cvFileNameOpt,
-          coverLetterFileName = coverLetterFileNameOpt,
-          linkedinProfileFileName = linkedinProfileFileNameOpt,
-          positionSought = positionSoughtOpt,
-          employerSought = employerSoughtOpt,
-          jobAdUrl = row[Option[String]]("job_ad_url"),
-          accountId = Some(accountId),
-          status = row[Int]("status"),
-          creationTimestamp = row[Date]("added_at").getTime
-        )
-      }.toList
+          val employerSoughtOpt = employerSought match {
+            case "" => None
+            case otherString => Some(otherString)
+          }
+
+          FrontendOrder(
+            id = orderId,
+            edition = Edition(
+              id = editionId,
+              code = editionCode
+            ),
+            containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
+            couponId = couponIdOpt,
+            cvFileName = cvFileNameOpt,
+            coverLetterFileName = coverLetterFileNameOpt,
+            linkedinProfileFileName = linkedinProfileFileNameOpt,
+            positionSought = positionSoughtOpt,
+            employerSought = employerSoughtOpt,
+            jobAdUrl = jobAdUrlOpt,
+            accountId = Some(accountId),
+            status = status,
+            creationTimestamp = creationDate.getTime
+          )
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 }

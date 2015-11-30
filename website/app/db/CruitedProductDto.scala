@@ -18,17 +18,19 @@ object CruitedProductDto {
 
       Logger.info("CruitedProductDto.getAll():" + query)
 
-      // TODO: undeprecate
-      SQL(query)().map { row =>
-        CruitedProduct(
-          id = row[Long]("id"),
-          code = row[String]("code"),
-          price = Price(
-            amount = row[Double]("price_amount"),
-            currencyCode = "SEK"
+      val rowParser = long("id") ~ str("code") ~ double("price_amount") map {
+        case id ~ code ~ priceAmount =>
+          CruitedProduct(
+            id = id,
+            code = code,
+            price = Price(
+              amount = priceAmount,
+              currencyCode = "SEK"
+            )
           )
-        )
-      }.toList
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 

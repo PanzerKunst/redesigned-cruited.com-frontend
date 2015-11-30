@@ -1,5 +1,6 @@
 package db
 
+import anorm.SqlParser._
 import anorm._
 import models.Edition
 import play.api.Logger
@@ -35,13 +36,15 @@ object EditionDto {
 
       Logger.info("EditionDto.getAll():" + query)
 
-      // TODO: undeprecate
-      SQL(query)().map { row =>
-        Edition(
-          id = row[Long]("id"),
-          code = row[String]("edition")
-        )
-      }.toList
+      val rowParser = long("id") ~ str("edition") map {
+        case id ~ code =>
+          Edition(
+            id = id,
+            code = code
+          )
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 }
