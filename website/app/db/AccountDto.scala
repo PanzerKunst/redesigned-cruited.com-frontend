@@ -9,6 +9,8 @@ import play.api.db.DB
 import play.api.libs.json.{JsNull, JsValue, Json}
 
 object AccountDto {
+  val unknownUserId = 1053
+
   def createTemporary(accountId: Long): Option[Long] = {
     DB.withConnection { implicit c =>
       val query = """

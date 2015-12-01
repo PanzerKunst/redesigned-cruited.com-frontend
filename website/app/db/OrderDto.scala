@@ -1,7 +1,5 @@
 package db
 
-import java.util.Date
-
 import anorm.SqlParser._
 import anorm._
 import models.frontend.{FrontendOrder, OrderReceivedFromFrontend}
@@ -11,8 +9,6 @@ import play.api.Play.current
 import play.api.db.DB
 
 object OrderDto {
-  val unknownUserId = 1053
-
   def createTemporary(order: OrderReceivedFromFrontend): Option[Long] = {
     DB.withConnection { implicit c =>
       val cvFileNameClause = order.cvFileName match {
@@ -47,7 +43,7 @@ object OrderDto {
 
       val query = """
       insert into documents(id, edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, /* useful fields */
-        paid_on, hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+        li_url, paid_on, hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
       values(""" + order.tempId + """, """ +
         order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
@@ -55,13 +51,13 @@ object OrderDto {
         '',
         now(), '""" +
         couponCodeClause + """', """ +
-        order.accountId.getOrElse(unknownUserId) + """, '""" +
+        order.accountId.getOrElse(AccountDto.unknownUserId) + """, '""" +
         Order.getTypeForDb(order.containedProductCodes) + """', """ +
         Order.statusIdNotPaid + """, '""" +
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """,
-        '0000-00-00 00:00:00', 0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+        '', '0000-00-00 00:00:00', 0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
 
       Logger.info("OrderDto.createTemporary():" + query)
 
@@ -105,21 +101,21 @@ object OrderDto {
 
       val query = """
       insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, paid_on, /* useful fields */
-        hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+        li_url, hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
       values(""" + order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
         cvFileNameClause + """',
         '', '""" +
         DbUtil.formatTimestampForInsertOrUpdate(order.creationTimestamp) + """', '""" +
         couponCodeClause + """', """ +
-        order.accountId.getOrElse(unknownUserId) + """, '""" +
+        order.accountId.getOrElse(AccountDto.unknownUserId) + """, '""" +
         Order.getTypeForDb(order.containedProductCodes) + """', """ +
         Order.statusIdPaid + """, '""" +
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """,
         now(),
-        0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+        '', 0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
 
       Logger.info("OrderDto.createFinalised():" + query)
 
@@ -217,7 +213,7 @@ object OrderDto {
           }
 
           val accountIdOpt = accountId match {
-            case OrderDto.unknownUserId => None
+            case AccountDto.unknownUserId => None
             case otherNb => Some(otherNb)
           }
 

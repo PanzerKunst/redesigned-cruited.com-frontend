@@ -67,6 +67,7 @@ object DbAdmin {
     }
   }
 
+  // TODO: remove column `li_url`
   private def alterTableDocuments() {
     DB.withConnection { implicit c =>
       val query = """
@@ -100,6 +101,7 @@ object DbAdmin {
     }
   }
 
+  // TODO: add column `li_url`
   private def removeAlterationOnTableDocuments() {
     DB.withConnection { implicit c =>
       val query = """

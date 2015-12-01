@@ -29,7 +29,7 @@ CR.localStorageKeys = {
 CR.Controllers.Index = React.createClass({
     displayName: "Index",
 
-    dwsUrlRoot: "http://localhost:9001/",
+    dwsUrlRoot: "http://api.cruited.com/",
 
     render: function render() {
         return React.createElement(
@@ -69,7 +69,7 @@ CR.Controllers.Index = React.createClass({
                 { className: "form-group" },
                 React.createElement(
                     "label",
-                    { htmlFor: "doc-types" },
+                    { htmlFor: "doc-types", className: "for-required-field" },
                     "Doc types"
                 ),
                 React.createElement("input", { type: "text", id: "doc-types", className: "form-control" }),
@@ -80,7 +80,7 @@ CR.Controllers.Index = React.createClass({
                 { className: "form-group" },
                 React.createElement(
                     "label",
-                    { htmlFor: "edition-id" },
+                    { htmlFor: "edition-id", className: "for-required-field" },
                     "Edition ID"
                 ),
                 React.createElement("input", { type: "text", id: "edition-id", className: "form-control" }),
@@ -91,7 +91,7 @@ CR.Controllers.Index = React.createClass({
                 { className: "form-group" },
                 React.createElement(
                     "label",
-                    { htmlFor: "session-id" },
+                    { htmlFor: "session-id", className: "for-required-field" },
                     "Session ID"
                 ),
                 React.createElement("input", { type: "text", id: "session-id", className: "form-control" }),
@@ -176,6 +176,16 @@ CR.Controllers.Index = React.createClass({
                     ),
                     React.createElement("input", { type: "text", className: "form-control", disabled: true })
                 )
+            ),
+            React.createElement(
+                "div",
+                { className: "form-group" },
+                React.createElement(
+                    "label",
+                    { htmlFor: "linkedin-public-profile-url" },
+                    "Linkedin public profile URL"
+                ),
+                React.createElement("input", { type: "text", id: "linkedin-public-profile-url", className: "form-control" })
             ),
             React.createElement(
                 "div",
@@ -312,6 +322,8 @@ CR.Controllers.Index = React.createClass({
         this.$cofCoverLetterFileInput = this.$cofCoverLetterFormGroup.find("input[type=file]");
         this.$cofCoverLetterFileNameInput = this.$cofCoverLetterFormGroup.find("input[type=text]");
 
+        this.$linkedinPublicProfileUrlInput = $("#linkedin-public-profile-url");
+
         this.$fileUploadForm = $("#file-upload-form");
 
         this.$orderIdInput = $("#order-id");
@@ -410,6 +422,11 @@ CR.Controllers.Index = React.createClass({
                 }
                 if (_this.cofCoverLetterFile) {
                     formData.append("coverLetterFile", _this.cofCoverLetterFile, _this.cofCoverLetterFile.name);
+                }
+
+                var linkedinPublicProfileUrl = _this.$linkedinPublicProfileUrlInput.val();
+                if (linkedinPublicProfileUrl) {
+                    formData.append("linkedinPublicProfileUrl", linkedinPublicProfileUrl);
                 }
 
                 var type = "POST";

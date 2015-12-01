@@ -9,6 +9,8 @@ import play.api.db.DB
 import play.api.libs.json.{JsNull, Json}
 
 object AccountDto {
+  val unknownUserId = 1053
+
   def getOfId(id: Long): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """

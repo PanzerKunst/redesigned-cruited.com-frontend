@@ -6,7 +6,6 @@ import javax.inject.Inject
 import db.{AccountDto, CouponDto, OrderDto, TermAcceptationDto}
 import models.frontend.OrderReceivedFromFrontend
 import models.{Coupon, Order}
-import play.api.libs.json.{JsNull, Json}
 import play.api.mvc._
 import services.{DocumentService, GlobalConfig, OrderService}
 
@@ -72,7 +71,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
               OrderDto.update(updatedOrder)
 
               Future {
-                orderService.convertDocsToPdf(orderId)
+                orderService.convertDocsToPdf(orderId, None)
                 orderService.generateDocThumbnails(orderId)
               }
             }
@@ -139,7 +138,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
               OrderDto.update(updatedOrder)
 
               Future {
-                orderService.convertDocsToPdf(orderId)
+                orderService.convertDocsToPdf(orderId, None)
                 orderService.generateDocThumbnails(orderId)
               }
             }
@@ -200,6 +199,12 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           (None, None)
         }
 
+        val linkedinPublicProfileUrlOpt = if (requestData.contains("linkedinPublicProfileUrl")) {
+          Some(requestData("linkedinPublicProfileUrl").head)
+        } else {
+          None
+        }
+
         val orderStatus = getStatusFromOrderInfo(containedDocTypes, couponOpt)
 
         // Create order and get ID
@@ -209,6 +214,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           couponCode = couponCodeOpt,
           cvFileName = None,
           coverLetterFileName = None,
+          linkedinPublicProfileUrl = linkedinPublicProfileUrlOpt,
           positionSought = positionSoughtOpt,
           employerSought = employerSoughtOpt,
           accountId = accountIdOpt,
@@ -234,15 +240,21 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
             Some(fileName)
         }
 
+        val linkedinProfileFileName = linkedinPublicProfileUrlOpt match {
+          case None => None
+          case Some(linkedinPublicProfileUrl) => Some(orderId + Order.fileNamePrefixSeparator + GlobalConfig.linkedinProfilePdfFileNameWithoutPrefix)
+        }
+
         val updatedOrder = new Order(orderReceivedFromFrontend, orderId).copy(
           cvFileName = newCvFileName,
-          coverLetterFileName = newCoverLetterFileName
+          coverLetterFileName = newCoverLetterFileName,
+          linkedinProfileFileName = linkedinProfileFileName
         )
 
         OrderDto.update(updatedOrder)
 
         Future {
-          orderService.convertDocsToPdf(orderId)
+          orderService.convertDocsToPdf(orderId, linkedinPublicProfileUrlOpt)
           orderService.generateDocThumbnails(orderId)
         }
 

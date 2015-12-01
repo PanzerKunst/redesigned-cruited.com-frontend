@@ -1,7 +1,7 @@
 "use strict";
 
 CR.Controllers.Index = React.createClass({
-    dwsUrlRoot: "http://localhost:9001/",
+    dwsUrlRoot: "http://api.cruited.com/",
 
     render: function() {
         return (
@@ -28,19 +28,19 @@ CR.Controllers.Index = React.createClass({
         return (
             <form id="create-order-form" onSubmit={this._cofSubmit}>
                 <div className="form-group">
-                    <label htmlFor="doc-types">Doc types</label>
+                    <label htmlFor="doc-types" className="for-required-field">Doc types</label>
                     <input type="text" id="doc-types" className="form-control" />
                     <p className="field-error" data-check="empty" />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="edition-id">Edition ID</label>
+                    <label htmlFor="edition-id" className="for-required-field">Edition ID</label>
                     <input type="text" id="edition-id" className="form-control" />
                     <p className="field-error" data-check="empty" />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="session-id">Session ID</label>
+                    <label htmlFor="session-id" className="for-required-field">Session ID</label>
                     <input type="text" id="session-id" className="form-control" />
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -87,6 +87,11 @@ CR.Controllers.Index = React.createClass({
                         </label>
                         <input type="text" className="form-control" disabled />
                     </div>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="linkedin-public-profile-url">Linkedin public profile URL</label>
+                    <input type="text" id="linkedin-public-profile-url" className="form-control" />
                 </div>
 
                 <div className="centered-contents">
@@ -171,6 +176,8 @@ CR.Controllers.Index = React.createClass({
         this.$cofCoverLetterFormGroup = this.$createOrderForm.children().filter("[data-id=\"cover-letter-form-group\"]");
         this.$cofCoverLetterFileInput = this.$cofCoverLetterFormGroup.find("input[type=file]");
         this.$cofCoverLetterFileNameInput = this.$cofCoverLetterFormGroup.find("input[type=text]");
+
+        this.$linkedinPublicProfileUrlInput = $("#linkedin-public-profile-url");
 
 
         this.$fileUploadForm = $("#file-upload-form");
@@ -272,6 +279,11 @@ CR.Controllers.Index = React.createClass({
             }
             if (this.cofCoverLetterFile) {
                 formData.append("coverLetterFile", this.cofCoverLetterFile, this.cofCoverLetterFile.name);
+            }
+
+            let linkedinPublicProfileUrl = this.$linkedinPublicProfileUrlInput.val();
+            if (linkedinPublicProfileUrl) {
+                formData.append("linkedinPublicProfileUrl", linkedinPublicProfileUrl);
             }
 
             let type = "POST";

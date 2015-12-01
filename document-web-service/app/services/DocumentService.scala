@@ -30,7 +30,6 @@ class DocumentService @Inject()(val ws: WSClient) {
   val convertApiDotComToPdfFromRichTextUrl = Play.configuration.getString("convertapi.com.toPdf.fromRichText.url").get
   val convertApiDotComToPdfFromWebUrl = Play.configuration.getString("convertapi.com.toPdf.fromWeb.url").get
   val convertApiDotComApiKey = Play.configuration.getString("convertapi.com.apiKey").get
-  val linkedinProfilePdfFileNameWithoutPrefix = Play.configuration.getString("linkedinProfile.pdfFileName.withoutPrefix").get
   val docThumbnailFileExtension = Play.configuration.getString("docThumbnail.fileExtension").get
   val docThumbnailWidthPxHdpi = Play.configuration.getInt("docThumbnail.widthPxHdpi").get
 
@@ -96,7 +95,7 @@ class DocumentService @Inject()(val ws: WSClient) {
     byteArrayResult match {
       case Failure(e) => throw e
       case Success(byteArray) =>
-        val outputStream = new FileOutputStream(assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + linkedinProfilePdfFileNameWithoutPrefix)
+        val outputStream = new FileOutputStream(assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + GlobalConfig.linkedinProfilePdfFileNameWithoutPrefix)
         try {
           outputStream.write(byteArray)
         } finally {

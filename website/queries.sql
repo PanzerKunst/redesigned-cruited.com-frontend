@@ -9,7 +9,7 @@ select * from useri
 order by id desc;
 
 delete from useri
-where id > 1919;
+where id > 1932;
 
 
 select * from documents
@@ -23,7 +23,7 @@ select * from documents
 order by id desc;
 
 delete from documents
-where id > 2774;
+where id > 2788;
 
 select * from term_accceptation
 order by userid desc;
@@ -48,8 +48,10 @@ select file, file_cv, file_li, added_at, added_by, d.type as doc_types, d.status
         where d.id = 2768
         order by red_comment_doc_type, red_comment_cat_id, ordd, top_comment_doc_type, top_comment_cat_id, top_comment_id;
 
+select * from documents_scores
+where id_doc = 2768
+order by id_category;
 
-
-
-
-
+select * from default_categories
+where shw = 1
+order by type, id;

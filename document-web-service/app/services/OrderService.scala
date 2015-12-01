@@ -9,18 +9,22 @@ import play.api.libs.json.JsNull
 
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
-  def convertDocsToPdf(orderId: Long) {
+  def convertDocsToPdf(orderId: Long, linkedinPublicProfileUrlOpt: Option[String]) {
     documentService.convertDocsToPdf(orderId)
-    convertLinkedinPublicProfilePageToPdf(orderId)
+    convertLinkedinPublicProfilePageToPdf(orderId, linkedinPublicProfileUrlOpt)
     updateFileNamesInDb(orderId)
   }
 
-  private def convertLinkedinPublicProfilePageToPdf(orderId: Long) {
-    val accountId = OrderDto.getOfId(orderId).get.accountId.get
-    val linkedinProfile = AccountDto.getOfId(accountId).get.linkedinProfile
+  private def convertLinkedinPublicProfilePageToPdf(orderId: Long, linkedinPublicProfileUrlOpt: Option[String]) {
+    linkedinPublicProfileUrlOpt match {
+      case Some(linkedinPublicProfileUrl) => documentService.convertLinkedinProfilePageToPdf(orderId, linkedinPublicProfileUrl)
+      case None =>
+        val accountId = OrderDto.getOfId(orderId).get.accountId.get
+        val linkedinProfile = AccountDto.getOfId(accountId).get.linkedinProfile
 
-    if (linkedinProfile != JsNull) {
-      documentService.convertLinkedinProfilePageToPdf(orderId, (linkedinProfile \ "publicProfileUrl").as[String])
+        if (linkedinProfile != JsNull) {
+          documentService.convertLinkedinProfilePageToPdf(orderId, (linkedinProfile \ "publicProfileUrl").as[String])
+        }
     }
   }
 
@@ -59,13 +63,14 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
-    if (order.containedProductCodes.contains(CruitedProduct.getCodeFromType(CruitedProduct.dbTypeLinkedinProfileReview))) {
+    if (order.containedProductCodes.contains(CruitedProduct.getCodeFromType(CruitedProduct.dbTypeLinkedinProfileReview)) &&
+      order.accountId.get != AccountDto.unknownUserId) {
       // Fail epically if the Linkedin profile doesn't exist
       if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile == JsNull) {
         throw new Exception("OrderService.getNewLinkedinProfileFileName() > Fatal error: linkedinProfile is JsNull for order ID " + order.id)
       }
 
-      Some(order.id.get + Order.fileNamePrefixSeparator + documentService.linkedinProfilePdfFileNameWithoutPrefix)
+      Some(order.id.get + Order.fileNamePrefixSeparator + GlobalConfig.linkedinProfilePdfFileNameWithoutPrefix)
     } else {
       None
     }
