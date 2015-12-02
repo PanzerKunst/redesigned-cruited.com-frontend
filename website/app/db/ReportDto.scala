@@ -14,7 +14,7 @@ object ReportDto {
   def getOfOrderId(orderId: Long): Option[AssessmentReport] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, file_li, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, score1_cv, score1, score1_li,
+        select file, file_cv, file_li, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, score1_cv, score1, score1_li,
           e.id as edition_id, edition,
           c.id as coupon_id,
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
@@ -35,14 +35,14 @@ object ReportDto {
       Logger.info("ReportDto.getOfOrderId():" + query)
 
       // Use of `getAliased` because of bug when using the regular `get`
-      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ float("score1_cv") ~ float("score1") ~ float("score1_li") ~
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ float("score1_cv") ~ float("score1") ~ float("score1_li") ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~
         (long("red_comment_id") ?) ~ (str("red_comment_text") ?) ~ (int("points") ?) ~
         getAliased[Option[Long]]("red_comment_cat_id") ~ getAliased[Option[String]]("red_comment_doc_type") ~
         (long("top_comment_id") ?) ~ (str("top_comment_text") ?) ~
         (long("top_comment_cat_id") ?) ~ (str("top_comment_doc_type") ?) map {
-        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ cvScore ~ coverLetterScore ~ linkedinProfileScore ~
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ cvScore ~ coverLetterScore ~ linkedinProfileScore ~
           editionId ~ editionCode ~
           couponId ~
           redCommentId ~ redCommentText ~ weight ~
@@ -94,6 +94,7 @@ object ReportDto {
             positionSought = positionSoughtOpt,
             employerSought = employerSoughtOpt,
             jobAdUrl = jobAdUrl,
+            customerComment = customerComment,
             accountId = Some(accountId),
             status = Order.statusIdComplete,
             creationTimestamp = creationDate.getTime

@@ -70,6 +70,12 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       Some(requestData("jobAdUrl").head)
     }
 
+    val customerComment = if (!requestData.contains("customerComment")) {
+      None
+    } else {
+      Some(requestData("customerComment").head)
+    }
+
     // Create temporary order
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
@@ -81,6 +87,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       positionSought = positionSought,
       employerSought = employerSought,
       jobAdUrl = jobAdUrl,
+      customerComment = customerComment,
       accountId = SessionService.getAccountId(request.session)
     )
 

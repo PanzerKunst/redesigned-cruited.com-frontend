@@ -117,6 +117,7 @@ order.assessmentInfo.subtitle=Tell us a bit about you
 order.assessmentInfo.nextStepBtn.text=Proceed to next step
 order.assessmentInfo.validation.notSignedIn=We cannot assess your Linkedin profile unless you sign in
 order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
+order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
 
 order.assessmentInfo.form.browseBtn.text=Browse...
 order.assessmentInfo.form.linkedinProfile.label=Your Linkedin profile
@@ -131,6 +132,7 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Employer sought
 order.assessmentInfo.form.positionSought.label=Position sought
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
+order.assessmentInfo.form.customerComment.label=Specific questions
 order.assessmentInfo.form.tos.text=I have read and accept the <a>Terms of Service</a>
 
 

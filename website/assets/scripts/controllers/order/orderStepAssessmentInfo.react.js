@@ -156,24 +156,29 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getOptionalInfoFormGroup: function() {
-            let positionSoughtInputValue = CR.order ? CR.order.getSoughtPosition() : null;
-            let employerSoughtInputValue = CR.order ? CR.order.getSoughtEmployer() : null;
-            let jobAdUrlInputValue = CR.order ? CR.order.getJobAdUrl() : null;
+            let positionSoughtFieldValue = CR.order ? CR.order.getSoughtPosition() : null;
+            let employerSoughtFieldValue = CR.order ? CR.order.getSoughtEmployer() : null;
+            let jobAdUrlFieldValue = CR.order ? CR.order.getJobAdUrl() : null;
 
             return (
                 <fieldset>
                     <div className="form-group">
                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                        <input type="text" className="form-control" id="position-sought" defaultValue={positionSoughtInputValue} />
+                        <input type="text" className="form-control" id="position-sought" defaultValue={positionSoughtFieldValue} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                        <input type="text" className="form-control" id="employer-sought" defaultValue={employerSoughtInputValue} />
+                        <input type="text" className="form-control" id="employer-sought" defaultValue={employerSoughtFieldValue} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                        <input type="text" className="form-control" id="job-ad-url" defaultValue={jobAdUrlInputValue} />
+                        <input type="text" className="form-control" id="job-ad-url" defaultValue={jobAdUrlFieldValue} />
                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
+                        <textarea className="form-control" id="customer-comment" maxLength="512" />
+                        <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                     </div>
                 </fieldset>
             );
@@ -187,16 +192,17 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
 
             this.$cvFormGroup = this.$form.children("#cv-form-group");
-            this.$cvFileInput = this.$cvFormGroup.find("#cv");
-            this.$cvFileNameInput = this.$cvFormGroup.find("#cv-file-name");
+            this.$cvFileField = this.$cvFormGroup.find("#cv");
+            this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
 
             this.$coverLetterFormGroup = this.$form.children("#cover-letter-form-group");
-            this.$coverLetterFileInput = this.$coverLetterFormGroup.find("#cover-letter");
-            this.$coverLetterFileNameInput = this.$coverLetterFormGroup.find("#cover-letter-file-name");
+            this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
+            this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
 
-            this.$positionSoughtInput = this.$form.find("#position-sought");
-            this.$employerSoughtInput = this.$form.find("#employer-sought");
-            this.$jobAdUrlInput = this.$form.find("#job-ad-url");
+            this.$positionSoughtField = this.$form.find("#position-sought");
+            this.$employerSoughtField = this.$form.find("#employer-sought");
+            this.$jobAdUrlField = this.$form.find("#job-ad-url");
+            this.$customerCommentField = this.$form.find("#customer-comment");
 
             this.$submitBtn = this.$form.find("button[type=submit]");
         },
@@ -207,19 +213,20 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 "cv-file-name",
                 "cover-letter-file-name",
                 "job-ad-url",
+                "customer-comment",
                 "accept-tos"
             ]);
         },
 
         _handleCvFileSelected: function() {
-            this.cvFile = this.$cvFileInput[0].files[0];
-            this.$cvFileNameInput.val(this.cvFile.name);
+            this.cvFile = this.$cvFileField[0].files[0];
+            this.$cvFileNameField.val(this.cvFile.name);
             this.$cvFormGroup.removeClass("has-error");
         },
 
         _handleCoverLetterFileSelected: function() {
-            this.coverLetterFile = this.$coverLetterFileInput[0].files[0];
-            this.$coverLetterFileNameInput.val(this.coverLetterFile.name);
+            this.coverLetterFile = this.$coverLetterFileField[0].files[0];
+            this.$coverLetterFileNameField.val(this.coverLetterFile.name);
             this.$coverLetterFormGroup.removeClass("has-error");
         },
 
@@ -245,9 +252,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
                     }
 
-                    let positionSought = this.$positionSoughtInput.val();
-                    let employerSought = this.$employerSoughtInput.val();
-                    let jobAdUrl = this.$jobAdUrlInput.val();
+                    let positionSought = this.$positionSoughtField.val();
+                    let employerSought = this.$employerSoughtField.val();
+                    let jobAdUrl = this.$jobAdUrlField.val();
+                    let customerComment = this.$customerCommentField.val();
 
                     if (positionSought) {
                         formData.append("positionSought", positionSought);
@@ -257,6 +265,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
                     if (jobAdUrl) {
                         formData.append("jobAdUrl", jobAdUrl);
+                    }
+                    if (customerComment) {
+                        formData.append("customerComment", customerComment);
                     }
 
                     let type = "POST";

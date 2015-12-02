@@ -72,8 +72,8 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
-        add job_ad_url varchar(255)
-        after employer;"""
+        add job_ad_url varchar(255) after employer,
+        add customer_comment varchar(512) after job_ad_url;"""
 
       Logger.info("DbAdmin.alterTableDocuments():" + query)
 
@@ -106,7 +106,8 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
-        drop column job_ad_url;"""
+        drop column job_ad_url,
+        drop column customer_comment;"""
 
       Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
 
