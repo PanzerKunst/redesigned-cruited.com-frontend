@@ -121,7 +121,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def report(orderId: Long) = Action { request =>
-    val productCode = if (request.queryString.contains("productCode")) {
+    val selectedProductCode = if (request.queryString.contains("productCode")) {
       request.queryString.get("productCode").get.head
     } else {
       CruitedProduct.codeCvReview
@@ -132,7 +132,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case Some(order) =>
         ReportDto.getOfOrderId(orderId) match {
           case None => BadRequest("No report available for order ID " + orderId)
-          case Some(assessmentReport) => Ok(views.html.report(getI18nMessages(request), SessionService.isSignedIn(request), assessmentReport, dwsRootUrl))
+          case Some(assessmentReport) => Ok(views.html.report(getI18nMessages(request), SessionService.isSignedIn(request), assessmentReport, selectedProductCode, dwsRootUrl))
         }
     }
   }

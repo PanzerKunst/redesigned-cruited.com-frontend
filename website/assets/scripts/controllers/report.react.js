@@ -8,6 +8,7 @@ CR.Controllers.Report = P(function(c) {
                 cvReport: null,
                 coverLetterReport: null,
                 linkedinProfileReport: null,
+                selectedProductCode: null,
                 dwsRootUrl: null
             };
         },
@@ -27,25 +28,25 @@ CR.Controllers.Report = P(function(c) {
                         {this._getGlobalSection()}
                         <section>
                             <ul className="nav nav-pills" role="tablist">
-                                <li role="presentation" className="active">
-                                    <a href="#cv-report-panel" aria-controls="cv-report-panel" role="tab" data-toggle="pill">{CR.i18nMessages["product.name.CV_REVIEW"]}</a>
+                                <li role="presentation">
+                                    <a href="#CV_REVIEW-report-panel" aria-controls="CV_REVIEW-report-panel" role="tab" data-toggle="pill">{CR.i18nMessages["product.name.CV_REVIEW"]}</a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#cover-letter-report-panel" aria-controls="cover-letter-report-panel" role="tab" data-toggle="pill">{CR.i18nMessages["product.name.COVER_LETTER_REVIEW"]}</a>
+                                    <a href="#COVER_LETTER_REVIEW-report-panel" aria-controls="COVER_LETTER_REVIEW-report-panel" role="tab" data-toggle="pill">{CR.i18nMessages["product.name.COVER_LETTER_REVIEW"]}</a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#linkedin-profile-report-panel" aria-controls="linkedin-profile-report-panel" role="tab" data-toggle="pill">{CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"]}</a>
+                                    <a href="#LINKEDIN_PROFILE_REVIEW-report-panel" aria-controls="LINKEDIN_PROFILE_REVIEW-report-panel" role="tab" data-toggle="pill">{CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"]}</a>
                                 </li>
                             </ul>
 
                             <div className="tab-content">
-                                <div role="tabpanel" className="tab-pane fade in active" id="cv-report-panel">
+                                <div role="tabpanel" className="tab-pane fade in active" id="CV_REVIEW-report-panel">
                                     {this._getDocumentReportSection(CR.Models.Product.codes.CV_REVIEW)}
                                 </div>
-                                <div role="tabpanel" className="tab-pane fade" id="cover-letter-report-panel">
+                                <div role="tabpanel" className="tab-pane fade" id="COVER_LETTER_REVIEW-report-panel">
                                     {this._getDocumentReportSection(CR.Models.Product.codes.COVER_LETTER_REVIEW)}
                                 </div>
-                                <div role="tabpanel" className="tab-pane fade" id="linkedin-profile-report-panel">
+                                <div role="tabpanel" className="tab-pane fade" id="LINKEDIN_PROFILE_REVIEW-report-panel">
                                     {this._getDocumentReportSection(CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW)}
                                 </div>
                             </div>
@@ -53,6 +54,20 @@ CR.Controllers.Report = P(function(c) {
                     </div>
                 </div>
             );
+        },
+
+        componentDidUpdate: function() {
+            this._initElements();
+            this._selectTabForSelectedProduct();
+        },
+
+        _initElements: function() {
+            this.$tabList = $("ul[role=tablist]");
+            this.$tabs = this.$tabList.find("a");
+        },
+
+        _selectTabForSelectedProduct: function() {
+            this.$tabs.filter("[aria-controls=" + this.state.selectedProductCode + "-report-panel]").tab("show");
         },
 
         _getGlobalSection: function() {
@@ -187,7 +202,7 @@ CR.Controllers.Report = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, assessmentReport, dwsRootUrl) {
+    c.init = function(i18nMessages, assessmentReport, selectedProductCode, dwsRootUrl) {
         CR.i18nMessages = i18nMessages;
 
         // TODO: remove
@@ -197,6 +212,7 @@ CR.Controllers.Report = P(function(c) {
         this.cvReport = assessmentReport.cvReport;
         this.coverLetterReport = assessmentReport.coverLetterReport;
         this.linkedinProfileReport = assessmentReport.linkedinProfileReport;
+        this.selectedProductCode = selectedProductCode;
         this.dwsRootUrl = dwsRootUrl;
 
         this.reactInstance = ReactDOM.render(
@@ -213,6 +229,7 @@ CR.Controllers.Report = P(function(c) {
             cvReport: this.cvReport,
             coverLetterReport: this.coverLetterReport,
             linkedinProfileReport: this.linkedinProfileReport,
+            selectedProductCode: this.selectedProductCode,
             dwsRootUrl: this.dwsRootUrl
         });
     };
