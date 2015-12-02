@@ -43,7 +43,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                             {order.getProducts().map(function(product, i) {
                                                 let reactItmId = "product-" + i;
 
-                                                return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} orderId={order.getId()} productCode={product.code} />;
+                                                return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} order={order} productCode={product.code} />;
                                             })}
                                         </ul>
                                     </li>

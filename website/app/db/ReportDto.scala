@@ -65,7 +65,7 @@ object ReportDto {
           }
 
           val accountId = addedBy match {
-            case OrderDto.unknownUserId => throw new Exception("It shouldn't be possible to retrieve a report for an order assigned to UnknownUser")
+            case AccountDto.unknownUserId => throw new Exception("It shouldn't be possible to retrieve a report for an order assigned to UnknownUser")
             case otherNb => otherNb
           }
 

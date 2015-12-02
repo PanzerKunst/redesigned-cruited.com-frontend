@@ -144,11 +144,9 @@ CR.Controllers.Report = P(function(c) {
                                     topCommentParagraph = <p>{categoryAndItsComments.topComment.text}</p>;
                                 }
 
-                                return (
-                                    <li key={reactItemId}>
-                                        <h3>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".title"]}</h3>
-                                        <p>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".shortDesc"]}</p>
-                                        {topCommentParagraph}
+                                let redCommentList = null;
+                                if (!_.isEmpty(categoryAndItsComments.redComments)) {
+                                    redCommentList = (
                                         <ul className="styleless">
                                             {categoryAndItsComments.redComments.map(function(comment) {
                                                 let reactSubItemId = "comment-" + comment.id;
@@ -156,6 +154,15 @@ CR.Controllers.Report = P(function(c) {
                                                 return <li key={reactSubItemId} className="red-comment">{comment.text}</li>;
                                             })}
                                         </ul>
+                                    );
+                                }
+
+                                return (
+                                    <li key={reactItemId}>
+                                        <h3>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".title"]}</h3>
+                                        <p>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".shortDesc"]}</p>
+                                        {topCommentParagraph}
+                                        {redCommentList}
                                     </li>
                                 );
                             })}
@@ -182,6 +189,10 @@ CR.Controllers.Report = P(function(c) {
 
     c.init = function(i18nMessages, assessmentReport, dwsRootUrl) {
         CR.i18nMessages = i18nMessages;
+
+        // TODO: remove
+        console.log("assessmentReport", assessmentReport);
+
         this.order = CR.Models.Order(assessmentReport.order);
         this.cvReport = assessmentReport.cvReport;
         this.coverLetterReport = assessmentReport.coverLetterReport;
