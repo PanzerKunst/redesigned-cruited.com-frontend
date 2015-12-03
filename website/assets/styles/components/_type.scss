@@ -11,7 +11,7 @@ blockquote {
   &.primary {
     font-size: 1.2em;
     color: $grey;
-    background-color: $lighter-grey;
+    background-color: $light-grey;
 
     > footer {
       color: transparentize($grey, 0.2);
@@ -49,7 +49,7 @@ blockquote {
 
       &:before,
       &:after {
-        color: $lighter-grey;
+        color: $light-grey;
         opacity: 0.4;
       }
     }

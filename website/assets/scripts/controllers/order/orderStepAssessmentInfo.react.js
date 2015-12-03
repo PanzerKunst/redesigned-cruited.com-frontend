@@ -22,6 +22,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     </div>
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
+
+                        <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.assessmentInfo} />
+
                         <form onSubmit={this._handleSubmit}>
                             {this._getSignInWithLinkedinFormGroup()}
                             {this._getCvFormGroup()}

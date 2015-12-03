@@ -19,6 +19,9 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                     </div>
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.accountCreation.subtitle"]}</span>
+
+                        <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.accountCreation} />
+
                         <form onSubmit={this._handleSubmit}>
                             <section id="register-with-linkedin-section">
                                 <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switchLink.text"]}</a>

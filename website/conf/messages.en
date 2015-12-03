@@ -160,3 +160,8 @@ order.accountCreation.registerWithEmail.password.label=Password
 order.accountCreation.registerWithEmail.password.field.placeholder=5 chars minimum
 order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 8 characters
+
+
+# Order Step Payment page
+
+order.payment.title=Payment

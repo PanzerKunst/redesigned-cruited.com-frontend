@@ -18,6 +18,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.productSelection.subtitle"]}</span>
 
+                        <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
+
                         <section id="products-section">
                             <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
 

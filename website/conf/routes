@@ -18,7 +18,7 @@ GET         /reports/:orderId                                     controllers.Ap
 GET         /order                                                controllers.Application.orderStepProductSelection
 GET         /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
 GET         /order/create-account                                 controllers.Application.orderStepAccountCreation
-GET         /order/pay                                            controllers.Application.orderStepPayment
+GET         /order/payment                                        controllers.Application.orderStepPayment
 
 # API
 POST        /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables

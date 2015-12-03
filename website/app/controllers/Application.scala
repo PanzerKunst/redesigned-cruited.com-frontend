@@ -71,7 +71,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           case None => throw new Exception("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
             if (!AccountService.isTemporary(accountId)) {
-              Redirect("/order/pay")
+              Redirect("/order/payment")
             } else {
               val linkedinProfile = AccountDto.getOfId(accountId) match {
                 case None => JsNull
