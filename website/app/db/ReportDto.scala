@@ -14,7 +14,7 @@ object ReportDto {
   def getOfOrderId(orderId: Long): Option[AssessmentReport] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, file_li, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, score1_cv, score1, score1_li,
+        select file, file_cv, file_li, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment,
           e.id as edition_id, edition,
           c.id as coupon_id,
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
@@ -35,14 +35,14 @@ object ReportDto {
       Logger.info("ReportDto.getOfOrderId():" + query)
 
       // Use of `getAliased` because of bug when using the regular `get`
-      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ float("score1_cv") ~ float("score1") ~ float("score1_li") ~
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~
         (long("red_comment_id") ?) ~ (str("red_comment_text") ?) ~ (int("points") ?) ~
         getAliased[Option[Long]]("red_comment_cat_id") ~ getAliased[Option[String]]("red_comment_doc_type") ~
         (long("top_comment_id") ?) ~ (str("top_comment_text") ?) ~
         (long("top_comment_cat_id") ?) ~ (str("top_comment_doc_type") ?) map {
-        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ cvScore ~ coverLetterScore ~ linkedinProfileScore ~
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~
           editionId ~ editionCode ~
           couponId ~
           redCommentId ~ redCommentText ~ weight ~
@@ -100,21 +100,6 @@ object ReportDto {
             creationTimestamp = creationDate.getTime
           )
 
-          val cvScoreOpt = cvScore match {
-            case 0 => None
-            case otherNb => Some(otherNb.toInt)
-          }
-
-          val coverLetterScoreOpt = coverLetterScore match {
-            case 0 => None
-            case otherNb => Some(otherNb.toInt)
-          }
-
-          val linkedinProfileScoreOpt = linkedinProfileScore match {
-            case 0 => None
-            case otherNb => Some(otherNb.toInt)
-          }
-
           val redCommentOpt = redCommentId match {
             case None => None
             case Some(id) => Some(RedComment(
@@ -140,36 +125,33 @@ object ReportDto {
             ))
           }
 
-          (order, cvScoreOpt, coverLetterScoreOpt, linkedinProfileScoreOpt, redCommentOpt, topCommentOpt)
+          (order, redCommentOpt, topCommentOpt)
       }
 
       normaliseAssessmentReport(SQL(query).as(rowParser.*))
     }
   }
 
-  private def normaliseAssessmentReport(denormalisedAssessmentReport: List[(FrontendOrder, Option[Int], Option[Int], Option[Int], Option[RedComment], Option[TopComment])]): Option[AssessmentReport] = {
+  private def normaliseAssessmentReport(denormalisedAssessmentReport: List[(FrontendOrder, Option[RedComment], Option[TopComment])]): Option[AssessmentReport] = {
     if (denormalisedAssessmentReport.isEmpty)
       None
     else {
       val firstRow = denormalisedAssessmentReport.head
 
       val order = firstRow._1
-      val cvScoreOpt = firstRow._2
-      val coverLetterScoreOpt = firstRow._3
-      val linkedinProfileScoreOpt = firstRow._4
 
       var redComments: List[RedComment] = List()
       var topComments: List[TopComment] = List()
 
       for (row <- denormalisedAssessmentReport) {
         // Red comment
-        if (row._5.isDefined) {
-          val redComment = row._5.get
+        if (row._2.isDefined) {
+          val redComment = row._2.get
           var isInListAlready = false
 
           breakable {
             for (commentInList <- redComments) {
-              if (!isInListAlready && commentInList.category.id == redComment.category.id && commentInList.id == redComment.id) {
+              if (commentInList.category.id == redComment.category.id && commentInList.id == redComment.id) {
                 // Comments of different categories can have the same ID
                 isInListAlready = true
                 break()
@@ -183,13 +165,13 @@ object ReportDto {
         }
 
         // Top comment
-        if (row._6.isDefined) {
-          val topComment = row._6.get
+        if (row._3.isDefined) {
+          val topComment = row._3.get
           var isInListAlready = false
 
           breakable {
             for (commentInList <- topComments) {
-              if (!isInListAlready && commentInList.category.id == topComment.category.id && commentInList.id == topComment.id) {
+              if (commentInList.category.id == topComment.category.id && commentInList.id == topComment.id) {
                 isInListAlready = true
                 break()
               }
@@ -202,30 +184,39 @@ object ReportDto {
         }
       }
 
-      val cvReportOpt = cvScoreOpt match {
-        case None => None
-        case Some(score) => Some(DocumentReport(
-          score = score,
-          redComments = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview),
-          topComments = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
+      val redCommentsForCv = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
+      val topCommentsForCv = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
+
+      val cvReportOpt = if (redCommentsForCv.isEmpty && topCommentsForCv.isEmpty) {
+        None
+      } else {
+        Some(DocumentReport(
+          redComments = redCommentsForCv,
+          topComments = topCommentsForCv
         ))
       }
 
-      val coverLetterReportOpt = coverLetterScoreOpt match {
-        case None => None
-        case Some(score) => Some(DocumentReport(
-          score = score,
-          redComments = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview),
-          topComments = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
+      val redCommentsForCoverLetter = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
+      val topCommentsForCoverLetter = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
+
+      val coverLetterReportOpt = if (redCommentsForCoverLetter.isEmpty && topCommentsForCoverLetter.isEmpty) {
+        None
+      } else {
+        Some(DocumentReport(
+          redComments = redCommentsForCoverLetter,
+          topComments = topCommentsForCoverLetter
         ))
       }
 
-      val linkedinProfileReportOpt = linkedinProfileScoreOpt match {
-        case None => None
-        case Some(score) => Some(DocumentReport(
-          score = score,
-          redComments = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview),
-          topComments = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
+      val redCommentsForLinkedinProfile = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
+      val topCommentsForLinkedinProfile = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
+
+      val linkedinProfileReportOpt = if (redCommentsForLinkedinProfile.isEmpty && topCommentsForLinkedinProfile.isEmpty) {
+        None
+      } else {
+        Some(DocumentReport(
+          redComments = redCommentsForLinkedinProfile,
+          topComments = topCommentsForLinkedinProfile
         ))
       }
 
@@ -234,6 +225,85 @@ object ReportDto {
         cvReport = cvReportOpt,
         coverLetterReport = coverLetterReportOpt,
         linkedinProfileReport = linkedinProfileReportOpt
+      ))
+    }
+  }
+
+  def getScoresOfOrderId(orderId: Long): AssessmentReportScores = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select `type`, id_category, id_default, criteria_score, score
+        from documents_scores
+        where id_doc = """ + orderId + """
+        order by `type`, id_category, id_default;"""
+
+      Logger.info("ReportDto.getScoresOfOrderId():" + query)
+
+      val rowParser = str("type") ~ long("id_category") ~ long("id_default") ~ int("criteria_score") ~ int("score") map {
+        case docType ~ categoryId ~ defaultCommentId ~ score ~ isGreen => (docType, categoryId, defaultCommentId, score, isGreen)
+      }
+
+      normaliseScores(SQL(query).as(rowParser.*))
+    }
+  }
+
+  private def normaliseScores(denormalisedScores: List[(String, Long, Long, Int, Int)]): AssessmentReportScores = {
+    val cvReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeCvReview))
+    val coverLetterReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeCoverLetterReview))
+    val linkedinProfileReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeLinkedinProfileReview))
+
+    AssessmentReportScores(
+      cvReportScores = cvReportScores,
+      coverLetterReportScores = coverLetterReportScores,
+      linkedinProfileReportScores = linkedinProfileReportScores
+    )
+  }
+
+  private def getReportScores(rows: List[(String, Long, Long, Int, Int)]): Option[DocumentReportScores] = {
+    if (rows.isEmpty) {
+      None
+    } else {
+      val allPointsColumn = rows.map(row => row._4)
+      val greenPointsColumn = rows.filter(row => row._5 == 1).map(row => row._4)
+
+      def add(total: Int, cur: Int) = total + cur
+
+      val totalPoints = allPointsColumn.reduce(add)
+      val totalGreenPoints = greenPointsColumn.reduce(add)
+      val totalScore = math.round(totalGreenPoints.toDouble / totalPoints.toDouble * 100).toInt
+
+      var pointsPerCategory: Map[String, Int] = Map() // [Category ID, Score] - Because "No Json serializer found for type Map[Long,Int]"
+
+      for (row <- rows) {
+        val categoryId = row._2
+        var isInListAlready = false
+
+        breakable {
+          for (categoryIdInMap <- pointsPerCategory.keys) {
+            if (categoryIdInMap.toLong == categoryId) {
+              isInListAlready = true
+              break()
+            }
+          }
+        }
+
+        if (!isInListAlready) {
+          val categoryRows = rows.filter(row => row._2 == categoryId)
+
+          val categoryAllPointsColumn = categoryRows.map(row => row._4)
+          val categoryGreenPointsColumn = categoryRows.filter(row => row._5 == 1).map(row => row._4)
+
+          val categoryPoints = categoryAllPointsColumn.reduce(add)
+          val categoryGreenPoints = categoryGreenPointsColumn.reduce(add)
+          val categoryScore = math.round(categoryGreenPoints.toDouble / categoryPoints.toDouble * 100).toInt
+
+          pointsPerCategory += (categoryId.toString -> categoryScore)
+        }
+      }
+
+      Some(DocumentReportScores(
+        globalScore = totalScore,
+        categoryScores = pointsPerCategory
       ))
     }
   }

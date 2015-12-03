@@ -8,6 +8,9 @@ CR.Controllers.Report = P(function(c) {
                 cvReport: null,
                 coverLetterReport: null,
                 linkedinProfileReport: null,
+                cvReportScores: null,
+                coverLetterReportScores: null,
+                linkedinProfileReportScores: null,
                 selectedProductCode: null,
                 dwsRootUrl: null
             };
@@ -89,10 +92,13 @@ CR.Controllers.Report = P(function(c) {
                 let documentUrl = this._getDocumentUrl(this.state.order.getId(), productCode);
 
                 let docReport = this.state.cvReport;
+                let docReportScores = this.state.cvReportScores;
                 if (productCode === CR.Models.Product.codes.COVER_LETTER_REVIEW) {
                     docReport = this.state.coverLetterReport;
+                    docReportScores = this.state.coverLetterReportScores;
                 } else if (productCode === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
                     docReport = this.state.linkedinProfileReport;
+                    docReportScores = this.state.linkedinProfileReportScores;
                 }
 
                 let categoriesAndTheirComments = [];
@@ -146,7 +152,7 @@ CR.Controllers.Report = P(function(c) {
                             <img src={documentUrl + "/thumbnail"} />
                             <a href={documentUrl}>{CR.i18nMessages["report.document.link.text"]}</a>
                             <span>{CR.i18nMessages["report.document.score.label"]}:</span>
-                            <span>{docReport.score}</span>
+                            <span>{docReportScores.globalScore}</span>
                         </section>
                         <section className="report-analysis">
                             <h2>{CR.i18nMessages["report.analysis.title"]}</h2>
@@ -176,6 +182,7 @@ CR.Controllers.Report = P(function(c) {
                                     <li key={reactItemId}>
                                         <h3>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".title"]}</h3>
                                         <p>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".shortDesc"]}</p>
+                                        <span>{docReportScores.categoryScores[categoryAndItsComments.categoryId]}</span>
                                         {topCommentParagraph}
                                         {redCommentList}
                                     </li>
@@ -202,16 +209,22 @@ CR.Controllers.Report = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, assessmentReport, selectedProductCode, dwsRootUrl) {
+    c.init = function(i18nMessages, assessmentReport, assessmentReportScores, selectedProductCode, dwsRootUrl) {
         CR.i18nMessages = i18nMessages;
 
         // TODO: remove
-        console.log("assessmentReport", assessmentReport);
+        console.log("assessmentReportScores", assessmentReportScores);
 
         this.order = CR.Models.Order(assessmentReport.order);
+
         this.cvReport = assessmentReport.cvReport;
         this.coverLetterReport = assessmentReport.coverLetterReport;
         this.linkedinProfileReport = assessmentReport.linkedinProfileReport;
+
+        this.cvReportScores = assessmentReportScores.cvReportScores;
+        this.coverLetterReportScores = assessmentReportScores.coverLetterReportScores;
+        this.linkedinProfileReportScores = assessmentReportScores.linkedinProfileReportScores;
+
         this.selectedProductCode = selectedProductCode;
         this.dwsRootUrl = dwsRootUrl;
 
@@ -229,6 +242,9 @@ CR.Controllers.Report = P(function(c) {
             cvReport: this.cvReport,
             coverLetterReport: this.coverLetterReport,
             linkedinProfileReport: this.linkedinProfileReport,
+            cvReportScores: this.cvReportScores,
+            coverLetterReportScores: this.coverLetterReportScores,
+            linkedinProfileReportScores: this.linkedinProfileReportScores,
             selectedProductCode: this.selectedProductCode,
             dwsRootUrl: this.dwsRootUrl
         });

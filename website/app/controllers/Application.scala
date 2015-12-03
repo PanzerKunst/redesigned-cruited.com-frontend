@@ -132,7 +132,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case Some(order) =>
         ReportDto.getOfOrderId(orderId) match {
           case None => BadRequest("No report available for order ID " + orderId)
-          case Some(assessmentReport) => Ok(views.html.report(getI18nMessages(request), SessionService.isSignedIn(request), assessmentReport, selectedProductCode, dwsRootUrl))
+          case Some(assessmentReport) => Ok(views.html.report(getI18nMessages(request), SessionService.isSignedIn(request), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
         }
     }
   }
