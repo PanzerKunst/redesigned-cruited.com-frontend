@@ -1,52 +1,24 @@
-@(isSignedIn: Boolean, pageId: String)(implicit messages: Messages)
+@(account: Option[Account], pageId: String)(implicit messages: Messages)
 
-<div id="small-medium-screen-menu" class="container">
-    <div>
-        <div>
-            <a class="brand" href="/">Cruited</a>
-            <button class="styleless"></button>
-        </div>
-    </div>
-
-    <nav role="navigation">
-        <div>
-            <!-- TODO ul class="links-to-wp-site">
-                <li><a href="https://cruited.com/vara-tjanster/">Våra tjänster</a></li>
-                <li><a href="https://cruited.com/var-metod/">Vår metod</a></li>
-                <li><a href="https://cruited.com/om-cruited/">Om Cruited</a></li>
-            </ul -->
-
-            <div class="other-nav-ux">
-                @if(isSignedIn) {
-                <a href="/logout">@Messages("signOut")</a>
-                } else {
-                <a href="/login">@Messages("signIn")</a>
+<nav id="header-nav">
+    <a href="/" class="fa fa-home"></a>
+    <a href="https://www.cruited.com" class="brand">Cruited</a>
+    @if(account.isDefined) {
+        <article>
+            <span>@account.get.firstName @account.get.lastName</span>
+            @if(account.get.linkedinProfile != play.api.libs.json.JsNull) {
+                @defining((account.get.linkedinProfile \ "pictureUrl").as[String]) { pictureUrl =>
+                <div class="profile-picture" style="background-image: url(@pictureUrl)"></div>
                 }
-            </div>
-        </div>
+            }
+        </article>
+        } else {
+        <a href="/login">@messages("menu.signIn")</a>
+        }
     </nav>
-</div>
-
-<div id="large-screen-menu" class="container">
-    <div>
-        <a class="brand" href="/">Cruited</a>
-
-        <nav role="navigation">
-            <div>
-                <!-- TODO ul class="links-to-wp-site">
-                    <li><a href="https://cruited.com/vara-tjanster/">Våra tjänster</a></li>
-                    <li><a href="https://cruited.com/var-metod/">Vår metod</a></li>
-                    <li><a href="https://cruited.com/om-cruited/">Om Cruited</a></li>
-                </ul -->
-
-                <div class="other-nav-ux">
-                    @if(isSignedIn) {
-                    <a href="/logout">@Messages("signOut")</a>
-                    } else {
-                    <a href="/login">@Messages("signIn")</a>
-                    }
-                </div>
-            </div>
-        </nav>
-    </div>
+<div id="menu">
+    <nav>
+        <a href="/my-account">@messages("menu.myAccount")</a>
+        <a href="/logout">@messages("menu.signOut")</a>
+    </nav>
 </div>

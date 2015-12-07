@@ -49,9 +49,10 @@ category.LINKEDIN_PROFILE_REVIEW.20.shortDesc=LinkedIn är världens största cv
 
 menu.signIn=Sign in
 menu.signOut=Sign out
+menu.myAccount=My account
 
 
-# Sign in page
+# Sign In page
 
 signIn.title=Sign in
 signIn.form.linkedIn.btn.text=Sign in with Linkedin
@@ -62,6 +63,11 @@ signin.form.email.submit.btn.text=Sign in
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
 signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during your first <a href="/order">order</a>
+
+
+# My Account page
+
+myAccount.title=My account
 
 
 # Dashboard page
@@ -132,7 +138,8 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Employer sought
 order.assessmentInfo.form.positionSought.label=Position sought
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
-order.assessmentInfo.form.customerComment.label=Specific questions
+order.assessmentInfo.form.customerComment.label=Ställ en fråga!
+order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
 order.assessmentInfo.form.tos.text=I have read and accept the <a>Terms of Service</a>
 
 

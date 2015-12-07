@@ -42,8 +42,6 @@
 }
 
 button.styleless.fa {
-  margin-top: -0.5em;
-
   padding: 0.93em 1.04em;
   @include medium-screen {
     padding: 0.8em 0.9em;
@@ -51,8 +49,17 @@ button.styleless.fa {
   @include large-screen {
     padding: 0.5em 0.6em;
   }
+
+  &.fa-times {
+    margin-top: -0.5em;
+  }
 }
 
-.linkedin-profile-sneak-peek > img {
-  margin-right: 0.5em;
+.profile-picture {
+  display: inline-block;
+
+  border-radius: 50%;
+
+  background: no-repeat center center;
+  background-size: cover;
 }

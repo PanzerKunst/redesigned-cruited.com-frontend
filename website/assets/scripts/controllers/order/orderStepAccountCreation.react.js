@@ -62,8 +62,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             if (this.state.linkedinProfile) {
                 return (
                     <div>
-                        <article className="linkedin-profile-sneak-peek">
-                            <img src={this.state.linkedinProfile.pictureUrl} />
+                        <article>
+                            <div className="profile-picture" style={{ backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")" }} />
                             <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                         </article>
                         <div className="form-group">

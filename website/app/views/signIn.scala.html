@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], isSignedIn: Boolean, linkedinAuthCodeRequestUrl: String, linkedinErrorMessage: Option[String], isLinkedinAccountUnregistered: Boolean)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], linkedinAuthCodeRequestUrl: String, linkedinErrorMessage: Option[String], isLinkedinAccountUnregistered: Boolean)(implicit messages: Messages)
 
-@main("Cruited", "sign-in") {
+@main("Cruited - " + messages("signIn.title"), "sign-in") {
 <!--
     Header
 -->
-@header(isSignedIn, "sign-in")
+@header(None, "sign-in")
 
 } {
 /*

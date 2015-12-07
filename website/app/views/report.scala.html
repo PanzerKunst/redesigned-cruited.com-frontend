@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], isSignedIn: Boolean, assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, selectedProductCode: String, dwsRootUrl: String)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, selectedProductCode: String, dwsRootUrl: String)(implicit messages: Messages)
 
-@main("Cruited - Report", "report") {
+@main("Cruited - " + messages("report.title"), "report") {
 <!--
     Header
 -->
-@header(isSignedIn, "report")
+@header(account, "report")
 
 } {
 /*

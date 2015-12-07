@@ -11,7 +11,7 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
         let stepThreeInnerTag = "<span>3. " + CR.i18nMessages["order.accountCreation.title"] + "</span>";
         let stepThreeTag = (<span dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />);
         if (this.props.step >= CR.Controllers.OrderCommon.steps.accountCreation) {
-            stepThreeTag = (<a href="/order/account-creation" dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />);
+            stepThreeTag = (<a href="/order/create-account" dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />);
         }
 
         let stepFourInnerTag = "<span>4. " + CR.i18nMessages["order.payment.title"] + "</span>";

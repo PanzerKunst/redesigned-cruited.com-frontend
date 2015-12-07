@@ -1,7 +1,7 @@
 "use strict";
 
 CR.Controllers.Common = P(function(c) {
-    c.menuOpacityTweenDuration = 0.3;
+    c.menuOpacityTweenDuration = 0.15;
 
     c.init = function() {
         this._initElements();
@@ -12,8 +12,8 @@ CR.Controllers.Common = P(function(c) {
         this.$window = $(window);
 
         this.$siteHeader = $("#container").children("header");
-        this.$menuBtn = this.$siteHeader.find("button");
-        this.$smallAndMediumScreenNav = this.$siteHeader.children("#small-medium-screen-menu").children("nav");
+        this.$menuBtn = this.$siteHeader.find("article");
+        this.$menu = this.$siteHeader.find("#menu");
 
         this.$scrollingAnchors = $(".main").find("a[href^=#]");
     };
@@ -38,18 +38,18 @@ CR.Controllers.Common = P(function(c) {
 
     c._toggleMenu = function() {
         if (this.$siteHeader.hasClass("menu-open")) {
-            let tween = TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
+            let tween = TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
 
             tween.eventCallback("onComplete", function() {
-                this.$smallAndMediumScreenNav.css({"display": "none"});
+                this.$menu.css({"display": "none"});
             }.bind(this));
 
             tween.resume();
 
             this.$siteHeader.removeClass("menu-open");
         } else {
-            this.$smallAndMediumScreenNav.css({"display": "block", "opacity": 0});
-            TweenLite.to(this.$smallAndMediumScreenNav, this.menuOpacityTweenDuration, {opacity: 1});
+            this.$menu.css({"display": "flex", "opacity": 0});
+            TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {opacity: 1});
 
             this.$siteHeader.addClass("menu-open");
         }

@@ -1,6 +1,9 @@
+$drop-shadow-color: transparentize(black, 0.8);
+$header-bottom-border-height: 1px;
+
 @mixin header-box-shadow {
   //          offset-x  offset-y  blur-radius spread-radius color
-  box-shadow: 0 0.25em 0.5em 0 transparentize(black, 0.8);
+  box-shadow: 0 0.25em 0.5em 0 $drop-shadow-color;
 }
 
 @mixin header-bg-color-transition {
@@ -8,269 +11,162 @@
 }
 
 #container > header {
-  $header-side-padding: 8px;
-
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: $z-index-header;
 
-  // Declarations global to all screen sizes
-  > .container {
-    font-size: #{$font-size-base-px}px;
+  @include linear-gradient(white 50%, $gradient-light-grey);
 
-    a {
-      color: white;
+  border-bottom: $header-bottom-border-height solid $drop-shadow-color;
 
-      @include text-shadow;
-      &.btn {
-        text-shadow: none;
-      }
-    }
-
-    .brand:hover {
-      text-decoration: none;
-    }
-
-    .other-nav-ux {
-      display: flex;
-      justify-content: flex-end;
-
-      > a[href="/users/"] {
-        margin-right: 3 * $spacer-unit-size;
-      }
-
-      > .btn {
-        color: $primary-btn-color;
-        border-color: $primary-btn-color;
-
-        height: $form-control-height;
-
-        padding: 0.35em 1.5em;
-
-        margin-right: $header-side-padding;
-
-        &:active,
-        &:focus,
-        &:hover {
-          color: white;
-          background-color: darken($primary-btn-color, 15%);
-          border-color: darken($primary-btn-color, 25%);
-        }
-      }
-
-      > select {
-        width: 70px;
-      }
-    }
-  }
-
-  &.scrolled-down,
-  &.menu-open {
-    > .container {
-      a {
-        color: $dark-grey;
-        text-shadow: none;
-      }
-    }
-  }
-
-  // Small and medium screen declarations
-  > .container {
-    &#small-medium-screen-menu {
-      display: block;
-    }
-    &#large-screen-menu {
-      display: none;
-    }
-
-    > div {
-      @include header-bg-color-transition;
-
-      > div {
-        display: flex;
-        justify-content: space-between;
-      }
-    }
-
-    .brand {
-      font-size: 22px;
-      padding: 0 $header-side-padding;
-    }
-
-    > nav {
-      display: none;
-
-      background-color: white;
-      @include header-box-shadow;
-    }
-
-    button {
-      $menu-btn-img-location-x: 80px;
-      $menu-btn-img-location-y: -900px;
-
-      @include hdpi-sprite();
-      background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
-      @include hidpi {
-        background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
-      }
-
-      width: 120px;
-      height: 40px;
-
-      color: white;
-      font-weight: bold;
-      text-transform: uppercase;
-
-      &::before {
-        content: "MENU";
-        @include text-shadow;
-      }
-    }
-
-    .other-nav-ux {
-      > a[href="/users/"] {
-        margin-top: 5px;
-      }
-
-      > .btn {
-        margin-bottom: $header-side-padding;
-      }
-
-      > select {
-        margin-right: $header-side-padding;
-      }
-    }
-  }
-
-  &.scrolled-down,
-  &.menu-open {
-    > #small-medium-screen-menu > div {
-      background-color: white;
-    }
-
-    button {
-      $menu-btn-img-location-x: 80px;
-      $menu-btn-img-location-y: -1000px;
-
-      background-position: $menu-btn-img-location-x $menu-btn-img-location-y;
-      @include hidpi {
-        background-position: $menu-btn-img-location-x $menu-btn-img-location-y/2;
-      }
-
-      color: $grey;
-
-      &::before {
-        text-shadow: none;
-      }
-    }
+  height: $header-height;
+  @include large-screen {
+    height: $header-height-large-screen;
   }
 
   &.scrolled-down {
-    > #small-medium-screen-menu > div {
-      @include header-box-shadow;
-    }
-  }
-
-  &.menu-open {
-    > #small-medium-screen-menu > div {
-      box-shadow: none !important;
-    }
-  }
-
-  // Medium screen declarations
-  @include medium-screen {
-    > #small-medium-screen-menu {
-      > div > div,
-      > nav > div {
-        max-width: 640px;
-        margin: 0 auto;
-      }
-    }
-  }
-
-  // Large screen declarations
-  @include large-screen {
-    > .container {
-      &#small-medium-screen-menu {
-        display: none;
-      }
-      &#large-screen-menu {
-        display: block;
-
-        @include header-bg-color-transition;
-
-        height: 60px;
-
-        > div {
-          max-width: $large-content-width;
-          margin: 0 auto;
-
-          display: flex;
-          justify-content: space-between;
-        }
-      }
-
-      $logo-width-large-screen: 15%;
-
-      .brand {
-        width: $logo-width-large-screen;
-
-        font-size: 30px;
-
-        padding: 4px 0 0 0;
-      }
-
-      nav {
-        width: 100% - $logo-width-large-screen;
-
-        display: flex;
-        justify-content: space-between;
-
-        .nav {
-          margin-top: 8px;
-
-          > li {
-            display: inline-block;
-          }
-        }
-      }
-
-      button {
-        display: none;
-      }
-
-      .other-nav-ux {
-        > a[href="/users/"] {
-          margin-top: 18px;
-        }
-
-        > .btn {
-          margin-top: 13px;
-        }
-
-        > select {
-          margin: 13px 0 0 0;
-        }
-      }
-    }
-
-    &.scrolled-down {
-      > #large-screen-menu {
-        background-color: white;
-        @include header-box-shadow;
-      }
-    }
+    @include header-box-shadow;
   }
 }
 
-#container {
-  > header,
-  > header.menu-open,
-  > header.scrolled-down {
-    .current-menu-item > a {
-      color: $primary-btn-color;
+#header-nav,
+#menu {
+  padding: 0 $spacer-unit-size;
+
+  @include medium-screen {
+    width: $medium-content-width;
+
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
+  }
+
+  @include large-screen {
+    width: $large-content-width;
+  }
+}
+
+#header-nav {
+  @include clearfix;
+
+  > a {
+    color: $dark-grey;
+  }
+
+  > .fa-home {
+    float: left;
+
+    text-decoration: none;
+    font-size: 22px;
+    padding: 9px $spacer-unit-size;
+
+    margin-left: -$spacer-unit-size;
+    @include medium-screen {
+      margin-left: 0;
+    }
+
+    @include large-screen {
+      font-size: 34px;
+      padding: 0;
+      margin-top: 12px;
+    }
+  }
+
+  .brand {
+    position: absolute;
+    left: 50%;
+    margin-left: -1.6em;
+
+    font-size: 22px;
+    @include large-screen {
+      font-size: 30px;
+      margin-top: 4px;
+    }
+  }
+
+  > a[href="/login"],
+  > article {
+    float: right;
+  }
+
+  > a[href="/login"] {
+    margin-top: 7px;
+    @include medium-screen {
+      margin-top: 4px;
+    }
+    @include large-screen {
+      margin-top: 9px;
+    }
+  }
+
+  > article {
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    height: $header-height;
+    @include large-screen {
+      height: $header-height-large-screen;
+    }
+
+    > span {
+      font-size: $font-size-sm;
+      @include ellipsis;
+      max-width: 4em;
+      @include medium-screen {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .profile-picture {
+    width: 35px;
+    height: 35px;
+    @include large-screen {
+      width: 40px;
+      height: 40px;
+    }
+
+    margin-left: 0.5em;
+  }
+}
+
+#menu {
+  display: none;
+  justify-content: flex-end;
+
+  > nav {
+    background-color: white;
+
+    @include header-box-shadow;
+
+    margin-top: - $header-bottom-border-height;
+    padding: 0.7em 1em;
+
+    position: relative;
+
+    &::before {
+      @include icon-font($fa-var-caret-up);
+      color: white;
+
+      position: absolute;
+      top: -0.65em;
+      z-index: $z-index-header + 1;
+
+      right: 14px;
+      @include medium-screen {
+        right: 12px;
+      }
+      @include large-screen {
+        right: 13px;
+      }
+    }
+
+    > a {
+      display: block;
     }
   }
 }

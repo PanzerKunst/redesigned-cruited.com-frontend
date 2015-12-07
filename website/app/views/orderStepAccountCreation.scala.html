@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], isSignedIn: Boolean, linkedinAuthCodeRequestUrl: String, linkedinProfile: play.api.libs.json.JsValue, linkedinErrorMessage: Option[String])(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Option[Account], linkedinAuthCodeRequestUrl: String, linkedinProfile: play.api.libs.json.JsValue, linkedinErrorMessage: Option[String])(implicit messages: Messages)
 
-@main("Cruited - Order", "order-step-account-creation") {
+@main("Cruited - " + messages("order.accountCreation.title"), "order-step-account-creation") {
 <!--
     Header
 -->
-@header(isSignedIn, "order-step-account-creation")
+@header(account, "order-step-account-creation")
 
 } {
 /*

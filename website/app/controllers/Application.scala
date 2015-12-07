@@ -4,11 +4,11 @@ import javax.inject.Inject
 
 import db._
 import models.CruitedProduct
-import play.api.{Play, Logger}
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.JsNull
 import play.api.mvc._
+import play.api.{Logger, Play}
 import services._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,12 +25,13 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         if (AccountService.isTemporary(accountId)) {
           Redirect("/order")
         } else {
-          val account = AccountDto.getOfId(accountId).get
-          val accountOrders = OrderDto.getOfAccountIdForFrontend(accountId)
-
-          Ok(views.html.dashboard(getI18nMessages(request), SessionService.isSignedIn(request), account, accountOrders))
+          Ok(views.html.dashboard(getI18nMessages(request), AccountDto.getOfId(accountId), OrderDto.getOfAccountIdForFrontend(accountId)))
         }
     }
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def signOut = Action { request =>
@@ -40,53 +41,76 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def signIn = Action { request =>
     val isLinkedinAccountUnregistered = false
-    Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+    Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+  }
+
+  def myAccount = Action { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) =>
+        if (AccountService.isTemporary(accountId)) {
+          Unauthorized
+        } else {
+          val account = AccountDto.getOfId(accountId).get
+          Ok(views.html.myAccount(getI18nMessages(request), account))
+        }
+    }
   }
 
   def orderStepProductSelection = Action { request =>
-    Ok(views.html.orderStepProductSelection(getI18nMessages(request), SessionService.isSignedIn(request), CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
+    val accountOpt = SessionService.getAccountId(request.session) match {
+      case None => None
+      case Some(accountId) =>
+        if (AccountService.isTemporary(accountId)) {
+          None
+        } else {
+          AccountDto.getOfId(accountId)
+        }
+    }
+
+    Ok(views.html.orderStepProductSelection(getI18nMessages(request), accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
   }
 
   def orderStepAssessmentInfo = Action { request =>
-    val linkedinProfile = SessionService.getAccountId(request.session) match {
-      case None => JsNull
-      case Some(accountId) => AccountDto.getOfId(accountId) match {
-        case None => JsNull
-        case Some(account) => account.linkedinProfile
-      }
+    val (accountOpt, linkedinProfile) = SessionService.getAccountId(request.session) match {
+      case None => (None, JsNull)
+      case Some(accountId) =>
+        val account = AccountDto.getOfId(accountId).get
+        val acc = if (AccountService.isTemporary(accountId)) {
+          None
+        } else {
+          Some(account)
+        }
+
+        (acc, account.linkedinProfile)
     }
 
-    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
+    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
       .withHeaders(doNotCachePage: _*)
   }
 
   def orderStepAccountCreation = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None =>
-        Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
+        Ok(views.html.orderStepAccountCreation(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
           .withHeaders(doNotCachePage: _*)
 
       case Some(accountId) =>
-        AccountDto.getOfId(accountId) match {
-          case None => throw new Exception("No account found in database for ID '" + accountId + "'")
-          case Some(account) =>
-            if (!AccountService.isTemporary(accountId)) {
-              Redirect("/order/payment")
-            } else {
-              val linkedinProfile = AccountDto.getOfId(accountId) match {
-                case None => JsNull
-                case Some(existingAccount) => existingAccount.linkedinProfile
-              }
+        if (!AccountDto.getOfId(accountId).isDefined) {
+          throw new Exception("No account found in database for ID '" + accountId + "'")
+        }
+        if (!AccountService.isTemporary(accountId)) {
+          Redirect("/order/payment")
+        } else {
+          val (accountOpt, linkedinProfile) = AccountDto.getOfId(accountId) match {
+            case None => (None, JsNull)
+            case Some(existingAccount) => (Some(existingAccount), existingAccount.linkedinProfile)
+          }
 
-              Ok(views.html.orderStepAccountCreation(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
-                .withHeaders(doNotCachePage: _*)
-            }
+          Ok(views.html.orderStepAccountCreation(getI18nMessages(request), accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
+            .withHeaders(doNotCachePage: _*)
         }
     }
-  }
-
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def orderStepPayment = Action { request =>
@@ -121,26 +145,32 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def report(orderId: Long) = Action { request =>
-    val selectedProductCode = if (request.queryString.contains("productCode")) {
-      request.queryString.get("productCode").get.head
+    if (!SessionService.isSignedIn(request)) {
+      Unauthorized
     } else {
-      CruitedProduct.codeCvReview
-    }
+      val selectedProductCode = if (request.queryString.contains("productCode")) {
+        request.queryString.get("productCode").get.head
+      } else {
+        CruitedProduct.codeCvReview
+      }
 
-    OrderDto.getOfIdForFrontend(orderId) match {
-      case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
-      case Some(order) =>
-        ReportDto.getOfOrderId(orderId) match {
-          case None => BadRequest("No report available for order ID " + orderId)
-          case Some(assessmentReport) => Ok(views.html.report(getI18nMessages(request), SessionService.isSignedIn(request), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
-        }
+      OrderDto.getOfIdForFrontend(orderId) match {
+        case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
+        case Some(order) =>
+          ReportDto.getOfOrderId(orderId) match {
+            case None => BadRequest("No report available for order ID " + orderId)
+            case Some(assessmentReport) =>
+              val accountId = SessionService.getAccountId(request.session).get
+              Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
+          }
+      }
     }
   }
 
   def linkedinCallbackSignIn = Action { request =>
     if (request.queryString.contains("error")) {
       val isLinkedinAccountUnregistered = false
-      Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
+      Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
@@ -211,7 +241,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         val isLinkedinAccountUnregistered = true
 
         // We display the error that this user isn't registered
-        Ok(views.html.signIn(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+        Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
       } else {
         // We update the LI fields in DB, except maybe the email and first name if they are already set
         AccountDto.getOfId(accountId.get) match {
@@ -239,7 +269,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
     if (request.queryString.contains("error")) {
-      Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), SessionService.isSignedIn(request), linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
