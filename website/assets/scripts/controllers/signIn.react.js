@@ -56,7 +56,7 @@ CR.Controllers.SignIn = P(function(c) {
                 <form onSubmit={this._handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email-address">{CR.i18nMessages["signIn.form.email.emailAddress.label"]}</label>
-                        <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["signIn.form.email.emailAddress.field.placeholder"]} />
+                        <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["signIn.form.email.emailAddress.placeholder"]} />
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="email">{CR.i18nMessages["signIn.validation.incorrectEmail"]}</p>
                     </div>
@@ -67,16 +67,14 @@ CR.Controllers.SignIn = P(function(c) {
                     </div>
                     <div className="centered-contents">
                         <p className="other-form-error" id="invalid-credentials">{CR.i18nMessages["signIn.validation.invalidCredentials"]}</p>
-                        <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["signin.form.email.submit.btn.text"]}</button>
+                        <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["signin.form.email.submitBtn.text"]}</button>
                     </div>
                 </form>
                 );
         },
 
         _initElements: function() {
-            this.$contentWrapper = $("#content");
-
-            this.$form = this.$contentWrapper.find("form");
+            this.$form = $("#content").find("form");
             this.$emailAddressField = this.$form.find("#email-address");
             this.$passwordField = this.$form.find("#password");
             this.$invalidCredentialsError = this.$form.find("#invalid-credentials");

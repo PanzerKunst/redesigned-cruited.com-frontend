@@ -29,6 +29,11 @@ $header-bottom-border-height: 1px;
   &.scrolled-down {
     @include header-box-shadow;
   }
+  &.menu-open {
+    #content-overlay-when-menu-open {
+      display: block;
+    }
+  }
 }
 
 #header-nav,
@@ -46,21 +51,30 @@ $header-bottom-border-height: 1px;
   @include large-screen {
     width: $large-content-width;
   }
+
+  a {
+    color: $dark-grey;
+  }
 }
 
 #header-nav {
   @include clearfix;
 
-  > a {
-    color: $dark-grey;
+  > .fa-home,
+  .fa-bars {
+    font-size: 22px;
+    padding: 9px $spacer-unit-size;
+
+    @include large-screen {
+      font-size: 34px;
+      padding: 0;
+    }
   }
 
   > .fa-home {
     float: left;
 
     text-decoration: none;
-    font-size: 22px;
-    padding: 9px $spacer-unit-size;
 
     margin-left: -$spacer-unit-size;
     @include medium-screen {
@@ -68,8 +82,6 @@ $header-bottom-border-height: 1px;
     }
 
     @include large-screen {
-      font-size: 34px;
-      padding: 0;
       margin-top: 12px;
     }
   }
@@ -122,6 +134,17 @@ $header-bottom-border-height: 1px;
     }
   }
 
+  .fa-bars {
+    margin-right: -$spacer-unit-size;
+    @include medium-screen {
+      margin-right: 0;
+    }
+
+    @include large-screen {
+      margin-left: 0.5em;
+    }
+  }
+
   .profile-picture {
     width: 35px;
     height: 35px;
@@ -147,6 +170,7 @@ $header-bottom-border-height: 1px;
     padding: 0.7em 1em;
 
     position: relative;
+    z-index: $z-index-header + 1; // To make sure that the overlay is behind
 
     &::before {
       @include icon-font($fa-var-caret-up);
@@ -154,7 +178,6 @@ $header-bottom-border-height: 1px;
 
       position: absolute;
       top: -0.65em;
-      z-index: $z-index-header + 1;
 
       right: 14px;
       @include medium-screen {
@@ -168,5 +191,20 @@ $header-bottom-border-height: 1px;
     > a {
       display: block;
     }
+  }
+}
+
+#content-overlay-when-menu-open {
+  display: none;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-index-header;
+
+  top: $header-height;
+  @include large-screen {
+    top: $header-height-large-screen;
   }
 }

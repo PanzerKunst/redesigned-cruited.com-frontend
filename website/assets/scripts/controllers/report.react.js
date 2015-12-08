@@ -65,7 +65,7 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _initElements: function() {
-            this.$tabList = $("ul[role=tablist]");
+            this.$tabList = $("#content").find("ul[role=tablist]");
             this.$tabs = this.$tabList.find("a");
         },
 

@@ -57,9 +57,9 @@ menu.myAccount=My account
 signIn.title=Sign in
 signIn.form.linkedIn.btn.text=Sign in with Linkedin
 signIn.form.email.emailAddress.label=Email address
-signIn.form.email.emailAddress.field.placeholder=your@mail.com
+signIn.form.email.emailAddress.placeholder=your@mail.com
 signIn.form.email.password.label=Password
-signin.form.email.submit.btn.text=Sign in
+signin.form.email.submitBtn.text=Sign in
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
 signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during your first <a href="/order">order</a>
@@ -68,6 +68,16 @@ signIn.validation.linkedinAccountUnregistered=This linkedin account is not regis
 # My Account page
 
 myAccount.title=My account
+myAccount.validation.passwordTooShort=Password should be at least 5 characters
+myAccount.validation.passwordMismatch=Passwords do not match
+myAccount.saveSuccessful.text=Your account details have been updated
+
+myAccount.form.emailAddress.label=Email address
+myAccount.form.firstName.label=First name
+myAccount.form.password.label=New password (only if you want to change it)
+myAccount.form.password.placeholder=5 chars minimum
+myAccount.form.confirmPassword.label=Confirm password
+myAccount.form.submitBtn.text=Save
 
 
 # Dashboard page
@@ -108,7 +118,7 @@ order.productSelection.cartSection.productsHeader.products=Products
 order.productSelection.cartSection.productsHeader.defaultPrice=Price
 order.productSelection.cartSection.edition=Edition
 order.productSelection.cartSection.coupon.label=Have a valid Promotion code or a Gift Card from one of our partners?
-order.productSelection.cartSection.coupon.field.placeholder=Coupon Code
+order.productSelection.cartSection.coupon.placeholder=Coupon Code
 order.productSelection.cartSection.coupon.addBtn.text=Apply coupon
 order.productSelection.cartSection.coupon.addBtn.loadingText=Applying coupon...
 order.productSelection.cartSection.coupon.notFoundError=Coupon not found or expired
@@ -151,6 +161,7 @@ order.accountCreation.nextStepBtn.text=Register and continue
 order.accountCreation.nextStepBtn.withEmailPrefix=Register with
 order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered in our system. Please <a href="/login">Sign in</a>.
 order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered in our system. Please <a href="/login">Sign in</a>.
+order.accountCreation.validation.passwordMismatch=Passwords do not match
 
 order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
 order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
@@ -160,13 +171,14 @@ order.accountCreation.registerWithLinkedin.validation.notSignedIn=You need to si
 
 order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your Linkedin account?
 order.accountCreation.registerWithEmail.firstName.label=First name
-order.accountCreation.registerWithEmail.firstName.field.placeholder=
+order.accountCreation.registerWithEmail.firstName.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=Email address
-order.accountCreation.registerWithEmail.emailAddress.field.placeholder=your@mail.com
+order.accountCreation.registerWithEmail.emailAddress.placeholder=your@mail.com
 order.accountCreation.registerWithEmail.password.label=Password
-order.accountCreation.registerWithEmail.password.field.placeholder=5 chars minimum
+order.accountCreation.registerWithEmail.password.placeholder=5 chars minimum
+order.accountCreation.registerWithEmail.confirmPassword.label=Confirm password
 order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
-order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 8 characters
+order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
 
 
 # Order Step Payment page

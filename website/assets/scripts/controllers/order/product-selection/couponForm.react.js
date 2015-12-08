@@ -6,7 +6,7 @@ CR.Controllers.CouponForm = React.createClass({
             <form ref="form" onSubmit={this._handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="coupon-code">{CR.i18nMessages["order.productSelection.cartSection.coupon.label"]}</label>
-                    <input type="text" className="form-control" id="coupon-code" placeholder={CR.i18nMessages["order.productSelection.cartSection.coupon.field.placeholder"]} />
+                    <input type="text" className="form-control" id="coupon-code" placeholder={CR.i18nMessages["order.productSelection.cartSection.coupon.placeholder"]} />
                     <p className="field-error" data-check="empty" />
                     <p className="other-form-error" id="coupon-not-found-error">{CR.i18nMessages["order.productSelection.cartSection.coupon.notFoundError"]}</p>
                 </div>

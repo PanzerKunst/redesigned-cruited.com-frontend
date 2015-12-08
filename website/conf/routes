@@ -26,6 +26,7 @@ POST        /api/db/re-create-tables                              controllers.ap
 GET         /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
 POST        /api/orders                                           controllers.api.OrderApi.create
 POST        /api/accounts                                         controllers.api.AccountApi.create
+PUT         /api/accounts                                         controllers.api.AccountApi.update
 POST        /api/auth                                             controllers.api.AuthApi.signIn
 
 # 3rd party auth

@@ -10,15 +10,18 @@
                 @defining((account.get.linkedinProfile \ "pictureUrl").as[String]) { pictureUrl =>
                 <div class="profile-picture" style="background-image: url(@pictureUrl)"></div>
                 }
+            } else {
+                <button class="styleless fa fa-bars"></button>
             }
         </article>
         } else {
-        <a href="/login">@messages("menu.signIn")</a>
+        <a href="/login"><i class="fa fa-sign-in"></i>@messages("menu.signIn")</a>
         }
     </nav>
 <div id="menu">
     <nav>
-        <a href="/my-account">@messages("menu.myAccount")</a>
-        <a href="/logout">@messages("menu.signOut")</a>
+        <a href="/my-account"><i class="fa fa-user"></i>@messages("menu.myAccount")</a>
+        <a href="/logout"><i class="fa fa-sign-out"></i>@messages("menu.signOut")</a>
     </nav>
 </div>
+<div id="content-overlay-when-menu-open"></div>

@@ -3,11 +3,12 @@ package services
 import play.api.mvc.{AnyContent, Request, Session}
 
 object SessionService {
-  val SESSION_KEY_ACCOUNT_ID = "accountId"
-  val SESSION_KEY_ORDER_ID = "orderId"
+  val sessionKeyAccountId = "accountId"
+  val sessionKeyOrderId = "orderId"
+  val sessionKeyAccountSaveSuccessful = "accountSaveSuccessful"
 
   def getOrderId(session: Session): Option[Long] = {
-    session.get(SESSION_KEY_ORDER_ID) match {
+    session.get(sessionKeyOrderId) match {
       case None => None
       case Some(orderId) => Some(orderId.toLong)
     }
@@ -20,9 +21,16 @@ object SessionService {
   }
 
   def getAccountId(session: Session): Option[Long] = {
-    session.get(SESSION_KEY_ACCOUNT_ID) match {
+    session.get(sessionKeyAccountId) match {
       case None => None
       case Some(accountId) => Some(accountId.toLong)
+    }
+  }
+
+  def isAccountSaveSuccessful(session: Session): Boolean = {
+    session.get(sessionKeyAccountSaveSuccessful) match {
+      case None => false
+      case Some(str) => str.toBoolean
     }
   }
 }

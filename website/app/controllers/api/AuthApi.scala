@@ -19,7 +19,7 @@ class AuthApi extends Controller {
 
         AccountDto.getOfEmailAndPassword(signInData.emailAddress, signInData.password) match {
           case None => NoContent
-          case Some(account) => Ok.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> account.id.toString))
+          case Some(account) => Ok.withSession(request.session + (SessionService.sessionKeyAccountId -> account.id.toString))
         }
     }
   }

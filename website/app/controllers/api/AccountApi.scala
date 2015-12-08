@@ -3,7 +3,6 @@ package controllers.api
 import javax.inject.Singleton
 
 import db.{AccountDto, OrderDto}
-import models.Order
 import models.frontend.AccountReceivedFromFrontend
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller, Request}
@@ -60,7 +59,7 @@ class AccountApi extends Controller {
 
             // TODO: send welcome email
 
-            Created.withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> newAccountId.toString))
+            Created.withSession(request.session + (SessionService.sessionKeyAccountId -> newAccountId.toString))
           }
         }
     }
@@ -79,6 +78,37 @@ class AccountApi extends Controller {
         }
 
         accountId
+    }
+  }
+
+  def update = Action(parse.json) { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) => AccountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) =>
+          request.body.validate[AccountReceivedFromFrontend] match {
+            case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
+
+            case s: JsSuccess[AccountReceivedFromFrontend] =>
+              val frontendAccount = s.get
+
+              val updatedPassword = if (frontendAccount.password.isDefined) {
+                Some(frontendAccount.password.get)
+              } else {
+                account.password
+              }
+
+              val updatedAccount = account.copy(
+                firstName = Some(frontendAccount.firstName),
+                password = updatedPassword
+              )
+
+              AccountDto.update(updatedAccount)
+
+              Ok.withSession(request.session + (SessionService.sessionKeyAccountSaveSuccessful -> "true"))
+          }
+      }
     }
   }
 }

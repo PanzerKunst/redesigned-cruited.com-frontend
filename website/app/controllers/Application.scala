@@ -52,7 +52,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           Unauthorized
         } else {
           val account = AccountDto.getOfId(accountId).get
-          Ok(views.html.myAccount(getI18nMessages(request), account))
+          val isSaveSuccessful = SessionService.isAccountSaveSuccessful(request.session)
+
+          Ok(views.html.myAccount(getI18nMessages(request), account, isSaveSuccessful))
+            .withSession(request.session - SessionService.sessionKeyAccountSaveSuccessful)
         }
     }
   }
@@ -257,7 +260,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             AccountDto.update(updatedAccount)
 
             Redirect("/")
-              .withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> accountId.get.toString))
+              .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.get.toString))
         }
       }
     }
@@ -299,7 +302,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           AccountDto.update(updatedAccount)
 
           Redirect(appRedirectUri)
-            .withSession(request.session + (SessionService.SESSION_KEY_ACCOUNT_ID -> accountId.toString))
+            .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
     }
   }

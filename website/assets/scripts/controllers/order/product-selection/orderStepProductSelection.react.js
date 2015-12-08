@@ -89,7 +89,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         _initElements: function() {
-            this.$emptyCartError = $(".with-circles").children("form").children("#empty-cart");
+            this.$emptyCartError = $("#content").find("form").children("#empty-cart");
         },
 
         _initValidation: function() {

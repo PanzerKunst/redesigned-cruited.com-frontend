@@ -95,7 +95,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
       case None => throw new Exception("OrderDto.createTemporary didn't return an ID!")
       case Some(createdOrderId) =>
         Created(Json.toJson(OrderDto.getOfIdForFrontend(createdOrderId)))
-          .withSession(request.session + (SessionService.SESSION_KEY_ORDER_ID -> tempOrderId.toString))
+          .withSession(request.session + (SessionService.sessionKeyOrderId -> tempOrderId.toString))
     }
   }
 }

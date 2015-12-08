@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], account: Account)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Account, isSaveSuccessful: Boolean)(implicit messages: Messages)
 
 @main("Cruited - " + messages("myAccount.title"), "my-account") {
 <!--
@@ -13,7 +13,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     CR.Controllers.MyAccount(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
-        @Html(play.api.libs.json.Json.toJson(account).toString())
+        @Html(play.api.libs.json.Json.toJson(account).toString()),
+        @isSaveSuccessful.toString
     );
 });
 }
