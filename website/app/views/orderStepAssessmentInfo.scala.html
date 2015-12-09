@@ -13,16 +13,22 @@
 document.addEventListener("DOMContentLoaded", function() {
     var linkedinErrorMessage = null;
     @if(linkedinErrorMessage.isDefined) {
-        linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
+        linkedinErrorMessage = "@linkedinErrorMessage.get";
     }
 
     var linkedinProfile = @Html(linkedinProfile.toString()) || null;
+
+    var account = null;
+    @if(account.isDefined) {
+        account = "@account.get";
+    }
 
     CR.Controllers.OrderStepAssessmentInfo(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         "@Html(linkedinAuthCodeRequestUrl)",
         linkedinProfile,
-        linkedinErrorMessage
+        linkedinErrorMessage,
+        account
     );
 });
 }

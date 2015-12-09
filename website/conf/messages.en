@@ -109,7 +109,7 @@ resetPassword.email.subject=Nytt lösenord till Cruited
 
 # Dashboard page
 
-dashboard.title=My Assessments Dashboard
+dashboard.title=My Assessments
 dashboard.subtitle=Welcome to your Assessments Dashboard, {firstName}!
 dashboard.newAssessmentBtn.text=Get a new assessment
 

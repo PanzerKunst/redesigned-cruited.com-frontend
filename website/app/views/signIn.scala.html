@@ -13,7 +13,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     var linkedinErrorMessage = null;
     @if(linkedinErrorMessage.isDefined) {
-        linkedinErrorMessage = "@Html(linkedinErrorMessage.get)";
+        linkedinErrorMessage = "@linkedinErrorMessage.get";
     }
 
     CR.Controllers.SignIn(

@@ -6,7 +6,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             return {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinProfile: null,
-                linkedinErrorMessage: null
+                linkedinErrorMessage: null,
+                account: null
             };
         },
 
@@ -30,13 +31,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             {this._getCvFormGroup()}
                             {this._getCoverLetterFormGroup()}
                             {this._getOptionalInfoFormGroup()}
-                            <div>
-                                <div className="checkbox checkbox-primary">
-                                    <input type="checkbox" id="accept-tos" />
-                                    <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
-                                </div>
-                                <p className="field-error" data-check="empty" />
-                            </div>
+                            {this._getTosFormGroup()}
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.nextStepBtn.text"]}</button>
                             </div>
@@ -69,7 +64,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     formGroupContents = (
                         <div>
                             <article>
-                                <div className="profile-picture" style={{ backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")" }} />
+                                <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
                                 <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                             </article>
                             <ol>
@@ -184,6 +179,22 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                     </div>
                 </fieldset>
+            );
+        },
+
+        _getTosFormGroup: function() {
+            if (this.state.account) {
+                return null;
+            }
+
+            return (
+                <div>
+                    <div className="checkbox checkbox-primary">
+                        <input type="checkbox" id="accept-tos" />
+                        <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
+                    </div>
+                    <p className="field-error" data-check="empty" />
+                </div>
             );
         },
 
@@ -311,12 +322,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage) {
+    c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage, account) {
         CR.i18nMessages = i18nMessages;
         this.linkedinAuthCodeRequestUrl = linkedinAuthCodeRequestUrl;
         this.linkedinProfile = linkedinProfile;
-
         this.linkedinErrorMessage = linkedinErrorMessage;
+        this.account = account;
         CR.order = CR.Models.Order(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order));
 
         this.reactInstance = ReactDOM.render(
@@ -331,7 +342,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         this.reactInstance.replaceState({
             linkedinAuthCodeRequestUrl: this.linkedinAuthCodeRequestUrl,
             linkedinProfile: this.linkedinProfile,
-            linkedinErrorMessage: this.linkedinErrorMessage
+            linkedinErrorMessage: this.linkedinErrorMessage,
+            account: this.account
         });
     };
 });
