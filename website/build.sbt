@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
   "mysql" % "mysql-connector-java" % "5.1.36",
   "org.apache.httpcomponents" % "httpmime" % "4.5.1",
   "org.apache.pdfbox" % "pdfbox" % "1.8.10",
-  "org.imgscalr" % "imgscalr-lib" % "4.2"
+  "org.imgscalr" % "imgscalr-lib" % "4.2",
+  "com.typesafe.play" %% "play-mailer" % "2.4.1"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

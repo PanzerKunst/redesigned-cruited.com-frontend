@@ -15,6 +15,8 @@ GET         /sign-in                                              controllers.Ap
 GET         /signin                                               controllers.Application.signIn
 GET         /my-account                                           controllers.Application.myAccount
 GET         /reports/:orderId                                     controllers.Application.report(orderId: Long)
+GET         /reset-password                                       controllers.Application.resetPassword
+GET         /reset-password/confirm                               controllers.Application.confirmResetPassword
 
 GET         /order                                                controllers.Application.orderStepProductSelection
 GET         /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
@@ -27,7 +29,9 @@ GET         /api/coupons/:code                                    controllers.ap
 POST        /api/orders                                           controllers.api.OrderApi.create
 POST        /api/accounts                                         controllers.api.AccountApi.create
 PUT         /api/accounts                                         controllers.api.AccountApi.update
+PUT         /api/accounts/password                                controllers.api.AccountApi.updatePassword
 POST        /api/auth                                             controllers.api.AuthApi.signIn
+POST        /api/auth/reset-password                              controllers.api.AuthApi.sendResetPasswordEmail
 
 # 3rd party auth
 GET         /auth/linkedin/callback/sign-in                       controllers.Application.linkedinCallbackSignIn

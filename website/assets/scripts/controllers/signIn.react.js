@@ -65,6 +65,9 @@ CR.Controllers.SignIn = P(function(c) {
                         <input type="password" className="form-control" id="password" />
                         <p className="field-error" data-check="empty" />
                     </div>
+                    <div>
+                        <a href="/reset-password">{CR.i18nMessages["signIn.form.forgottenPasswordLink.text"]}</a>
+                    </div>
                     <div className="centered-contents">
                         <p className="other-form-error" id="invalid-credentials">{CR.i18nMessages["signIn.validation.invalidCredentials"]}</p>
                         <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["signin.form.email.submitBtn.text"]}</button>

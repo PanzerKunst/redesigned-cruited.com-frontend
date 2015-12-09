@@ -30,10 +30,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
-  }
-
   def signOut = Action { request =>
     linkedinService.invalidateAccessToken()
     Redirect("/").withNewSession
@@ -58,6 +54,32 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session - SessionService.sessionKeyAccountSaveSuccessful)
         }
     }
+  }
+
+  def resetPassword = Action { request =>
+    Ok(views.html.resetPassword(getI18nMessages(request)))
+  }
+
+  def confirmResetPassword = Action { request =>
+    if (request.queryString.contains("token")) {
+      val token = request.queryString.get("token").get.head
+
+      AccountService.resetPasswordTokens.get(token) match {
+        case None => BadRequest("This token has already been used, or is incorrect")
+        case Some(accountId) =>
+          val account = AccountDto.getOfId(accountId).get
+
+          AccountService.resetPasswordTokens -= token
+
+          Ok(views.html.newPassword(getI18nMessages(request), account))
+      }
+    } else {
+      Unauthorized
+    }
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def orderStepProductSelection = Action { request =>

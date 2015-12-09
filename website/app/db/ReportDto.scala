@@ -259,6 +259,16 @@ object ReportDto {
     )
   }
 
+  /**
+   * For categories:
+   * [sum of scores for all greens] / [sum of all scores in the category] * 100
+   *
+   * For document total:
+   * [sum of scores for all greens in all categories] / [sum of scores for all criteria in all categories] * 100
+   *
+   * @param rows (docType, categoryId, defaultCommentId, score, isGreen)
+   * @return
+   */
   private def getReportScores(rows: List[(String, Long, Long, Int, Int)]): Option[DocumentReportScores] = {
     if (rows.isEmpty) {
       None

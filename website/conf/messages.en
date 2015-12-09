@@ -55,14 +55,16 @@ menu.myAccount=My account
 # Sign In page
 
 signIn.title=Sign in
+signIn.validation.incorrectEmail=This email address looks incorrect
+signIn.validation.invalidCredentials=Invalid credentials, please try again
+signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during your first <a href="/order">order</a>
+
 signIn.form.linkedIn.btn.text=Sign in with Linkedin
 signIn.form.email.emailAddress.label=Email address
 signIn.form.email.emailAddress.placeholder=your@mail.com
 signIn.form.email.password.label=Password
 signin.form.email.submitBtn.text=Sign in
-signIn.validation.incorrectEmail=This email address looks incorrect
-signIn.validation.invalidCredentials=Invalid credentials, please try again
-signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during your first <a href="/order">order</a>
+signIn.form.forgottenPasswordLink.text=Forgotten your password?
 
 
 # My Account page
@@ -78,6 +80,31 @@ myAccount.form.password.label=New password (only if you want to change it)
 myAccount.form.password.placeholder=5 chars minimum
 myAccount.form.confirmPassword.label=Confirm password
 myAccount.form.submitBtn.text=Save
+
+
+# Reset password pages
+
+resetPassword.title=Reset your password
+resetPassword.validation.incorrectEmail=This email address looks incorrect
+resetPassword.validation.noAccountFoundForThisEmailAddress=This email address isn't registered in our system
+resetPassword.emailSent.text=Check your inbox!
+
+resetPassword.form.emailAddress.label=Email address
+resetPassword.form.emailAddress.placeholder=your@mail.com
+resetPassword.form.submitBtn.text=Send me that wicked reset password email!
+
+resetPassword.new.saveSuccessful.text=Your new password is saved. You can <a href="/login">sign in</a>.
+resetPassword.new.validation.passwordTooShort=Password should be at least 5 characters
+resetPassword.new.validation.passwordMismatch=Passwords do not match
+resetPassword.new.form.password.label=New password
+resetPassword.new.form.password.placeholder=5 chars minimum
+resetPassword.new.form.confirmPassword.label=Confirm new password
+resetPassword.new.form.submitBtn.text=Save
+
+
+# Reset password email
+
+resetPassword.email.subject=Nytt lösenord till Cruited
 
 
 # Dashboard page

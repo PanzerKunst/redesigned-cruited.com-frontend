@@ -53,7 +53,7 @@ CR.Controllers.MyAccount = P(function(c) {
                                 <input type="password" className="form-control" id="confirm-password" />
                             </div>
                             <div className="centered-contents">
-                                <p className="other-form-error" id="password-mismatch">{CR.i18nMessages["myAccount.validation.passwordMismatch"]}</p>
+                                <p className="other-form-error">{CR.i18nMessages["myAccount.validation.passwordMismatch"]}</p>
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["myAccount.form.submitBtn.text"]}</button>
                             </div>
                         </form>
@@ -76,7 +76,7 @@ CR.Controllers.MyAccount = P(function(c) {
             this.$passwordField = this.$form.find("#password");
             this.$confirmPasswordField = this.$form.find("#confirm-password");
 
-            this.$passwordMismatchError = this.$form.find("#password-mismatch");
+            this.$passwordMismatchError = this.$form.find(".other-form-error");
             this.$submitBtn = this.$form.find("[type=submit]");
             this.$successAlert = this.$content.children().children(".alert");
         },

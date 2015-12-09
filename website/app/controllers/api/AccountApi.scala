@@ -111,4 +111,29 @@ class AccountApi extends Controller {
       }
     }
   }
+
+  def updatePassword = Action(parse.json) { request =>
+    request.body.validate[AccountReceivedFromFrontend] match {
+      case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
+
+      case s: JsSuccess[AccountReceivedFromFrontend] =>
+        val frontendAccount = s.get
+
+        if (!frontendAccount.password.isDefined) {
+          BadRequest("Field 'password' must be specified")
+        } else {
+          AccountDto.getOfEmailAddress(frontendAccount.emailAddress) match {
+            case None => BadRequest("No account found in DB for email " + frontendAccount.emailAddress)
+            case Some(account) =>
+              val updatedAccount = account.copy(
+                password = frontendAccount.password
+              )
+
+              AccountDto.update(updatedAccount)
+
+              Ok
+          }
+        }
+    }
+  }
 }
