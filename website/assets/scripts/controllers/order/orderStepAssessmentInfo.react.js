@@ -190,7 +190,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             return (
                 <div>
                     <div className="checkbox checkbox-primary">
-                        <input type="checkbox" id="accept-tos" />
+                        <input type="checkbox" id="accept-tos" checked={CR.order.isTosAccepted()} />
                         <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
                     </div>
                     <p className="field-error" data-check="empty" />
@@ -298,6 +298,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 CR.order.setSoughtPosition(order.positionSought);
                                 CR.order.setSoughtEmployer(order.employerSought);
                                 CR.order.setJobAdUrl(order.jobAdUrl);
+                                CR.order.setTosAccepted();
 
                                 location.href = "/order/create-account";
                             } else {

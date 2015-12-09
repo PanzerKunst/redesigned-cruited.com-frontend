@@ -38,6 +38,7 @@ CR.Models.Order = P(function(c) {
         this._jobAdUrl = order && order.jobAdUrl ? order.jobAdUrl : null;
         this._status = order && order.status ? order.status : null;
         this._creationTimestamp = order && order.creationTimestamp ? order.creationTimestamp : null;
+        this._isTosAccepted = order && order.isTosAccepted ? order.isTosAccepted : null;
 
         this._saveOrderInLocalStorage();
     };
@@ -159,6 +160,15 @@ CR.Models.Order = P(function(c) {
         return this._creationTimestamp;
     };
 
+    c.isTosAccepted = function() {
+        return this._isTosAccepted;
+    };
+
+    c.setTosAccepted = function() {
+        this._isTosAccepted = true;
+        this._saveOrderInLocalStorage();
+    };
+
     c.getTitleForHtml = function() {
         if (this._positionSought && this._employerSought) {
             return this._positionSought + " - " + this._employerSought;
@@ -259,7 +269,8 @@ CR.Models.Order = P(function(c) {
             positionSought: this._positionSought,
             employerSought: this._employerSought,
             jobAdUrl: this._jobAdUrl,
-            status: this._status
+            status: this._status,
+            isTosAccepted: this._isTosAccepted
         });
     };
 });
