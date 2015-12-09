@@ -36,7 +36,7 @@ CR.Models.Order = P(function(c) {
         this._positionSought = order && order.positionSought ? order.positionSought : null;
         this._employerSought = order && order.employerSought ? order.employerSought : null;
         this._jobAdUrl = order && order.jobAdUrl ? order.jobAdUrl : null;
-        this._status = order && order.status ? order.status : null;
+        this._status = order && order.status !== null ? order.status : null;
         this._creationTimestamp = order && order.creationTimestamp ? order.creationTimestamp : null;
         this._isTosAccepted = order && order.isTosAccepted ? order.isTosAccepted : null;
 

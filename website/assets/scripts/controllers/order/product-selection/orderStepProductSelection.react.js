@@ -10,6 +10,10 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         render: function() {
+
+            // TODO: remove
+            console.log("CR.order", CR.order);
+
             return (
                 <div id="content">
                     <div id="page-header-bar">
@@ -76,7 +80,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         </form>
                     </div>
                 </div>
-                );
+            );
         },
 
         componentDidUpdate: function() {
@@ -165,7 +169,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                     <td>{CR.i18nMessages["reduction.name." + reduction.code]}:</td>
                                     <td>- {reduction.price.amount} {reduction.price.currencyCode}</td>
                                 </tr>
-                                );
+                            );
                         })}
 
                         {this._getCouponRow()}
@@ -177,7 +181,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         </tr>
                     </tfoot>
                 </table>
-                );
+            );
         },
 
         _getCouponRow: function() {
@@ -195,7 +199,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     <td>{orderCoupon.campaignName}:</td>
                     <td>- {amount}{unit}</td>
                 </tr>
-                );
+            );
         },
 
         _handleSubmit: function(e) {
