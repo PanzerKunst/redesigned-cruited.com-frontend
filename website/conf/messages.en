@@ -71,14 +71,12 @@ signIn.form.forgottenPasswordLink.text=Forgotten your password?
 
 myAccount.title=My account
 myAccount.validation.passwordTooShort=Password should be at least 5 characters
-myAccount.validation.passwordMismatch=Passwords do not match
 myAccount.saveSuccessful.text=Your account details have been updated
 
 myAccount.form.emailAddress.label=Email address
 myAccount.form.firstName.label=First name
 myAccount.form.password.label=New password (only if you want to change it)
 myAccount.form.password.placeholder=5 chars minimum
-myAccount.form.confirmPassword.label=Confirm password
 myAccount.form.submitBtn.text=Save
 
 
@@ -95,10 +93,8 @@ resetPassword.form.submitBtn.text=Send me that wicked reset password email!
 
 resetPassword.new.saveSuccessful.text=Your new password is saved. You can <a href="/login">sign in</a>.
 resetPassword.new.validation.passwordTooShort=Password should be at least 5 characters
-resetPassword.new.validation.passwordMismatch=Passwords do not match
 resetPassword.new.form.password.label=New password
 resetPassword.new.form.password.placeholder=5 chars minimum
-resetPassword.new.form.confirmPassword.label=Confirm new password
 resetPassword.new.form.submitBtn.text=Save
 
 
@@ -188,7 +184,6 @@ order.accountCreation.nextStepBtn.text=Register and continue
 order.accountCreation.nextStepBtn.withEmailPrefix=Register with
 order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered in our system. Please <a href="/login">Sign in</a>.
 order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered in our system. Please <a href="/login">Sign in</a>.
-order.accountCreation.validation.passwordMismatch=Passwords do not match
 
 order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
 order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
@@ -203,7 +198,6 @@ order.accountCreation.registerWithEmail.emailAddress.label=Email address
 order.accountCreation.registerWithEmail.emailAddress.placeholder=your@mail.com
 order.accountCreation.registerWithEmail.password.label=Password
 order.accountCreation.registerWithEmail.password.placeholder=5 chars minimum
-order.accountCreation.registerWithEmail.confirmPassword.label=Confirm password
 order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
 

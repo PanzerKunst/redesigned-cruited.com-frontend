@@ -35,7 +35,6 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                             <div className="centered-contents">
                                 <p className="other-form-error" id="email-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}}></p>
                                 <p className="other-form-error" id="linkedin-account-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}}></p>
-                                <p className="other-form-error" id="password-mismatch">{CR.i18nMessages["order.accountCreation.validation.passwordMismatch"]}</p>
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.nextStepBtn.text"]}</button>
                             </div>
                         </form>
@@ -106,11 +105,6 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="min-length">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.passwordTooShort"]}</p>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="confirm-password">{CR.i18nMessages["order.accountCreation.registerWithEmail.confirmPassword.label"]}</label>
-                        <input type="password" className="form-control" id="confirm-password" />
-                        <p className="field-error" data-check="empty" />
-                    </div>
                 </div>
             );
         },
@@ -126,11 +120,9 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this.$firstNameField = this.$registerWithEmailSection.find("#first-name");
             this.$emailAddressField = this.$registerWithEmailSection.find("#email-address");
             this.$passwordField = this.$registerWithEmailSection.find("#password");
-            this.$confirmPasswordField = this.$registerWithEmailSection.find("#confirm-password");
 
             this.$emailAlreadyRegisteredError = this.$form.find("#email-already-registered");
             this.$linkedinAccountAlreadyRegisteredError = this.$form.find("#linkedin-account-already-registered");
-            this.$passwordMismatchError = this.$form.find("#password-mismatch");
 
             this.$submitBtn = this.$form.find("[type=submit]");
         },
@@ -142,8 +134,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this.registerWithEmailValidator = CR.Services.Validator([
                 "first-name",
                 "email-address",
-                "password",
-                "confirm-password"
+                "password"
             ]);
         },
 
@@ -228,11 +219,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 }
             } else {
                 if (this.registerWithEmailValidator.isValid()) {
-                    if (this.$passwordField.val() === this.$confirmPasswordField.val()) {
-                        this._submitAccountCreation();
-                    } else {
-                        this.registerWithEmailValidator.showErrorMessage(this.$passwordMismatchError);
-                    }
+                    this._submitAccountCreation();
                 }
             }
         },
@@ -275,7 +262,6 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this.registerWithLinkedinValidator.hideErrorMessage(this.$notSignedInWithLinkedinError);
             this.registerWithLinkedinValidator.hideErrorMessage(this.$linkedinAccountAlreadyRegisteredError);
             this.registerWithEmailValidator.hideErrorMessage(this.$emailAlreadyRegisteredError);
-            this.registerWithEmailValidator.hideErrorMessage(this.$passwordMismatchError);
         },
 
         _isRegisterWithLinkedinSectionVisible: function() {
