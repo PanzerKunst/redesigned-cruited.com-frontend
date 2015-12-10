@@ -36,11 +36,28 @@ CR.Models.Order = P(function(c) {
         this._positionSought = order && order.positionSought ? order.positionSought : null;
         this._employerSought = order && order.employerSought ? order.employerSought : null;
         this._jobAdUrl = order && order.jobAdUrl ? order.jobAdUrl : null;
+        this._customerComment = order && order.customerComment ? order.customerComment : null;
         this._status = order && order.status !== null ? order.status : null;
         this._creationTimestamp = order && order.creationTimestamp ? order.creationTimestamp : null;
         this._isTosAccepted = order && order.isTosAccepted ? order.isTosAccepted : null;
+    };
 
-        this._saveOrderInLocalStorage();
+    c.saveInLocalStorage = function() {
+        CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.order, {
+            products: this._products,
+            reductions: this._reductions,
+            edition: this._edition,
+            coupon: this._coupon,
+            id: this._id,
+            cvFileName: this._cvFileName,
+            coverLetterFileName: this._coverLetterFileName,
+            positionSought: this._positionSought,
+            employerSought: this._employerSought,
+            jobAdUrl: this._jobAdUrl,
+            customerComment: this._customerComment,
+            status: this._status,
+            isTosAccepted: this._isTosAccepted
+        });
     };
 
     c.getProducts = function() {
@@ -55,7 +72,6 @@ CR.Models.Order = P(function(c) {
         if (!foundProduct) {
             this._products.push(product);
             this._calculateReductions();
-            this._saveOrderInLocalStorage();
         }
     };
 
@@ -72,7 +88,6 @@ CR.Models.Order = P(function(c) {
         if (!_.isNull(productIndex)) {
             this._products.splice(productIndex, 1);
             this._calculateReductions();
-            this._saveOrderInLocalStorage();
         }
     };
 
@@ -86,7 +101,6 @@ CR.Models.Order = P(function(c) {
 
     c.setEdition = function(edition) {
         this._edition = edition;
-        this._saveOrderInLocalStorage();
     };
 
     c.getCoupon = function() {
@@ -95,7 +109,6 @@ CR.Models.Order = P(function(c) {
 
     c.setCoupon = function(coupon) {
         this._coupon = coupon;
-        this._saveOrderInLocalStorage();
     };
 
     c.getId = function() {
@@ -104,7 +117,6 @@ CR.Models.Order = P(function(c) {
 
     c.setId = function(id) {
         this._id = id;
-        this._saveOrderInLocalStorage();
     };
 
     c.getCvFileName = function() {
@@ -113,7 +125,6 @@ CR.Models.Order = P(function(c) {
 
     c.setCvFileName = function(fileNameWithPrefix) {
         this._cvFileName = this._getFileNameStrippedFromPrefix(fileNameWithPrefix);
-        this._saveOrderInLocalStorage();
     };
 
     c.getCoverLetterFileName = function() {
@@ -122,7 +133,6 @@ CR.Models.Order = P(function(c) {
 
     c.setCoverLetterFileName = function(fileNameWithPrefix) {
         this._coverLetterFileName = this._getFileNameStrippedFromPrefix(fileNameWithPrefix);
-        this._saveOrderInLocalStorage();
     };
 
     c.getSoughtPosition = function() {
@@ -131,7 +141,6 @@ CR.Models.Order = P(function(c) {
 
     c.setSoughtPosition = function(positionSought) {
         this._positionSought = positionSought;
-        this._saveOrderInLocalStorage();
     };
 
     c.getSoughtEmployer = function() {
@@ -140,7 +149,6 @@ CR.Models.Order = P(function(c) {
 
     c.setSoughtEmployer = function(employerSought) {
         this._employerSought = employerSought;
-        this._saveOrderInLocalStorage();
     };
 
     c.getJobAdUrl = function() {
@@ -149,7 +157,14 @@ CR.Models.Order = P(function(c) {
 
     c.setJobAdUrl = function(jobAdUrl) {
         this._jobAdUrl = jobAdUrl;
-        this._saveOrderInLocalStorage();
+    };
+
+    c.getCustomerComment = function() {
+        return this._customerComment;
+    };
+
+    c.setCustomerComment = function(customerComment) {
+        this._customerComment = customerComment;
     };
 
     c.getStatus = function() {
@@ -166,7 +181,6 @@ CR.Models.Order = P(function(c) {
 
     c.setTosAccepted = function() {
         this._isTosAccepted = true;
-        this._saveOrderInLocalStorage();
     };
 
     c.getTitleForHtml = function() {
@@ -255,22 +269,5 @@ CR.Models.Order = P(function(c) {
         for (let i = 0; i < this._products.length; i++) {
             delete this._products[i].reducedPrice;
         }
-    };
-
-    c._saveOrderInLocalStorage = function() {
-        CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.order, {
-            products: this._products,
-            reductions: this._reductions,
-            edition: this._edition,
-            coupon: this._coupon,
-            id: this._id,
-            cvFileName: this._cvFileName,
-            coverLetterFileName: this._coverLetterFileName,
-            positionSought: this._positionSought,
-            employerSought: this._employerSought,
-            jobAdUrl: this._jobAdUrl,
-            status: this._status,
-            isTosAccepted: this._isTosAccepted
-        });
     };
 });

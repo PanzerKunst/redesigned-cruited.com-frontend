@@ -16,6 +16,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);  // TODO
             }
 
+            if (!CR.order) {
+                return null;
+            }
+
             return (
                 <div id="content">
                     <div id="page-header-bar">
@@ -108,8 +112,6 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            let inputValue = CR.order ? CR.order.getCvFileName() : null;
-
             return (
                 <div className="form-group fg-file-upload" id="cv-form-group">
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.cvFile.label"]}</label>
@@ -119,7 +121,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={inputValue} disabled />
+                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={CR.order.getCvFileName()} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -135,8 +137,6 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            let inputValue = CR.order ? CR.order.getCoverLetterFileName() : null;
-
             return (
                 <div className="form-group fg-file-upload" id="cover-letter-form-group">
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.label"]}</label>
@@ -146,7 +146,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={inputValue} disabled />
+                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={CR.order.getCoverLetterFileName()} disabled />
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
@@ -154,28 +154,24 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getOptionalInfoFormGroup: function() {
-            let positionSoughtFieldValue = CR.order ? CR.order.getSoughtPosition() : null;
-            let employerSoughtFieldValue = CR.order ? CR.order.getSoughtEmployer() : null;
-            let jobAdUrlFieldValue = CR.order ? CR.order.getJobAdUrl() : null;
-
             return (
                 <fieldset>
                     <div className="form-group">
                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                        <input type="text" className="form-control" id="position-sought" defaultValue={positionSoughtFieldValue} />
+                        <input type="text" className="form-control" id="position-sought" defaultValue={CR.order.getSoughtPosition()} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                        <input type="text" className="form-control" id="employer-sought" defaultValue={employerSoughtFieldValue} />
+                        <input type="text" className="form-control" id="employer-sought" defaultValue={CR.order.getSoughtEmployer()} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                        <input type="text" className="form-control" id="job-ad-url" defaultValue={jobAdUrlFieldValue} />
+                        <input type="text" className="form-control" id="job-ad-url" defaultValue={CR.order.getJobAdUrl()} />
                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                     </div>
                     <div className="form-group">
                         <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
-                        <textarea className="form-control" id="customer-comment" maxLength="512" />
+                        <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={CR.order.getCustomerComment()} />
                         <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                     </div>
                 </fieldset>
@@ -190,7 +186,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             return (
                 <div>
                     <div className="checkbox checkbox-primary">
-                        <input type="checkbox" id="accept-tos" checked={CR.order.isTosAccepted()} />
+                        <input type="checkbox" id="accept-tos" defaultChecked={CR.order.isTosAccepted()} />
                         <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
                     </div>
                     <p className="field-error" data-check="empty" />
@@ -298,7 +294,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 CR.order.setSoughtPosition(order.positionSought);
                                 CR.order.setSoughtEmployer(order.employerSought);
                                 CR.order.setJobAdUrl(order.jobAdUrl);
+                                CR.order.setCustomerComment(order.customerComment);
                                 CR.order.setTosAccepted();
+                                CR.order.saveInLocalStorage();
 
                                 location.href = "/order/create-account";
                             } else {
@@ -329,7 +327,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         this.linkedinProfile = linkedinProfile;
         this.linkedinErrorMessage = linkedinErrorMessage;
         this.account = account;
-        CR.order = CR.Models.Order(CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order));
+
+        let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+        CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),

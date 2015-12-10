@@ -157,6 +157,26 @@ object OrderDto {
         case Some(fileName) => ", file_li = '" + DbUtil.safetize(fileName) + "'"
       }
 
+      val positionSoughtClause = order.positionSought match {
+        case None => ""
+        case Some(positionSought) => ", position = '" + DbUtil.safetize(positionSought) + "'"
+      }
+
+      val employerSoughtClause = order.employerSought match {
+        case None => ""
+        case Some(employerSought) => ", employer = '" + DbUtil.safetize(employerSought) + "'"
+      }
+
+      val jobAdUrlClause = order.jobAdUrl match {
+        case None => ""
+        case Some(jobAdUrl) => ", job_ad_url = '" + DbUtil.safetize(jobAdUrl) + "'"
+      }
+
+      val customerCommentClause = order.customerComment match {
+        case None => ""
+        case Some(customerComment) => ", customer_comment = '" + DbUtil.safetize(customerComment) + "'"
+      }
+
       val query = """
         update documents set
         edition_id = """ + order.editionId + """,
@@ -164,7 +184,11 @@ object OrderDto {
         accountIdClause +
         cvFileNameClause +
         coverLetterFileNameClause +
-        linkedinProfileFileNameClause + """
+        linkedinProfileFileNameClause +
+        positionSoughtClause +
+        employerSoughtClause +
+        jobAdUrlClause +
+        customerCommentClause + """
         where id = """ + order.id.get + """;"""
 
       Logger.info("OrderDto.update():" + query)
@@ -211,17 +235,17 @@ object OrderDto {
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val cvFileNameOpt = cvFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val accountIdOpt = accountId match {
@@ -291,17 +315,17 @@ object OrderDto {
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val cvFileNameOpt = cvFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val positionSoughtOpt = positionSought match {

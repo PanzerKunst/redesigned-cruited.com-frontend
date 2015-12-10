@@ -23,9 +23,18 @@ case class Order(id: Option[Long],
     editionId = frontendOrder.edition.id,
     containedProductCodes = frontendOrder.containedProductCodes,
     couponId = frontendOrder.couponId,
-    cvFileName = frontendOrder.cvFileName,
-    coverLetterFileName = frontendOrder.coverLetterFileName,
-    linkedinProfileFileName = frontendOrder.linkedinProfileFileName,
+    cvFileName = frontendOrder.cvFileName match {
+      case None => None
+      case Some(fileName) => Some(frontendOrder.id + Order.fileNamePrefixSeparator + fileName)
+    },
+    coverLetterFileName = frontendOrder.coverLetterFileName match {
+      case None => None
+      case Some(fileName) => Some(frontendOrder.id + Order.fileNamePrefixSeparator + fileName)
+    },
+    linkedinProfileFileName = frontendOrder.linkedinProfileFileName match {
+      case None => None
+      case Some(fileName) => Some(frontendOrder.id + Order.fileNamePrefixSeparator + fileName)
+    },
     positionSought = frontendOrder.positionSought,
     employerSought = frontendOrder.employerSought,
     jobAdUrl = frontendOrder.jobAdUrl,
@@ -34,23 +43,6 @@ case class Order(id: Option[Long],
     status = frontendOrder.status,
     creationTimestamp = frontendOrder.creationTimestamp
   )
-
-  def getCvFileNameWithoutPrefix: Option[String] = {
-    getFileNameWithoutPrefix(cvFileName)
-  }
-
-  private def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
-    fileName match {
-      case None => None
-      case Some(fileNameWithPrefix) =>
-        val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
-        Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
-    }
-  }
-
-  def getCoverLetterFileNameWithoutPrefix: Option[String] = {
-    getFileNameWithoutPrefix(coverLetterFileName)
-  }
 }
 
 object Order {
@@ -93,5 +85,14 @@ object Order {
     docTypes.split(typeStringSeparator)
       .map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
       .toList
+  }
+
+  def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
+    fileName match {
+      case None => None
+      case Some(fileNameWithPrefix) =>
+        val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
+        Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
+    }
   }
 }

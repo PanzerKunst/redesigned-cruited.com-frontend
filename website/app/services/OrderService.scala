@@ -12,12 +12,12 @@ class OrderService @Inject()(val documentService: DocumentService) {
   def finaliseFileNames(orderId: Long) {
     val orderToFinalise = OrderDto.getOfId(orderId).get
 
-    val finalisedCvFileName = orderToFinalise.getCvFileNameWithoutPrefix match {
+    val finalisedCvFileName = Order.getFileNameWithoutPrefix(orderToFinalise.cvFileName) match {
       case None => None
       case Some(fileNameWithoutPrefix) => Some(orderId + Order.fileNamePrefixSeparator + fileNameWithoutPrefix)
     }
 
-    val finalisedCoverLetterFileName = orderToFinalise.getCoverLetterFileNameWithoutPrefix match {
+    val finalisedCoverLetterFileName = Order.getFileNameWithoutPrefix(orderToFinalise.coverLetterFileName) match {
       case None => None
       case Some(fileNameWithoutPrefix) => Some(orderId + Order.fileNamePrefixSeparator + fileNameWithoutPrefix)
     }

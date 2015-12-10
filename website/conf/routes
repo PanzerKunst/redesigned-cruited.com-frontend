@@ -22,11 +22,13 @@ GET         /order                                                controllers.Ap
 GET         /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
 GET         /order/create-account                                 controllers.Application.orderStepAccountCreation
 GET         /order/payment                                        controllers.Application.orderStepPayment
+GET         /order/edit                                           controllers.Application.editOrder
 
 # API
 POST        /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables
 GET         /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
 POST        /api/orders                                           controllers.api.OrderApi.create
+PUT         /api/orders                                           controllers.api.OrderApi.update
 POST        /api/accounts                                         controllers.api.AccountApi.create
 PUT         /api/accounts                                         controllers.api.AccountApi.update
 PUT         /api/accounts/password                                controllers.api.AccountApi.updatePassword

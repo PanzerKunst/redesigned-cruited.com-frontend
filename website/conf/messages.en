@@ -57,7 +57,7 @@ menu.myAccount=My account
 signIn.title=Sign in
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
-signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during your first <a href="/order">order</a>
+signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during <a href="/order">your first order</a>.
 
 signIn.form.linkedIn.btn.text=Sign in with Linkedin
 signIn.form.email.emailAddress.label=Email address
@@ -108,6 +108,7 @@ resetPassword.email.subject=Nytt lösenord till Cruited
 dashboard.title=My Assessments
 dashboard.subtitle=Welcome to your Assessments Dashboard, {firstName}!
 dashboard.newAssessmentBtn.text=Get a new assessment
+dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a href="{url}">edit the assessment information</a> if you wish.
 
 
 # Report page
@@ -205,3 +206,8 @@ order.accountCreation.registerWithEmail.validation.passwordTooShort=Password sho
 # Order Step Payment page
 
 order.payment.title=Payment
+
+
+# Edit Order page
+
+order.edit.saveBtn.text=Save

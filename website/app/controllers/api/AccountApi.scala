@@ -112,7 +112,7 @@ class AccountApi extends Controller {
     }
   }
 
-  def updatePassword = Action(parse.json) { request =>
+  def updatePassword() = Action(parse.json) { request =>
     request.body.validate[AccountReceivedFromFrontend] match {
       case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
 

@@ -11,7 +11,7 @@ CR.Controllers.EditionListItem = React.createClass({
                     <label htmlFor={radioId}>{CR.i18nMessages["edition.name." + this.props.edition.code]}</label>
                 </div>
             </li>
-            );
+        );
     },
 
     _isThisEditionSelected: function() {
@@ -20,6 +20,8 @@ CR.Controllers.EditionListItem = React.createClass({
 
     _handleEditionChanged: function() {
         CR.order.setEdition(this.props.edition);
+        CR.order.saveInLocalStorage();
+
         this.props.controller.reRender();
     }
 });

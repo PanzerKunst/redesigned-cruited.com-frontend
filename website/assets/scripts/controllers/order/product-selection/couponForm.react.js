@@ -12,7 +12,7 @@ CR.Controllers.CouponForm = React.createClass({
                 </div>
                 <button type="submit" className="btn btn-default">{CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.text"]}</button>
             </form>
-            );
+        );
     },
 
     componentDidMount: function() {
@@ -56,7 +56,10 @@ CR.Controllers.CouponForm = React.createClass({
                         let coupon = JSON.parse(httpRequest.responseText);
                         if (coupon) {
                             this.$form[0].reset();
+
                             CR.order.setCoupon(coupon);
+                            CR.order.saveInLocalStorage();
+
                             this.props.controller.reRender();
                         }
                     } else {

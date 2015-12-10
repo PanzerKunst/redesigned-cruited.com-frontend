@@ -13,7 +13,7 @@ CR.Controllers.ProductListItem = React.createClass({
         if (this.props.product.reducedPrice) {
             reducedPriceParagraph = (
                 <p className="reduced-price">{this.props.product.reducedPrice.currencyCode} {this.props.product.reducedPrice.amount}</p>
-                );
+            );
         }
 
         return (
@@ -27,7 +27,7 @@ CR.Controllers.ProductListItem = React.createClass({
                     {reducedPriceParagraph}
                 </div>
             </li>
-            );
+        );
     },
 
     componentDidMount: function() {
@@ -53,6 +53,8 @@ CR.Controllers.ProductListItem = React.createClass({
         } else {
             CR.order.removeProduct(this.props.product);
         }
+        CR.order.saveInLocalStorage();
+
         this.props.controller.reRender();
     }
 });

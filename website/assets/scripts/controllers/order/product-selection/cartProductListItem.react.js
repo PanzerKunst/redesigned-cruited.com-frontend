@@ -16,6 +16,8 @@ CR.Controllers.CartProductListItem = React.createClass({
 
     _handleClick: function() {
         CR.order.removeProduct(this.props.product);
+        CR.order.saveInLocalStorage();
+
         this.props.controller.reRender();
     }
 });

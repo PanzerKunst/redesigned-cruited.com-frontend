@@ -10,10 +10,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         render: function() {
-
-            // TODO: remove
-            console.log("CR.order", CR.order);
-
             return (
                 <div id="content">
                     <div id="page-header-bar">

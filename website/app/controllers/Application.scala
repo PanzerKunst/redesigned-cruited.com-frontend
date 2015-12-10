@@ -40,6 +40,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
   }
 
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
+  }
+
   def myAccount = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
@@ -78,10 +82,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
-  }
-
   def orderStepProductSelection = Action { request =>
     val accountOpt = SessionService.getAccountId(request.session) match {
       case None => None
@@ -93,7 +93,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         }
     }
 
-    Ok(views.html.orderStepProductSelection(getI18nMessages(request), accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
+    Ok(views.html.order.orderStepProductSelection(getI18nMessages(request), accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
   }
 
   def orderStepAssessmentInfo = Action { request =>
@@ -110,14 +110,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         (acc, account.linkedinProfile)
     }
 
-    Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
+    Ok(views.html.order.orderStepAssessmentInfo(getI18nMessages(request), accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
       .withHeaders(doNotCachePage: _*)
   }
 
   def orderStepAccountCreation = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None =>
-        Ok(views.html.orderStepAccountCreation(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
+        Ok(views.html.order.orderStepAccountCreation(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
           .withHeaders(doNotCachePage: _*)
 
       case Some(accountId) =>
@@ -132,7 +132,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             case Some(existingAccount) => (Some(existingAccount), existingAccount.linkedinProfile)
           }
 
-          Ok(views.html.orderStepAccountCreation(getI18nMessages(request), accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
+          Ok(views.html.order.orderStepAccountCreation(getI18nMessages(request), accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
             .withHeaders(doNotCachePage: _*)
         }
     }
@@ -169,6 +169,27 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
+  def editOrder = Action { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) =>
+        AccountDto.getOfId(accountId) match {
+          case None => throw new Exception("No account found in database for ID '" + accountId + "'")
+          case Some(account) =>
+            if (!request.queryString.contains("id")) {
+              BadRequest("'id' missing")
+            } else {
+              val id = request.queryString.get("id").get.head.toLong
+
+              OrderDto.getOfIdForFrontend(id) match {
+                case None => BadRequest("Couldn't find an order in DB for ID " + id)
+                case Some(order) => Ok(views.html.order.editOrder(getI18nMessages(request), Some(account), order))
+              }
+            }
+        }
+    }
+  }
+
   def report(orderId: Long) = Action { request =>
     if (!SessionService.isSignedIn(request)) {
       Unauthorized
@@ -179,15 +200,15 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         CruitedProduct.codeCvReview
       }
 
-      OrderDto.getOfIdForFrontend(orderId) match {
-        case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
-        case Some(order) =>
-          ReportDto.getOfOrderId(orderId) match {
-            case None => BadRequest("No report available for order ID " + orderId)
-            case Some(assessmentReport) =>
-              val accountId = SessionService.getAccountId(request.session).get
-              Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
-          }
+      if (!OrderDto.getOfIdForFrontend(orderId).isDefined) {
+        BadRequest("Couldn't find an order in DB for ID " + orderId)
+      } else {
+        ReportDto.getOfOrderId(orderId) match {
+          case None => BadRequest("No report available for order ID " + orderId)
+          case Some(assessmentReport) =>
+            val accountId = SessionService.getAccountId(request.session).get
+            Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
+        }
       }
     }
   }
@@ -292,9 +313,13 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
   }
 
+  def linkedinCallbackOrderStepAccountCreation = Action { request =>
+    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
+  }
+
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
     if (request.queryString.contains("error")) {
-      Ok(views.html.orderStepAssessmentInfo(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      Ok(views.html.order.orderStepAssessmentInfo(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
@@ -327,9 +352,5 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
     }
-  }
-
-  def linkedinCallbackOrderStepAccountCreation = Action { request =>
-    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 }

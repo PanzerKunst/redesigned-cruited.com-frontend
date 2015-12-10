@@ -26,6 +26,12 @@ CR.Controllers.Dashboard = P(function(c) {
                         <span>{CR.Services.String.template(CR.i18nMessages["dashboard.subtitle"], "firstName", this.state.account.firstName)}</span>
                         <ul className="styleless">
                             {this.state.orders.map(function(order, index) {
+                                let editOrderMarkup = null;
+                                if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
+                                    let url = "/order/edit?id=" + order.getId();
+                                    editOrderMarkup = <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
+                                }
+
                                 let reactItemId = "order-" + index;
 
                                 return (
@@ -46,6 +52,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                                 return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} order={order} productCode={product.code} />;
                                             })}
                                         </ul>
+                                        {editOrderMarkup}
                                     </li>
                                 );
                             }.bind(this))}
@@ -87,6 +94,7 @@ CR.Controllers.Dashboard = P(function(c) {
 
         // Clearing the current order in local storage
         CR.order = CR.Models.Order();
+        CR.order.saveInLocalStorage();
     };
 
     c.reRender = function() {

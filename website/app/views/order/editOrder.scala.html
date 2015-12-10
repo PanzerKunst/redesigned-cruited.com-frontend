@@ -1,0 +1,19 @@
+@(i18nMessages: Map[String, String], account: Option[Account], order: models.frontend.FrontendOrder)(implicit messages: Messages)
+
+@main("Cruited - " + messages("order.assessmentInfo.title"), "order-step-assessment-info") {
+<!--
+    Header
+-->
+@header(account)
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function() {
+    CR.Controllers.EditOrder(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
+        @Html(play.api.libs.json.Json.toJson(order).toString())
+    );
+});
+}
