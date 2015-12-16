@@ -1,22 +1,24 @@
-@(account: Option[Account])(implicit messages: Messages)
+@(accountOpt: Option[Account])(implicit messages: Messages)
 
 <nav id="header-nav">
     <a href="/" class="fa fa-home"></a>
     <a href="https://www.cruited.com" class="brand">Cruited</a>
-    @if(account.isDefined) {
-        <article>
-            <span>@account.get.firstName @account.get.lastName</span>
-            @if(account.get.linkedinProfile != play.api.libs.json.JsNull) {
-                @defining((account.get.linkedinProfile \ "pictureUrl").as[String]) { pictureUrl =>
-                <div class="profile-picture" style="background-image: url(@pictureUrl)"></div>
+    @if(accountOpt.isDefined && accountOpt.get.id > 0) {
+        @defining(accountOpt.get) { account =>
+            <article>
+                <span>@account.firstName @account.lastName</span>
+                @if(account.linkedinProfile != play.api.libs.json.JsNull) {
+                    @defining((account.linkedinProfile \ "pictureUrl").as[String]) { pictureUrl =>
+                        <div class="profile-picture" style="background-image: url(@pictureUrl)"></div>
+                    }
+                } else {
+                    <button class="styleless fa fa-bars"></button>
                 }
-            } else {
-                <button class="styleless fa fa-bars"></button>
-            }
-        </article>
-        } else {
-        <a href="/login"><i class="fa fa-sign-in"></i>@messages("menu.signIn")</a>
+            </article>
         }
+    } else {
+        <a href="/login"><i class="fa fa-sign-in"></i>@messages("menu.signIn")</a>
+    }
     </nav>
 <div id="menu">
     <nav>

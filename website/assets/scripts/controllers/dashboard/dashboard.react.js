@@ -78,10 +78,6 @@ CR.Controllers.Dashboard = P(function(c) {
         CR.i18nMessages = i18nMessages;
         this.account = account;
         this.orders = orders.map(function(order) {
-
-            // TODO: remove
-            console.log("order", order);
-
             return CR.Models.Order(order);
         });
 

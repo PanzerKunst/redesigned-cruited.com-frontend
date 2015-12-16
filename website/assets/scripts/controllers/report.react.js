@@ -211,10 +211,6 @@ CR.Controllers.Report = P(function(c) {
 
     c.init = function(i18nMessages, assessmentReport, assessmentReportScores, selectedProductCode, dwsRootUrl) {
         CR.i18nMessages = i18nMessages;
-
-        // TODO: remove
-        console.log("assessmentReportScores", assessmentReportScores);
-
         this.order = CR.Models.Order(assessmentReport.order);
 
         this.cvReport = assessmentReport.cvReport;
