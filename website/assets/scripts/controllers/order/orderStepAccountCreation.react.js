@@ -35,7 +35,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                             <div className="centered-contents">
                                 <p className="other-form-error" id="email-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}}></p>
                                 <p className="other-form-error" id="linkedin-account-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}}></p>
-                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.nextStepBtn.text"]}</button>
+                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.submitBtn.text"]}</button>
                             </div>
                         </form>
                     </div>
@@ -67,7 +67,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                             <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                         </article>
                         <div className="form-group">
-                            <label htmlFor="email-from-linkedin">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.email.label"]}</label>
+                            <label htmlFor="email-from-linkedin" className="for-required-field">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.email.label"]}</label>
                             <input type="text" className="form-control" id="email-from-linkedin" defaultValue={this.state.linkedinProfile.emailAddress} onChange={this._handleLinkedinEmailChanged} />
                             <p className="field-error" data-check="empty" />
                             <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.incorrectEmail"]}</p>
@@ -89,18 +89,18 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             return (
                 <div>
                     <div className="form-group">
-                        <label htmlFor="first-name">{CR.i18nMessages["order.accountCreation.registerWithEmail.firstName.label"]}</label>
+                        <label htmlFor="first-name" className="for-required-field">{CR.i18nMessages["order.accountCreation.registerWithEmail.firstName.label"]}</label>
                         <input type="text" className="form-control" id="first-name" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.firstName.placeholder"]} />
                         <p className="field-error" data-check="empty" />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="email-address">{CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.label"]}</label>
+                        <label htmlFor="email-address" className="for-required-field">{CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.label"]}</label>
                         <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.placeholder"]} onChange={this._handleEmailAddressChanged} />
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.incorrectEmail"]}</p>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="password">{CR.i18nMessages["order.accountCreation.registerWithEmail.password.label"]}</label>
+                        <label htmlFor="password" className="for-required-field">{CR.i18nMessages["order.accountCreation.registerWithEmail.password.label"]}</label>
                         <input type="password" className="form-control" id="password" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.password.placeholder"]} data-min-length="5" />
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="min-length">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.passwordTooShort"]}</p>
@@ -192,9 +192,9 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
         _changeSubmitBtnText: function(emailAddress) {
             if (emailAddress) {
-                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.nextStepBtn.withEmailPrefix"] + " " + emailAddress);
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.withEmailPrefix"] + " " + emailAddress);
             } else {
-                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.nextStepBtn.text"]);
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.text"]);
             }
         },
 

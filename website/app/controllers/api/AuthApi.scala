@@ -13,7 +13,7 @@ import play.api.mvc.{Action, Controller}
 import services.{AccountService, EmailService, SessionService}
 
 @Singleton
-class AuthApi @Inject()(val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
   val rootUrl = Play.configuration.getString("rootUrl").get
 
   def signIn = Action(parse.json) { request =>
@@ -42,7 +42,7 @@ class AuthApi @Inject()(val messagesApi: MessagesApi) extends Controller with I1
 
             AccountService.resetPasswordTokens += (token -> account.id)
 
-            EmailService.sendAccountDataUpdatedEmail(emailAddress, resetPasswordUrl, account.firstName.get, Messages("resetPassword.email.subject"))
+            emailService.sendResetPasswordEmail(emailAddress, resetPasswordUrl, account.firstName.get, Messages("resetPassword.email.subject"))
 
             Ok
         }

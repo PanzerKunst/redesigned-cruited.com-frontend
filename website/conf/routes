@@ -29,6 +29,7 @@ POST        /api/db/re-create-tables                              controllers.ap
 GET         /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
 POST        /api/orders                                           controllers.api.OrderApi.create
 PUT         /api/orders                                           controllers.api.OrderApi.update
+PUT         /api/orders/pay                                       controllers.api.OrderApi.pay
 POST        /api/accounts                                         controllers.api.AccountApi.create
 PUT         /api/accounts                                         controllers.api.AccountApi.update
 PUT         /api/accounts/password                                controllers.api.AccountApi.updatePassword

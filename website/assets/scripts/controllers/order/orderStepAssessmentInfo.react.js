@@ -37,7 +37,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             {this._getOptionalInfoFormGroup()}
                             {this._getTosFormGroup()}
                             <div className="centered-contents">
-                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.nextStepBtn.text"]}</button>
+                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.submitBtn.text"]}</button>
                             </div>
                         </form>
                     </div>

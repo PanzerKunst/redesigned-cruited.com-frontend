@@ -1,30 +1,21 @@
 package services
 
+import javax.inject.{Inject, Singleton}
+
 import play.Play
-import play.api.Logger
-import play.api.Play.current
-import play.api.libs.mailer.{Email, MailerPlugin}
+import play.api.libs.mailer.{Email, MailerClient}
 
-object EmailService {
-  val accountAddress = Play.application().configuration().getString("smtp.user")
-  val accountName = Play.application().configuration().getString("smtp.account.name")
+@Singleton
+class EmailService @Inject()(mailerClient: MailerClient) {
+  val accountAddress = Play.application().configuration().getString("play.mailer.user")
+  val accountName = Play.application().configuration().getString("play.mailer.account.name")
 
-  def sendAccountDataUpdatedEmail(emailAddress: String, resetPasswordUrl: String, firstName: String, subjecte: String) {
-    val body = views.html.email.resetPassword(resetPasswordUrl, firstName).toString()
-
-    // TODO: remove
-    Logger.info("Email body: " + body)
-
-    /* TODO: commented because of bug http://stackoverflow.com/questions/32861731/nosuchelementexception-in-play-framework-while-sending-email
-    MailerPlugin.send(Email(
-      subject = subjecte,
-      from = accountName + " <" + accountAddress + ">",
-      to = Seq(emailAddress),
-      bodyHtml = Some(body),
-      cc = Seq(),
-      bcc = Seq(),
-      attachments = Seq(),
-      headers = Seq()
-    )) */
+  def sendResetPasswordEmail(emailAddress: String, resetPasswordUrl: String, firstName: String, subject: String) {
+    mailerClient.send(Email(
+      subject,
+      accountName + "<" + accountAddress + ">",
+      Seq(emailAddress),
+      bodyHtml = Some(views.html.email.resetPassword(resetPasswordUrl, firstName).toString())
+    ))
   }
 }

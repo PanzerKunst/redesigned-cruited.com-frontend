@@ -3,9 +3,12 @@ package controllers.api
 import java.io.File
 import javax.inject.{Inject, Singleton}
 
+import com.paymill.context.PaymillContext
 import db.OrderDto
 import models.Order
 import models.frontend.OrderReceivedFromFrontend
+import play.api.{Logger, Play}
+import play.api.Play.current
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import services.{DocumentService, SessionService}
@@ -14,6 +17,9 @@ import scala.util.Random
 
 @Singleton
 class OrderApi @Inject()(val documentService: DocumentService) extends Controller {
+  val paymillAccountEmailAddress = Play.configuration.getString("paymill.account.emailAddress").get
+  val paymillAccountPrivateKey = Play.configuration.getString("paymill.account.privateKey").get
+
   def create = Action(parse.multipartFormData) { request =>
     // We only want to generate negative IDs, because positive ones are for non-temp orders
     val rand = Random.nextLong()
@@ -117,7 +123,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
             case Some(cvFile) =>
               val fileName = id + Order.fileNamePrefixSeparator + cvFile.filename
               cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-              Some(fileName)
+              Some(cvFile.filename)
           }
 
           val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
@@ -125,7 +131,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
             case Some(coverLetterFile) =>
               val fileName = id + Order.fileNamePrefixSeparator + coverLetterFile.filename
               coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-              Some(fileName)
+              Some(coverLetterFile.filename)
           }
 
 
@@ -172,6 +178,21 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
 
           Ok
       }
+    }
+  }
+
+  def pay = Action { request =>
+    request.body.asText match {
+      case None => BadRequest("Request body must contain the Paymill token")
+      case Some(paymillToken) =>
+        val paymillContext = new PaymillContext(paymillAccountPrivateKey)
+        val paymentService = paymillContext.getPaymentService
+        val payment = paymentService.createWithToken(paymillToken)
+
+        // TODO: remove
+        Logger.info("payment: " + payment)
+
+        Ok
     }
   }
 }

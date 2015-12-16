@@ -1,0 +1,15 @@
+#order-step-payment {
+  #expires-and-cvc {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    > .form-group {
+      width: 30%;
+    }
+  }
+
+  .alert {
+    display: none;
+  }
+}

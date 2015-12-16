@@ -29,10 +29,11 @@
 // Layouts/partials
 @import "layouts/_header";
 @import "layouts/_footer";
-@import "layouts/_orderPages";
-@import "layouts/_orderStepProductSelection";
-@import "layouts/_orderStepAssessmentInfo";
-@import "layouts/_orderStepAccountCreation";
+@import "layouts/order/_orderPages";
+@import "layouts/order/_orderStepProductSelection";
+@import "layouts/order/_orderStepAssessmentInfo";
+@import "layouts/order/_orderStepAccountCreation";
+@import "layouts/order/_orderStepPayment";
 @import "layouts/_dashboard";
 @import "layouts/_report";
 @import "layouts/_signIn";

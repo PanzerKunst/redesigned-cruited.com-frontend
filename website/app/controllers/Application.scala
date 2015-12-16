@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import db._
-import models.CruitedProduct
+import models.{CruitedProduct, Order}
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.JsNull
@@ -13,6 +13,7 @@ import services._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Failure
 
 class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
@@ -38,10 +39,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   def signIn = Action { request =>
     val isLinkedinAccountUnregistered = false
     Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
-  }
-
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def myAccount = Action { request =>
@@ -114,6 +111,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       .withHeaders(doNotCachePage: _*)
   }
 
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
+  }
+
   def orderStepAccountCreation = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None =>
@@ -143,27 +144,48 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case None => Redirect("/order/assessment-info")
       case Some(accountId) =>
         AccountDto.getOfId(accountId) match {
-          case None => throw new Exception("No account found in database for ID '" + accountId + "'")
+          case None => InternalServerError("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
             if (AccountService.isTemporary(account.id)) {
-              throw new Exception("Impossible to upgrade a temp order for a temporary account")
+              BadRequest("Impossible to upgrade a temp order for a temporary account")
             } else {
-              val tempOrders = OrderDto.getOfAccountId(account.id).filter(order => order.id.get < 0)
+              OrderDto.getOfAccountId(accountId).find(order => order.id.get < 0) match {
+                // If finalised order, we display the dashboard
+                case None => Redirect("/")
 
-              for (tempOrder <- tempOrders) {
-                // 1. Create finalised order, with data from the old one
-                val finalisedOrderId = OrderDto.createFinalised(tempOrder).get
+                // Else (temp order), we finalize the order
+                case Some(tempOrder) =>
+                  // Create finalised order, with data from the old one
+                  val finalisedOrderId = OrderDto.createFinalised(tempOrder).get
 
-                // 2. Delete old order
-                OrderDto.deleteOfId(tempOrder.id.get)
+                  // Delete old order
+                  OrderDto.deleteOfId(tempOrder.id.get)
 
-                Future {
-                  orderService.finaliseFileNames(finalisedOrderId)
-                  orderService.convertDocsToPdf(finalisedOrderId)
-                  orderService.generateDocThumbnails(finalisedOrderId)
-                }
+                  val finalisedOrder = OrderDto.getOfId(finalisedOrderId).get
+
+                  Future {
+                    orderService.finaliseFileNames(finalisedOrder, tempOrder.id.get)
+                    val finalisedOrderWithPdfFileNames = orderService.convertDocsToPdf(finalisedOrder)
+                    orderService.generateDocThumbnails(finalisedOrderWithPdfFileNames)
+                  } onFailure {
+                    case e => Logger.error(e.getMessage, e)
+                  }
+
+                  // If the cost is 0, we set the status to paid and redirect to the dashboard
+                  if (tempOrder.costAfterReductions == 0) {
+                    val paidOrder = tempOrder.copy(
+                      id = Some(finalisedOrderId),
+                      status = Order.statusIdPaid
+                    )
+
+                    OrderDto.update(paidOrder)
+
+                    Redirect("/")
+                  } else {
+                    // We display the payment page
+                    Ok(views.html.order.orderStepPayment(getI18nMessages(request), Some(account), finalisedOrderId))
+                  }
               }
-              Redirect("/")
             }
         }
     }
@@ -174,7 +196,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case None => Unauthorized
       case Some(accountId) =>
         AccountDto.getOfId(accountId) match {
-          case None => throw new Exception("No account found in database for ID '" + accountId + "'")
+          case None => InternalServerError("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
             if (!request.queryString.contains("id")) {
               BadRequest("'id' missing")
@@ -228,60 +250,21 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
       val linkedinProfile = linkedinService.getProfile
 
-      // TODO: remove
-      Logger.info("linkedinProfile: " + linkedinProfile)
-
       val accountId = AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
-        case Some(account) =>
-
-          // TODO: remove
-          Logger.info("linkedinCallbackSignIn > Some(account.id)")
-
-          Some(account.id)
+        case Some(account) => Some(account.id)
         case None => SessionService.getAccountId(request.session) match {
-          case Some(id) =>
-
-            // TODO: remove
-            Logger.info("linkedinCallbackSignIn > Some(id)")
-
-            Some(id)
+          case Some(id) => Some(id)
           case None =>
-
-            // TODO: remove
-            Logger.info("linkedinCallbackSignIn > None 1")
-
             AccountDto.getOfEmailAddress((linkedinProfile \ "emailAddress").as[String]) match {
-              case Some(accountWithSameEmail) =>
-
-                // TODO: remove
-                Logger.info("linkedinCallbackSignIn > Some(accountWithSameEmail.id)")
-
-                Some(accountWithSameEmail.id)
+              case Some(accountWithSameEmail) => Some(accountWithSameEmail.id)
               case None =>
-
-                // TODO: remove
-                Logger.info("linkedinCallbackSignIn > None 2")
-
                 AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
-                  case None =>
-
-                    // TODO: remove
-                    Logger.info("linkedinCallbackSignIn > None 3")
-
-                    None
-                  case Some(accountWithSameLinkedinId) =>
-
-                    // TODO: remove
-                    Logger.info("linkedinCallbackSignIn > Some(accountWithSameLinkedinId.id)")
-
-                    Some(accountWithSameLinkedinId.id)
+                  case None => None
+                  case Some(accountWithSameLinkedinId) => Some(accountWithSameLinkedinId.id)
                 }
             }
         }
       }
-
-      // TODO: remove
-      Logger.info("linkedinCallbackSignIn > request.session: " + request.session)
 
       if (!accountId.isDefined || AccountService.isTemporary(accountId.get)) {
         val isLinkedinAccountUnregistered = true
@@ -291,7 +274,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       } else {
         // We update the LI fields in DB, except maybe the email and first name if they are already set
         AccountDto.getOfId(accountId.get) match {
-          case None => throw new Exception("No account found in database for ID '" + accountId + "'")
+          case None => InternalServerError("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
             val updatedAccount = account.copy(
               firstName = Some(account.firstName.getOrElse((linkedinProfile \ "firstName").as[String])),
@@ -311,10 +294,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def linkedinCallbackOrderStepAssessmentInfo = Action { request =>
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
-  }
-
-  def linkedinCallbackOrderStepAccountCreation = Action { request =>
-    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
@@ -337,7 +316,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       }
 
       AccountDto.getOfId(accountId) match {
-        case None => throw new Exception("No account found in database for ID '" + accountId + "'")
+        case None => InternalServerError("No account found in database for ID '" + accountId + "'")
         case Some(account) =>
           val updatedAccount = account.copy(
             firstName = Some(account.firstName.getOrElse((linkedinProfile \ "firstName").as[String])),
@@ -352,5 +331,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
     }
+  }
+
+  def linkedinCallbackOrderStepAccountCreation = Action { request =>
+    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 }

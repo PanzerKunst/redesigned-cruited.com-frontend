@@ -96,7 +96,7 @@ CR.Services.Validator = P(function(c) {
                     this.showErrorMessage(this._get$empty($field));
                     return false;
                 }
-            } else if (!$field.val().trim()) {
+            } else if (!$field.val() || !$field.val().trim()) {
                 if (!isOnBlur) {
                     this.flagInvalid($field);
                     this.showErrorMessage(this._get$empty($field));

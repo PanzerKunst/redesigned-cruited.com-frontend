@@ -6,5 +6,7 @@ node_modules
 /design/LiveYourDreamsBg.ai
 /design/dark-bg.ai
 /website/conf/application.conf
+/website/conf/application-prod.conf
 /website/public
 /document-web-service/conf/application.conf
+/document-web-service/conf/application-prod.conf

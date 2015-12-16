@@ -39,7 +39,7 @@ CR.Controllers.MyAccount = P(function(c) {
                                 <input type="text" className="form-control" id="email-address" defaultValue={this.state.account.emailAddress} disabled />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="first-name">{CR.i18nMessages["myAccount.form.firstName.label"]}</label>
+                                <label htmlFor="first-name" className="for-required-field">{CR.i18nMessages["myAccount.form.firstName.label"]}</label>
                                 <input type="text" className="form-control" id="first-name" defaultValue={this.state.account.firstName} />
                                 <p className="field-error" data-check="empty" />
                             </div>

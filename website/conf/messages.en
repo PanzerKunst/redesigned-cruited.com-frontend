@@ -124,7 +124,7 @@ report.document.score.label=Your C-Score
 
 order.productSelection.title=Product Selection
 order.productSelection.subtitle=How can we help you?
-order.productSelection.nextStepBtn.text=Proceed to next step
+order.productSelection.submitBtn.text=Proceed to next step
 order.productSelection.validation.emptyCart=You need to select at least 1 product to continue
 
 order.productSelection.productsSection.title=Products
@@ -154,7 +154,7 @@ order.productSelection.cartSection.total=Total You Pay
 
 order.assessmentInfo.title=Assessment details
 order.assessmentInfo.subtitle=Tell us a bit about you
-order.assessmentInfo.nextStepBtn.text=Proceed to next step
+order.assessmentInfo.submitBtn.text=Proceed to next step
 order.assessmentInfo.validation.notSignedIn=We cannot assess your Linkedin profile unless you sign in
 order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
 order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
@@ -181,8 +181,8 @@ order.assessmentInfo.form.tos.text=I have read and accept the <a>Terms of Servic
 
 order.accountCreation.title=Create your account
 order.accountCreation.subtitle=Under which account do you want your assessment to be saved?
-order.accountCreation.nextStepBtn.text=Register and continue
-order.accountCreation.nextStepBtn.withEmailPrefix=Register with
+order.accountCreation.submitBtn.text=Register and continue
+order.accountCreation.submitBtn.withEmailPrefix=Register with
 order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered in our system. Please <a href="/login">Sign in</a>.
 order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered in our system. Please <a href="/login">Sign in</a>.
 
@@ -206,6 +206,18 @@ order.accountCreation.registerWithEmail.validation.passwordTooShort=Password sho
 # Order Step Payment page
 
 order.payment.title=Payment
+order.payment.subtitle=Please enter your card details
+order.payment.submitBtn.text=Complete my order
+order.payment.validation.invalidCardNumber=Invalid card number
+order.payment.validation.invalidExpirationDate=Invalid expiration date
+order.payment.success.text=Your payment was successful. You can now <a href="/login">sign in to access your dashboard</a>.
+
+order.payment.form.cardNumber.label=Card number
+order.payment.form.cardNumber.placeholder=
+order.payment.form.expires.month.label=Expires
+order.payment.form.cvc.label=CVC
+order.payment.form.cvc.placeholder=123
+order.payment.form.cardholderName.label=Cardholder name
 
 
 # Edit Order page

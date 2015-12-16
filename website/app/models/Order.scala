@@ -1,6 +1,6 @@
 package models
 
-import db.CruitedProductDto
+import db.{CouponDto, CruitedProductDto, ReductionDto}
 import models.frontend.FrontendOrder
 
 case class Order(id: Option[Long],
@@ -23,18 +23,9 @@ case class Order(id: Option[Long],
     editionId = frontendOrder.edition.id,
     containedProductCodes = frontendOrder.containedProductCodes,
     couponId = frontendOrder.couponId,
-    cvFileName = frontendOrder.cvFileName match {
-      case None => None
-      case Some(fileName) => Some(frontendOrder.id + Order.fileNamePrefixSeparator + fileName)
-    },
-    coverLetterFileName = frontendOrder.coverLetterFileName match {
-      case None => None
-      case Some(fileName) => Some(frontendOrder.id + Order.fileNamePrefixSeparator + fileName)
-    },
-    linkedinProfileFileName = frontendOrder.linkedinProfileFileName match {
-      case None => None
-      case Some(fileName) => Some(frontendOrder.id + Order.fileNamePrefixSeparator + fileName)
-    },
+    cvFileName = frontendOrder.cvFileName,
+    coverLetterFileName = frontendOrder.coverLetterFileName,
+    linkedinProfileFileName = frontendOrder.linkedinProfileFileName,
     positionSought = frontendOrder.positionSought,
     employerSought = frontendOrder.employerSought,
     jobAdUrl = frontendOrder.jobAdUrl,
@@ -43,6 +34,52 @@ case class Order(id: Option[Long],
     status = frontendOrder.status,
     creationTimestamp = frontendOrder.creationTimestamp
   )
+
+  def costAfterReductions: Int = {
+    var orderedProducts: List[CruitedProduct] = List()
+    for (p <- CruitedProductDto.getAll) {
+      if (containedProductCodes.contains(p.code)) {
+        orderedProducts = orderedProducts :+ p
+      }
+    }
+
+
+    // Product cost
+    val orderPriceAmounts = orderedProducts.map(p => p.price.amount)
+    var costAfterReductions = orderPriceAmounts.reduce((total, cur) => total + cur)
+
+
+    // Reductions
+    val allReductions = ReductionDto.getAll
+
+    val reduction = orderedProducts.length match {
+      case 2 => Some(allReductions.find(r => r.code == Reduction.code2ProductsSameOrder).get)
+      case 3 => Some(allReductions.find(r => r.code == Reduction.code3ProductsSameOrder).get)
+      case other => None
+    }
+
+    if (reduction.isDefined) {
+      costAfterReductions = costAfterReductions - reduction.get.price.amount
+    }
+
+
+    // Coupon
+    if (couponId.isDefined) {
+      val coupon = CouponDto.getOfId(couponId.get).get
+      coupon.discountPercentage match {
+        case Some(discountPercentage) =>
+          val couponReductionAmount = costAfterReductions * discountPercentage / 100
+          costAfterReductions = costAfterReductions - couponReductionAmount
+
+        case None =>
+          if (coupon.discountPrice.isDefined) {
+            costAfterReductions = costAfterReductions - coupon.discountPrice.get.amount
+          }
+      }
+    }
+
+    costAfterReductions.toInt
+  }
 }
 
 object Order {

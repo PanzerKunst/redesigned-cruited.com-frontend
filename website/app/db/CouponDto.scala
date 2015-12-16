@@ -10,7 +10,8 @@ import play.api.db.DB
 object CouponDto {
   def getOfId(id: Long): Option[Coupon] = {
     DB.withConnection { implicit c =>
-      val query = """select name, discount, discount_type, valid_date, campaign_name
+      val query = """
+      select name, discount, discount_type, valid_date, campaign_name
       from codes
       where id = """ + id + """
       limit 1;"""
@@ -43,7 +44,8 @@ object CouponDto {
 
   def getOfCode(code: String): Option[Coupon] = {
     DB.withConnection { implicit c =>
-      val query = """select id, discount, discount_type, valid_date, campaign_name
+      val query = """
+      select id, discount, discount_type, valid_date, campaign_name
       from codes
       where shw = 1
         and name = '""" + DbUtil.safetize(code) + """'

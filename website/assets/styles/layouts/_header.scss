@@ -61,8 +61,13 @@ $header-bottom-border-height: 1px;
   @include clearfix;
 
   > .fa-home,
-  .fa-bars {
+  .fa-bars,
+  > a[href="/login"] {
     color: $sky-blue;
+  }
+
+  > .fa-home,
+  .fa-bars {
     font-size: 22px;
     padding: 9px $spacer-unit-size;
 

@@ -75,12 +75,12 @@ object OrderDto {
     DB.withConnection { implicit c =>
       val cvFileNameClause = order.cvFileName match {
         case None => ""
-        case Some(fileName) => DbUtil.safetize(fileName)
+        case Some(fileName) => order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName)
       }
 
       val coverLetterFileNameClause = order.coverLetterFileName match {
         case None => ""
-        case Some(fileName) => DbUtil.safetize(fileName)
+        case Some(fileName) => order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName)
       }
 
       val couponCodeClause = order.couponId match {
@@ -121,7 +121,7 @@ object OrderDto {
         couponCodeClause + """', """ +
         order.accountId.getOrElse(AccountDto.unknownUserId) + """, '""" +
         Order.getTypeForDb(order.containedProductCodes) + """', """ +
-        Order.statusIdPaid + """, '""" +
+        Order.statusIdNotPaid + """, '""" +
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +
@@ -144,17 +144,17 @@ object OrderDto {
 
       val cvFileNameClause = order.cvFileName match {
         case None => ""
-        case Some(fileName) => ", file_cv = '" + DbUtil.safetize(fileName) + "'"
+        case Some(fileName) => ", file_cv = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
       }
 
       val coverLetterFileNameClause = order.coverLetterFileName match {
         case None => ""
-        case Some(fileName) => ", file = '" + DbUtil.safetize(fileName) + "'"
+        case Some(fileName) => ", file = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
       }
 
       val linkedinProfileFileNameClause = order.linkedinProfileFileName match {
         case None => ""
-        case Some(fileName) => ", file_li = '" + DbUtil.safetize(fileName) + "'"
+        case Some(fileName) => ", file_li = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
       }
 
       val positionSoughtClause = order.positionSought match {

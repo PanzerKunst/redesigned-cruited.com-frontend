@@ -72,7 +72,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         </section>
                         <form onSubmit={this._handleSubmit} className="centered-contents">
                             <p className="other-form-error" id="empty-cart">{CR.i18nMessages["order.productSelection.validation.emptyCart"]}</p>
-                            <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.productSelection.nextStepBtn.text"]}</button>
+                            <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.productSelection.submitBtn.text"]}</button>
                         </form>
                     </div>
                 </div>
@@ -116,35 +116,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             return null;
         },
 
-        _getOrderSubTotal: function() {
-            let orderSubTotal = 0;
-
-            CR.order.getProducts().forEach(function(product) {
-                orderSubTotal += product.price.amount;
-            });
-
-            return orderSubTotal;
-        },
-
-        _getOrderTotal: function() {
-            let orderTotal = this._getOrderSubTotal();
-
-            CR.order.getReductions().forEach(function(reduction) {
-                orderTotal -= reduction.price.amount;
-            });
-
-            let orderCoupon = CR.order.getCoupon();
-            if (orderCoupon) {
-                if (orderCoupon.discountPercentage) {
-                    orderTotal = Math.round(orderTotal - orderTotal * orderCoupon.discountPercentage / 100);
-                } else {
-                    orderTotal -= orderCoupon.discountPrice.amount;
-                }
-            }
-
-            return orderTotal;
-        },
-
         _getCartTable: function() {
             if (_.isEmpty(this.state.products)) {
                 return null;
@@ -155,7 +126,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     <tbody>
                         <tr>
                             <td>{CR.i18nMessages["order.productSelection.cartSection.subTotal"]}:</td>
-                            <td>{this._getOrderSubTotal()} {this.state.products[0].price.currencyCode}</td>
+                            <td>{CR.order.getBasePrice()} {this.state.products[0].price.currencyCode}</td>
                         </tr>
                         {CR.order.getReductions().map(function(reduction, index) {
                             let reactItemId = "cart-reduction-" + index;
@@ -173,7 +144,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     <tfoot>
                         <tr>
                             <td>{CR.i18nMessages["order.productSelection.cartSection.total"]}:</td>
-                            <td>{this._getOrderTotal()} {this.state.products[0].price.currencyCode}</td>
+                            <td>{CR.order.getTotalPrice()} {this.state.products[0].price.currencyCode}</td>
                         </tr>
                     </tfoot>
                 </table>

@@ -23,8 +23,8 @@ CR.Controllers.NewPassword = P(function(c) {
                             <div className="form-group">
                                 <label htmlFor="password">{CR.i18nMessages["resetPassword.new.form.password.label"]}</label>
                                 <input type="password" className="form-control" id="password" placeholder={CR.i18nMessages["resetPassword.new.form.password.placeholder"]} data-min-length="5" />
-                                <p className="field-error" data-check="min-length">{CR.i18nMessages["resetPassword.new.validation.passwordTooShort"]}</p>
                                 <p className="field-error" data-check="empty" />
+                                <p className="field-error" data-check="min-length">{CR.i18nMessages["resetPassword.new.validation.passwordTooShort"]}</p>
                             </div>
                             <div className="alert alert-success alert-dismissible" role="alert">
                                 <button type="button" className="close" data-dismiss="alert" aria-label="Close">

@@ -13,4 +13,7 @@ object Reduction {
       (JsPath \ "code").write[String] and
       (JsPath \ "price").write[Price]
     )(unlift(Reduction.unapply))
+
+  val code2ProductsSameOrder = "2_PRODUCTS_SAME_ORDER"
+  val code3ProductsSameOrder = "3_PRODUCTS_SAME_ORDER"
 }

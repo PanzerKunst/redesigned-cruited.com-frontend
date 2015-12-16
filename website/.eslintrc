@@ -115,6 +115,7 @@ globals:
     ReactDOM: true
     classNames: true
     moment: true
+    paymill: true
 
 ecmaFeatures:
     jsx: true

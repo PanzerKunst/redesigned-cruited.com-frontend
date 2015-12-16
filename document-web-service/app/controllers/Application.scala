@@ -6,11 +6,13 @@ import javax.inject.Inject
 import db.{AccountDto, CouponDto, OrderDto, TermAcceptationDto}
 import models.frontend.OrderReceivedFromFrontend
 import models.{Coupon, Order}
+import play.api.Logger
 import play.api.mvc._
 import services.{DocumentService, GlobalConfig, OrderService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Failure
 
 class Application @Inject()(val documentService: DocumentService, val orderService: OrderService) extends Controller {
   def preFlight = Action { request =>
@@ -73,6 +75,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
               Future {
                 orderService.convertDocsToPdf(orderId, None)
                 orderService.generateDocThumbnails(orderId)
+              } onFailure {
+                case e => Logger.error(e.getMessage, e)
               }
             }
 
@@ -140,6 +144,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
               Future {
                 orderService.convertDocsToPdf(orderId, None)
                 orderService.generateDocThumbnails(orderId)
+              } onFailure {
+                case e => Logger.error(e.getMessage, e)
               }
             }
 
@@ -256,6 +262,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
         Future {
           orderService.convertDocsToPdf(orderId, linkedinPublicProfileUrlOpt)
           orderService.generateDocThumbnails(orderId)
+        } onFailure {
+          case e => Logger.error(e.getMessage, e)
         }
 
         if (accountIdOpt.isDefined) {

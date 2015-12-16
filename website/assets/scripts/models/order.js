@@ -183,6 +183,35 @@ CR.Models.Order = P(function(c) {
         this._isTosAccepted = true;
     };
 
+    c.getBasePrice = function() {
+        let basePrice = 0;
+
+        this._products.forEach(function(product) {
+            basePrice += product.price.amount;
+        });
+
+        return basePrice;
+    };
+
+    c.getTotalPrice = function() {
+        let totalPrice = this.getBasePrice();
+
+        this._reductions.forEach(function(reduction) {
+            totalPrice -= reduction.price.amount;
+        });
+
+        let orderCoupon = this._coupon;
+        if (orderCoupon) {
+            if (orderCoupon.discountPercentage) {
+                totalPrice = Math.round(totalPrice - totalPrice * orderCoupon.discountPercentage / 100);
+            } else {
+                totalPrice -= orderCoupon.discountPrice.amount;
+            }
+        }
+
+        return parseInt(totalPrice, 10);
+    };
+
     c.getTitleForHtml = function() {
         if (this._positionSought && this._employerSought) {
             return this._positionSought + " - " + this._employerSought;

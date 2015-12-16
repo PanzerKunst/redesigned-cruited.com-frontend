@@ -338,7 +338,7 @@ CR.localStorageKeys = {
 CR.Controllers.Index = React.createClass({
     displayName: "Index",
 
-    dwsUrlRoot: "http://api.cruited.com/",
+    dwsUrlRoot: "http://localhost:9001/",
 
     render: function render() {
         return React.createElement(

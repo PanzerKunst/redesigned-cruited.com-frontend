@@ -57,7 +57,6 @@ CR.Controllers.ResetPassword = P(function(c) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$noAccountFoundForThisEmailAddressError);
-            this.$successAlert.hide();
 
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
