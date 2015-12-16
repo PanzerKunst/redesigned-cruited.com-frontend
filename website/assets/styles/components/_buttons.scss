@@ -7,14 +7,20 @@
   > .fa-spinner {
     margin: 0 0.5em 0 -0.6em;
   }
+}
 
-  &.btn-lg {
-    padding: 0.8em 2em;
+.btn-lg {
+  padding: 0.8em 2em;
 
-    > .fa-spinner {
-      margin-left: -1.25em;
-    }
+  > .fa-spinner {
+    margin-left: -1.25em;
   }
+}
+
+.btn-xs {
+  padding: 0.2em 0.5em;
+
+  font-size: $font-size-sm;
 }
 
 .btn-default,

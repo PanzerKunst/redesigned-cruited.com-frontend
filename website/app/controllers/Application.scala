@@ -183,7 +183,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     Redirect("/")
                   } else {
                     // We display the payment page
-                    Ok(views.html.order.orderStepPayment(getI18nMessages(request), Some(account), finalisedOrderId))
+                    Ok(views.html.order.orderStepPayment(getI18nMessages(request), Some(account), CruitedProductDto.getAll, ReductionDto.getAll, finalisedOrderId))
                   }
               }
             }
@@ -206,6 +206,27 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
                 case Some(order) => Ok(views.html.order.editOrder(getI18nMessages(request), Some(account), order))
+              }
+            }
+        }
+    }
+  }
+
+  def completePayment = Action { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) =>
+        AccountDto.getOfId(accountId) match {
+          case None => InternalServerError("No account found in database for ID '" + accountId + "'")
+          case Some(account) =>
+            if (!request.queryString.contains("orderId")) {
+              BadRequest("'orderId' missing")
+            } else {
+              val orderId = request.queryString.get("orderId").get.head.toLong
+
+              OrderDto.getOfIdForFrontend(orderId) match {
+                case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
+                case Some(order) => Ok(views.html.order.completePayment(getI18nMessages(request), Some(account), CruitedProductDto.getAll, ReductionDto.getAll, order))
               }
             }
         }

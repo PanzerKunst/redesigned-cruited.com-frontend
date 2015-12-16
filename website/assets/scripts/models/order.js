@@ -17,11 +17,21 @@ CR.Models.Order = P(function(c) {
         this._products = order && order.products ? _.cloneDeep(order.products) : [];
         if (_.isEmpty(this._products) && order && !_.isEmpty(order.containedProductCodes)) {
             this._products = order.containedProductCodes.map(function(productCode) {
+                if (!_.isEmpty(CR.products)) {
+                    let product = _.find(CR.products, "code", productCode);
+                    if (product) {
+                        return product;
+                    }
+
+                    return {code: productCode};
+                }
+
                 return {code: productCode};
             });
         }
 
-        this._reductions = order && order.reductions ? _.cloneDeep(order.reductions) : [];
+        this._calculateReductions();
+
         this._coupon = order && order.coupon ? _.cloneDeep(order.coupon) : null;
 
         if (order && order.edition) {

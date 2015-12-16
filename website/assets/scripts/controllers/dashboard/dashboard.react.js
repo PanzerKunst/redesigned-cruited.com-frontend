@@ -26,6 +26,13 @@ CR.Controllers.Dashboard = P(function(c) {
                         <span>{CR.Services.String.template(CR.i18nMessages["dashboard.subtitle"], "firstName", this.state.account.firstName)}</span>
                         <ul className="styleless">
                             {this.state.orders.map(function(order, index) {
+                                let completePaymentLink = null;
+
+                                if (order.getStatus() === CR.Models.OrderStaticProps.statusIds.notPaid) {
+                                    let url = "/order/complete-payment?orderId=" + order.getId();
+                                    completePaymentLink = <a href={url} className="btn btn-primary btn-xs">{CR.i18nMessages["dashboard.completePaymentLink.text"]}</a>;
+                                }
+
                                 let editOrderMarkup = null;
                                 if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
                                     let url = "/order/edit?id=" + order.getId();
@@ -42,6 +49,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                         </p>
                                         <p>
                                             <span>{CR.i18nMessages["order.status.label"]}:</span> {order.getStatusForHtml()}
+                                            {completePaymentLink}
                                             <span>{order.getEditionForHtml()}</span>
                                         </p>
 
@@ -77,6 +85,7 @@ CR.Controllers.Dashboard = P(function(c) {
     c.init = function(i18nMessages, account, orders) {
         CR.i18nMessages = i18nMessages;
         this.account = account;
+
         this.orders = orders.map(function(order) {
             return CR.Models.Order(order);
         });

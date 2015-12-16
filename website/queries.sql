@@ -32,3 +32,7 @@ order by userid desc;
 
 select * from codes
 where valid_date > now();
+
+delete from useri;
+
+delete from documents;

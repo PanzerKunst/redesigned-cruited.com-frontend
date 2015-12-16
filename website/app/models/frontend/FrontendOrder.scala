@@ -1,13 +1,13 @@
 package models.frontend
 
-import models.Edition
+import models.{Coupon, Edition}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Writes}
 
 case class FrontendOrder(id: Long,
                          edition: Edition,
                          containedProductCodes: List[String],
-                         couponId: Option[Long],
+                         coupon: Option[Coupon],
                          cvFileName: Option[String],
                          coverLetterFileName: Option[String],
                          linkedinProfileFileName: Option[String],
@@ -24,7 +24,7 @@ object FrontendOrder {
     (JsPath \ "id").write[Long] and
       (JsPath \ "edition").write[Edition] and
       (JsPath \ "containedProductCodes").write[List[String]] and
-      (JsPath \ "couponId").writeNullable[Long] and
+      (JsPath \ "coupon").writeNullable[Coupon] and
       (JsPath \ "cvFileName").writeNullable[String] and
       (JsPath \ "coverLetterFileName").writeNullable[String] and
       (JsPath \ "linkedinProfileFileName").writeNullable[String] and

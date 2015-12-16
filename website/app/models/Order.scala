@@ -22,7 +22,10 @@ case class Order(id: Option[Long],
     id = Some(frontendOrder.id),
     editionId = frontendOrder.edition.id,
     containedProductCodes = frontendOrder.containedProductCodes,
-    couponId = frontendOrder.couponId,
+    couponId = frontendOrder.coupon match {
+      case None => None
+      case Some(coupon) => Some(coupon.id)
+    },
     cvFileName = frontendOrder.cvFileName,
     coverLetterFileName = frontendOrder.coverLetterFileName,
     linkedinProfileFileName = frontendOrder.linkedinProfileFileName,

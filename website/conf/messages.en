@@ -107,6 +107,7 @@ resetPassword.email.subject=Nytt lösenord till Cruited
 
 dashboard.title=My Assessments
 dashboard.subtitle=Welcome to your Assessments Dashboard, {firstName}!
+dashboard.completePaymentLink.text=Pay
 dashboard.newAssessmentBtn.text=Get a new assessment
 dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a href="{url}">edit the assessment information</a> if you wish.
 
@@ -140,7 +141,6 @@ order.productSelection.editionsSection.subtitle=Please choose which edition best
 order.productSelection.cartSection.title=Your Order
 order.productSelection.cartSection.productsHeader.products=Products
 order.productSelection.cartSection.productsHeader.defaultPrice=Price
-order.productSelection.cartSection.edition=Edition
 order.productSelection.cartSection.coupon.label=Have a valid Promotion code or a Gift Card from one of our partners?
 order.productSelection.cartSection.coupon.placeholder=Coupon Code
 order.productSelection.cartSection.coupon.addBtn.text=Apply coupon

@@ -3,7 +3,7 @@ package db
 import anorm.SqlParser._
 import anorm._
 import models.frontend.{FrontendOrder, OrderReceivedFromFrontend}
-import models.{Edition, Order}
+import models.{Coupon, Price, Edition, Order}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
@@ -218,7 +218,7 @@ object OrderDto {
       val query = """
         select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment,
           e.id as edition_id, edition,
-          c.id as coupon_id
+          c.id as coupon_id, c.name, discount, discount_type, valid_date, campaign_name
         from documents d
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
@@ -228,10 +228,10 @@ object OrderDto {
 
       val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
         long("edition_id") ~ str("edition") ~
-        (long("coupon_id") ?) map {
+        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
         case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
           editionId ~ editionCode ~
-          couponIdOpt =>
+          couponIdOpt ~ couponCodeOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -263,6 +263,27 @@ object OrderDto {
             case otherString => Some(otherString)
           }
 
+          val couponOpt = couponIdOpt match {
+            case None => None
+            case Some(couponId) =>
+              val (discountPercentageOpt, discountPriceOpt) = discountTypeOpt.get match {
+                case "by_percent" => (amountOpt, None)
+                case "by_value" => (None, Some(Price(
+                  amount = amountOpt.get,
+                  currencyCode = "SEK"
+                )))
+              }
+
+              Some(Coupon(
+                id = couponId,
+                code = couponCodeOpt.get,
+                campaignName = campaignNameOpt.get,
+                expirationTimestamp = expirationDateOpt.get.getTime,
+                discountPercentage = discountPercentageOpt,
+                discountPrice = discountPriceOpt
+              ))
+          }
+
           FrontendOrder(
             id = id,
             edition = Edition(
@@ -270,7 +291,7 @@ object OrderDto {
               code = editionCode
             ),
             containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
-            couponId = couponIdOpt,
+            coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
             linkedinProfileFileName = linkedinProfileFileNameOpt,
@@ -297,7 +318,7 @@ object OrderDto {
       val query = """
         select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment,
           e.id as edition_id, edition,
-          c.id as coupon_id
+          c.id as coupon_id, c.name, discount, discount_type, valid_date, campaign_name
         from documents d
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
@@ -308,10 +329,10 @@ object OrderDto {
 
       val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
         long("edition_id") ~ str("edition") ~
-        (long("coupon_id") ?) map {
+        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
         case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
           editionId ~ editionCode ~
-          couponIdOpt =>
+          couponIdOpt ~ couponCodeOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -338,6 +359,27 @@ object OrderDto {
             case otherString => Some(otherString)
           }
 
+          val couponOpt = couponIdOpt match {
+            case None => None
+            case Some(couponId) =>
+              val (discountPercentageOpt, discountPriceOpt) = discountTypeOpt.get match {
+                case "by_percent" => (amountOpt, None)
+                case "by_value" => (None, Some(Price(
+                  amount = amountOpt.get,
+                  currencyCode = "SEK"
+                )))
+              }
+
+              Some(Coupon(
+                id = couponId,
+                code = couponCodeOpt.get,
+                campaignName = campaignNameOpt.get,
+                expirationTimestamp = expirationDateOpt.get.getTime,
+                discountPercentage = discountPercentageOpt,
+                discountPrice = discountPriceOpt
+              ))
+          }
+
           FrontendOrder(
             id = orderId,
             edition = Edition(
@@ -345,7 +387,7 @@ object OrderDto {
               code = editionCode
             ),
             containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
-            couponId = couponIdOpt,
+            coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
             linkedinProfileFileName = linkedinProfileFileNameOpt,

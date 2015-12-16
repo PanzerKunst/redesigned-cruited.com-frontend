@@ -23,6 +23,7 @@ GET         /order/assessment-info                                controllers.Ap
 GET         /order/create-account                                 controllers.Application.orderStepAccountCreation
 GET         /order/payment                                        controllers.Application.orderStepPayment
 GET         /order/edit                                           controllers.Application.editOrder
+GET         /order/complete-payment                               controllers.Application.completePayment
 
 # API
 POST        /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables

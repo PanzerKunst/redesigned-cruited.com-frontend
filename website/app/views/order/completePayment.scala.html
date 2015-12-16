@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], account: Option[Account], products: List[CruitedProduct], reductions: List[Reduction], orderId: Long)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Option[Account], products: List[CruitedProduct], reductions: List[Reduction], order: models.frontend.FrontendOrder)(implicit messages: Messages)
 
 @main("Cruited - " + messages("order.payment.title"), "order-step-payment") {
 <!--
@@ -14,11 +14,11 @@
 var PAYMILL_PUBLIC_KEY = "8a8394c43fa91e5f013fb3adc1a51e29";
 
 document.addEventListener("DOMContentLoaded", function() {
-    CR.Controllers.OrderStepPayment(
+    CR.Controllers.CompletePayment(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         @Html(play.api.libs.json.Json.toJson(products).toString()),
         @Html(play.api.libs.json.Json.toJson(reductions).toString()),
-        @orderId
+        @Html(play.api.libs.json.Json.toJson(order).toString())
     );
 });
 }
