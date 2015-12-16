@@ -13,7 +13,6 @@ import services._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Failure
 
 class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
@@ -111,10 +110,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       .withHeaders(doNotCachePage: _*)
   }
 
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
-  }
-
   def orderStepAccountCreation = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None =>
@@ -205,7 +200,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
-                case Some(order) => Ok(views.html.order.editOrder(getI18nMessages(request), Some(account), order))
+                case Some(order) =>
+                  if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
+                    Ok(views.html.order.editOrder(getI18nMessages(request), Some(account), order))
+                  } else {
+                    Forbidden("You are not allowed to edit orders which are not yours")
+                  }
               }
             }
         }
@@ -234,25 +234,32 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def report(orderId: Long) = Action { request =>
-    if (!SessionService.isSignedIn(request)) {
-      Unauthorized
-    } else {
-      val selectedProductCode = if (request.queryString.contains("productCode")) {
-        request.queryString.get("productCode").get.head
-      } else {
-        CruitedProduct.codeCvReview
-      }
-
-      if (!OrderDto.getOfIdForFrontend(orderId).isDefined) {
-        BadRequest("Couldn't find an order in DB for ID " + orderId)
-      } else {
-        ReportDto.getOfOrderId(orderId) match {
-          case None => BadRequest("No report available for order ID " + orderId)
-          case Some(assessmentReport) =>
-            val accountId = SessionService.getAccountId(request.session).get
-            Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) =>
+        val selectedProductCode = if (request.queryString.contains("productCode")) {
+          request.queryString.get("productCode").get.head
+        } else {
+          CruitedProduct.codeCvReview
         }
-      }
+
+        OrderDto.getOfIdForFrontend(orderId) match {
+          case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
+          case Some(order) =>
+            val account = AccountDto.getOfId(accountId).get
+
+            if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
+              ReportDto.getOfOrderId(orderId) match {
+                case None => BadRequest("No report available for order ID " + orderId)
+                case Some(assessmentReport) =>
+                  val accountId = SessionService.getAccountId(request.session).get
+
+                  Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
+              }
+            } else {
+              Forbidden("You are not allowed to view reports which are not yours")
+            }
+        }
     }
   }
 
@@ -352,6 +359,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
     }
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def linkedinCallbackOrderStepAccountCreation = Action { request =>
