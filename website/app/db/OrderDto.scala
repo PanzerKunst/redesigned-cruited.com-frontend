@@ -219,7 +219,7 @@ object OrderDto {
       val query = """
         select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment,
           e.id as edition_id, edition,
-          c.id as coupon_id, c.name, discount, discount_type, valid_date, campaign_name
+          c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name
         from documents d
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
@@ -229,10 +229,10 @@ object OrderDto {
 
       val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
         long("edition_id") ~ str("edition") ~
-        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
+        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
         case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
           editionId ~ editionCode ~
-          couponIdOpt ~ couponCodeOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
+          couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -281,7 +281,9 @@ object OrderDto {
                 campaignName = campaignNameOpt.get,
                 expirationTimestamp = expirationDateOpt.get.getTime,
                 discountPercentage = discountPercentageOpt,
-                discountPrice = discountPriceOpt
+                discountPrice = discountPriceOpt,
+                `type` = couponTypeOpt.get,
+                maxUseCount = couponMaxUseCountOpt.get
               ))
           }
 
@@ -320,7 +322,7 @@ object OrderDto {
       val query = """
         select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment,
           e.id as edition_id, edition,
-          c.id as coupon_id, c.name, discount, discount_type, valid_date, campaign_name
+          c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name
         from documents d
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
@@ -331,10 +333,10 @@ object OrderDto {
 
       val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
         long("edition_id") ~ str("edition") ~
-        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
+        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
         case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
           editionId ~ editionCode ~
-          couponIdOpt ~ couponCodeOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
+          couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
@@ -378,7 +380,9 @@ object OrderDto {
                 campaignName = campaignNameOpt.get,
                 expirationTimestamp = expirationDateOpt.get.getTime,
                 discountPercentage = discountPercentageOpt,
-                discountPrice = discountPriceOpt
+                discountPrice = discountPriceOpt,
+                `type` = couponTypeOpt.get,
+                maxUseCount = couponMaxUseCountOpt.get
               ))
           }
 

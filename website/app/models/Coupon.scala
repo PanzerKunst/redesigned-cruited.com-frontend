@@ -8,7 +8,9 @@ case class Coupon(id: Long,
                   campaignName: String,
                   expirationTimestamp: Long,
                   discountPercentage: Option[Int],
-                  discountPrice: Option[Price])
+                  discountPrice: Option[Price],
+                  `type`: Int,
+                  maxUseCount: Int)
 
 object Coupon {
   implicit val writes: Writes[Coupon] = (
@@ -17,6 +19,14 @@ object Coupon {
       (JsPath \ "campaignName").write[String] and
       (JsPath \ "expirationTimestamp").write[Long] and
       (JsPath \ "discountPercentage").writeNullable[Int] and
-      (JsPath \ "discountPrice").writeNullable[Price]
+      (JsPath \ "discountPrice").writeNullable[Price] and
+      (JsPath \ "type").write[Int] and
+      (JsPath \ "maxUseCount").write[Int]
     )(unlift(Coupon.unapply))
+
+  val typeNoRestriction = 0
+  val typeSingleUse = 1
+  val typeTwoUses = 2
+  val typeOncePerAccount = 3
+  val typeNUsesPerAccount = 4
 }
