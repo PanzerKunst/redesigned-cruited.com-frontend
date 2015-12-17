@@ -1,7 +1,7 @@
 package models
 
 import db.{CouponDto, CruitedProductDto}
-import models.frontend.OrderReceivedFromFrontend
+import models.client.OrderReceivedFromClient
 
 case class Order(id: Option[Long],
                  editionId: Long,
@@ -13,48 +13,33 @@ case class Order(id: Option[Long],
                  positionSought: Option[String],
                  employerSought: Option[String],
                  jobAdUrl: Option[String],
+                 customerComment: Option[String],
                  accountId: Option[Long],
                  status: Int,
                  creationTimestamp: Option[Long]) {
 
-  def this(orderReceivedFromFrontend: OrderReceivedFromFrontend, id: Long) = this(
+  def this(orderReceivedFromClient: OrderReceivedFromClient, id: Long) = this(
     id = Some(id),
-    editionId = orderReceivedFromFrontend.editionId,
-    containedProductCodes = Order.getContainedProductCodesFromTypesArray(orderReceivedFromFrontend.containedDocTypes),
-    couponId = orderReceivedFromFrontend.couponCode match {
+    editionId = orderReceivedFromClient.editionId,
+    containedProductCodes = Order.getContainedProductCodesFromTypesArray(orderReceivedFromClient.containedDocTypes),
+    couponId = orderReceivedFromClient.couponCode match {
       case None => None
       case Some(couponCode) => CouponDto.getOfCode(couponCode) match {
         case None => None
         case Some(coupon) => Some(coupon.id)
       }
     },
-    cvFileName = orderReceivedFromFrontend.cvFileName,
-    coverLetterFileName = orderReceivedFromFrontend.coverLetterFileName,
+    cvFileName = orderReceivedFromClient.cvFileName,
+    coverLetterFileName = orderReceivedFromClient.coverLetterFileName,
     linkedinProfileFileName = None,
-    positionSought = orderReceivedFromFrontend.positionSought,
-    employerSought = orderReceivedFromFrontend.employerSought,
+    positionSought = orderReceivedFromClient.positionSought,
+    employerSought = orderReceivedFromClient.employerSought,
     jobAdUrl = None,
-    accountId = orderReceivedFromFrontend.accountId,
-    status = orderReceivedFromFrontend.status,
+    customerComment = None,
+    accountId = orderReceivedFromClient.accountId,
+    status = orderReceivedFromClient.status,
     creationTimestamp = None
   )
-
-  def getCvFileNameWithoutPrefix: Option[String] = {
-    getFileNameWithoutPrefix(cvFileName)
-  }
-
-  def getCoverLetterFileNameWithoutPrefix: Option[String] = {
-    getFileNameWithoutPrefix(coverLetterFileName)
-  }
-
-  private def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
-    fileName match {
-      case None => None
-      case Some(fileNameWithPrefix) =>
-        val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
-        Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
-    }
-  }
 }
 
 object Order {
@@ -93,13 +78,6 @@ object Order {
     }
   }
 
-  def getTypeForDbLegacy(docTypes: List[String]): String = {
-    docTypes.length match {
-      case 0 => ""
-      case nbAboveZero => docTypes.mkString(typeStringSeparator)
-    }
-  }
-
   def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
     getContainedProductCodesFromTypesArray(docTypes.split(typeStringSeparator).toList)
   }
@@ -107,5 +85,14 @@ object Order {
   def getContainedProductCodesFromTypesArray(docTypes: List[String]): List[String] = {
     docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
       .toList
+  }
+
+  def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
+    fileName match {
+      case None => None
+      case Some(fileNameWithPrefix) =>
+        val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
+        Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
+    }
   }
 }

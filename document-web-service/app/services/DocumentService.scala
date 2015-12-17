@@ -39,14 +39,17 @@ class DocumentService @Inject()(val ws: WSClient) {
   val extensionOdt = "odt"
   val extensionRtf = "rtf"
 
-  def renameFile(oldName: String, newName: String) {
+  def renameFile(name: String, oldOrderId: Long, orderId: Long) {
+    val oldName = oldOrderId + Order.fileNamePrefixSeparator + name
+    val newName = orderId + Order.fileNamePrefixSeparator + name
+
     val oldFile = new File(assessedDocumentsRootDir + oldName)
     if (!oldFile.exists) {
       throw new Exception("Trying to rename file " + oldName + " but it doesn't exist!")
     }
     val newFile = new File(assessedDocumentsRootDir + newName)
     if (newFile.exists) {
-      throw new Exception("Can't rename file " + oldName + " to " + newFile + " because the destination already exists!")
+      throw new Exception("Can't rename file " + oldName + " to " + newName + " because the destination already exists!")
     }
 
     oldFile.renameTo(newFile)

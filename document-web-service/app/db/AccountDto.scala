@@ -14,14 +14,14 @@ object AccountDto {
   def getOfId(id: Long): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """
-        select prenume, nume, email, linkedin_basic_profile_fields, registered_at
+        select prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
         from useri
         where id = """ + id + """;"""
 
       Logger.info("AccountDto.getOfId():" + query)
 
-      val optionRowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") map {
-        case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate =>
+      val rowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
+        case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString =>
@@ -36,11 +36,12 @@ object AccountDto {
             emailAddress = emailAddress,
             password = None,
             linkedinProfile = linkedinBasicProfileOpt,
+            `type` = accountType,
             creationTimestamp = creationDate.getTime
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 }

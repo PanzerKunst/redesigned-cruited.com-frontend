@@ -9,6 +9,7 @@ case class Account(id: Long,
                    emailAddress: Option[String],
                    password: Option[String],
                    linkedinProfile: JsValue,
+                   `type`: Int,
                    creationTimestamp: Long)
 
 object Account {
@@ -19,6 +20,7 @@ object Account {
       (JsPath \ "emailAddress").writeNullable[String] and
       (JsPath \ "password").writeNullable[String] and
       (JsPath \ "linkedinProfile").write[JsValue] and
+      (JsPath \ "type").write[Int] and
       (JsPath \ "creationTimestamp").write[Long]
     )(unlift(Account.unapply))
 }

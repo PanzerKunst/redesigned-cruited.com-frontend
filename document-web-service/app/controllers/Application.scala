@@ -4,7 +4,7 @@ import java.io.File
 import javax.inject.Inject
 
 import db.{AccountDto, CouponDto, OrderDto, TermAcceptationDto}
-import models.frontend.OrderReceivedFromFrontend
+import models.client.OrderReceivedFromClient
 import models.{Coupon, Order}
 import play.api.Logger
 import play.api.mvc._
@@ -12,7 +12,6 @@ import services.{DocumentService, GlobalConfig, OrderService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Failure
 
 class Application @Inject()(val documentService: DocumentService, val orderService: OrderService) extends Controller {
   def preFlight = Action { request =>
@@ -73,8 +72,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
               OrderDto.update(updatedOrder)
 
               Future {
-                orderService.convertDocsToPdf(orderId, None)
-                orderService.generateDocThumbnails(orderId)
+                val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder)
+                orderService.generateDocThumbnails(updatedOrderWithPdfFileNames)
               } onFailure {
                 case e => Logger.error(e.getMessage, e)
               }
@@ -142,8 +141,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
               OrderDto.update(updatedOrder)
 
               Future {
-                orderService.convertDocsToPdf(orderId, None)
-                orderService.generateDocThumbnails(orderId)
+                val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder)
+                orderService.generateDocThumbnails(updatedOrderWithPdfFileNames)
               } onFailure {
                 case e => Logger.error(e.getMessage, e)
               }
@@ -214,7 +213,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
         val orderStatus = getStatusFromOrderInfo(containedDocTypes, couponOpt)
 
         // Create order and get ID
-        val orderReceivedFromFrontend = OrderReceivedFromFrontend(
+        val orderReceivedFromClient = OrderReceivedFromClient(
           editionId = requestData("editionId").head.toLong,
           containedDocTypes = containedDocTypes,
           couponCode = couponCodeOpt,
@@ -228,7 +227,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           sessionId = requestData("sessionId").head
         )
 
-        val orderId = OrderDto.create(orderReceivedFromFrontend).get
+        val orderId = OrderDto.create(orderReceivedFromClient).get
 
         val newCvFileName = requestBody.file("cvFile") match {
           case None => None
@@ -251,7 +250,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           case Some(linkedinPublicProfileUrl) => Some(orderId + Order.fileNamePrefixSeparator + GlobalConfig.linkedinProfilePdfFileNameWithoutPrefix)
         }
 
-        val updatedOrder = new Order(orderReceivedFromFrontend, orderId).copy(
+        val updatedOrder = new Order(orderReceivedFromClient, orderId).copy(
           cvFileName = newCvFileName,
           coverLetterFileName = newCoverLetterFileName,
           linkedinProfileFileName = linkedinProfileFileName
@@ -260,8 +259,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
         OrderDto.update(updatedOrder)
 
         Future {
-          orderService.convertDocsToPdf(orderId, linkedinPublicProfileUrlOpt)
-          orderService.generateDocThumbnails(orderId)
+          val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder)
+          orderService.generateDocThumbnails(updatedOrderWithPdfFileNames)
         } onFailure {
           case e => Logger.error(e.getMessage, e)
         }
@@ -338,6 +337,15 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       }
   }
 
+  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action {
+    request =>
+      OrderDto.getOfId(orderId) match {
+        case None => BadRequest("No order found for ID " + orderId)
+        case Some(order) =>
+          sendThumbnail(order.coverLetterFileName)
+      }
+  }
+
   private def sendThumbnail(docFileNameOpt: Option[String]) = {
     docFileNameOpt match {
       case None => NoContent
@@ -349,15 +357,6 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           inline = true
         )
     }
-  }
-
-  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) =>
-          sendThumbnail(order.coverLetterFileName)
-      }
   }
 
   def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action {

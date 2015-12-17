@@ -5,14 +5,14 @@ import java.util.Date
 import anorm.SqlParser._
 import anorm._
 import models.Order
-import models.frontend.OrderReceivedFromFrontend
+import models.client.OrderReceivedFromClient
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
 
 object OrderDto {
   // TODO: delete when the new App pages are released
-  def create(order: OrderReceivedFromFrontend): Option[Long] = {
+  def create(order: OrderReceivedFromClient): Option[Long] = {
     DB.withConnection { implicit c =>
       val nameClause = if (order.positionSought.isDefined && order.employerSought.isDefined) {
         order.positionSought.get + " - " + order.employerSought.get
@@ -72,7 +72,7 @@ object OrderDto {
         now(), '""" +
         couponCodeClause + """', """ +
         order.accountId.getOrElse(AccountDto.unknownUserId) + """, '""" +
-        Order.getTypeForDbLegacy(order.containedDocTypes) + """', """ +
+        Order.getTypeForDb(order.containedDocTypes) + """', """ +
         order.status + """, '""" +
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', '""" +
@@ -95,17 +95,37 @@ object OrderDto {
 
       val cvFileNameClause = order.cvFileName match {
         case None => ""
-        case Some(fileName) => ", file_cv = '" + DbUtil.safetize(fileName) + "'"
+        case Some(fileName) => ", file_cv = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
       }
 
       val coverLetterFileNameClause = order.coverLetterFileName match {
         case None => ""
-        case Some(fileName) => ", file = '" + DbUtil.safetize(fileName) + "'"
+        case Some(fileName) => ", file = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
       }
 
       val linkedinProfileFileNameClause = order.linkedinProfileFileName match {
         case None => ""
-        case Some(fileName) => ", file_li = '" + DbUtil.safetize(fileName) + "'"
+        case Some(fileName) => ", file_li = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
+      }
+
+      val positionSoughtClause = order.positionSought match {
+        case None => ""
+        case Some(positionSought) => ", position = '" + DbUtil.safetize(positionSought) + "'"
+      }
+
+      val employerSoughtClause = order.employerSought match {
+        case None => ""
+        case Some(employerSought) => ", employer = '" + DbUtil.safetize(employerSought) + "'"
+      }
+
+      val jobAdUrlClause = order.jobAdUrl match {
+        case None => ""
+        case Some(jobAdUrl) => ", job_ad_url = '" + DbUtil.safetize(jobAdUrl) + "'"
+      }
+
+      val customerCommentClause = order.customerComment match {
+        case None => ""
+        case Some(customerComment) => ", customer_comment = '" + DbUtil.safetize(customerComment) + "'"
       }
 
       val query = """
@@ -115,7 +135,11 @@ object OrderDto {
         accountIdClause +
         cvFileNameClause +
         coverLetterFileNameClause +
-        linkedinProfileFileNameClause + """
+        linkedinProfileFileNameClause +
+        positionSoughtClause +
+        employerSoughtClause +
+        jobAdUrlClause +
+        customerCommentClause + """
         where id = """ + order.id.get + """;"""
 
       Logger.info("OrderDto.update():" + query)
@@ -139,36 +163,40 @@ object OrderDto {
   def getOfId(id: Long): Option[Order] = {
     DB.withConnection { implicit c =>
       val query = """
-        select edition_id, file, file_cv, file_li, added_at, added_by, type, status, position, employer, /* TODO job_ad_url, */
-          c.id as coupon_id
+        select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment,
+          e.id as edition_id, edition,
+          c.id as coupon_id, c.name, discount, discount_type, valid_date, campaign_name
         from documents d
-        left join codes c on c.name = d.code
+          inner join product_edition e on e.id = d.edition_id
+          left join codes c on c.name = d.code
         where d.id = """ + id + """;"""
 
       Logger.info("OrderDto.getOfId():" + query)
 
-      val optionRowParser = long("edition_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") /* TODO ~ (str("job_ad_url") ?) */ ~
-        (long("coupon_id") ?) map {
-        case editionId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought /* TODO ~ jobAdUrl */ ~
-          couponId =>
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
+        long("edition_id") ~ str("edition") ~
+        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
+          editionId ~ editionCode ~
+          couponIdOpt ~ couponCodeOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val cvFileNameOpt = cvFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
-            case otherString => Some(otherString)
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
 
           val accountIdOpt = accountId match {
-            case 0 => None
+            case AccountDto.unknownUserId => None
             case otherNb => Some(otherNb)
           }
 
@@ -186,20 +214,21 @@ object OrderDto {
             id = Some(id),
             editionId = editionId,
             containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
-            couponId = couponId,
+            couponId = couponIdOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
             linkedinProfileFileName = linkedinProfileFileNameOpt,
             positionSought = positionSoughtOpt,
             employerSought = employerSoughtOpt,
-            jobAdUrl = None,
+            jobAdUrl = jobAdUrlOpt,
+            customerComment = customerCommentOpt,
             accountId = accountIdOpt,
             status = status,
             creationTimestamp = Some(creationDate.getTime)
           )
       }
 
-      SQL(query).as(optionRowParser.singleOpt)
+      SQL(query).as(rowParser.singleOpt)
     }
   }
 }
