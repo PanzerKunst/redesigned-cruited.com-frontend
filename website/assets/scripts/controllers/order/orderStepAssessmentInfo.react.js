@@ -289,6 +289,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             if (httpRequest.status === CR.httpStatusCodes.created) {
                                 let order = JSON.parse(httpRequest.responseText);
                                 CR.order.setId(order.id);
+                                CR.order.setIdInBase64(order.idInBase64);
                                 CR.order.setCvFileName(order.cvFileName);
                                 CR.order.setCoverLetterFileName(order.coverLetterFileName);
                                 CR.order.setSoughtPosition(order.positionSought);

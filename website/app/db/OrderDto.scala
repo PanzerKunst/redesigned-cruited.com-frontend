@@ -3,10 +3,11 @@ package db
 import anorm.SqlParser._
 import anorm._
 import models.frontend.{FrontendOrder, OrderReceivedFromFrontend}
-import models.{Coupon, Price, Edition, Order}
+import models.{Coupon, Edition, Order, Price}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
+import services.StringService
 
 object OrderDto {
   def createTemporary(order: OrderReceivedFromFrontend): Option[Long] = {
@@ -286,11 +287,12 @@ object OrderDto {
 
           FrontendOrder(
             id = id,
+            idInBase64 = StringService.base64Encode(id.toString),
             edition = Edition(
               id = editionId,
               code = editionCode
             ),
-            containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
+            containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
@@ -382,11 +384,12 @@ object OrderDto {
 
           FrontendOrder(
             id = orderId,
+            idInBase64 = StringService.base64Encode(orderId.toString),
             edition = Edition(
               id = editionId,
               code = editionCode
             ),
-            containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
+            containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,

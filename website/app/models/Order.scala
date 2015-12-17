@@ -121,9 +121,12 @@ object Order {
     }
   }
 
-  def getContainedProductCodesFromTypes(docTypes: String): List[String] = {
-    docTypes.split(typeStringSeparator)
-      .map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
+  def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
+    getContainedProductCodesFromTypesArray(docTypes.split(typeStringSeparator).toList)
+  }
+
+  def getContainedProductCodesFromTypesArray(docTypes: List[String]): List[String] = {
+    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
       .toList
   }
 

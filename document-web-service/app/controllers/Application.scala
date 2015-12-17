@@ -8,7 +8,7 @@ import models.client.OrderReceivedFromClient
 import models.{Coupon, Order}
 import play.api.Logger
 import play.api.mvc._
-import services.{DocumentService, GlobalConfig, OrderService}
+import services.{DocumentService, GlobalConfig, OrderService, StringService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -294,12 +294,21 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getCvOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) => sendDocument(order.cvFileName)
+  def getCvOfOrder(orderId: Long) = Action { request =>
+    if (request.queryString.contains("token")) {
+      val orderIdBase64 = request.queryString.get("token").get.head
+
+      if (orderIdBase64 == StringService.base64Encode(orderId.toString)) {
+        OrderDto.getOfId(orderId) match {
+          case None => BadRequest("No order found for ID " + orderId)
+          case Some(order) => sendDocument(order.cvFileName)
+        }
+      } else {
+        Forbidden("Invalid token")
       }
+    } else {
+      BadRequest("Token must be specified")
+    }
   }
 
   private def sendDocument(fileNameOpt: Option[String]) = {
@@ -312,38 +321,54 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getCoverLetterOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) => sendDocument(order.coverLetterFileName)
+  def getCoverLetterOfOrder(orderId: Long) = Action { request =>
+    if (request.queryString.contains("token")) {
+      val orderIdBase64 = request.queryString.get("token").get.head
+
+      if (orderIdBase64 == StringService.base64Encode(orderId.toString)) {
+        OrderDto.getOfId(orderId) match {
+          case None => BadRequest("No order found for ID " + orderId)
+          case Some(order) => sendDocument(order.coverLetterFileName)
+        }
+      } else {
+        Forbidden("Invalid token")
       }
+    } else {
+      BadRequest("Token must be specified")
+    }
   }
 
-  def getLinkedinProfileOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) => sendDocument(order.linkedinProfileFileName)
+  def getLinkedinProfileOfOrder(orderId: Long) = Action { request =>
+    if (request.queryString.contains("token")) {
+      val orderIdBase64 = request.queryString.get("token").get.head
+
+      if (orderIdBase64 == StringService.base64Encode(orderId.toString)) {
+        OrderDto.getOfId(orderId) match {
+          case None => BadRequest("No order found for ID " + orderId)
+          case Some(order) => sendDocument(order.linkedinProfileFileName)
+        }
+      } else {
+        Forbidden("Invalid token")
       }
+    } else {
+      BadRequest("Token must be specified")
+    }
   }
 
-  def getCvThumbnailOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) =>
-          sendThumbnail(order.cvFileName)
-      }
+  def getCvThumbnailOfOrder(orderId: Long) = Action { request =>
+    OrderDto.getOfId(orderId) match {
+      case None => BadRequest("No order found for ID " + orderId)
+      case Some(order) =>
+        sendThumbnail(order.cvFileName)
+    }
   }
 
-  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) =>
-          sendThumbnail(order.coverLetterFileName)
-      }
+  def getCoverLetterThumbnailOfOrder(orderId: Long) = Action { request =>
+    OrderDto.getOfId(orderId) match {
+      case None => BadRequest("No order found for ID " + orderId)
+      case Some(order) =>
+        sendThumbnail(order.coverLetterFileName)
+    }
   }
 
   private def sendThumbnail(docFileNameOpt: Option[String]) = {
@@ -359,13 +384,12 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action {
-    request =>
-      OrderDto.getOfId(orderId) match {
-        case None => BadRequest("No order found for ID " + orderId)
-        case Some(order) =>
-          sendThumbnail(order.linkedinProfileFileName)
-      }
+  def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action { request =>
+    OrderDto.getOfId(orderId) match {
+      case None => BadRequest("No order found for ID " + orderId)
+      case Some(order) =>
+        sendThumbnail(order.linkedinProfileFileName)
+    }
   }
 
   // Not used, but to keep

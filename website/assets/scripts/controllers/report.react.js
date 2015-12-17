@@ -89,7 +89,8 @@ CR.Controllers.Report = P(function(c) {
 
         _getDocumentReportSection: function(productCode) {
             if (_.find(this.state.order.getProducts(), "code", productCode)) {
-                let documentUrl = this._getDocumentUrl(this.state.order.getId(), productCode);
+                let documentUrl = this._getDocumentUrl(this.state.order.getId(), this.state.order.getIdInBase64(), productCode);
+                let thumbnailUrl = this._getThumbnailUrl(this.state.order.getId(), productCode);
 
                 let docReport = this.state.cvReport;
                 let docReportScores = this.state.cvReportScores;
@@ -149,7 +150,7 @@ CR.Controllers.Report = P(function(c) {
                     <div>
                         <section className="summary">
                             <h2>{CR.i18nMessages["report.summary.title"]}</h2>
-                            <img src={documentUrl + "/thumbnail"} />
+                            <img src={thumbnailUrl} />
                             <a href={documentUrl}>{CR.i18nMessages["report.document.link.text"]}</a>
                             <span>{CR.i18nMessages["report.document.score.label"]}:</span>
                             <span>{docReportScores.globalScore}</span>
@@ -197,14 +198,25 @@ CR.Controllers.Report = P(function(c) {
             return <a>Order this assessment</a>;
         },
 
-        _getDocumentUrl: function(orderId, productCode) {
+        _getDocumentUrl: function(orderId, orderIdInBase64, productCode) {
             switch (productCode) {
                 case CR.Models.Product.codes.CV_REVIEW:
-                    return this.state.dwsRootUrl + "docs/" + orderId + "/cv";
+                    return this.state.dwsRootUrl + "docs/" + orderId + "/cv?token=" + orderIdInBase64;
                 case CR.Models.Product.codes.COVER_LETTER_REVIEW:
-                    return this.state.dwsRootUrl + "docs/" + orderId + "/cover-letter";
+                    return this.state.dwsRootUrl + "docs/" + orderId + "/cover-letter?token=" + orderIdInBase64;
                 default:
-                    return this.state.dwsRootUrl + "docs/" + orderId + "/linkedin-profile";
+                    return this.state.dwsRootUrl + "docs/" + orderId + "/linkedin-profile?token=" + orderIdInBase64;
+            }
+        },
+
+        _getThumbnailUrl: function(orderId, productCode) {
+            switch (productCode) {
+                case CR.Models.Product.codes.CV_REVIEW:
+                    return this.state.dwsRootUrl + "docs/" + orderId + "/cv/thumbnail";
+                case CR.Models.Product.codes.COVER_LETTER_REVIEW:
+                    return this.state.dwsRootUrl + "docs/" + orderId + "/cover-letter/thumbnail";
+                default:
+                    return this.state.dwsRootUrl + "docs/" + orderId + "/linkedin-profile/thumbnail";
             }
         }
     });

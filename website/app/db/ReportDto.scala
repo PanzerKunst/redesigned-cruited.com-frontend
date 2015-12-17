@@ -107,7 +107,7 @@ object ReportDto {
               id = editionId,
               code = editionCode
             ),
-            containedProductCodes = Order.getContainedProductCodesFromTypes(docTypes),
+            containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,

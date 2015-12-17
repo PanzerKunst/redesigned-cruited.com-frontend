@@ -41,6 +41,7 @@ CR.Models.Order = P(function(c) {
         }
 
         this._id = order && order.id ? order.id : null;
+        this._idInBase64 = order && order.idInBase64 ? order.idInBase64 : null;
         this._cvFileName = order && order.cvFileName ? order.cvFileName : null;
         this._coverLetterFileName = order && order.coverLetterFileName ? order.coverLetterFileName : null;
         this._positionSought = order && order.positionSought ? order.positionSought : null;
@@ -59,6 +60,7 @@ CR.Models.Order = P(function(c) {
             edition: this._edition,
             coupon: this._coupon,
             id: this._id,
+            idInBase64: this._idInBase64,
             cvFileName: this._cvFileName,
             coverLetterFileName: this._coverLetterFileName,
             positionSought: this._positionSought,
@@ -129,20 +131,28 @@ CR.Models.Order = P(function(c) {
         this._id = id;
     };
 
+    c.getIdInBase64 = function() {
+        return this._idInBase64;
+    };
+
+    c.setIdInBase64 = function(idInBase64) {
+        this._idInBase64 = idInBase64;
+    };
+
     c.getCvFileName = function() {
         return this._cvFileName;
     };
 
-    c.setCvFileName = function(fileNameWithPrefix) {
-        this._cvFileName = this._getFileNameStrippedFromPrefix(fileNameWithPrefix);
+    c.setCvFileName = function(fileName) {
+        this._cvFileName = fileName;
     };
 
     c.getCoverLetterFileName = function() {
         return this._coverLetterFileName;
     };
 
-    c.setCoverLetterFileName = function(fileNameWithPrefix) {
-        this._coverLetterFileName = this._getFileNameStrippedFromPrefix(fileNameWithPrefix);
+    c.setCoverLetterFileName = function(fileName) {
+        this._coverLetterFileName = fileName;
     };
 
     c.getSoughtPosition = function() {
@@ -254,15 +264,6 @@ CR.Models.Order = P(function(c) {
         }
 
         return CR.i18nMessages["edition.name." + this._edition.code];
-    };
-
-    c._getFileNameStrippedFromPrefix = function(fileNameWithPrefix) {
-        if (!fileNameWithPrefix) {
-            return null;
-        }
-
-        let indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(CR.Models.OrderStaticProps.fileNamePrefixSeparator, 1) + CR.Models.OrderStaticProps.fileNamePrefixSeparator.length;
-        return fileNameWithPrefix.substring(indexFileNameAfterPrefix);
     };
 
     c._calculateReductions = function() {
