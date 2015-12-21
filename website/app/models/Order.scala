@@ -2,6 +2,7 @@ package models
 
 import db.{CouponDto, CruitedProductDto, ReductionDto}
 import models.frontend.FrontendOrder
+import play.api.Logger
 
 case class Order(id: Option[Long],
                  editionId: Long,
@@ -18,7 +19,7 @@ case class Order(id: Option[Long],
                  status: Int,
                  creationTimestamp: Long) {
 
-  def this(frontendOrder: FrontendOrder) = this(
+  def this(frontendOrder: FrontendOrder, linkedinProfileFileName: Option[String]) = this(
     id = Some(frontendOrder.id),
     editionId = frontendOrder.edition.id,
     containedProductCodes = frontendOrder.containedProductCodes,
@@ -28,7 +29,7 @@ case class Order(id: Option[Long],
     },
     cvFileName = frontendOrder.cvFileName,
     coverLetterFileName = frontendOrder.coverLetterFileName,
-    linkedinProfileFileName = frontendOrder.linkedinProfileFileName,
+    linkedinProfileFileName = linkedinProfileFileName,
     positionSought = frontendOrder.positionSought,
     employerSought = frontendOrder.employerSought,
     jobAdUrl = frontendOrder.jobAdUrl,
@@ -51,6 +52,9 @@ case class Order(id: Option[Long],
     val orderPriceAmounts = orderedProducts.map(p => p.price.amount)
     var costAfterReductions = orderPriceAmounts.reduce((total, cur) => total + cur)
 
+    // TODO: remove
+    Logger.info("costAfterReductions :" + costAfterReductions)
+
 
     // Reductions
     val allReductions = ReductionDto.getAll
@@ -64,6 +68,9 @@ case class Order(id: Option[Long],
     if (reduction.isDefined) {
       costAfterReductions = costAfterReductions - reduction.get.price.amount
     }
+
+    // TODO: remove
+    Logger.info("costAfterReductions :" + costAfterReductions)
 
 
     // Coupon
@@ -80,6 +87,10 @@ case class Order(id: Option[Long],
           }
       }
     }
+
+    // TODO: remove
+    Logger.info("costAfterReductions :" + costAfterReductions)
+
 
     costAfterReductions.toInt
   }

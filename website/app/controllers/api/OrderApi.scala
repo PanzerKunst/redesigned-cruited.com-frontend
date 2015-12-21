@@ -4,19 +4,20 @@ import java.io.File
 import javax.inject.{Inject, Singleton}
 
 import com.paymill.context.PaymillContext
-import db.OrderDto
+import db.{AccountDto, OrderDto}
 import models.Order
 import models.frontend.OrderReceivedFromFrontend
-import play.api.{Logger, Play}
 import play.api.Play.current
+import play.api.i18n.{MessagesApi, I18nSupport, Messages}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import services.{DocumentService, SessionService}
+import play.api.{Logger, Play}
+import services.{EmailService, DocumentService, SessionService}
 
 import scala.util.Random
 
 @Singleton
-class OrderApi @Inject()(val documentService: DocumentService) extends Controller {
+class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
   val paymillAccountEmailAddress = Play.configuration.getString("paymill.account.emailAddress").get
   val paymillAccountPrivateKey = Play.configuration.getString("paymill.account.privateKey").get
 
@@ -100,7 +101,7 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
     OrderDto.createTemporary(tempOrder) match {
       case None => throw new Exception("OrderDto.createTemporary didn't return an ID!")
       case Some(createdOrderId) =>
-        Created(Json.toJson(OrderDto.getOfIdForFrontend(createdOrderId)))
+        Created(Json.toJson(OrderDto.getOfIdForFrontend(createdOrderId).get._1))
           .withSession(request.session + (SessionService.sessionKeyOrderId -> tempOrderId.toString))
     }
   }
@@ -182,17 +183,24 @@ class OrderApi @Inject()(val documentService: DocumentService) extends Controlle
   }
 
   def pay = Action { request =>
-    request.body.asText match {
-      case None => BadRequest("Request body must contain the Paymill token")
-      case Some(paymillToken) =>
-        val paymillContext = new PaymillContext(paymillAccountPrivateKey)
-        val paymentService = paymillContext.getPaymentService
-        val payment = paymentService.createWithToken(paymillToken)
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) =>
+        AccountDto.getOfId(accountId) match {
+          case None => InternalServerError("No account found in database for ID '" + accountId + "'")
+          case Some(account) =>
+            request.body.asText match {
+              case None => BadRequest("Request body must contain the Paymill token")
+              case Some(paymillToken) =>
+                val paymillContext = new PaymillContext(paymillAccountPrivateKey)
+                val paymentService = paymillContext.getPaymentService
+                val payment = paymentService.createWithToken(paymillToken)
 
-        // TODO: remove
-        Logger.info("payment: " + payment)
+                emailService.sendOrderCompleteEmail(account.emailAddress.get, account.firstName.get, Messages("email.orderComplete.subject"))
 
-        Ok
+                Ok
+            }
+        }
     }
   }
 }

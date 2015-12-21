@@ -42,7 +42,7 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
 
             AccountService.resetPasswordTokens += (token -> account.id)
 
-            emailService.sendResetPasswordEmail(emailAddress, resetPasswordUrl, account.firstName.get, Messages("resetPassword.email.subject"))
+            emailService.sendResetPasswordEmail(emailAddress, account.firstName.get, resetPasswordUrl, Messages("email.resetPassword.subject"))
 
             Ok
         }

@@ -50,6 +50,13 @@ Make the `activator` script executable:
     $ chmod u+x activator
 
 
+# JVM params
+
+`$ vi ~/.profile` and add the following line:
+
+    export SBT_OPTS="-Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled"
+
+
 # Start web server
 
     $ screen -dR

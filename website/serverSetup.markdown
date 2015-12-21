@@ -9,7 +9,7 @@ Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
 
 # Web server
 
-`$ sudo cp /etc/nginx/sites-available/careerstudio /etc/nginx/sites-available/cruited-frontend`
+`$ sudo cp /etc/nginx/sites-available/cruited-api /etc/nginx/sites-available/cruited-frontend`
 
 `$ sudo vi /etc/nginx/sites-available/cruited-frontend`
 
@@ -50,6 +50,13 @@ Make the `activator` script executable:
     $ chmod u+x activator
 
 
+# JVM params
+
+`$ vi ~/.profile` and add the following line:
+
+    export SBT_OPTS="-Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled"
+
+    
 # Start web server
 
     $ screen -dR

@@ -57,8 +57,6 @@ class AccountApi extends Controller {
               }
             }
 
-            // TODO: send welcome email
-
             Created.withSession(request.session + (SessionService.sessionKeyAccountId -> newAccountId.toString))
           }
         }

@@ -98,11 +98,6 @@ resetPassword.new.form.password.placeholder=5 chars minimum
 resetPassword.new.form.submitBtn.text=Save
 
 
-# Reset password email
-
-resetPassword.email.subject=Nytt lösenord till Cruited
-
-
 # Dashboard page
 
 dashboard.title=My Assessments
@@ -224,3 +219,11 @@ order.payment.form.cardholderName.label=Cardholder name
 # Edit Order page
 
 order.edit.saveBtn.text=Save
+
+
+# Emails
+
+email.resetPassword.subject=Nytt lösenord till Cruited
+email.unpaidOrderReminder.subject=Complete your order
+email.twoDaysAfterAssessmentDelivered.subject=Bara ett steg kvar till en granskning av din jobbansökan
+email.orderComplete.subject=Granskning skapad

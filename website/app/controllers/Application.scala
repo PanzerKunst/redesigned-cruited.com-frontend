@@ -1,11 +1,12 @@
 package controllers
 
+import java.util.Timer
 import javax.inject.Inject
 
 import db._
 import models.{CruitedProduct, Order}
 import play.api.Play.current
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{Messages, I18nSupport, Lang, MessagesApi}
 import play.api.libs.json.JsNull
 import play.api.mvc._
 import play.api.{Logger, Play}
@@ -14,9 +15,12 @@ import services._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService) extends Controller with I18nSupport {
+class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService, val emailsToSendTasker: EmailsToSendTasker, val emailService: EmailService) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
   val dwsRootUrl = Play.configuration.getString("dws.rootUrl").get
+
+  // Run the EmailsToSendTasker task after 0ms, repeating every 5 seconds
+  new Timer().schedule(emailsToSendTasker, 0, 5 * 1000)
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
@@ -25,7 +29,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         if (AccountService.isTemporary(accountId)) {
           Redirect("/order")
         } else {
-          Ok(views.html.dashboard(getI18nMessages(request), AccountDto.getOfId(accountId), OrderDto.getOfAccountIdForFrontend(accountId)))
+          val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1}
+          Ok(views.html.dashboard(getI18nMessages(request), AccountDto.getOfId(accountId), frontendOrders))
         }
     }
   }
@@ -38,6 +43,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   def signIn = Action { request =>
     val isLinkedinAccountUnregistered = false
     Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def myAccount = Action { request =>
@@ -175,6 +184,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
                     OrderDto.update(paidOrder)
 
+                    emailService.sendOrderCompleteEmail(account.emailAddress.get, account.firstName.get, Messages("email.orderComplete.subject"))
+
                     Redirect("/")
                   } else {
                     // We display the payment page
@@ -200,7 +211,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
-                case Some(order) =>
+                case Some(tuple) =>
+                  val order = tuple._1
+
                   if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
                     Ok(views.html.order.editOrder(getI18nMessages(request), Some(account), order))
                   } else {
@@ -226,7 +239,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
               OrderDto.getOfIdForFrontend(orderId) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
-                case Some(order) => Ok(views.html.order.completePayment(getI18nMessages(request), Some(account), CruitedProductDto.getAll, ReductionDto.getAll, order))
+                case Some(tuple) => Ok(views.html.order.completePayment(getI18nMessages(request), Some(account), CruitedProductDto.getAll, ReductionDto.getAll, tuple._1))
               }
             }
         }
@@ -245,10 +258,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
         OrderDto.getOfIdForFrontend(orderId) match {
           case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
-          case Some(order) =>
+          case Some(tuple) =>
             val account = AccountDto.getOfId(accountId).get
 
-            if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
+            if (tuple._1.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
               ReportDto.getOfOrderId(orderId) match {
                 case None => BadRequest("No report available for order ID " + orderId)
                 case Some(assessmentReport) =>
@@ -324,6 +337,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
   }
 
+  def linkedinCallbackOrderStepAccountCreation = Action { request =>
+    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
+  }
+
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
     if (request.queryString.contains("error")) {
       Ok(views.html.order.orderStepAssessmentInfo(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
@@ -359,13 +376,5 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
     }
-  }
-
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
-  }
-
-  def linkedinCallbackOrderStepAccountCreation = Action { request =>
-    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 }

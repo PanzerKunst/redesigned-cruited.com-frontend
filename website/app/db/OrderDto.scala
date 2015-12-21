@@ -211,10 +211,10 @@ object OrderDto {
   }
 
   def getOfId(id: Long): Option[Order] = {
-    getOfIdForFrontend(id).map { fo => new Order(fo)}
+    getOfIdForFrontend(id).map { tuple => new Order(tuple._1, tuple._2)}
   }
 
-  def getOfIdForFrontend(id: Long): Option[FrontendOrder] = {
+  def getOfIdForFrontend(id: Long): Option[(FrontendOrder, Option[String])] = {
     DB.withConnection { implicit c =>
       val query = """
         select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment,
@@ -240,11 +240,6 @@ object OrderDto {
           }
 
           val cvFileNameOpt = cvFileName match {
-            case "" => None
-            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
-          }
-
-          val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
             case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
@@ -287,7 +282,7 @@ object OrderDto {
               ))
           }
 
-          FrontendOrder(
+          val frontendOrder = FrontendOrder(
             id = id,
             idInBase64 = StringService.base64Encode(id.toString),
             edition = Edition(
@@ -298,7 +293,6 @@ object OrderDto {
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
-            linkedinProfileFileName = linkedinProfileFileNameOpt,
             positionSought = positionSoughtOpt,
             employerSought = employerSoughtOpt,
             jobAdUrl = jobAdUrlOpt,
@@ -307,6 +301,13 @@ object OrderDto {
             status = status,
             creationTimestamp = creationDate.getTime
           )
+
+          val linkedinProfileFileNameOpt = linkedinProfileFileName match {
+            case "" => None
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
+          }
+
+          (frontendOrder, linkedinProfileFileNameOpt)
       }
 
       SQL(query).as(rowParser.singleOpt)
@@ -314,10 +315,10 @@ object OrderDto {
   }
 
   def getOfAccountId(accountId: Long): List[Order] = {
-    getOfAccountIdForFrontend(accountId).map { fo => new Order(fo)}
+    getOfAccountIdForFrontend(accountId).map { tuple => new Order(tuple._1, tuple._2)}
   }
 
-  def getOfAccountIdForFrontend(accountId: Long): List[FrontendOrder] = {
+  def getOfAccountIdForFrontend(accountId: Long): List[(FrontendOrder, Option[String])] = {
     DB.withConnection { implicit c =>
       val query = """
         select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment,
@@ -344,11 +345,6 @@ object OrderDto {
           }
 
           val cvFileNameOpt = cvFileName match {
-            case "" => None
-            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
-          }
-
-          val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
             case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           }
@@ -386,7 +382,7 @@ object OrderDto {
               ))
           }
 
-          FrontendOrder(
+          val frontendOrder = FrontendOrder(
             id = orderId,
             idInBase64 = StringService.base64Encode(orderId.toString),
             edition = Edition(
@@ -397,7 +393,6 @@ object OrderDto {
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
             coverLetterFileName = coverLetterFileNameOpt,
-            linkedinProfileFileName = linkedinProfileFileNameOpt,
             positionSought = positionSoughtOpt,
             employerSought = employerSoughtOpt,
             jobAdUrl = jobAdUrlOpt,
@@ -406,9 +401,42 @@ object OrderDto {
             status = status,
             creationTimestamp = creationDate.getTime
           )
+
+          val linkedinProfileFileNameOpt = linkedinProfileFileName match {
+            case "" => None
+            case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
+          }
+
+          (frontendOrder, linkedinProfileFileNameOpt)
       }
 
       SQL(query).as(rowParser.*)
+    }
+  }
+
+  def setUnpaidOrderReminderEmailSent(orderId: Long) {
+    DB.withConnection { implicit c =>
+      val query = """
+        update documents set
+        1day_email_sent = 1
+        where id = """ + orderId + """;"""
+
+      Logger.info("OrderDto.setUnpaidOrderReminderEmailSent():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  def setTwoDaysAfterAssessmentDeliveredEmailSent(orderId: Long) {
+    DB.withConnection { implicit c =>
+      val query = """
+        update documents set
+        2days_after_assessment_delivered_email_sent = 1
+        where id = """ + orderId + """;"""
+
+      Logger.info("OrderDto.setTwoDaysAfterAssessmentDeliveredEmailSent():" + query)
+
+      SQL(query).executeUpdate()
     }
   }
 }

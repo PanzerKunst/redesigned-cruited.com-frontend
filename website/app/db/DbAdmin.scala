@@ -73,7 +73,8 @@ object DbAdmin {
       val query = """
         alter table documents
         add job_ad_url varchar(255) after employer,
-        add customer_comment varchar(512) after job_ad_url;"""
+        add customer_comment varchar(512) after job_ad_url,
+        add 2days_after_assessment_delivered_email_sent tinyint(1) unsigned not null default 0 after 1day_email_sent;"""
 
       Logger.info("DbAdmin.alterTableDocuments():" + query)
 
@@ -107,7 +108,8 @@ object DbAdmin {
       val query = """
         alter table documents
         drop column job_ad_url,
-        drop column customer_comment;"""
+        drop column customer_comment,
+        drop column 2days_after_assessment_delivered_email_sent;"""
 
       Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
 

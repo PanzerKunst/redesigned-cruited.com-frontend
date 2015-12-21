@@ -1,8 +1,11 @@
 package db
 
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 
 object DbUtil {
+  val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
   def safetize(string: String): String = {
     string.replaceAll("'", "''")
   }

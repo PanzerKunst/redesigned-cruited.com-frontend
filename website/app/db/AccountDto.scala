@@ -1,8 +1,10 @@
 package db
 
+import java.util.{Calendar, GregorianCalendar}
+
 import anorm.SqlParser._
 import anorm._
-import models.Account
+import models.{Account, Order}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
@@ -246,6 +248,67 @@ object AccountDto {
       }
 
       SQL(query).as(rowParser.singleOpt)
+    }
+  }
+
+  def getWhoNeedUnpaidOrderReminderEmail: List[(String, String, Long)] = {
+    DB.withConnection { implicit c =>
+      val cal = new GregorianCalendar()
+      cal.add(Calendar.DATE, -1)
+      val creationDateClause = """
+        and added_at < '""" + DbUtil.dateFormat.format(cal.getTime) + """'"""
+
+      val query = """
+        select distinct email, prenume,
+          max(d.id) as order_id
+        from useri u
+          inner join documents d on d.added_by = u.id
+        where added_by = u.id
+          and d.id > 0
+          and d.status = """ + Order.statusIdNotPaid + """
+          and 1day_email_sent = 0""" +
+        creationDateClause + """
+        group by email, prenume;"""
+
+      Logger.info("OrderDto.getWhoNeedUnpaidOrderReminderEmail():" + query)
+
+      val rowParser = str("email") ~ str("prenume") ~
+        long("order_id") map {
+        case emailAddress ~ firstName ~
+          orderId => (emailAddress, firstName, orderId)
+      }
+
+      SQL(query).as(rowParser.*)
+    }
+  }
+
+  def getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail: List[(String, String, Long)] = {
+    DB.withConnection { implicit c =>
+      val cal = new GregorianCalendar()
+      cal.add(Calendar.DATE, -2)
+      val assessmentCompletedDateClause = """
+        and set_done_at < '""" + DbUtil.dateFormat.format(cal.getTime) + """'"""
+
+      val query = """
+        select distinct email, prenume,
+          max(d.id) as order_id
+        from useri u
+          inner join documents d on d.added_by = u.id
+        where d.id > 0
+          and d.status = """ + Order.statusIdComplete + """
+          and 2days_after_assessment_delivered_email_sent = 0""" +
+        assessmentCompletedDateClause + """
+        group by email, prenume;"""
+
+      Logger.info("OrderDto.getWhoNeedTheTwoDayAfterAssessmentDeliveredEmail():" + query)
+
+      val rowParser = str("email") ~ str("prenume") ~
+        long("order_id") map {
+        case emailAddress ~ firstName ~
+          orderId => (emailAddress, firstName, orderId)
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 }
