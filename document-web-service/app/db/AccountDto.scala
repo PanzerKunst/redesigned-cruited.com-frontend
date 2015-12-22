@@ -24,9 +24,7 @@ object AccountDto {
         case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
-            case otherString =>
-              val readyToParse = otherString.replaceAll("\\n", "\\\\n") // Because there is a problem when Json.parse()ing the new lines contained in the summary
-              Json.parse(readyToParse)
+            case otherString => Json.parse(otherString)
           }
 
           Account(
