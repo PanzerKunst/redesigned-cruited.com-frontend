@@ -9,7 +9,10 @@ object CouponService {
       case Coupon.typeNoRestriction => false
       case Coupon.typeSingleUse => CouponDto.useCount(coupon.code, None) >= 1
       case Coupon.typeTwoUses => CouponDto.useCount(coupon.code, None) >= 2
-      case Coupon.typeOncePerAccount => CouponDto.useCount(coupon.code, Some(accountIdOpt.get)) >= 1
+      case Coupon.typeOncePerAccount => accountIdOpt match {
+        case None => false
+        case Some(accountId) => CouponDto.useCount(coupon.code, Some(accountId)) >= 1
+      }
       case _ => CouponDto.useCount(coupon.code, Some(accountIdOpt.get)) >= coupon.maxUseCount
     }
   }

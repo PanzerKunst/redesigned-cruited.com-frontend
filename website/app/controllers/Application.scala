@@ -1,12 +1,12 @@
 package controllers
 
-import java.util.Timer
+import java.util.{Timer, Date}
 import javax.inject.Inject
 
 import db._
 import models.{CruitedProduct, Order}
 import play.api.Play.current
-import play.api.i18n.{Messages, I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.libs.json.JsNull
 import play.api.mvc._
 import play.api.{Logger, Play}
@@ -45,10 +45,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
   }
 
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
-  }
-
   def myAccount = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
@@ -67,6 +63,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def resetPassword = Action { request =>
     Ok(views.html.resetPassword(getI18nMessages(request)))
+  }
+
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def confirmResetPassword = Action { request =>
@@ -179,12 +179,13 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   if (tempOrder.costAfterReductions == 0) {
                     val paidOrder = tempOrder.copy(
                       id = Some(finalisedOrderId),
-                      status = Order.statusIdPaid
+                      status = Order.statusIdPaid,
+                      paymentTimestamp = Some(new Date().getTime)
                     )
 
                     OrderDto.update(paidOrder)
 
-                    emailService.sendOrderCompleteEmail(account.emailAddress.get, account.firstName.get, Messages("email.orderComplete.subject"))
+                    emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, Messages("email.orderComplete.free.subject"))
 
                     Redirect("/")
                   } else {

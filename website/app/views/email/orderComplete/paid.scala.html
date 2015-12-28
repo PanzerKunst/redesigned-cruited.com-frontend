@@ -1,0 +1,35 @@
+@(firstName: String, emailAddress: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, currencyCode: String, vatAmount: Double, orderDateTime: String)
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Hej @firstName,</p>
+
+    <p>Tack för din beställning hos cruited.com!</p>
+
+    <p>Din beställning kommer att finnas tillgänglig på ditt konto inom 24 timmar.<br />
+        Vi kommer att meddela dig via e-post när din beställning är tillgänglig.</p>
+
+    <p>Här följer all information om din order (kvitto):<br />
+        <strong>Bestälning</strong>: Granskning av @orderedProducts<br />
+        <strong>Kvittonummer</strong>: 10@orderId<br />
+        <strong>Betalt</strong>: @costAfterReductions @currencyCode<br />
+        <strong>Moms</strong>: @vatAmount @currencyCode<br />
+        <strong>Momssats</strong>: 25%<br />
+        <strong>Betalningssätt</strong>: Kortbetalning<br />
+        <strong>Tid för shöp</strong>: @orderDateTime<br />
+        <strong>Mottagare</strong>: @emailAddress<br />
+        <strong>Leverans</strong>: Online</p>
+
+    <p>Cruited.com är en del av Next Big Thing AB (5569111833)<br />
+        Adress: Tranebergsvägen 78, 167 44 BROMMA, Sverige<br />
+        Moms: SE556911183301</p>
+
+    <p>Har du frågor om din beställning? Kontakta kundtjänst: kontakt@@cruited.com</p>
+
+    <p>Tack för att du använder Cruited.com!</p>
+
+    <footer>
+        Cruited-teamet
+    </footer>
+</body>
+</html>

@@ -74,7 +74,9 @@ gulp.task("scripts", ["react"], function() {
 // `gulp react` - Compiles React JSX
 gulp.task("react", ["lint"], function() {
     return gulp.src(scriptSrcFiles)
-        .pipe(babel())
+        .pipe(babel({
+            presets: ["es2015", "react"]
+        }))
         .pipe(concat(srcScriptsDistFileName))
         .pipe(gulp.dest(scriptDistDir));
 });

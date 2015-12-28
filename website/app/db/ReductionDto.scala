@@ -6,6 +6,7 @@ import models.{Price, Reduction}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
+import services.GlobalConfig
 
 object ReductionDto {
   def getAll: List[Reduction] = {
@@ -13,7 +14,7 @@ object ReductionDto {
       val query = """
         select id, code, reduction_amount
         from reduction
-        where reduction_currency_code = 'SEK'
+        where reduction_currency_code = '""" + GlobalConfig.currencyCode + """'
         order by id;"""
 
       Logger.info("ReductionDto.getAll():" + query)
@@ -26,7 +27,7 @@ object ReductionDto {
             code = code,
             price = Price(
               amount = reductionAmount,
-              currencyCode = "SEK"
+              currencyCode = GlobalConfig.currencyCode
             )
           )
       }

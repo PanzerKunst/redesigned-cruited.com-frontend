@@ -1,5 +1,7 @@
 package db
 
+import java.util.{Calendar, GregorianCalendar}
+
 import anorm.SqlParser._
 import anorm._
 import models._
@@ -7,7 +9,7 @@ import models.frontend.FrontendOrder
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
-import services.StringService
+import services.{GlobalConfig, StringService}
 
 import scala.util.control.Breaks._
 
@@ -15,7 +17,7 @@ object ReportDto {
   def getOfOrderId(orderId: Long): Option[AssessmentReport] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment,
+        select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name,
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
@@ -36,14 +38,14 @@ object ReportDto {
       Logger.info("ReportDto.getOfOrderId():" + query)
 
       // Use of `getAliased` because of bug when using the regular `get`
-      val rowParser = str("file") ~ str("file_cv") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
+      val rowParser = str("file") ~ str("file_cv") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~
         (long("red_comment_id") ?) ~ (str("red_comment_text") ?) ~ (int("points") ?) ~
         getAliased[Option[Long]]("red_comment_cat_id") ~ getAliased[Option[String]]("red_comment_doc_type") ~
         (long("top_comment_id") ?) ~ (str("top_comment_text") ?) ~
         (long("top_comment_cat_id") ?) ~ (str("top_comment_doc_type") ?) map {
-        case coverLetterFileName ~ cvFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~
+        case coverLetterFileName ~ cvFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ paymentDate ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~
           redCommentId ~ redCommentText ~ weight ~
@@ -83,7 +85,7 @@ object ReportDto {
                 case "by_percent" => (amountOpt, None)
                 case "by_value" => (None, Some(Price(
                   amount = amountOpt.get,
-                  currencyCode = "SEK"
+                  currencyCode = GlobalConfig.currencyCode
                 )))
               }
 
@@ -97,6 +99,14 @@ object ReportDto {
                 `type` = couponTypeOpt.get,
                 maxUseCount = couponMaxUseCountOpt.get
               ))
+          }
+
+          val paymentCal = new GregorianCalendar()
+          paymentCal.setTime(paymentDate)
+          val paymentTimestampOpt = if (paymentCal.get(Calendar.YEAR) == 0) {
+            None
+          } else {
+            Some(paymentDate.getTime)
           }
 
           val order = FrontendOrder(
@@ -116,7 +126,8 @@ object ReportDto {
             customerComment = customerComment,
             accountId = Some(accountId),
             status = Order.statusIdComplete,
-            creationTimestamp = creationDate.getTime
+            creationTimestamp = creationDate.getTime,
+            paymentTimestamp = paymentTimestampOpt
           )
 
           val redCommentOpt = redCommentId match {

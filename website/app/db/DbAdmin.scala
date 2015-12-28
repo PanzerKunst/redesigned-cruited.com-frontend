@@ -5,6 +5,7 @@ import models.CruitedProduct
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
+import services.GlobalConfig
 
 object DbAdmin {
   def reCreateTables() {
@@ -124,16 +125,16 @@ object DbAdmin {
 
   private def initDataProduct() {
     DB.withConnection { implicit c =>
-        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCvReview + "', 299, 'SEK');").execute()
-        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCoverLetterReview + "', 299, 'SEK');").execute()
-        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeLinkedinProfileReview + "', 299, 'SEK');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCvReview + "', 299, '" + GlobalConfig.currencyCode + "');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCoverLetterReview + "', 299, '" + GlobalConfig.currencyCode + "');").execute()
+        SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeLinkedinProfileReview + "', 299, '" + GlobalConfig.currencyCode + "');").execute()
     }
   }
 
   private def initDataReduction() {
     DB.withConnection { implicit c =>
-        SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, 'SEK');").execute()
-        SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, 'SEK');").execute()
+        SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, '" + GlobalConfig.currencyCode + "');").execute()
+        SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, '" + GlobalConfig.currencyCode + "');").execute()
     }
   }
 }

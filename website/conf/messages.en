@@ -206,7 +206,7 @@ order.payment.subtitle=Please enter your card details
 order.payment.submitBtn.text=Complete my order
 order.payment.validation.invalidCardNumber=Invalid card number
 order.payment.validation.invalidExpirationDate=Invalid expiration date
-order.payment.success.text=Your payment was successful. You can now <a href="/login">sign in to access your dashboard</a>.
+order.payment.success.text=Your payment was successful. You can access <a href="/">your dashboard</a> to see the status of your assessment.
 
 order.payment.form.cardNumber.label=Card number
 order.payment.form.cardNumber.placeholder=
@@ -226,4 +226,6 @@ order.edit.saveBtn.text=Save
 email.resetPassword.subject=Nytt lösenord till Cruited
 email.unpaidOrderReminder.subject=Complete your order
 email.twoDaysAfterAssessmentDelivered.subject=Bara ett steg kvar till en granskning av din jobbansökan
-email.orderComplete.subject=Granskning skapad
+email.orderComplete.free.subject=Granskning skapad
+email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
+email.orderComplete.paid.orderedProductsSeparator=och

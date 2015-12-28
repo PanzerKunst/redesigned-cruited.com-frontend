@@ -92,20 +92,12 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   def generateDocThumbnails(order: Order) {
-
-    // TODO: remove
-    Logger.info("OrderService > generateDocThumbnails: " + order.id.get)
-
     generateThumbnailForFile(order.id.get, order.cvFileName)
     generateThumbnailForFile(order.id.get, order.coverLetterFileName)
     generateThumbnailForFile(order.id.get, order.linkedinProfileFileName)
   }
 
   private def generateThumbnailForFile(orderId: Long, fileNameOpt: Option[String]) {
-
-    // TODO: remove
-    Logger.info("OrderService > generateThumbnailForFile: " + fileNameOpt)
-
     fileNameOpt match {
       case None =>
       case Some(fileNameWithoutPrefix) =>

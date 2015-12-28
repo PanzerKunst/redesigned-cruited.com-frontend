@@ -17,7 +17,8 @@ case class FrontendOrder(id: Long,
                          customerComment: Option[String],
                          accountId: Option[Long],
                          status: Int,
-                         creationTimestamp: Long)
+                         creationTimestamp: Long,
+                         paymentTimestamp: Option[Long])
 
 object FrontendOrder {
   implicit val writes: Writes[FrontendOrder] = (
@@ -34,6 +35,7 @@ object FrontendOrder {
       (JsPath \ "customerComment").writeNullable[String] and
       (JsPath \ "accountId").writeNullable[Long] and
       (JsPath \ "status").write[Int] and
-      (JsPath \ "creationTimestamp").write[Long]
+      (JsPath \ "creationTimestamp").write[Long] and
+      (JsPath \ "paymentTimestamp").writeNullable[Long]
     )(unlift(FrontendOrder.unapply))
 }

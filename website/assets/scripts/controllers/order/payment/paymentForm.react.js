@@ -6,7 +6,7 @@ CR.Controllers.PaymentForm = React.createClass({
             <form ref="form" onSubmit={this._handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="card-number" className="for-required-field">{CR.i18nMessages["order.payment.form.cardNumber.label"]}</label>
-                    <input type="text" className="form-control" id="card-number" placeholder={CR.i18nMessages["order.payment.form.cardNumber.placeholder"]} onBlur={this._handleCardNumberFieldBlur} />
+                    <input type="number" className="form-control" id="card-number" placeholder={CR.i18nMessages["order.payment.form.cardNumber.placeholder"]} onBlur={this._handleCardNumberFieldBlur} />
                     <p className="field-error" data-check="empty" />
                     <p className="field-error" id="invalid-card-number">{CR.i18nMessages["order.payment.validation.invalidCardNumber"]}</p>
                 </div>
@@ -38,7 +38,7 @@ CR.Controllers.PaymentForm = React.createClass({
                     </div>
                     <div className="form-group">
                         <label htmlFor="cvc" className="for-required-field">{CR.i18nMessages["order.payment.form.cvc.label"]}</label>
-                        <input type="text" className="form-control" id="cvc" placeholder={CR.i18nMessages["order.payment.form.cvc.placeholder"]} />
+                        <input type="number" className="form-control" id="cvc" placeholder={CR.i18nMessages["order.payment.form.cvc.placeholder"]} />
                         <p className="field-error" data-check="empty" />
                     </div>
                 </div>
@@ -52,7 +52,7 @@ CR.Controllers.PaymentForm = React.createClass({
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <p dangerouslySetInnerHtml={{__html: CR.i18nMessages["order.payment.success.text"]}} />
+                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.payment.success.text"]}} />
                 </div>
                 <div className="centered-contents">
                     <p className="other-form-error"></p>
@@ -123,7 +123,7 @@ CR.Controllers.PaymentForm = React.createClass({
                 this.validator.showErrorMessage(this.$invalidExpirationDateError);
                 this.$submitBtn.disableLoading();
             } else {
-                paymill.createToken({
+                /* TODO paymill.createToken({
                     number: cardNumber,
                     exp_month: cardExpiryMonth,
                     exp_year: cardExpiryYear,
@@ -131,7 +131,10 @@ CR.Controllers.PaymentForm = React.createClass({
                     cardholder: this.$cardholderNameField.val(),
                     amount: this.props.price * 100,
                     currency: this.props.currency
-                }, this._handlePaymillResponse);
+                }, this._handlePaymillResponse); */
+
+                // TODO: remove
+                this._handlePaymillResponse(null, {token: "af"});
             }
         }
     },

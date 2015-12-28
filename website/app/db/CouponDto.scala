@@ -6,6 +6,7 @@ import models.{Order, Coupon, Price}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
+import services.GlobalConfig
 
 object CouponDto {
   def getOfId(id: Long): Option[Coupon] = {
@@ -26,7 +27,7 @@ object CouponDto {
             case "by_percent" => (Some(amount), None)
             case "by_value" => (None, Some(Price(
               amount = amount,
-              currencyCode = "SEK"
+              currencyCode = GlobalConfig.currencyCode
             )))
           }
 
@@ -64,7 +65,7 @@ object CouponDto {
             case "by_percent" => (Some(amount), None)
             case "by_value" => (None, Some(Price(
               amount = amount,
-              currencyCode = "SEK"
+              currencyCode = GlobalConfig.currencyCode
             )))
           }
 

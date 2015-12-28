@@ -19,12 +19,21 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
     ))
   }
 
-  def sendOrderCompleteEmail(emailAddress: String, firstName: String, subject: String) {
+  def sendFreeOrderCompleteEmail(emailAddress: String, firstName: String, subject: String) {
     mailerClient.send(Email(
       subject,
       accountName + "<" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(views.html.email.orderComplete(firstName).toString())
+      bodyHtml = Some(views.html.email.orderComplete.free(firstName).toString())
+    ))
+  }
+
+  def sendPaidOrderCompleteEmail(emailAddress: String, firstName: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, currencyCode: String, vatAmount: Double, orderDateTime: String, subject: String) {
+    mailerClient.send(Email(
+      subject,
+      accountName + "<" + accountAddress + ">",
+      Seq(emailAddress),
+      bodyHtml = Some(views.html.email.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, currencyCode, vatAmount, orderDateTime).toString())
     ))
   }
 

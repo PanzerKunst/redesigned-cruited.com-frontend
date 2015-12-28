@@ -6,6 +6,7 @@ import models.{CruitedProduct, Price}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
+import services.GlobalConfig
 
 object CruitedProductDto {
   def getAll: List[CruitedProduct] = {
@@ -13,7 +14,7 @@ object CruitedProductDto {
       val query = """
         select id, code, price_amount
         from product
-        where price_currency_code = 'SEK'
+        where price_currency_code = '""" + GlobalConfig.currencyCode + """'
         order by id;"""
 
       Logger.info("CruitedProductDto.getAll():" + query)
@@ -25,7 +26,7 @@ object CruitedProductDto {
             code = code,
             price = Price(
               amount = priceAmount,
-              currencyCode = "SEK"
+              currencyCode = GlobalConfig.currencyCode
             )
           )
       }
@@ -38,7 +39,7 @@ object CruitedProductDto {
     DB.withConnection { implicit c =>
       val query = """select code, price_amount
       from product
-      where price_currency_code = 'SEK'
+      where price_currency_code = '""" + GlobalConfig.currencyCode + """'
         and id = """ + id + """
       limit 1;"""
 
@@ -51,7 +52,7 @@ object CruitedProductDto {
             code = code,
             price = Price(
               amount = priceAmount,
-              currencyCode = "SEK"
+              currencyCode = GlobalConfig.currencyCode
             )
           )
       }

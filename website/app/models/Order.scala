@@ -17,7 +17,8 @@ case class Order(id: Option[Long],
                  customerComment: Option[String],
                  accountId: Option[Long],
                  status: Int,
-                 creationTimestamp: Long) {
+                 creationTimestamp: Long,
+                 paymentTimestamp: Option[Long]) {
 
   def this(frontendOrder: FrontendOrder, linkedinProfileFileName: Option[String]) = this(
     id = Some(frontendOrder.id),
@@ -36,7 +37,8 @@ case class Order(id: Option[Long],
     customerComment = frontendOrder.customerComment,
     accountId = frontendOrder.accountId,
     status = frontendOrder.status,
-    creationTimestamp = frontendOrder.creationTimestamp
+    creationTimestamp = frontendOrder.creationTimestamp,
+    paymentTimestamp = frontendOrder.paymentTimestamp
   )
 
   def costAfterReductions: Int = {
