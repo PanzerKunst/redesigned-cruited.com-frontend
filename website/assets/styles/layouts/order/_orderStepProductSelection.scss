@@ -1,57 +1,431 @@
 #order-step-product-selection {
-  .reduced-price {
-    display: none;
-  }
-
-  .with-reduced-price {
-    > .price {
-      color: $brand-danger;
-      text-decoration: line-through;
-    }
-
-    > .reduced-price {
-      display: block;
-    }
-  }
-
   #products-section,
-  #edition-selection {
+  #editions-section {
+    padding-bottom: 2.5em;
+    border-bottom: 1px solid $well-border-color;
+
+    > header > p {
+      margin-bottom: 0;
+      min-height: 3.5em;
+
+      > strong {
+        color: $brand-danger;
+      }
+    }
+
     li {
       background-color: white;
+      color: $grey;
 
-      border-width: 0.1em;
-      border-color: $well-border-color;
-      border-radius: 0.3em;
+      @include project-border;
 
-      display: flex;
-      justify-content: space-around;
+      cursor: pointer;
 
-      margin-bottom: 1em;
+      margin-bottom: 0.5em;
       &:last-child {
         margin-bottom: 0;
+      }
+    }
+
+    @include large-screen {
+      display: flex;
+      justify-content: space-between;
+
+      > header > p,
+      > ul {
+        font-size: #{$font-size-base-px}px;
+      }
+
+      > ul {
+        width: 55%;
+        margin-top: 99px;
+      }
+    }
+  }
+
+  #products-section {
+    li {
+      border-style: dashed;
+
+      // Using Float instead of Flexbox due to insuffient browser support
+      @include clearfix;
+      min-height: 5.2em;
+
+      &.selected {
+        border: 2px solid $primary-btn-color;
+      }
+
+      > .checkbox {
+        float: left;
+        margin-left: $spacer-unit-size;
+
+        width: 55%;
+      }
+
+      > .prices {
+        float: right;
+
+        margin-top: 1.2em;
+        &.with-reduction {
+          margin-top: 0.7em;
+        }
       }
 
       p {
         margin-bottom: 0;
       }
     }
+
+    @include medium-screen {
+      .checkbox {
+        margin-top: 1.5em;
+      }
+
+      .prices {
+        margin-right: 0;
+
+        > p {
+          width: 8em;
+          text-align: center;
+
+          border-left: 1px solid $gradient-light-grey;
+        }
+      }
+    }
+
+    @include large-screen {
+      .checkbox > label::before {
+        margin-top: 3px; // Default
+      }
+    }
   }
 
-  #products-section li {
-    border-style: dashed;
+  .prices {
+    margin-right: $spacer-unit-size;
+
+    font-size: 1.2em;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    > p,
+    span {
+      line-height: 1em;
+    }
+
+    > p {
+      text-align: center;
+    }
   }
 
-  #edition-selection li {
+  .amount {
+    font-weight: bold;
+    font-size: 1.7em;
+  }
+
+  .currency-code {
+    margin-left: 0.3em;
+  }
+
+  .full-price {
+    color: $brand-danger;
+    text-decoration: line-through;
+    text-align: center;
+  }
+
+  #editions-section li {
     border-style: solid;
+
+    &.selected {
+      border: 2px solid $action-color;
+    }
+
+    > div {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    $edition-icon-location-x: -1900px;
+    $edition-icon-location-y: 0;
+
+    > .edition-icon {
+      margin: 3.1em 0 1em 1em;
+
+      @include hdpi-sprite;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+      @include hidpi {
+        background-position: half-pos($edition-icon-location-x, $edition-icon-location-y);
+      }
+
+      width: 50px;
+      height: 50px;
+    }
+
+    &.YOUNG_PRO > .edition-icon {
+      $edition-icon-img-location-y: -100px;
+
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+      @include hidpi {
+        background-position: half-pos($edition-icon-location-x, $edition-icon-location-y);
+      }
+    }
+
+    &.EXEC > .edition-icon {
+      $edition-icon-img-location-y: -200px;
+
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+      @include hidpi {
+        background-position: half-pos($edition-icon-location-x, $edition-icon-location-y);
+      }
+    }
+
+    > .radio {
+      margin-left: -33px;
+      margin-right: $spacer-unit-size;
+
+      width: 84%;
+    }
+
+    label {
+      padding-left: 26px;
+
+      // Because of the increased font size of the contained <span>
+      &::before,
+      &::after {
+        margin-top: 6px;
+        @include medium-screen {
+          margin-top: 10px;
+        }
+        @include large-screen {
+          margin-top: 6px;
+        }
+      }
+
+      > span {
+        font-size: 1.2em;
+        color: $action-color;
+        font-weight: bold;
+
+        display: block;
+      }
+    }
+
+    @include medium-screen {
+      .edition-icon {
+        margin-top: 1em;
+        margin-left: 2em;
+        margin-right: 2em;
+      }
+
+      .radio {
+        margin-left: 0;
+        width: 77%;
+      }
+
+      label {
+        padding-left: 5px; // Default
+      }
+    }
   }
 
   #cart-section {
+    > header {
+      @include clearfix;
+
+      margin-bottom: 1em;
+
+      > h2 {
+        float: left;
+
+        margin-bottom: 0;
+        padding-left: 2em;
+
+        font-size: 1.3em;
+        color: $dark-grey;
+        line-height: 1.4em;
+
+        $cart-icon-location-x: -1900px;
+        $cart-icon-location-y: -300px;
+
+        @include hdpi-sprite;
+        background-position: $cart-icon-location-x $cart-icon-location-y;
+        @include hidpi {
+          background-position: half-pos($cart-icon-location-x, $cart-icon-location-y);
+        }
+
+        @include medium-screen {
+          padding-left: 2.4em;
+
+          $cart-icon-location-y: -400px;
+          background-position: $cart-icon-location-x $cart-icon-location-y;
+        }
+
+        @include large-screen {
+          padding-left: 2em;
+        }
+      }
+
+      > span {
+        float: right;
+
+        padding: 0.1em 0.7em;
+        margin-top: 2.6em;
+
+        color: white;
+
+        background-color: $brand-danger;
+        border-radius: $default-border-radius;
+      }
+    }
+
+    > div {
+      background-color: white;
+
+      @include project-border;
+
+      margin-bottom: 2em;
+      padding: 2em 2.8em 1em 2.8em;
+
+      > div {
+        color: $well-border-color;
+        border-bottom: 1px solid $well-border-color;
+
+        text-transform: uppercase;
+
+        @include clearfix;
+
+        > span {
+          float: left;
+          &:last-child {
+            float: right;
+          }
+        }
+      }
+
+      li {
+        @include clearfix;
+
+        margin-top: 1em;
+
+        > span {
+          float: left;
+
+          &.cart-product-price {
+            float: right;
+
+            color: $grey;
+
+            margin: 1.7em -2.9em 0 0;
+            @include medium-screen {
+              margin: 0 -2.65em 0 0;
+            }
+            @include large-screen {
+              margin-right: -2.025em;
+            }
+          }
+        }
+
+        .fa-times {
+          color: $brand-danger;
+        }
+      }
+
+      @include medium-screen {
+        // Because of table floated right
+        @include clearfix;
+
+        .cart-product-name {
+          display: inline-block;
+          width: 10em;
+        }
+      }
+
+      @include large-screen {
+        padding-left: 5em;
+        padding-right: 5em;
+      }
+    }
+
     p {
       margin-bottom: 0;
     }
 
-    td:last-child {
-      text-align: right;
+    form {
+      padding: 1.5em 0 2em 0;
+
+      border: 1px dashed $well-border-color;
+      border-left: none;
+      border-right: none;
+
+      > .form-group {
+        margin-bottom: 0.5em;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .other-form-error {
+        // Default
+        margin-left: 0.75em;
+      }
+
+      @include medium-screen {
+        > .form-group > div {
+          display: flex;
+        }
+
+        button {
+          width: auto;
+          margin-left: 0.5em;
+        }
+      }
+    }
+
+    table {
+      margin-top: 2em;
+
+      width: 100%;
+
+      .sub-total-row {
+        color: $grey;
+      }
+      .reduction-row {
+        color: $primary-btn-color;
+      }
+      .coupon-row {
+        color: $brand-danger;
+      }
+
+      td:last-child {
+        text-align: right;
+      }
+
+      @include medium-screen {
+        width: auto;
+
+        float: right;
+
+        td:last-child {
+          width: 6em;
+        }
+      }
+    }
+
+    tfoot {
+      border-top: 0.5em solid $well-border-color;
+
+      td {
+        &:first-child {
+          text-transform: uppercase;
+          letter-spacing: -0.05em;
+        }
+        &:last-child {
+          font-size: 1.5em;
+          font-weight: bold;
+        }
+      }
     }
   }
 }

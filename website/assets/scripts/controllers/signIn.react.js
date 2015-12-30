@@ -13,9 +13,11 @@ CR.Controllers.SignIn = P(function(c) {
         render: function() {
             return (
                 <div id="content">
-                    <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["signIn.title"]}</h1>
-                    </div>
+                    <header>
+                        <div>
+                            <h1>{CR.i18nMessages["signIn.title"]}</h1>
+                        </div>
+                    </header>
                     <div className="with-circles">
                         <form>
                             {this._getSignInWithLinkedinForm()}

@@ -23,9 +23,11 @@ CR.Controllers.Report = P(function(c) {
 
             return (
                 <div id="content">
-                    <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["report.title"]}</h1>
-                    </div>
+                    <header>
+                        <div>
+                            <h1>{CR.i18nMessages["report.title"]}</h1>
+                        </div>
+                    </header>
                     <div className="with-circles">
                         <span>{this.state.order.getTitleForHtml()}</span>
                         {this._getGlobalSection()}

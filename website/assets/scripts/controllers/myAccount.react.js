@@ -28,9 +28,11 @@ CR.Controllers.MyAccount = P(function(c) {
 
             return (
                 <div id="content">
-                    <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["myAccount.title"]}</h1>
-                    </div>
+                    <header>
+                        <div>
+                            <h1>{CR.i18nMessages["myAccount.title"]}</h1>
+                        </div>
+                    </header>
                     <div className="with-circles">
                         {successAlert}
                         <form onSubmit={this._handleSubmit}>

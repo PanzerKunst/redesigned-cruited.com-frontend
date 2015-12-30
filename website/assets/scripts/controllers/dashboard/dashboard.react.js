@@ -16,12 +16,14 @@ CR.Controllers.Dashboard = P(function(c) {
 
             return (
                 <div id="content">
-                    <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["dashboard.title"]}</h1>
-                        <a className="btn btn-danger" id="new-assessment" href="/order">{CR.i18nMessages["dashboard.newAssessmentBtn.text"]}
-                            <i className="fa fa-plus"></i>
-                        </a>
-                    </div>
+                    <header>
+                        <div>
+                            <h1>{CR.i18nMessages["dashboard.title"]}</h1>
+                            <a className="btn btn-danger" id="new-assessment" href="/order">{CR.i18nMessages["dashboard.newAssessmentBtn.text"]}
+                                <i className="fa fa-plus"></i>
+                            </a>
+                        </div>
+                    </header>
                     <div className="with-circles">
                         <span>{CR.Services.String.template(CR.i18nMessages["dashboard.subtitle"], "firstName", this.state.account.firstName)}</span>
                         <ul className="styleless">

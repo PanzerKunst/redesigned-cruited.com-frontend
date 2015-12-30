@@ -22,9 +22,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             return (
                 <div id="content">
-                    <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
-                    </div>
+                    <header>
+                        <div>
+                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                        </div>
+                    </header>
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
 

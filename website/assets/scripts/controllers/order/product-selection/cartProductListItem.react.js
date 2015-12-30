@@ -2,16 +2,19 @@
 
 CR.Controllers.CartProductListItem = React.createClass({
     render: function() {
+        let product = this.props.product;
+        let editionCode = CR.order.getEdition().code;
+        let editionSpanClasses = "edition " + editionCode;
+
         return (
             <li>
                 <span>
-                    <p>{CR.i18nMessages["product.name." + this.props.product.code]}</p>
-                    <span>{CR.i18nMessages["edition.name." + CR.order.getEdition().code]}</span>
+                    <p className="cart-product-name">{CR.i18nMessages["product.name." + product.code]}</p>
+                    <span className={editionSpanClasses}>{CR.i18nMessages["edition.name." + editionCode]}</span>
                 </span>
-                <span>{this.props.product.price.amount} {this.props.product.price.currencyCode}</span>
-                <button className="styleless fa fa-times" onClick={this._handleClick}></button>
+                <span className="cart-product-price">{product.price.amount} {product.price.currencyCode}<button className="styleless fa fa-times" onClick={this._handleClick}></button></span>
             </li>
-            );
+        );
     },
 
     _handleClick: function() {

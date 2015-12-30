@@ -1,0 +1,32 @@
+/* iOS */
+
+// Fixed background doesn't work on iOS
+html[data-useragent*="iPhone"],
+html[data-useragent*="iPad"],
+html[data-useragent*="iPod"] {
+  #header-nav {
+    > a[href="/login"] {
+      margin-top: 9px;
+    }
+  }
+}
+
+/* Flexbox */
+
+// Flexbox progressive enhancements
+html[data-useragent*="Chrome"],
+html[data-useragent*="Firefox"] {
+  #order-steps-breadcrumbs {
+    > a,
+    > span {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}
+
+/* IE */
+
+html[data-useragent*="Trident"] {
+}

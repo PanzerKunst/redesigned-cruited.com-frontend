@@ -12,6 +12,10 @@ $darker-grey: rgb(42, 68, 94); // #2A445E
 $light-grey-blue: rgb(98, 143, 187);   // #628FBB
 $well-border-color: rgb(189, 205, 216); // #BDCDD8
 $sky-blue: rgb(38, 169, 224); // #26A9E0
+$pro-edition-color: $sky-blue;
+$young-pro-edition-color: rgb(51, 184, 176);  // #33B8B0
+$exec-edition-color: rgb(159, 39, 121); // #9F2779
+
 
 $line-height-project: 1.75em;
 
@@ -46,3 +50,5 @@ $default-animation-duration: 300ms;
 $content-element-margin-bottom: 1.2em;
 
 $well-padding: 1em;
+
+$default-border-radius: 0.3em;

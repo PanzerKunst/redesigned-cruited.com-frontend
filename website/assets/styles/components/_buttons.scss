@@ -24,30 +24,7 @@
 }
 
 .btn-default,
-a.btn-default {
-  @include styleless-btn;
-
-  color: $grey;
-  border: 2px solid $grey;
-
-  &:active,
-  &:focus,
-  &:hover {
-    color: $background-body-color;
-    border-color: darken($grey, 25%);
-    background-color: darken($grey, 15%);
-  }
-
-  &[disabled],
-  &[disabled]:active,
-  &[disabled]:focus,
-  &[disabled]:hover {
-    color: $grey;
-    border-color: $grey;
-    background-color: $background-body-color;
-  }
-}
-
+a.btn-default,
 .btn-primary,
 a.btn-primary,
 .btn-success,
@@ -60,6 +37,30 @@ a.btn-warning,
 a.btn-danger,
 .btn.sign-in-with-linkedin {
   color: white;
+}
+
+.btn-default,
+a.btn-default {
+  background-color: $grey;
+  border-color: $grey;
+
+  &:active,
+  &:focus,
+  &:hover,
+  &:active:focus {
+    background-color: darken($grey, 15%);
+    border-color: darken($grey, 25%);
+
+    color: white;
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover {
+    background-color: $grey;
+    border-color: $grey;
+  }
 }
 
 .btn-primary,

@@ -17,6 +17,17 @@
   }
 }
 
+.checkbox {
+  > label::after {
+    padding-top: 0;
+  }
+}
+html[data-useragent*="AppleWebKit"] {
+  > label::after {
+    padding-top: 1px;
+  }
+}
+
 .checkbox-primary {
   > input[type=checkbox]:checked + label::before {
     background-color: $primary-btn-color;

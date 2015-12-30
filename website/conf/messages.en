@@ -7,8 +7,11 @@ product.name.COVER_LETTER_REVIEW=Cover Letter
 product.name.LINKEDIN_PROFILE_REVIEW=Linkedin Profile
 
 edition.name.PRO=Professional
-edition.name.YOUNG_PRO=Young Professional
+edition.name.YOUNG_PRO=Young Pro
 edition.name.EXEC=Executive
+edition.name.long.PRO=Professional
+edition.name.long.YOUNG_PRO=Young Professional
+edition.name.long.EXEC=Executive
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2-item
 reduction.name.3_PRODUCTS_SAME_ORDER=3-item
@@ -89,7 +92,7 @@ resetPassword.emailSent.text=Check your inbox!
 
 resetPassword.form.emailAddress.label=Email address
 resetPassword.form.emailAddress.placeholder=your@mail.com
-resetPassword.form.submitBtn.text=Send me that wicked reset password email!
+resetPassword.form.submitBtn.text=Send me that reset email!
 
 resetPassword.new.saveSuccessful.text=Your new password is saved. You can <a href="/login">sign in</a>.
 resetPassword.new.validation.passwordTooShort=Password should be at least 5 characters
@@ -126,17 +129,21 @@ order.productSelection.validation.emptyCart=You need to select at least 1 produc
 order.productSelection.productsSection.title=Products
 order.productSelection.productsSection.offerTwoProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select 2 items!
 order.productSelection.productsSection.offerThreeProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select all 3 items!
+order.productSelection.productsSection.allOffersActivated.text=You're saving <strong>{reductionPrice}</strong> on the full price
 order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my Linkedin Profile
 
 order.productSelection.editionsSection.title=Product Edition
 order.productSelection.editionsSection.subtitle=Please choose which edition best suits you
+order.productSelection.editionsSection.editionDescription.text.PRO=You have worked for at least a year
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working a year or less, or you are a student
+order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
 
 order.productSelection.cartSection.title=Your Order
 order.productSelection.cartSection.productsHeader.products=Products
 order.productSelection.cartSection.productsHeader.defaultPrice=Price
-order.productSelection.cartSection.coupon.label=Have a valid Promotion code or a Gift Card from one of our partners?
+order.productSelection.cartSection.coupon.label=Have a Promotion Code or a Gift Card from one of our partners?
 order.productSelection.cartSection.coupon.placeholder=Coupon Code
 order.productSelection.cartSection.coupon.addBtn.text=Apply coupon
 order.productSelection.cartSection.coupon.addBtn.loadingText=Applying coupon...

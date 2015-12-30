@@ -1,44 +1,10 @@
+@mixin project-border {
+  border: 1px solid $well-border-color;
+  border-radius: $default-border-radius;
+}
+
 [role=main] {
   background-color: $light-grey;
-}
-
-#page-header-bar {
-  background-color: $dark-grey;
-  color: white;
-}
-
-.with-circles {
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-image: url(../images/section-circles_263.png);
-  @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
-    background-image: url(../images/section-circles_526.png);
-    background-size: 263px 80px;
-  }
-
-  @include medium-screen {
-    background-image: url(../images/section-circles-large.png);
-  }
-
-  $section-padding-top: $spacer-unit-size * 6;
-  $section-padding-bottom: $spacer-unit-size * 2.5;
-
-  padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
-
-  @include medium-screen {
-    padding-top: $section-padding-top * $medium-screen-ratio-l;
-    padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
-
-    width: $medium-content-width;
-
-    padding-left: 0;
-    padding-right: 0;
-    margin: 0 auto;
-  }
-
-  @include large-screen {
-    width: $large-content-width;
-  }
 }
 
 button.styleless.fa {
@@ -66,4 +32,73 @@ button.styleless.fa {
 
 a > i.fa {
   margin-right: 0.5em;
+}
+
+.edition {
+  padding: 0.3em .7em 0.3em 2.3em;
+  border-radius: 0.15em;
+
+  font-size: $font-size-sm;
+  color: white;
+
+  $edition-icon-location-x: -1892px;
+  $edition-icon-location-y: -496px;
+
+  @include hdpi-sprite($pro-edition-color);
+  background-position: $edition-icon-location-x $edition-icon-location-y;
+  @include hidpi {
+    background-position: -942px -246px;
+  }
+
+  &.YOUNG_PRO {
+    $edition-icon-location-y: -596px;
+
+    @include hdpi-sprite($young-pro-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -942px -296px;
+    }
+  }
+
+  &.EXEC {
+    $edition-icon-location-y: -696px;
+
+    @include hdpi-sprite($exec-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -942px -346px;
+    }
+  }
+
+  @include medium-screen {
+    $edition-icon-location-x: -1893px;
+    $edition-icon-location-y: -797px;
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+
+    &.YOUNG_PRO {
+      $edition-icon-location-y: -897px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.EXEC {
+      $edition-icon-location-y: -997px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+  }
+
+  @include large-screen {
+    $edition-icon-location-x: -1889px;
+    $edition-icon-location-y: -794px;
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+
+    &.YOUNG_PRO {
+      $edition-icon-location-y: -894px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.EXEC {
+      $edition-icon-location-y: -994px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+  }
 }

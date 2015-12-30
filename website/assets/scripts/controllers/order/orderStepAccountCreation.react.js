@@ -14,9 +14,11 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         render: function() {
             return (
                 <div id="content">
-                    <div id="page-header-bar">
-                        <h1>{CR.i18nMessages["order.accountCreation.title"]}</h1>
-                    </div>
+                    <header>
+                        <div>
+                            <h1>{CR.i18nMessages["order.accountCreation.title"]}</h1>
+                        </div>
+                    </header>
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.accountCreation.subtitle"]}</span>
 
