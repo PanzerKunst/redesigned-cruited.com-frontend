@@ -1,6 +1,5 @@
 /* iOS */
 
-// Fixed background doesn't work on iOS
 html[data-useragent*="iPhone"],
 html[data-useragent*="iPad"],
 html[data-useragent*="iPod"] {
@@ -17,11 +16,16 @@ html[data-useragent*="iPod"] {
 html[data-useragent*="Chrome"],
 html[data-useragent*="Firefox"] {
   #order-steps-breadcrumbs {
+    display: flex;
+    justify-content: center;
+
     > a,
     > span {
       display: flex;
       flex-direction: column;
       justify-content: center;
+
+      margin: 0 0.2em;
     }
   }
 }

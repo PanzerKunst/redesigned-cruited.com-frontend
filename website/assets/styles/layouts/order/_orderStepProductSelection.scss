@@ -38,7 +38,7 @@
 
       > ul {
         width: 55%;
-        margin-top: 99px;
+        margin-top: 101px;
       }
     }
   }
@@ -163,7 +163,7 @@
     }
 
     &.YOUNG_PRO > .edition-icon {
-      $edition-icon-img-location-y: -100px;
+      $edition-icon-location-y: -100px;
 
       background-position: $edition-icon-location-x $edition-icon-location-y;
       @include hidpi {
@@ -172,7 +172,7 @@
     }
 
     &.EXEC > .edition-icon {
-      $edition-icon-img-location-y: -200px;
+      $edition-icon-location-y: -200px;
 
       background-position: $edition-icon-location-x $edition-icon-location-y;
       @include hidpi {
@@ -224,7 +224,8 @@
       }
 
       label {
-        padding-left: 5px; // Default
+        // Default
+        padding-left: 5px;
       }
     }
   }
@@ -284,7 +285,7 @@
 
       @include project-border;
 
-      margin-bottom: 2em;
+      margin-bottom: 1em;
       padding: 2em 2.8em 1em 2.8em;
 
       > div {
@@ -427,5 +428,9 @@
         }
       }
     }
+  }
+
+  .with-circles > form > .other-form-error {
+    margin-bottom: $content-element-margin-bottom;
   }
 }

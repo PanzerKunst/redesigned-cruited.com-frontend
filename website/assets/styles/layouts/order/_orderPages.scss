@@ -1,12 +1,14 @@
 #order-steps-breadcrumbs {
-  display: flex;
-  justify-content: center;
+  display: table;
+  margin: 0 auto;
 
   font-size: $font-size-xs;
   text-transform: uppercase;
 
   > a,
   > span {
+    display: table-cell;
+
     $border-radius: 0.5em;
     $border-radius-large: 1.85em;
 
@@ -15,7 +17,6 @@
     border-radius: $border-radius;
 
     padding: 0.8em 2em;
-    margin: 0 0.2em;
 
     &:first-child {
       border-top-left-radius: $border-radius-large;

@@ -36,13 +36,12 @@ CR.Controllers.Common = P(function(c) {
 
     c._toggleMenu = function() {
         if (this.$siteHeader.hasClass("menu-open")) {
-            let tween = TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {opacity: 0, paused: true});
-
-            tween.eventCallback("onComplete", function() {
-                this.$menu.css({"display": "none"});
-            }.bind(this));
-
-            tween.resume();
+            TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {
+                opacity: 0,
+                onComplete: function() {
+                    this.$menu.css({"display": "none"});
+                }.bind(this)
+            });
 
             this.$siteHeader.removeClass("menu-open");
         } else {
