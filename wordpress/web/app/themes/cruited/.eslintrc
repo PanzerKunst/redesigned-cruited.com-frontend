@@ -108,5 +108,9 @@ globals:
     Modernizr: true
     FastClick: true
     TweenLite: true
+    Power0: true
+    Power1: true
+    Power2: true
+    Power3: true
     Power4: true
     Breakpoints: true
