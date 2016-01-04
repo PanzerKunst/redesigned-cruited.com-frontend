@@ -39,8 +39,6 @@ html[data-useragent*="Trident"] {
   }
 
   #order-step-assessment-info {
-    $form-group-width: 48%;
-
     @include medium-screen {
       #position-and-employer-section,
       #url-and-comment-section {
@@ -48,7 +46,7 @@ html[data-useragent*="Trident"] {
 
         > .form-group {
           float: right;
-          width: $form-group-width;
+          width: $two-column-form-group-width;
 
           &:first-child {
             float: left;
@@ -63,7 +61,26 @@ html[data-useragent*="Trident"] {
 
         > div {
           float: right;
-          width: $form-group-width;
+          width: $two-column-form-group-width;
+
+          &:first-child {
+            float: left;
+          }
+        }
+      }
+    }
+  }
+
+  #edit-order {
+    @include medium-screen {
+      #documents-section,
+      #position-and-employer-section,
+      #url-and-comment-section {
+        @include clearfix;
+
+        > .form-group {
+          float: right;
+          width: $two-column-form-group-width;
 
           &:first-child {
             float: left;

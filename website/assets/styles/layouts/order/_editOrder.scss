@@ -1,0 +1,26 @@
+#edit-order {
+  form {
+    font-size: #{$font-size-base-px}px;
+
+    [type="submit"] {
+      margin-top: 1em;
+    }
+  }
+
+  #position-and-employer-section {
+    margin-top: 3em;
+  }
+
+  @include medium-screen {
+    #documents-section,
+    #position-and-employer-section,
+    #url-and-comment-section {
+      display: flex;
+      justify-content: space-between;
+
+      > .form-group {
+        width: $two-column-form-group-width;
+      }
+    }
+  }
+}

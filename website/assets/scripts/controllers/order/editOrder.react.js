@@ -28,9 +28,12 @@ CR.Controllers.EditOrder = P(function(c) {
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
 
                         <form onSubmit={this._handleSubmit}>
-                            {this._getCvFormGroup()}
-                            {this._getCoverLetterFormGroup()}
-                            {this._getOptionalInfoFormGroup()}
+                            <section id="documents-section">
+                                {this._getCvFormGroup()}
+                                {this._getCoverLetterFormGroup()}
+                            </section>
+                            {this._getFirstOptionalInfoFormGroup()}
+                            {this._getSecondOptionalInfoFormGroup()}
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.edit.saveBtn.text"]}</button>
                             </div>
@@ -95,9 +98,9 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        _getOptionalInfoFormGroup: function() {
+        _getFirstOptionalInfoFormGroup: function() {
             return (
-                <fieldset>
+                <section id="position-and-employer-section">
                     <div className="form-group">
                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
                         <input type="text" className="form-control" id="position-sought" defaultValue={this.state.order.getSoughtPosition()} />
@@ -106,6 +109,13 @@ CR.Controllers.EditOrder = P(function(c) {
                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
                         <input type="text" className="form-control" id="employer-sought" defaultValue={this.state.order.getSoughtEmployer()} />
                     </div>
+                </section>
+            );
+        },
+
+        _getSecondOptionalInfoFormGroup: function() {
+            return (
+                <section id="url-and-comment-section">
                     <div className="form-group">
                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
                         <input type="text" className="form-control" id="job-ad-url" defaultValue={this.state.order.getJobAdUrl()} />
@@ -116,18 +126,18 @@ CR.Controllers.EditOrder = P(function(c) {
                         <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={this.state.order.getCustomerComment()} />
                         <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                     </div>
-                </fieldset>
+                </section>
             );
         },
 
         _initElements: function() {
             this.$form = $("#content").find("form");
 
-            this.$cvFormGroup = this.$form.children("#cv-form-group");
+            this.$cvFormGroup = this.$form.find("#cv-form-group");
             this.$cvFileField = this.$cvFormGroup.find("#cv");
             this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
 
-            this.$coverLetterFormGroup = this.$form.children("#cover-letter-form-group");
+            this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
             this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
             this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
 
