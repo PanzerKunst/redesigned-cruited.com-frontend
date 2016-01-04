@@ -177,7 +177,7 @@ order.assessmentInfo.form.positionSought.label=Position sought
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
 order.assessmentInfo.form.customerComment.label=Ställ en fråga!
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
-order.assessmentInfo.form.tos.text=I have read and accept the <a>Terms of Service</a>
+order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Terms of Service</a>
 
 
 # Order Step Account Creation page
