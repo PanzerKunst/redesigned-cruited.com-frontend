@@ -27,6 +27,7 @@ $.fn.parallax = function(posX, speed) {
         // To have a smoother parallax on the hero image
         $window.mousewheel(function(e) {
             e.preventDefault();
+
             var scrollTop = $window.scrollTop();
             var scrollYPos = scrollTop - e.deltaY * 400;
 

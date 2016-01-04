@@ -123,26 +123,23 @@ a.btn-primary {
     background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
   }
 
-  width: 146px;
+  width: 156px;
   height: 21px;
 
   padding: 0;
 
   @include medium-screen {
-    $sign-in-with-linked-in-button-image-location-x: -300px;
+    $sign-in-with-linked-in-button-image-location-x: -400px;
 
     background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
     @include hidpi {
       background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
     }
 
-    width: 215px;
+    width: 230px;
     height: 41px;
 
     padding-top: 7px;
-  }
-  @include large-screen {
-    padding-top: 2px;
   }
 
   > span {

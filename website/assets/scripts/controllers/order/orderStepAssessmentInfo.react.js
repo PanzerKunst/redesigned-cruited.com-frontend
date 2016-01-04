@@ -33,10 +33,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.assessmentInfo} />
 
                         <form onSubmit={this._handleSubmit}>
-                            {this._getSignInWithLinkedinFormGroup()}
-                            {this._getCvFormGroup()}
-                            {this._getCoverLetterFormGroup()}
-                            {this._getOptionalInfoFormGroup()}
+                            <section id="documents-section">
+                                {this._getCvAndCoverLetterFormGroup()}
+                                {this._getSignInWithLinkedinFormGroup()}
+                            </section>
+                            {this._getFirstOptionalInfoFormGroup()}
+                            {this._getSecondOptionalInfoFormGroup()}
                             {this._getTosFormGroup()}
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.submitBtn.text"]}</button>
@@ -71,7 +73,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <div>
                             <article>
                                 <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
-                                <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
+                                <span id="linkedin-name">{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                             </article>
                             <ol>
                                 <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
@@ -105,12 +107,29 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             }
         },
 
-        _getCvFormGroup: function() {
-            let orderedCv = _.find(CR.order.getProducts(), function(product) {
+        _getCvAndCoverLetterFormGroup: function() {
+            this.orderedCv = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.CV_REVIEW;
             });
 
-            if (!orderedCv) {
+            this.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
+            });
+
+            if (!this.orderedCv && !this.orderedCoverLetter) {
+                return null;
+            }
+
+            return (
+                <div>
+                    {this._getCvFormGroup()}
+                    {this._getCoverLetterFormGroup()}
+                </div>
+            );
+        },
+
+        _getCvFormGroup: function() {
+            if (!this.orderedCv) {
                 return null;
             }
 
@@ -131,11 +150,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCoverLetterFormGroup: function() {
-            let orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
-
-            if (!orderedCoverLetter) {
+            if (!this.orderedCoverLetter) {
                 return null;
             }
 
@@ -155,9 +170,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _getOptionalInfoFormGroup: function() {
+        _getFirstOptionalInfoFormGroup: function() {
             return (
-                <fieldset>
+                <section id="position-and-employer-section">
                     <div className="form-group">
                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
                         <input type="text" className="form-control" id="position-sought" defaultValue={CR.order.getSoughtPosition()} />
@@ -166,6 +181,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
                         <input type="text" className="form-control" id="employer-sought" defaultValue={CR.order.getSoughtEmployer()} />
                     </div>
+                </section>
+            );
+        },
+
+        _getSecondOptionalInfoFormGroup: function() {
+            return (
+                <section id="url-and-comment-section">
                     <div className="form-group">
                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
                         <input type="text" className="form-control" id="job-ad-url" defaultValue={CR.order.getJobAdUrl()} />
@@ -176,7 +198,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={CR.order.getCustomerComment()} />
                         <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                     </div>
-                </fieldset>
+                </section>
             );
         },
 
@@ -186,7 +208,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             }
 
             return (
-                <div>
+                <div id="tos-wrapper" className="centered-contents">
                     <div className="checkbox checkbox-primary">
                         <input type="checkbox" id="accept-tos" defaultChecked={CR.order.isTosAccepted()} />
                         <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
@@ -199,15 +221,15 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         _initElements: function() {
             this.$form = $("#content").find("form");
 
-            this.$linkedinProfileFormGroup = this.$form.children("#linkedin-profile-form-group");
+            this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
             this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin");
             this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
 
-            this.$cvFormGroup = this.$form.children("#cv-form-group");
+            this.$cvFormGroup = this.$form.find("#cv-form-group");
             this.$cvFileField = this.$cvFormGroup.find("#cv");
             this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
 
-            this.$coverLetterFormGroup = this.$form.children("#cover-letter-form-group");
+            this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
             this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
             this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
 

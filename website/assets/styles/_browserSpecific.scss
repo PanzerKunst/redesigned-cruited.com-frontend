@@ -10,27 +10,66 @@ html[data-useragent*="iPod"] {
   }
 }
 
-/* Flexbox */
-
-// Flexbox progressive enhancements
-html[data-useragent*="Chrome"],
-html[data-useragent*="Firefox"] {
-  #order-steps-breadcrumbs {
-    display: flex;
-    justify-content: center;
-
-    > a,
-    > span {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      margin: 0 0.2em;
-    }
-  }
-}
 
 /* IE */
 
 html[data-useragent*="Trident"] {
+}
+
+
+.no-flexbox {
+  #order-steps-breadcrumbs {
+    display: table;
+    margin: 0 auto;
+
+    > a,
+    > span {
+      display: table-cell;
+    }
+  }
+
+  .fg-file-upload > div {
+    display: table;
+    width: 100%;
+
+    > label,
+    > input {
+      display: table-cell;
+    }
+  }
+
+  #order-step-assessment-info {
+    $form-group-width: 48%;
+
+    @include medium-screen {
+      #position-and-employer-section,
+      #url-and-comment-section {
+        @include clearfix;
+
+        > .form-group {
+          float: right;
+          width: $form-group-width;
+
+          &:first-child {
+            float: left;
+          }
+        }
+      }
+    }
+
+    @include large-screen {
+      #documents-section {
+        @include clearfix;
+
+        > div {
+          float: right;
+          width: $form-group-width;
+
+          &:first-child {
+            float: left;
+          }
+        }
+      }
+    }
+  }
 }
