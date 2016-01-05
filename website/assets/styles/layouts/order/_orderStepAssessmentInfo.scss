@@ -2,20 +2,12 @@
   form {
     font-size: #{$font-size-base-px}px;
 
-    margin-top: 5em;
-
-    [type="submit"] {
-      margin-top: 1em;
-    }
-
     .checkbox > label::before {
       margin-top: 3px;
     }
   }
 
   #linkedin-profile-form-group {
-    margin-bottom: 0;
-
     .sign-in-with-linkedin {
       padding-left: 22px;
       @include medium-screen {
@@ -38,7 +30,7 @@
   }
 
   #url-and-comment-section {
-    margin-bottom: 3em;
+    margin-bottom: 2em;
   }
 
   #tos-wrapper {

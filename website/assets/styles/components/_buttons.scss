@@ -58,8 +58,8 @@ a.btn-default {
   &[disabled]:active,
   &[disabled]:focus,
   &[disabled]:hover {
-    background-color: $grey;
-    border-color: $grey;
+    background-color: lighten($grey, 35%);
+    border-color: lighten($grey, 35%);
   }
 }
 

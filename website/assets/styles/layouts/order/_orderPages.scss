@@ -5,6 +5,8 @@
   font-size: $font-size-xs;
   text-transform: uppercase;
 
+  margin-bottom: 6em;
+
   > a,
   > span {
     display: flex;
@@ -51,6 +53,194 @@
     height: 3em;
 
     margin-right: 0.5em;
+  }
+}
+
+#cart-section {
+  > header {
+    @include clearfix;
+
+    margin-bottom: 0.5em;
+
+    > h2 {
+      float: left;
+
+      margin: 0;
+      padding-left: 2em;
+
+      font-size: 1.3em;
+      color: $dark-grey;
+      line-height: 1.4em;
+
+      $cart-icon-location-x: -1900px;
+      $cart-icon-location-y: -300px;
+
+      @include hdpi-sprite;
+      background-position: $cart-icon-location-x $cart-icon-location-y;
+      @include hidpi {
+        background-position: half-pos($cart-icon-location-x, $cart-icon-location-y);
+      }
+
+      @include medium-screen {
+        padding-left: 2.4em;
+
+        $cart-icon-location-y: -400px;
+        background-position: $cart-icon-location-x $cart-icon-location-y;
+      }
+
+      @include large-screen {
+        padding-left: 2em;
+      }
+    }
+
+    > span {
+      float: right;
+
+      padding: 0.4em 0.6em;
+
+      line-height: 1em;
+      color: white;
+
+      background-color: $brand-danger;
+      border-radius: $default-border-radius;
+    }
+  }
+
+  > div {
+    background-color: white;
+
+    @include project-border;
+
+    padding: 2em 2.8em 1em 2.8em;
+
+    > div {
+      color: $well-border-color;
+      border-bottom: 1px solid $well-border-color;
+
+      text-transform: uppercase;
+
+      @include clearfix;
+
+      > span {
+        float: left;
+        &:last-child {
+          float: right;
+        }
+      }
+    }
+
+    > ul {
+      margin-bottom: 0;
+      padding-bottom: $content-element-margin-bottom;
+
+      border-bottom: 1px dashed $well-border-color;
+    }
+
+    li {
+      @include clearfix;
+
+      margin-top: 1em;
+
+      > span {
+        float: left;
+
+        &.cart-product-price {
+          float: right;
+          color: $grey;
+          margin-top: 1.7em;
+        }
+      }
+    }
+
+    @include medium-screen {
+      // Because of table floated right
+      @include clearfix;
+    }
+
+    @include large-screen {
+      padding-left: 5em;
+      padding-right: 5em;
+    }
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+
+  // Coupon form
+  form {
+    padding: 1.5em 0 2em 0;
+
+    border-bottom: 1px dashed $well-border-color;
+
+    > .form-group {
+      margin-bottom: 0.5em;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    @include medium-screen {
+      > .form-group > div {
+        display: flex;
+      }
+
+      .btn {
+        width: auto;
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  #coupon-not-found-error {
+    // Default
+    margin-left: 0.75em;
+  }
+
+  table {
+    margin-top: 2em;
+
+    width: 100%;
+
+    .sub-total-row {
+      color: $grey;
+    }
+    .reduction-row {
+      color: $primary-btn-color;
+    }
+    .coupon-row {
+      color: $brand-danger;
+    }
+
+    td:last-child {
+      text-align: right;
+    }
+
+    @include medium-screen {
+      width: auto;
+
+      float: right;
+
+      td:last-child {
+        width: 6em;
+      }
+    }
+  }
+
+  tfoot {
+    border-top: 0.5em solid $well-border-color;
+
+    td {
+      &:first-child {
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+      }
+      &:last-child {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+    }
   }
 }
 

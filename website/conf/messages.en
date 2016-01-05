@@ -186,8 +186,8 @@ order.accountCreation.title=Create your account
 order.accountCreation.subtitle=Under which account do you want your assessment to be saved?
 order.accountCreation.submitBtn.text=Register and continue
 order.accountCreation.submitBtn.withEmailPrefix=Register with
-order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered in our system. Please <a href="/login">Sign in</a>.
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered in our system. Please <a href="/login">Sign in</a>.
+order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
+order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered. <a href="/login">Sign in</a>.
 
 order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
 order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin

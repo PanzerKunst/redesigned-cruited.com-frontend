@@ -34,8 +34,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section">
-                                {this._getCvAndCoverLetterFormGroup()}
                                 {this._getSignInWithLinkedinFormGroup()}
+                                {this._getCvAndCoverLetterFormGroup()}
                             </section>
                             {this._getFirstOptionalInfoFormGroup()}
                             {this._getSecondOptionalInfoFormGroup()}

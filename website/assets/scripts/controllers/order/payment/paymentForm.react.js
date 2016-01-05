@@ -31,6 +31,7 @@ CR.Controllers.PaymentForm = React.createClass({
                         <p className="field-error" data-check="empty" />
                     </div>
                     <div className="form-group">
+                        <label htmlFor="expires-year">&nbsp;</label>
                         <select className="form-control" id="expires-year" defaultValue="" onChange={this._handleExpirationDateChange}>
                             <option value="" disabled>YYYY</option>
                         </select>

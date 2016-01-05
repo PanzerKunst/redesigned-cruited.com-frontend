@@ -1,16 +1,11 @@
 #order-step-account-creation {
   form {
-    margin: 65px auto 0 auto;
-
     @include medium-screen {
+      margin: 0 auto;
       max-width: ($small-content-width + $medium-content-width) / 2;
     }
     @include large-screen {
       max-width: $medium-content-width;
-    }
-
-    [type="submit"] {
-      margin-top: 1em;
     }
   }
 

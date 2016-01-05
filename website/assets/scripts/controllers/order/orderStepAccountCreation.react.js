@@ -116,6 +116,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _initElements: function() {
             this.$form = $("#content").find("form");
             this.$registerWithLinkedinSection = this.$form.children("#register-with-linkedin-section");
+            this.$registerWithLinkedinBtn = this.$registerWithLinkedinSection.find(".sign-in-with-linkedin");
             this.$linkedinEmailField = this.$registerWithLinkedinSection.find("#email-from-linkedin");
 
             this.$registerWithEmailSection = this.$form.children("#register-with-email-section");
@@ -144,6 +145,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             if (this._isRegisterWithLinkedinSectionVisible() || this.state.isRegisterWithLinkedinDefault) {
                 this.$registerWithLinkedinSection.show();
                 this.$registerWithEmailSection.hide();
+
+                if (this._isSignInWithLinkedinBtnThere()) {
+                    this.$submitBtn.hide();
+                }
             } else {
                 this.$registerWithLinkedinSection.hide();
                 this.$registerWithEmailSection.show();
@@ -159,22 +164,28 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 this.$registerWithLinkedinSection.fadeOut({
                     animationDuration: animationDuration,
                     onComplete: function() {
+                        this.$submitBtn.show();
+
+                        this._updateSubmitBtnText();
+
                         this.$registerWithEmailSection.fadeIn({
                             animationDuration: animationDuration
                         });
-
-                        this._updateSubmitBtnText();
                     }.bind(this)
                 });
             } else {
                 this.$registerWithEmailSection.fadeOut({
                     animationDuration: animationDuration,
                     onComplete: function() {
+                        if (this._isSignInWithLinkedinBtnThere()) {
+                            this.$submitBtn.hide();
+                        }
+
+                        this._updateSubmitBtnText();
+
                         this.$registerWithLinkedinSection.fadeIn({
                             animationDuration: animationDuration
                         });
-
-                        this._updateSubmitBtnText();
                     }.bind(this)
                 });
             }
@@ -253,6 +264,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
         _isRegisterWithLinkedinSectionVisible: function() {
             return this.$registerWithLinkedinSection.is(":visible");
+        },
+
+        _isSignInWithLinkedinBtnThere: function() {
+            return this.$registerWithLinkedinBtn.length === 1;
         }
     });
 
