@@ -14,12 +14,14 @@ CR.Controllers.Dashboard = P(function(c) {
                 return null;
             }
 
+            let newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
+
             return (
                 <div id="content">
                     <header>
                         <div>
                             <h1>{CR.i18nMessages["dashboard.title"]}</h1>
-                            <a className="btn btn-danger" id="new-assessment" href="/order">{CR.i18nMessages["dashboard.newAssessmentBtn.text"]}
+                            <a className="btn btn-danger" id="new-assessment" href="/order">{newAssessmentBtnLabel}
                                 <i className="fa fa-plus"></i>
                             </a>
                         </div>
@@ -42,20 +44,27 @@ CR.Controllers.Dashboard = P(function(c) {
                                 }
 
                                 let reactItemId = "order-" + index;
+                                let editionClasses = "edition " + order.getEdition().code;
+                                let statusClasses = "status " + order.getStatusForHtml();
 
                                 return (
                                     <li key={reactItemId}>
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
                                         <p>
-                                            <span>{CR.i18nMessages["order.creationDate.label"]}:</span> {moment(order.getCreationTimestamp()).format("lll")}
+                                            <span className="dashboard-label">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}
                                         </p>
-                                        <p>
-                                            <span>{CR.i18nMessages["order.status.label"]}:</span> {order.getStatusForHtml()}
-                                            {completePaymentLink}
-                                            <span>{order.getEditionForHtml()}</span>
-                                        </p>
+                                        <section className="status-and-edition-wrapper">
+                                            <div>
+                                                <span className="dashboard-label">{CR.i18nMessages["order.status.label"]}:</span>
+                                                <span className={statusClasses}>{order.getStatusForHtml()}</span>
+                                                {completePaymentLink}
+                                            </div>
+                                            <div>
+                                                <span className={editionClasses}>{order.getEditionForHtml()}</span>
+                                            </div>
+                                        </section>
 
-                                        <ul className="styleless">
+                                        <ul className="styleless view-report-list">
                                             {order.getProducts().map(function(product, i) {
                                                 let reactItmId = "product-" + i;
 

@@ -107,6 +107,7 @@ dashboard.title=My Assessments
 dashboard.subtitle=Welcome to your Assessments Dashboard, {firstName}!
 dashboard.completePaymentLink.text=Pay
 dashboard.newAssessmentBtn.text=Get a new assessment
+dashboard.viewReportBtn.text=View report
 dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a href="{url}">edit the assessment information</a> if you wish.
 
 

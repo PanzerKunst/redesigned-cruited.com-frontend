@@ -1,5 +1,158 @@
 #dashboard {
-  li {
+  #content > header > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  #new-assessment {
+    font-size: $font-size-sm;
+    border-radius: 1.3em;
+
+    padding: 0.5em 0.7em;
+
+    margin-top: 4.6em;
+
+    line-height: 1em;
+    > span {
+      line-height: 1em;
+    }
+
+    @include medium-screen {
+      // Default
+      padding-left: 1em;
+      padding-right: 1em;
+
+      margin-top: 3.65em;
+    }
+
+    @include large-screen {
+      margin-top: 4.3em;
+    }
+
+    > .fa-plus {
+      margin-right: 1px;
+      @include medium-screen {
+        // Default
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  .with-circles > ul > li {
     background-color: white;
+    box-shadow: 0 0.2em 0 -0.1em lighten(black, 90%);
+
+    margin-bottom: 2em;
+
+    padding: 1.5em $spacer-unit-size;
+    @include medium-screen {
+      padding-left: 2.8em;
+      padding-right: 2.8em;
+    }
+    @include large-screen {
+      padding-left: 5em;
+      padding-right: 5em;
+    }
+
+    > h2 {
+      margin-top: 0;
+    }
+  }
+
+  span.dashboard-label {
+    font-weight: lighter;
+    margin-right: 0.5em;
+  }
+
+  .status-and-edition-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  span.status {
+    // TODO: test
+    &.In.Progress {
+      color: $brand-danger;
+    }
+    &.Completed {
+      color: $primary-btn-color;
+    }
+  }
+
+  .btn-primary.btn-xs {
+    margin-left: 1em;
+  }
+
+  .view-report-list {
+    margin: 1.8em 0;
+
+    > li {
+      background-color: $light-grey;
+
+      padding: 0 $spacer-unit-size;
+
+      margin-bottom: 0.5em;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      > span {
+        font-weight: bold;
+      }
+
+      > button {
+        margin: 0.5em 0;
+      }
+    }
+  }
+}
+
+.flexbox {
+  #dashboard {
+    #content > header > div {
+      display: block;
+      @include clearfix;
+
+      > h1 {
+        float: left;
+      }
+
+      > .btn {
+        float: right;
+      }
+    }
+
+    .status-and-edition-wrapper {
+      display: block;
+      @include clearfix;
+
+      > div {
+        &:first-child {
+          float: left;
+        }
+        &:last-child {
+          float: right;
+        }
+      }
+    }
+
+    .view-report-list > li {
+      display: block;
+      @include clearfix;
+
+      > span {
+        float: left;
+        margin-top: 0.7em;
+      }
+
+      > button {
+        float: right;
+      }
+    }
   }
 }
