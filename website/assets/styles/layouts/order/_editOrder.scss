@@ -24,3 +24,25 @@
     }
   }
 }
+
+.no-flexbox {
+  #edit-order {
+    @include medium-screen {
+      #documents-section,
+      #position-and-employer-section,
+      #url-and-comment-section {
+        display: block;
+        @include clearfix;
+
+        > .form-group {
+          float: right;
+          width: $two-column-form-group-width;
+
+          &:first-child {
+            float: left;
+          }
+        }
+      }
+    }
+  }
+}

@@ -53,3 +53,15 @@
     margin-right: 0.5em;
   }
 }
+
+.no-flexbox {
+  #order-steps-breadcrumbs {
+    display: table;
+    margin: 0 auto;
+
+    > a,
+    > span {
+      display: table-cell;
+    }
+  }
+}

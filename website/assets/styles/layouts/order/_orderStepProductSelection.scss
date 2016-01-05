@@ -367,11 +367,6 @@
         width: 100%;
       }
 
-      .other-form-error {
-        // Default
-        margin-left: 0.75em;
-      }
-
       @include medium-screen {
         > .form-group > div {
           display: flex;
@@ -382,6 +377,11 @@
           margin-left: 0.5em;
         }
       }
+    }
+
+    #coupon-not-found-error {
+      // Default
+      margin-left: 0.75em;
     }
 
     table {

@@ -55,56 +55,55 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getSignInWithLinkedinFormGroup: function() {
-            if (this.state.linkedinErrorMessage) {
-                return (<p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>);
+            let orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
+            });
+
+            if (!this.state.linkedinAuthCodeRequestUrl || !orderedLinkedin) {
+                return null;
+            }
+
+            let formGroupContents = null;
+
+            if (this.state.linkedinProfile) {
+                formGroupContents = (
+                    <div>
+                        <article id="linkedin-preview">
+                            <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
+                            <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
+                        </article>
+                        <ol>
+                            <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
+                            <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
+                        </ol>
+                        <div className="checkbox checkbox-primary">
+                            <input type="checkbox" id="linkedin-profile-checked" />
+                            <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.checkbox.label"]}</label>
+                        </div>
+                        <p className="field-error" data-check="empty" />
+                    </div>
+                );
             } else {
-                let orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
-                    return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
-                });
+                let signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
 
-                if (!this.state.linkedinAuthCodeRequestUrl || !orderedLinkedin) {
-                    return null;
-                }
-
-                let formGroupContents = null;
-
-                if (this.state.linkedinProfile) {
-                    formGroupContents = (
-                        <div>
-                            <article>
-                                <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
-                                <span id="linkedin-name">{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
-                            </article>
-                            <ol>
-                                <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
-                                <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
-                            </ol>
-                            <div className="checkbox checkbox-primary">
-                                <input type="checkbox" id="linkedin-profile-checked" />
-                                <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.checkbox.label"]}</label>
-                            </div>
-                            <p className="field-error" data-check="empty" />
-                        </div>
-                    );
-                } else {
-                    formGroupContents = (
-                        <div>
-                            <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
-                                <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
-                            </a>
-                        </div>
-                    );
-                }
-
-                return (
-                    <div className="form-group" id="linkedin-profile-form-group">
-                        <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.label"]}</label>
-
-                        {formGroupContents}
-                        <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.notSignedIn"]}</p>
+                formGroupContents = (
+                    <div>
+                        <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
+                            <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
+                        </a>
+                        {signInFailedParagraph}
                     </div>
                 );
             }
+
+            return (
+                <div className="form-group" id="linkedin-profile-form-group">
+                    <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.label"]}</label>
+
+                    {formGroupContents}
+                    <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.notSignedIn"]}</p>
+                </div>
+            );
         },
 
         _getCvAndCoverLetterFormGroup: function() {
@@ -269,7 +268,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             this.validator.hideErrorMessage(this.$notSignedInWithLinkedinError);
 
-            if (this._isSignInWithLinkedinBtnThere()) {
+            if (!this.state.linkedinErrorMessage && !this._isSignInWithLinkedinBtnThere()) {
                 if (this.validator.isValid()) {
                     this.$submitBtn.enableLoading();
 
@@ -342,7 +341,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _isSignInWithLinkedinBtnThere: function() {
-            return this.$signInWithLinkedinBtn.length === 0;
+            return this.$signInWithLinkedinBtn.length === 1;
         }
     });
 

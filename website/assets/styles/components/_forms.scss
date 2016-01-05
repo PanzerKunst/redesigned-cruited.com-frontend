@@ -58,3 +58,15 @@ form {
     }
   }
 }
+
+.no-flexbox {
+  .fg-file-upload > div {
+    display: table;
+    width: 100%;
+
+    > label,
+    > input {
+      display: table-cell;
+    }
+  }
+}

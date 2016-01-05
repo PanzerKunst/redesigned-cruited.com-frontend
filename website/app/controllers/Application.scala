@@ -1,6 +1,6 @@
 package controllers
 
-import java.util.{Timer, Date}
+import java.util.{Date, Timer}
 import javax.inject.Inject
 
 import db._
@@ -63,10 +63,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def resetPassword = Action { request =>
     Ok(views.html.resetPassword(getI18nMessages(request)))
-  }
-
-  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
-    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
   def confirmResetPassword = Action { request =>
@@ -277,6 +273,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
+  private def getI18nMessages(request: Request[AnyContent]): Map[String, String] = {
+    messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
+  }
+
   def linkedinCallbackSignIn = Action { request =>
     if (request.queryString.contains("error")) {
       val isLinkedinAccountUnregistered = false
@@ -338,13 +338,13 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
   }
 
-  def linkedinCallbackOrderStepAccountCreation = Action { request =>
-    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
-  }
-
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
     if (request.queryString.contains("error")) {
-      Ok(views.html.order.orderStepAssessmentInfo(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      if (linkedinRedirectUri == linkedinService.linkedinRedirectUriOrderStepAssessmentInfo) {
+        Ok(views.html.order.orderStepAssessmentInfo(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      } else {
+        Ok(views.html.order.orderStepAccountCreation(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      }
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
@@ -377,5 +377,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
     }
+  }
+
+  def linkedinCallbackOrderStepAccountCreation = Action { request =>
+    linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 }

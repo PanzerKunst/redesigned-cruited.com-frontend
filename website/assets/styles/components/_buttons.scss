@@ -139,7 +139,11 @@ a.btn-primary {
     width: 230px;
     height: 41px;
 
-    padding-top: 7px;
+    padding-top: 0.4em;
+  }
+
+  @include large-screen {
+    padding-top: 0.1em;
   }
 
   > span {

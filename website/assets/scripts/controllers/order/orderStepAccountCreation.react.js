@@ -26,19 +26,17 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="register-with-linkedin-section">
-                                <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switchLink.text"]}</a>
+                                <div className="centered-contents">
+                                    <a className="switch-registration-method-link" onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switchLink.text"]}</a>
+                                </div>
                                 {this._getRegisterWithLinkedinFormSection()}
-                                <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.notSignedIn"]}</p>
                             </section>
                             <section id="register-with-email-section">
-                                <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switchLink.text"]}</a>
+                                <div className="centered-contents">
+                                    <a className="switch-registration-method-link" onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switchLink.text"]}</a>
+                                </div>
                                 {this._getRegisterWithEmailFormSection()}
                             </section>
-                            <div className="centered-contents">
-                                <p className="other-form-error" id="email-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}}></p>
-                                <p className="other-form-error" id="linkedin-account-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}}></p>
-                                <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.submitBtn.text"]}</button>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -57,32 +55,35 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 return null;
             }
 
-            if (this.state.linkedinErrorMessage) {
-                return (<p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>);
-            }
-
             if (this.state.linkedinProfile) {
                 return (
                     <div>
-                        <article>
+                        <article id="linkedin-preview">
                             <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
                             <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                         </article>
                         <div className="form-group">
                             <label htmlFor="email-from-linkedin" className="for-required-field">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.email.label"]}</label>
-                            <input type="text" className="form-control" id="email-from-linkedin" defaultValue={this.state.linkedinProfile.emailAddress} onChange={this._handleLinkedinEmailChanged} />
+                            <input type="text" className="form-control" id="email-from-linkedin" defaultValue={this.state.linkedinProfile.emailAddress} onChange={this._updateSubmitBtnText} />
                             <p className="field-error" data-check="empty" />
                             <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.validation.incorrectEmail"]}</p>
+                        </div>
+                        <div className="centered-contents">
+                            <p className="other-form-error" id="linkedin-account-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.linkedinAccountIdAlreadyRegistered"]}}></p>
+                            <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.submitBtn.text"]}</button>
                         </div>
                     </div>
                 );
             }
 
+            let signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
+
             return (
-                <div>
+                <div className="centered-contents">
                     <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
                         <span>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.btn.text"]}</span>
                     </a>
+                    {signInFailedParagraph}
                 </div>
             );
         },
@@ -97,7 +98,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                     </div>
                     <div className="form-group">
                         <label htmlFor="email-address" className="for-required-field">{CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.label"]}</label>
-                        <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.placeholder"]} onChange={this._handleEmailAddressChanged} />
+                        <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["order.accountCreation.registerWithEmail.emailAddress.placeholder"]} onChange={this._updateSubmitBtnText} />
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="email">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.incorrectEmail"]}</p>
                     </div>
@@ -107,6 +108,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                         <p className="field-error" data-check="empty" />
                         <p className="field-error" data-check="min-length">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.passwordTooShort"]}</p>
                     </div>
+                    <div className="centered-contents">
+                        <p className="other-form-error" id="email-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}}></p>
+                        <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.submitBtn.text"]}</button>
+                    </div>
                 </div>
             );
         },
@@ -114,9 +119,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _initElements: function() {
             this.$form = $("#content").find("form");
             this.$registerWithLinkedinSection = this.$form.children("#register-with-linkedin-section");
-            this.$registerWithLinkedinBtn = this.$registerWithLinkedinSection.find(".sign-in-with-linkedin");
             this.$linkedinEmailField = this.$registerWithLinkedinSection.find("#email-from-linkedin");
-            this.$notSignedInWithLinkedinError = this.$registerWithLinkedinSection.find("#not-signed-in-with-linkedin");
 
             this.$registerWithEmailSection = this.$form.children("#register-with-email-section");
             this.$firstNameField = this.$registerWithEmailSection.find("#first-name");
@@ -125,8 +128,6 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
             this.$emailAlreadyRegisteredError = this.$form.find("#email-already-registered");
             this.$linkedinAccountAlreadyRegisteredError = this.$form.find("#linkedin-account-already-registered");
-
-            this.$submitBtn = this.$form.find("[type=submit]");
         },
 
         _initValidation: function() {
@@ -141,12 +142,16 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _showRelevantElements: function() {
-            if (this._isSignInWithLinkedinBtnThere() || this.state.isRegisterWithLinkedinDefault) {
+            if (this._isRegisterWithLinkedinSectionVisible() || this.state.isRegisterWithLinkedinDefault) {
                 this.$registerWithLinkedinSection.show();
                 this.$registerWithEmailSection.hide();
+
+                this.$submitBtn = this.$registerWithLinkedinSection.find("[type=submit]");
             } else {
                 this.$registerWithLinkedinSection.hide();
                 this.$registerWithEmailSection.show();
+
+                this.$submitBtn = this.$registerWithEmailSection.find("[type=submit]");
             }
         },
 
@@ -156,55 +161,43 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             let animationDuration = 0.2;
 
             if (this._isRegisterWithLinkedinSectionVisible()) {
-                let $registerWithEmailSection = this.$registerWithEmailSection;
-
                 this.$registerWithLinkedinSection.fadeOut({
                     animationDuration: animationDuration,
                     onComplete: function() {
-                        $registerWithEmailSection.fadeIn({
+                        this.$registerWithEmailSection.fadeIn({
                             animationDuration: animationDuration
                         });
 
-                        this._handleEmailAddressChanged();
+                        this.$submitBtn = this.$registerWithEmailSection.find("[type=submit]");
                     }.bind(this)
                 });
             } else {
-                let $registerWithLinkedinSection = this.$registerWithLinkedinSection;
-
                 this.$registerWithEmailSection.fadeOut({
                     animationDuration: animationDuration,
                     onComplete: function() {
-                        $registerWithLinkedinSection.fadeIn({
+                        this.$registerWithLinkedinSection.fadeIn({
                             animationDuration: animationDuration
                         });
 
-                        this._handleLinkedinEmailChanged();
+                        this.$submitBtn = this.$registerWithLinkedinSection.find("[type=submit]");
                     }.bind(this)
                 });
-            }
-        },
-
-        _handleEmailAddressChanged: function() {
-            this._changeSubmitBtnText(this.$emailAddressField.val());
-        },
-
-        _handleLinkedinEmailChanged: function() {
-            this._changeSubmitBtnText(this.$linkedinEmailField.val());
-        },
-
-        _changeSubmitBtnText: function(emailAddress) {
-            if (emailAddress) {
-                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.withEmailPrefix"] + " " + emailAddress);
-            } else {
-                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.text"]);
             }
         },
 
         _updateSubmitBtnText: function() {
             if (this._isRegisterWithLinkedinSectionVisible()) {
-                this._handleLinkedinEmailChanged();
+                this._setSubmitBtnText(this.$linkedinEmailField.val());
             } else {
-                this._handleEmailAddressChanged();
+                this._setSubmitBtnText(this.$emailAddressField.val());
+            }
+        },
+
+        _setSubmitBtnText: function(emailAddress) {
+            if (emailAddress) {
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.withEmailPrefix"] + " " + emailAddress);
+            } else {
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.text"]);
             }
         },
 
@@ -214,9 +207,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this._hideOtherFormErrors();
 
             if (this._isRegisterWithLinkedinSectionVisible()) {
-                if (this._isSignInWithLinkedinBtnThere()) {
-                    this.registerWithEmailValidator.showErrorMessage(this.$notSignedInWithLinkedinError);
-                } else if (this.registerWithLinkedinValidator.isValid()) {
+                if (this.registerWithLinkedinValidator.isValid() && !this.state.linkedinErrorMessage) {
                     this._submitAccountCreation();
                 }
             } else {
@@ -261,17 +252,12 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _hideOtherFormErrors: function() {
-            this.registerWithLinkedinValidator.hideErrorMessage(this.$notSignedInWithLinkedinError);
             this.registerWithLinkedinValidator.hideErrorMessage(this.$linkedinAccountAlreadyRegisteredError);
             this.registerWithEmailValidator.hideErrorMessage(this.$emailAlreadyRegisteredError);
         },
 
         _isRegisterWithLinkedinSectionVisible: function() {
             return this.$registerWithLinkedinSection.is(":visible");
-        },
-
-        _isSignInWithLinkedinBtnThere: function() {
-            return this.$registerWithLinkedinBtn.length === 1;
         }
     });
 

@@ -1,3 +1,5 @@
+$two-column-form-group-width: 48%;
+
 @mixin project-border {
   border: 1px solid $well-border-color;
   border-radius: $default-border-radius;
@@ -19,15 +21,6 @@ button.styleless.fa {
   &.fa-times {
     margin-top: -0.5em;
   }
-}
-
-.profile-picture {
-  display: inline-block;
-
-  border-radius: 50%;
-
-  background: no-repeat center center;
-  background-size: cover;
 }
 
 a > i.fa {
@@ -99,6 +92,32 @@ a > i.fa {
     &.EXEC {
       $edition-icon-location-y: -994px;
       background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+  }
+}
+
+.profile-picture {
+  display: inline-block;
+
+  border-radius: 50%;
+
+  background: no-repeat center center;
+  background-size: cover;
+}
+
+#linkedin-preview {
+  display: flex;
+  align-items: center;
+}
+
+.no-flexbox {
+  #linkedin-preview {
+    display: block;
+
+    > span {
+      display: inline-block;
+      vertical-align: top;
+      margin-top: 0.6em;
     }
   }
 }

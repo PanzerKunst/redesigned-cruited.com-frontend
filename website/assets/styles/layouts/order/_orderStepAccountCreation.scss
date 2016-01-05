@@ -1,17 +1,39 @@
 #order-step-account-creation {
+  form {
+    margin: 65px auto 0 auto;
+
+    @include medium-screen {
+      max-width: ($small-content-width + $medium-content-width) / 2;
+    }
+    @include large-screen {
+      max-width: $medium-content-width;
+    }
+
+    [type="submit"] {
+      margin-top: 1em;
+    }
+  }
+
   #register-with-linkedin-section,
   #register-with-email-section {
     display: none;
   }
 
+  .switch-registration-method-link {
+    display: inline-block;
+    margin-bottom: 2em;
+  }
+
   .sign-in-with-linkedin {
+    margin-bottom: 1em;
+
     padding-left: 22px;
     @include medium-screen {
       padding-left: 41px;
     }
   }
 
-  #coupon-not-found-error {
-    margin-left: 0.75em;
+  #linkedin-preview {
+    margin-bottom: $content-element-margin-bottom;
   }
 }

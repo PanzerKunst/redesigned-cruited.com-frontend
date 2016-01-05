@@ -214,3 +214,20 @@ $header-bottom-border-height: 1px;
     top: $header-height-large-screen;
   }
 }
+
+.no-flexbox {
+  #header-nav > article {
+    display: block;
+    margin-top: 0.2em;
+
+    > span,
+    > .profile-picture {
+      display: inline-block;
+    }
+
+    > span {
+      vertical-align: top;
+      margin-top: 0.85em;
+    }
+  }
+}

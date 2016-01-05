@@ -193,7 +193,6 @@ order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register wi
 order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
 order.accountCreation.registerWithLinkedin.email.label=Preferred email
 order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
-order.accountCreation.registerWithLinkedin.validation.notSignedIn=You need to sign in if you want to register with Linkedin
 
 order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your Linkedin account?
 order.accountCreation.registerWithEmail.firstName.label=First name

@@ -1,5 +1,4 @@
 /* iOS */
-
 html[data-useragent*="iPhone"],
 html[data-useragent*="iPad"],
 html[data-useragent*="iPod"] {
@@ -10,83 +9,6 @@ html[data-useragent*="iPod"] {
   }
 }
 
-
 /* IE */
-
 html[data-useragent*="Trident"] {
-}
-
-
-.no-flexbox {
-  #order-steps-breadcrumbs {
-    display: table;
-    margin: 0 auto;
-
-    > a,
-    > span {
-      display: table-cell;
-    }
-  }
-
-  .fg-file-upload > div {
-    display: table;
-    width: 100%;
-
-    > label,
-    > input {
-      display: table-cell;
-    }
-  }
-
-  #order-step-assessment-info {
-    @include medium-screen {
-      #position-and-employer-section,
-      #url-and-comment-section {
-        @include clearfix;
-
-        > .form-group {
-          float: right;
-          width: $two-column-form-group-width;
-
-          &:first-child {
-            float: left;
-          }
-        }
-      }
-    }
-
-    @include large-screen {
-      #documents-section {
-        @include clearfix;
-
-        > div {
-          float: right;
-          width: $two-column-form-group-width;
-
-          &:first-child {
-            float: left;
-          }
-        }
-      }
-    }
-  }
-
-  #edit-order {
-    @include medium-screen {
-      #documents-section,
-      #position-and-employer-section,
-      #url-and-comment-section {
-        @include clearfix;
-
-        > .form-group {
-          float: right;
-          width: $two-column-form-group-width;
-
-          &:first-child {
-            float: left;
-          }
-        }
-      }
-    }
-  }
 }

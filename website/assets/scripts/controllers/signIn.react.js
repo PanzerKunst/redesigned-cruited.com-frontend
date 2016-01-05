@@ -25,7 +25,7 @@ CR.Controllers.SignIn = P(function(c) {
                         {this._getSignInWithEmailForm()}
                     </div>
                 </div>
-                );
+            );
         },
 
         componentDidUpdate: function() {
@@ -38,19 +38,21 @@ CR.Controllers.SignIn = P(function(c) {
                 return null;
             }
 
+            let signInFailedParagraph = null;
             if (this.state.linkedinErrorMessage) {
-                return (<p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>);
-            }
-
-            if (this.state.isLinkedinAccountUnregistered) {
-                return (<p className="other-form-error shown-by-default" dangerouslySetInnerHTML={{__html: CR.i18nMessages["signIn.validation.linkedinAccountUnregistered"]}} />);
+                signInFailedParagraph = <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p>;
+            } else if (this.state.isLinkedinAccountUnregistered) {
+                signInFailedParagraph = <p className="other-form-error shown-by-default" dangerouslySetInnerHTML={{__html: CR.i18nMessages["signIn.validation.linkedinAccountUnregistered"]}} />;
             }
 
             return (
-                <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
-                    <span>{CR.i18nMessages["signIn.form.linkedIn.btn.text"]}</span>
-                </a>
-                );
+                <div>
+                    <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
+                        <span>{CR.i18nMessages["signIn.form.linkedIn.btn.text"]}</span>
+                    </a>
+                    {signInFailedParagraph}
+                </div>
+            );
         },
 
         _getSignInWithEmailForm: function() {
@@ -75,7 +77,7 @@ CR.Controllers.SignIn = P(function(c) {
                         <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["signin.form.email.submitBtn.text"]}</button>
                     </div>
                 </form>
-                );
+            );
         },
 
         _initElements: function() {

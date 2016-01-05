@@ -8,7 +8,7 @@
       margin-top: 1em;
     }
 
-    .checkbox>label::before {
+    .checkbox > label::before {
       margin-top: 3px;
     }
   }
@@ -20,17 +20,12 @@
       padding-left: 22px;
       @include medium-screen {
         padding-left: 41px;
+        padding-top: 0.5em;
       }
     }
 
     #not-signed-in-with-linkedin {
       margin-left: 0;
-    }
-
-    #linkedin-name {
-      display: inline-block;
-      vertical-align: top;
-      margin-top: 0.6em;
     }
 
     li {
@@ -53,8 +48,6 @@
     }
   }
 
-  $form-group-width: 48%;
-
   @include medium-screen {
     #position-and-employer-section,
     #url-and-comment-section {
@@ -62,7 +55,7 @@
       justify-content: space-between;
 
       > .form-group {
-        width: $form-group-width;
+        width: $two-column-form-group-width;
       }
     }
   }
@@ -73,7 +66,44 @@
       justify-content: space-between;
 
       > div {
-        width: $form-group-width;
+        width: $two-column-form-group-width;
+      }
+    }
+  }
+}
+
+.no-flexbox {
+  #order-step-assessment-info {
+    @include medium-screen {
+      #position-and-employer-section,
+      #url-and-comment-section {
+        display: block;
+        @include clearfix;
+
+        > .form-group {
+          float: right;
+          width: $two-column-form-group-width;
+
+          &:first-child {
+            float: left;
+          }
+        }
+      }
+    }
+
+    @include large-screen {
+      #documents-section {
+        display: block;
+        @include clearfix;
+
+        > div {
+          float: right;
+          width: $two-column-form-group-width;
+
+          &:first-child {
+            float: left;
+          }
+        }
       }
     }
   }
