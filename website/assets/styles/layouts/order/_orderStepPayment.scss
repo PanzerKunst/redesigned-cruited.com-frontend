@@ -60,7 +60,18 @@ $expires-and-cvc-field-width: 30%;
       }
 
       .edition {
+        // Original is -1889px -794px;
         background-position: -1893px -797px;
+
+        &.YOUNG_PRO {
+          // Original-y is -894px;
+          background-position: -1893px -897px;
+        }
+
+        &.EXEC {
+          // Original-y is -994px;
+          background-position: -1893px -997px;
+        }
       }
     }
 
