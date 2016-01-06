@@ -21,7 +21,7 @@
   }
 }
 
-.no-flexbox {
+@include no-flexbox {
   #edit-order {
     @include medium-screen {
       #documents-section,

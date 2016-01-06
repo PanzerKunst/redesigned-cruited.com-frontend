@@ -244,10 +244,12 @@
   }
 }
 
-.no-flexbox {
+@include no-flexbox {
   #order-steps-breadcrumbs {
     display: table;
-    margin: 0 auto;
+
+    margin-left: auto;
+    margin-right: auto;
 
     > a,
     > span {

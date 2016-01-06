@@ -114,7 +114,7 @@ a > i.fa {
   align-items: center;
 }
 
-.no-flexbox {
+@include no-flexbox {
   #linkedin-preview {
     display: block;
 

@@ -45,10 +45,20 @@ CR.Controllers.Common = P(function(c) {
 
             this.$siteHeader.removeClass("menu-open");
         } else {
-            this.$menu.css({"display": "flex", "opacity": 0});
+            this.$menu.css({"display": this._getMenuDisplayClass(), "opacity": 0});
             TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {opacity: 1});
 
             this.$siteHeader.addClass("menu-open");
         }
+    };
+
+    c._getMenuDisplayClass = function() {
+        let $html = $("html");
+
+        if ($html.hasClass("no-flexbox") || _.includes($html.data("useragent"), "OS 7_")) {
+            return "block";
+        }
+
+        return "flex";
     };
 });

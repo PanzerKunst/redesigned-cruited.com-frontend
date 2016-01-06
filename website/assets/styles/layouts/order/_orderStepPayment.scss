@@ -70,7 +70,7 @@ $expires-and-cvc-field-width: 30%;
   }
 }
 
-.no-flexbox {
+@include no-flexbox {
   #order-step-payment {
     #expires-and-cvc {
       display: block;

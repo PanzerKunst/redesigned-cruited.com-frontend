@@ -215,7 +215,7 @@ $header-bottom-border-height: 1px;
   }
 }
 
-.no-flexbox {
+@include no-flexbox {
   #header-nav > article {
     display: block;
     margin-top: 0.2em;
@@ -229,5 +229,9 @@ $header-bottom-border-height: 1px;
       vertical-align: top;
       margin-top: 0.85em;
     }
+  }
+
+  #menu {
+    float: right;
   }
 }

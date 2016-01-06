@@ -64,7 +64,7 @@
   }
 }
 
-.no-flexbox {
+@include no-flexbox {
   #order-step-assessment-info {
     @include medium-screen {
       #position-and-employer-section,

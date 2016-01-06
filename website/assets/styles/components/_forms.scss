@@ -59,7 +59,7 @@ form {
   }
 }
 
-.no-flexbox {
+@include no-flexbox {
   .fg-file-upload > div {
     display: table;
     width: 100%;
