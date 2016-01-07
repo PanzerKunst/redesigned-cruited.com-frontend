@@ -152,6 +152,10 @@
       }
     }
 
+    .cart-product-name {
+      font-weight: bold;
+    }
+
     @include medium-screen {
       // Because of table floated right
       @include clearfix;

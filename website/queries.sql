@@ -6,7 +6,7 @@ where id < 0;
 
 
 select * from useri
-order by id desc;
+order by registered_at desc;
 
 delete from useri
 where id > 1932;
@@ -21,7 +21,7 @@ where id < 0;
 
 
 select * from documents
-order by id desc
+order by added_by desc
 limit 30;
 
 delete from documents
@@ -33,6 +33,11 @@ order by userid desc;
 select * from codes
 where valid_date > now();
 
-delete from useri;
+delete from useri
+where email = 'cbramdit@gmail.com';
 
-delete from documents;
+delete from documents
+where added_by in (
+	select id from useri
+	where email = 'cbramdit@gmail.com'
+);

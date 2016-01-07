@@ -79,11 +79,11 @@ CR.Controllers.Report = P(function(c) {
             return (
                 <section>
                     <p>
-                        <span>{CR.i18nMessages["order.creationDate.label"]}:</span> {moment(this.state.order.getCreationTimestamp()).format("lll")}
+                        <span className="light-font">{CR.i18nMessages["order.creationDate.label"]}:</span> {moment(this.state.order.getCreationTimestamp()).format("lll")}
                     </p>
                     <div>
-                        <span>{CR.i18nMessages["order.status.label"]}:</span> {this.state.order.getStatusForHtml()}
-                        <span>{this.state.order.getEditionForHtml()}</span>
+                        <span className="light-font">{CR.i18nMessages["order.status.label"]}:</span> {this.state.order.getStatusForHtml()}
+                        <span>{CR.i18nMessages["edition.name." + this.state.order.getEdition().code]}</span>
                     </div>
                 </section>
             );
@@ -175,7 +175,7 @@ CR.Controllers.Report = P(function(c) {
                                             {categoryAndItsComments.redComments.map(function(comment) {
                                                 let reactSubItemId = "comment-" + comment.id;
 
-                                                return <li key={reactSubItemId} className="red-comment">{comment.text}</li>;
+                                                return <li key={reactSubItemId} className="red-comment light-font">{comment.text}</li>;
                                             })}
                                         </ul>
                                     );
@@ -183,9 +183,13 @@ CR.Controllers.Report = P(function(c) {
 
                                 return (
                                     <li key={reactItemId}>
-                                        <h3>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".title"]}</h3>
-                                        <p>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".shortDesc"]}</p>
-                                        <span>{docReportScores.categoryScores[categoryAndItsComments.categoryId]}</span>
+                                        <header>
+                                            <div>
+                                                <h3>{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".title"]}</h3>
+                                                <p className="light-font">{CR.i18nMessages["category." + productCode + "." + categoryAndItsComments.categoryId + ".shortDesc"]}</p>
+                                            </div>
+                                            <span>{docReportScores.categoryScores[categoryAndItsComments.categoryId]}</span>
+                                        </header>
                                         {topCommentParagraph}
                                         {redCommentList}
                                     </li>

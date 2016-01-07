@@ -40,7 +40,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         <section id="editions-section">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
-                                <p>{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
+                                <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
                             </header>
                             <ul className="styleless">
                             {CR.editions.map(function(edition, index) {
@@ -104,7 +104,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             if (CR.order.getProducts().length < 2) {
                 let reductionTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
                 if (reductionTwoProductsSameOrder) {
-                    return <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerTwoProductsSameOrder.text"], "reductionPrice", reductionTwoProductsSameOrder.price.amount + " " + reductionTwoProductsSameOrder.price.currencyCode)}} />;
+                    return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerTwoProductsSameOrder.text"], "reductionPrice", reductionTwoProductsSameOrder.price.amount + " " + reductionTwoProductsSameOrder.price.currencyCode)}} />;
                 }
             }
             return null;
@@ -114,7 +114,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             if (CR.order.getProducts().length === 2) {
                 let reductionThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
                 if (reductionThreeProductsSameOrder) {
-                    return <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerThreeProductsSameOrder.text"], "reductionPrice", reductionThreeProductsSameOrder.price.amount + " " + reductionThreeProductsSameOrder.price.currencyCode)}} />;
+                    return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerThreeProductsSameOrder.text"], "reductionPrice", reductionThreeProductsSameOrder.price.amount + " " + reductionThreeProductsSameOrder.price.currencyCode)}} />;
                 }
             }
             return null;
@@ -124,7 +124,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             if (CR.order.getProducts().length === this.state.products.length) {
                 let reductionThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
                 if (reductionThreeProductsSameOrder) {
-                    return <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.allOffersActivated.text"], "reductionPrice", reductionThreeProductsSameOrder.price.amount + " " + reductionThreeProductsSameOrder.price.currencyCode)}} />;
+                    return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.allOffersActivated.text"], "reductionPrice", reductionThreeProductsSameOrder.price.amount + " " + reductionThreeProductsSameOrder.price.currencyCode)}} />;
                 }
             }
             return null;

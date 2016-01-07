@@ -40,27 +40,32 @@ CR.Controllers.Dashboard = P(function(c) {
                                 let editOrderMarkup = null;
                                 if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
                                     let url = "/order/edit?id=" + order.getId();
-                                    editOrderMarkup = <p dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
+                                    editOrderMarkup = <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
                                 }
 
                                 let reactItemId = "order-" + index;
                                 let editionClasses = "edition " + order.getEdition().code;
                                 let statusClasses = "status " + order.getStatusForHtml();
 
+                                let editionKey = "edition.name." + order.getEdition().code;
+                                if (CR.Services.Browser.isSmallScreen()) {
+                                    editionKey = "edition.name.short." + order.getEdition().code;
+                                }
+
                                 return (
                                     <li key={reactItemId}>
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
                                         <p>
-                                            <span className="dashboard-label">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}
+                                            <span className="dashboard-label light-font">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}
                                         </p>
                                         <section className="status-and-edition-wrapper">
                                             <div>
-                                                <span className="dashboard-label">{CR.i18nMessages["order.status.label"]}:</span>
+                                                <span className="dashboard-label light-font">{CR.i18nMessages["order.status.label"]}:</span>
                                                 <span className={statusClasses}>{order.getStatusForHtml()}</span>
                                                 {completePaymentLink}
                                             </div>
                                             <div>
-                                                <span className={editionClasses}>{order.getEditionForHtml()}</span>
+                                                <span className={editionClasses}>{CR.i18nMessages[editionKey]}</span>
                                             </div>
                                         </section>
 

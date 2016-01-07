@@ -135,10 +135,11 @@ object Order {
   }
 
   def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
-    getContainedProductCodesFromTypesArray(docTypes.split(typeStringSeparator).toList)
+    val typeArray = docTypes.split(typeStringSeparator).map { docType => docType.trim}
+    getContainedProductCodesFromTypesArray(typeArray)
   }
 
-  def getContainedProductCodesFromTypesArray(docTypes: List[String]): List[String] = {
+  def getContainedProductCodesFromTypesArray(docTypes: Array[String]): List[String] = {
     docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
       .toList
   }

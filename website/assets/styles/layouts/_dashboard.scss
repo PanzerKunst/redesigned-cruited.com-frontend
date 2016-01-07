@@ -24,6 +24,10 @@
       padding-right: 1em;
 
       margin-top: 3.65em;
+
+      > span {
+        margin-right: 1em;
+      }
     }
 
     @include large-screen {
@@ -32,10 +36,6 @@
 
     > .fa-plus {
       margin-right: 1px;
-      @include medium-screen {
-        // Default
-        margin-left: 0.5em;
-      }
     }
   }
 
@@ -61,23 +61,12 @@
   }
 
   span.dashboard-label {
-    font-weight: lighter;
     margin-right: 0.5em;
   }
 
   .status-and-edition-wrapper {
     display: flex;
     justify-content: space-between;
-  }
-
-  span.status {
-    // TODO: test
-    &.In.Progress {
-      color: $brand-danger;
-    }
-    &.Completed {
-      color: $primary-btn-color;
-    }
   }
 
   .btn-primary.btn-xs {
@@ -145,13 +134,23 @@
       display: block;
       @include clearfix;
 
+      $floated-el-width: 50%;
+      $floated-el-separator-width: 2%;
+
+      > span,
+      > button {
+        max-width: $floated-el-width - $floated-el-separator-width / 2;
+      }
+
       > span {
         float: left;
-        margin-top: 0.7em;
+        margin: 0.8em 0;
       }
 
       > button {
         float: right;
+
+        margin-left: $floated-el-separator-width;
       }
     }
   }

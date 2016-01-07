@@ -19,7 +19,7 @@ CR.Controllers.EditionListItem = React.createClass({
                 <div className="radio radio-primary">
                     <input type="radio" name="editions" id={radioId} value={editionId} checked={isThisEditionSelected} onChange={this._setEdition} />
                     <label htmlFor={radioId}>
-                        <span>{CR.i18nMessages["edition.name.long." + editionCode]}</span>
+                        <span>{CR.i18nMessages["edition.name." + editionCode]}</span>
                         <p>{CR.i18nMessages["order.productSelection.editionsSection.editionDescription.text." + editionCode]}</p>
                     </label>
                 </div>

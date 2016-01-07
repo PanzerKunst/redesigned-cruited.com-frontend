@@ -17,7 +17,7 @@ object ReportDto {
   def getOfOrderId(orderId: Long): Option[AssessmentReport] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on
+        select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on,
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name,
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,

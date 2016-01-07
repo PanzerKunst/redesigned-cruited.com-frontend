@@ -244,13 +244,6 @@
     }
 
     > div {
-      @include medium-screen {
-        .cart-product-name {
-          display: inline-block;
-          width: 10em;
-        }
-      }
-
       li {
         > .cart-product-price {
           margin-right: -2.9em;
@@ -266,6 +259,13 @@
         .fa-times {
           color: $brand-danger;
         }
+      }
+    }
+
+    @include medium-screen {
+      .cart-product-name {
+        display: inline-block;
+        width: 12em;
       }
     }
   }

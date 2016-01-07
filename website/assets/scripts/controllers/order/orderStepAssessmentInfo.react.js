@@ -73,8 +73,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
                         </article>
                         <ol>
-                            <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
-                            <li dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
+                            <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
+                            <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
                         </ol>
                         <div className="checkbox checkbox-primary">
                             <input type="checkbox" id="linkedin-profile-checked" />

@@ -125,3 +125,21 @@ a > i.fa {
     }
   }
 }
+
+.light-font {
+  font-weight: lighter;
+
+  a,
+  strong {
+    font-weight: normal;
+  }
+}
+
+span.status {
+  &.In.Progress {
+    color: $brand-danger;
+  }
+  &.Completed {
+    color: $primary-btn-color;
+  }
+}

@@ -2,16 +2,16 @@
 
 defaultAssessmentTitle=Assessment
 
-product.name.CV_REVIEW=CV [Resume]
-product.name.COVER_LETTER_REVIEW=Cover Letter
-product.name.LINKEDIN_PROFILE_REVIEW=Linkedin Profile
+product.name.CV_REVIEW=CV Review
+product.name.COVER_LETTER_REVIEW=Cover Letter Review
+product.name.LINKEDIN_PROFILE_REVIEW=Linkedin Review
 
 edition.name.PRO=Professional
-edition.name.YOUNG_PRO=Young Pro
+edition.name.YOUNG_PRO=Young Professional
 edition.name.EXEC=Executive
-edition.name.long.PRO=Professional
-edition.name.long.YOUNG_PRO=Young Professional
-edition.name.long.EXEC=Executive
+edition.name.short.PRO=Professional
+edition.name.short.YOUNG_PRO=Young Pro
+edition.name.short.EXEC=Executive
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2-item
 reduction.name.3_PRODUCTS_SAME_ORDER=3-item
@@ -176,7 +176,7 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Employer sought
 order.assessmentInfo.form.positionSought.label=Position sought
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
-order.assessmentInfo.form.customerComment.label=Ställ en fråga!
+order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
 order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Terms of Service</a>
 
