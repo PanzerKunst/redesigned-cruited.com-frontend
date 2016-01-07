@@ -130,13 +130,13 @@ order.productSelection.validation.emptyCart=You need to select at least 1 produc
 order.productSelection.productsSection.title=Products
 order.productSelection.productsSection.offerTwoProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select 2 items!
 order.productSelection.productsSection.offerThreeProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select all 3 items!
-order.productSelection.productsSection.allOffersActivated.text=You're saving <strong>{reductionPrice}</strong> on the full price
+order.productSelection.productsSection.allOffersActivated.text=You're saving <strong>{reductionPrice}</strong> on the full price.
 order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my Linkedin Profile
 
 order.productSelection.editionsSection.title=Product Edition
-order.productSelection.editionsSection.subtitle=Please choose which edition best suits you
+order.productSelection.editionsSection.subtitle=Please choose which edition best suits you.
 order.productSelection.editionsSection.editionDescription.text.PRO=You have worked for at least a year
 order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working a year or less, or you are a student
 order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
@@ -158,6 +158,10 @@ order.productSelection.cartSection.total=Total You Pay
 
 order.assessmentInfo.title=Assessment details
 order.assessmentInfo.subtitle=Tell us a bit about you
+order.assessmentInfo.documentsSection.title=Your documents
+order.assessmentInfo.documentsSection.subtitle=This is what we will assess.
+order.assessmentInfo.jobYouSearchSection.title=The job you search
+order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we can help you. All optional information.
 order.assessmentInfo.submitBtn.text=Proceed to next step
 order.assessmentInfo.validation.notSignedIn=We cannot assess your Linkedin profile unless you sign in
 order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(

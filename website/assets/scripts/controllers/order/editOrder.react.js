@@ -28,12 +28,33 @@ CR.Controllers.EditOrder = P(function(c) {
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
 
                         <form onSubmit={this._handleSubmit}>
-                            <section id="documents-section">
-                                {this._getCvFormGroup()}
-                                {this._getCoverLetterFormGroup()}
+                            {this._getDocumentsSection()}
+                            <section id="job-you-search-section">
+                                <header>
+                                    <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
+                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
+                                </header>
+                                <div>
+                                    <div className="form-group">
+                                        <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
+                                        <input type="text" className="form-control" id="position-sought" defaultValue={this.state.order.getSoughtPosition()} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
+                                        <input type="text" className="form-control" id="employer-sought" defaultValue={this.state.order.getSoughtEmployer()} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
+                                        <input type="text" className="form-control" id="job-ad-url" defaultValue={this.state.order.getJobAdUrl()} />
+                                        <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
+                                    </div>
+                                </div>
                             </section>
-                            {this._getFirstOptionalInfoFormGroup()}
-                            {this._getSecondOptionalInfoFormGroup()}
+                            <div className="form-group">
+                                <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
+                                <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={this.state.order.getCustomerComment()} />
+                                <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
+                            </div>
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.edit.saveBtn.text"]}</button>
                             </div>
@@ -48,12 +69,35 @@ CR.Controllers.EditOrder = P(function(c) {
             this._initValidation();
         },
 
-        _getCvFormGroup: function() {
-            let orderedCv = _.find(this.state.order.getProducts(), function(product) {
+        _getDocumentsSection: function() {
+            this.orderedCv = _.find(this.state.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.CV_REVIEW;
             });
 
-            if (!orderedCv) {
+            this.orderedCoverLetter = _.find(this.state.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
+            });
+
+            if (!this.orderedCv && !this.orderedCoverLetter) {
+                return null;
+            }
+
+            return (
+                <section id="documents-section">
+                    <header>
+                        <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
+                        <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
+                    </header>
+                    <div>
+                        {this._getCvFormGroup()}
+                        {this._getCoverLetterFormGroup()}
+                    </div>
+                </section>
+            );
+        },
+
+        _getCvFormGroup: function() {
+            if (!this.orderedCv) {
                 return null;
             }
 
@@ -74,11 +118,7 @@ CR.Controllers.EditOrder = P(function(c) {
         },
 
         _getCoverLetterFormGroup: function() {
-            let orderedCoverLetter = _.find(this.state.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
-
-            if (!orderedCoverLetter) {
+            if (!this.orderedCoverLetter) {
                 return null;
             }
 
@@ -95,38 +135,6 @@ CR.Controllers.EditOrder = P(function(c) {
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
-            );
-        },
-
-        _getFirstOptionalInfoFormGroup: function() {
-            return (
-                <section id="position-and-employer-section">
-                    <div className="form-group">
-                        <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                        <input type="text" className="form-control" id="position-sought" defaultValue={this.state.order.getSoughtPosition()} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                        <input type="text" className="form-control" id="employer-sought" defaultValue={this.state.order.getSoughtEmployer()} />
-                    </div>
-                </section>
-            );
-        },
-
-        _getSecondOptionalInfoFormGroup: function() {
-            return (
-                <section id="url-and-comment-section">
-                    <div className="form-group">
-                        <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                        <input type="text" className="form-control" id="job-ad-url" defaultValue={this.state.order.getJobAdUrl()} />
-                        <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
-                        <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={this.state.order.getCustomerComment()} />
-                        <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
-                    </div>
-                </section>
             );
         },
 

@@ -248,6 +248,67 @@
   }
 }
 
+#order-step-assessment-info,
+#edit-order {
+  .with-circles {
+    @include medium-screen {
+      width: auto;
+      margin: 0 $spacer-unit-size;
+    }
+    @include large-screen {
+      width: $large-content-width;
+      margin: 0 auto;
+    }
+  }
+
+  form {
+    font-size: #{$font-size-base-px}px;
+  }
+
+  #documents-section,
+  #job-you-search-section {
+    padding-bottom: 2.5em;
+    border-bottom: 1px solid $well-border-color;
+
+    h2 {
+      margin-top: 0;
+    }
+
+    > header > p {
+      margin-bottom: 0;
+      min-height: 3.5em;
+    }
+  }
+
+  #job-you-search-section,
+  form > .form-group {
+    margin-top: 3em;
+  }
+
+  @include medium-screen {
+    #documents-section,
+    #job-you-search-section {
+      display: flex;
+      justify-content: space-between;
+
+      > header {
+        width: 40%;
+      }
+
+      > div {
+        width: 55%;
+        margin-top: 12px;
+      }
+    }
+
+    form > .form-group {
+      max-width: 55%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
 @include no-flexbox {
   #order-steps-breadcrumbs {
     display: table;
@@ -258,6 +319,25 @@
     > a,
     > span {
       display: table-cell;
+    }
+  }
+
+  #order-step-assessment-info,
+  #edit-order {
+    @include medium-screen {
+      #documents-section,
+      #job-you-search-section {
+        display: block;
+        @include clearfix;
+
+        > header {
+          float: left;
+        }
+
+        > div {
+          float: right;
+        }
+      }
     }
   }
 }

@@ -1,10 +1,6 @@
 #order-step-assessment-info {
-  form {
-    font-size: #{$font-size-base-px}px;
-
-    .checkbox > label::before {
-      margin-top: 3px;
-    }
+  .checkbox > label::before {
+    margin-top: 3px;
   }
 
   #linkedin-profile-form-group {
@@ -16,87 +12,15 @@
       }
     }
 
-    #not-signed-in-with-linkedin {
-      margin-left: 0;
-    }
-
     li {
       padding-left: 0.3em;
     }
-  }
-
-  #position-and-employer-section {
-    margin-top: 3em;
-  }
-
-  #url-and-comment-section {
-    margin-bottom: 2em;
   }
 
   #tos-wrapper {
     > .checkbox {
       display: inline-block;
       text-align: left;
-    }
-  }
-
-  @include medium-screen {
-    #position-and-employer-section,
-    #url-and-comment-section {
-      display: flex;
-      justify-content: space-between;
-
-      > .form-group {
-        width: $two-column-form-group-width;
-      }
-    }
-  }
-
-  @include large-screen {
-    #documents-section {
-      display: flex;
-      justify-content: space-between;
-
-      > div {
-        width: $two-column-form-group-width;
-      }
-    }
-  }
-}
-
-@include no-flexbox {
-  #order-step-assessment-info {
-    @include medium-screen {
-      #position-and-employer-section,
-      #url-and-comment-section {
-        display: block;
-        @include clearfix;
-
-        > .form-group {
-          float: right;
-          width: $two-column-form-group-width;
-
-          &:first-child {
-            float: left;
-          }
-        }
-      }
-    }
-
-    @include large-screen {
-      #documents-section {
-        display: block;
-        @include clearfix;
-
-        > div {
-          float: right;
-          width: $two-column-form-group-width;
-
-          &:first-child {
-            float: left;
-          }
-        }
-      }
     }
   }
 }

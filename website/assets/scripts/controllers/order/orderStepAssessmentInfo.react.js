@@ -34,11 +34,42 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section">
-                                {this._getSignInWithLinkedinFormGroup()}
-                                {this._getCvAndCoverLetterFormGroup()}
+                                <header>
+                                    <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
+                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
+                                </header>
+                                <div>
+                                    {this._getSignInWithLinkedinFormGroup()}
+                                    {this._getCvFormGroup()}
+                                    {this._getCoverLetterFormGroup()}
+                                </div>
                             </section>
-                            {this._getFirstOptionalInfoFormGroup()}
-                            {this._getSecondOptionalInfoFormGroup()}
+                            <section id="job-you-search-section">
+                                <header>
+                                    <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
+                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
+                                </header>
+                                <div>
+                                    <div className="form-group">
+                                        <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
+                                        <input type="text" className="form-control" id="position-sought" defaultValue={CR.order.getSoughtPosition()} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
+                                        <input type="text" className="form-control" id="employer-sought" defaultValue={CR.order.getSoughtEmployer()} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
+                                        <input type="text" className="form-control" id="job-ad-url" defaultValue={CR.order.getJobAdUrl()} />
+                                        <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
+                                    </div>
+                                </div>
+                            </section>
+                            <div className="form-group">
+                                <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
+                                <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={CR.order.getCustomerComment()} />
+                                <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
+                            </div>
                             {this._getTosFormGroup()}
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.submitBtn.text"]}</button>
@@ -106,29 +137,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _getCvAndCoverLetterFormGroup: function() {
-            this.orderedCv = _.find(CR.order.getProducts(), function(product) {
+        _getCvFormGroup: function() {
+            let orderedCv = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.CV_REVIEW;
             });
 
-            this.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
-
-            if (!this.orderedCv && !this.orderedCoverLetter) {
-                return null;
-            }
-
-            return (
-                <div>
-                    {this._getCvFormGroup()}
-                    {this._getCoverLetterFormGroup()}
-                </div>
-            );
-        },
-
-        _getCvFormGroup: function() {
-            if (!this.orderedCv) {
+            if (!orderedCv) {
                 return null;
             }
 
@@ -149,7 +163,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCoverLetterFormGroup: function() {
-            if (!this.orderedCoverLetter) {
+            let orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
+            });
+
+            if (!orderedCoverLetter) {
                 return null;
             }
 
@@ -166,38 +184,6 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     </div>
                     <p className="field-error" data-check="empty" />
                 </div>
-            );
-        },
-
-        _getFirstOptionalInfoFormGroup: function() {
-            return (
-                <section id="position-and-employer-section">
-                    <div className="form-group">
-                        <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                        <input type="text" className="form-control" id="position-sought" defaultValue={CR.order.getSoughtPosition()} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                        <input type="text" className="form-control" id="employer-sought" defaultValue={CR.order.getSoughtEmployer()} />
-                    </div>
-                </section>
-            );
-        },
-
-        _getSecondOptionalInfoFormGroup: function() {
-            return (
-                <section id="url-and-comment-section">
-                    <div className="form-group">
-                        <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                        <input type="text" className="form-control" id="job-ad-url" defaultValue={CR.order.getJobAdUrl()} />
-                        <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
-                        <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={CR.order.getCustomerComment()} />
-                        <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
-                    </div>
-                </section>
             );
         },
 
