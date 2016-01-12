@@ -301,23 +301,13 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       if (orderIdBase64 == StringService.base64Encode(orderId.toString)) {
         OrderDto.getOfId(orderId) match {
           case None => BadRequest("No order found for ID " + orderId)
-          case Some(order) => sendDocument(order.cvFileName)
+          case Some(order) => sendDocument(orderId, order.cvFileName)
         }
       } else {
         Forbidden("Invalid token")
       }
     } else {
       BadRequest("Token must be specified")
-    }
-  }
-
-  private def sendDocument(fileNameOpt: Option[String]) = {
-    fileNameOpt match {
-      case None => NoContent
-      case Some(fileName) => Ok.sendFile(
-        content = new File(documentService.assessedDocumentsRootDir + fileName),
-        inline = true
-      )
     }
   }
 
@@ -328,7 +318,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       if (orderIdBase64 == StringService.base64Encode(orderId.toString)) {
         OrderDto.getOfId(orderId) match {
           case None => BadRequest("No order found for ID " + orderId)
-          case Some(order) => sendDocument(order.coverLetterFileName)
+          case Some(order) => sendDocument(orderId, order.coverLetterFileName)
         }
       } else {
         Forbidden("Invalid token")
@@ -345,7 +335,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       if (orderIdBase64 == StringService.base64Encode(orderId.toString)) {
         OrderDto.getOfId(orderId) match {
           case None => BadRequest("No order found for ID " + orderId)
-          case Some(order) => sendDocument(order.linkedinProfileFileName)
+          case Some(order) => sendDocument(orderId, order.linkedinProfileFileName)
         }
       } else {
         Forbidden("Invalid token")
@@ -355,40 +345,47 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
+  private def sendDocument(orderId: Long, fileNameOpt: Option[String]) = {
+    fileNameOpt match {
+      case None => NoContent
+      case Some(fileName) => Ok.sendFile(
+        content = new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName),
+        inline = true
+      )
+    }
+  }
+
   def getCvThumbnailOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) =>
-        sendThumbnail(order.cvFileName)
+      case Some(order) => sendThumbnail(orderId, order.cvFileName)
     }
   }
 
   def getCoverLetterThumbnailOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) =>
-        sendThumbnail(order.coverLetterFileName)
-    }
-  }
-
-  private def sendThumbnail(docFileNameOpt: Option[String]) = {
-    docFileNameOpt match {
-      case None => NoContent
-      case Some(docFileName) =>
-        val thumbnailFileName = documentService.getFileNameWithoutExtension(docFileName) + "." + documentService.docThumbnailFileExtension
-
-        Ok.sendFile(
-          content = new File(documentService.assessedDocumentsThumbnailsRootDir + thumbnailFileName),
-          inline = true
-        )
+      case Some(order) => sendThumbnail(orderId, order.coverLetterFileName)
     }
   }
 
   def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) =>
-        sendThumbnail(order.linkedinProfileFileName)
+      case Some(order) => sendThumbnail(orderId, order.linkedinProfileFileName)
+    }
+  }
+
+  private def sendThumbnail(orderId: Long, docFileNameOpt: Option[String]) = {
+    docFileNameOpt match {
+      case None => NoContent
+      case Some(docFileName) =>
+        val thumbnailFileName = orderId + Order.fileNamePrefixSeparator + documentService.getFileNameWithoutExtension(docFileName) + "." + documentService.docThumbnailFileExtension
+
+        Ok.sendFile(
+          content = new File(documentService.assessedDocumentsThumbnailsRootDir + thumbnailFileName),
+          inline = true
+        )
     }
   }
 
