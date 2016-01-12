@@ -24,14 +24,16 @@ $.fn.parallax = function(posX, speed) {
     if (!Modernizr.touch) {
         $window.scroll(update).resize(update);
 
-        // To have a smoother parallax on the hero image
-        $window.mousewheel(function(e) {
-            e.preventDefault();
+        // To have a smoother parallax when scrolling with the mouse wheel
+        if (CR.Services.Browser.isWindows()) {
+            $window.mousewheel(function(e) {
+                e.preventDefault();
 
-            var scrollTop = $window.scrollTop();
-            var scrollYPos = scrollTop - e.deltaY * 400;
+                var scrollTop = $window.scrollTop();
+                var scrollYPos = scrollTop - e.deltaY * 200;
 
-            TweenLite.to(window, CR.defaultAnimationDuration, {scrollTo: scrollYPos, ease: Power1.easeOut});
-        });
+                TweenLite.to(window, CR.defaultAnimationDuration / 2, {scrollTo: scrollYPos, ease: Power1.easeOut});
+            });
+        }
     }
 };

@@ -74,5 +74,9 @@ CR.Services.Browser = {
 
     isIOS: function() {
         return /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+    },
+
+    isWindows: function() {
+        return navigator.platform === "Win32" || navigator.platform === "Win64";
     }
 };
