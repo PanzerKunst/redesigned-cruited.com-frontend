@@ -5,6 +5,18 @@ $two-column-form-group-width: 48%;
   border-radius: $default-border-radius;
 }
 
+@mixin dashed-border-bottom {
+  border-bottom: 1px dashed $well-border-color;
+}
+
+@mixin tight-letter-spacing {
+  letter-spacing: -0.05em;
+}
+
+@mixin bottom-shadow {
+  box-shadow: 0 0.2em 0 -0.1em lighten(black, 90%);
+}
+
 [role=main] {
   background-color: $light-grey;
 }
@@ -141,5 +153,35 @@ span.status {
   }
   &.Completed {
     color: $primary-btn-color;
+  }
+}
+
+.highlighted-number {
+  padding: 0.4em 0.6em;
+  line-height: 1em;
+  text-align: center;
+
+  color: white;
+  background-color: $brand-danger;
+  border-radius: $default-border-radius;
+}
+
+.assessment-label {
+  margin-right: 0.5em;
+}
+
+.well {
+  min-height: 0;
+  padding: 1em 1.75em;
+  margin-bottom: $content-element-margin-bottom;
+  @include project-border;
+  background-color: $light-grey;
+}
+
+nav > a,
+.nav > li > a {
+  &:focus,
+  &:hover {
+    text-decoration: none;
   }
 }

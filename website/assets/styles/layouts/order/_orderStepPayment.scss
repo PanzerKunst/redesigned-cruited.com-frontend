@@ -28,18 +28,18 @@ $expires-and-cvc-field-width: 30%;
     }
 
     #cart-section > header {
-        margin-bottom: 0.3em;
+      margin-bottom: 0.3em;
 
-        > h2 {
-          font-size: 1em;
-          padding: 0.3em 0 0 2em;
+      > h2 {
+        font-size: 1em;
+        padding: 0.3em 0 0 2em;
 
-          background-position: -1900px -294px;
-        }
+        background-position: -1900px -294px;
+      }
+    }
 
-        > span {
-          padding: .3em .5em;
-        }
+    .highlighted-number {
+      padding: .3em .5em;
     }
   }
 

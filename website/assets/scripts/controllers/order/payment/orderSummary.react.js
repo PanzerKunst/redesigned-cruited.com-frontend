@@ -9,7 +9,7 @@ CR.Controllers.OrderSummary = React.createClass({
             <section id="cart-section">
                 <header>
                     <h2>{CR.i18nMessages["order.productSelection.cartSection.title"]}</h2>
-                    <span>{order.getProducts().length}</span>
+                    <span className="highlighted-number">{order.getProducts().length}</span>
                 </header>
                 <div>
                     <div>

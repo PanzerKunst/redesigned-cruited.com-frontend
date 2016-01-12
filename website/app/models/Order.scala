@@ -55,7 +55,7 @@ case class Order(id: Option[Long],
     var costAfterReductions = orderPriceAmounts.reduce((total, cur) => total + cur)
 
     // TODO: remove
-    Logger.info("costAfterReductions :" + costAfterReductions)
+    Logger.info("costAfterReductions - 1:" + costAfterReductions)
 
 
     // Reductions
@@ -72,7 +72,7 @@ case class Order(id: Option[Long],
     }
 
     // TODO: remove
-    Logger.info("costAfterReductions :" + costAfterReductions)
+    Logger.info("costAfterReductions - 2:" + costAfterReductions)
 
 
     // Coupon
@@ -91,8 +91,7 @@ case class Order(id: Option[Long],
     }
 
     // TODO: remove
-    Logger.info("costAfterReductions :" + costAfterReductions)
-
+    Logger.info("costAfterReductions - 3:" + costAfterReductions)
 
     costAfterReductions.toInt
   }

@@ -59,6 +59,7 @@ $header-bottom-border-height: 1px;
 
 #header-nav {
   @include clearfix;
+  position: relative;
 
   > .fa-home,
   .fa-bars,
@@ -92,7 +93,7 @@ $header-bottom-border-height: 1px;
     }
   }
 
-  .brand {
+  > .brand {
     position: absolute;
     left: 50%;
     margin-left: -1.6em;

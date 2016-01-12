@@ -58,6 +58,7 @@ menu.myAccount=My account
 # Sign In page
 
 signIn.title=Sign in
+signIn.methodSeparatorText=or
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
 signIn.validation.linkedinAccountUnregistered=This linkedin account is not registered. Registration is done during <a href="/order">your first order</a>.
@@ -114,10 +115,16 @@ dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a hr
 # Report page
 
 report.title=Your Report
+
 report.summary.title=Report Summary
+report.summary.documentLink.text=Open original file
+report.summary.text=This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score.
+report.summary.score.label=Your C-Score
+report.summary.score.bar.label.weak=Weak
+report.summary.score.bar.label.good=Good
+report.summary.score.bar.label.excellent=Excellent
+
 report.analysis.title=Expert Report Analysis
-report.document.link.text=Download Original File
-report.document.score.label=Your C-Score
 
 
 # Order Step Product Selection page

@@ -1,22 +1,6 @@
 #order-step-product-selection {
   #products-section,
   #editions-section {
-    padding-bottom: 2.5em;
-    border-bottom: 1px solid $well-border-color;
-
-    h2 {
-      margin-top: 0;
-    }
-
-    > header > p {
-      margin-bottom: 0;
-      min-height: 3.5em;
-
-      > strong {
-        color: $brand-danger;
-      }
-    }
-
     li {
       background-color: white;
       color: $grey;

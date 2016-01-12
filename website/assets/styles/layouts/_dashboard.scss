@@ -41,7 +41,7 @@
 
   .with-circles > ul > li {
     background-color: white;
-    box-shadow: 0 0.2em 0 -0.1em lighten(black, 90%);
+    @include bottom-shadow;
 
     margin-bottom: 2em;
 
@@ -58,10 +58,6 @@
     > h2 {
       margin-top: 0;
     }
-  }
-
-  span.dashboard-label {
-    margin-right: 0.5em;
   }
 
   .status-and-edition-wrapper {
@@ -101,7 +97,7 @@
   }
 }
 
-.flexbox {
+@include no-flexbox {
   #dashboard {
     #content > header > div {
       display: block;

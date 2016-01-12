@@ -20,7 +20,7 @@
 // Retina sprite mixin and function inspired by Paul Stamatiou (http://paulstamatiou.com/responsive-retina-blog-development-part-2)
 
 @mixin hdpi-sprite($background-color: transparent) {
-  @include retina-image($sprite-url, 1000px 1000px);  // Sprite dimensions, halved
+  @include retina-image($sprite-url, 1000px 2000px);  // Sprite dimensions, halved
   background-color: $background-color;
   background-repeat: no-repeat;
 }
@@ -74,7 +74,10 @@
 
 @mixin no-flexbox {
   .no-flexbox,
-  html[data-useragent*="OS 7_"] {
+  html[data-useragent*="OS 7_"],
+  html[data-useragent*="OS 6_"],
+  html[data-useragent*="OS 5_"],
+  html[data-useragent*="OS 4_"] {
     @content;
   }
 }

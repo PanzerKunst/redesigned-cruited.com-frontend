@@ -22,6 +22,7 @@ CR.Controllers.SignIn = P(function(c) {
                         <form>
                             {this._getSignInWithLinkedinForm()}
                         </form>
+                        <p>{CR.i18nMessages["signIn.methodSeparatorText"]}</p>
                         {this._getSignInWithEmailForm()}
                     </div>
                 </div>

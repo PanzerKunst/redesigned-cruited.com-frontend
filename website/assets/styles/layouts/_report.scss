@@ -1,9 +1,52 @@
 #report {
+  .with-circles > header {
+    text-align: center;
+    margin-bottom: 2em;
+
+    > p {
+      margin-bottom: 0.5em;
+
+      @include medium-screen {
+        display: inline-block;
+        margin-right: 2em;
+      }
+    }
+  }
+
   .nav {
     text-align: center;
+    margin-bottom: 2em;
 
     > li {
       display: inline-block;
+
+      margin-right: 0.5em;
+
+      > a {
+        font-size: 0.65em;
+        color: $well-border-color;
+
+        background-color: white;
+        @include project-border;
+        border-radius: 2em;
+      }
+
+      &.active > a {
+        color: white;
+        background-color: $action-color;
+        border-color: $action-color;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      @include medium-screen {
+        > a {
+          font-size: $font-size-sm;
+          min-width: 13em;
+        }
+      }
     }
   }
 
@@ -12,12 +55,460 @@
   }
 
   .tab-pane {
-    section {
-      background-color: white;
+    > div {
+      > section {
+        margin-bottom: 2em;
+        background-color: white;
+        @include bottom-shadow;
+
+        padding: 1.5em $spacer-unit-size;
+        @include medium-screen {
+          padding-left: 2.8em;
+          padding-right: 2.8em;
+        }
+        @include large-screen {
+          padding-left: 5em;
+          padding-right: 5em;
+        }
+      }
+
+      .light-font {
+        @include medium-screen {
+          font-size: #{$medium-screen-ratio-s * $font-size-base-px}px;
+        }
+      }
+    }
+
+    h2 {
+      margin-top: 0.5em;
     }
   }
 
-  .red-comment {
-    margin-bottom: 1em;
+  .summary {
+    > section {
+      > .centered-contents,
+      > .light-font {
+        margin-bottom: 1.5em;
+      }
+
+      > .centered-contents {
+        min-width: 8em;
+
+        > a {
+          display: inline-block;
+
+          max-width: 7em;
+          max-height: 10em;
+
+          box-shadow: 0 0 0.2em 0 lighten(black, 90%);
+
+          margin-bottom: 0.5em;
+        }
+      }
+
+      @include large-screen {
+        display: flex;
+        justify-content: space-between;
+
+        > .centered-contents {
+          order: 2;
+          margin-left: 2em;
+        }
+
+        > .light-font {
+          order: 1;
+        }
+      }
+    }
+
+    > article {
+      > section:first-child {
+        background-color: $dark-grey;
+        color: white;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 0.5em 1em;
+        margin-bottom: 1em;
+        min-width: 9em;
+      }
+
+      p {
+        line-height: 1em;
+        text-align: center;
+
+        margin-bottom: 0;
+
+        &:last-child {
+          color: $sky-blue;
+          font-size: 4em;
+          font-weight: bold;
+          @include tight-letter-spacing;
+        }
+      }
+
+      @include medium-screen {
+        display: flex;
+
+        > section {
+          &:first-child {
+            display: block;
+            margin-bottom: 0;
+          }
+          &:last-child {
+            background-color: $light-grey;
+            padding: 1.4em 2em;
+          }
+        }
+
+        p {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .pdf-link {
+      font-size: $font-size-sm;
+      color: $pdf-red;
+
+      padding: 0.25em 0 0.25em 1.5em;
+
+      $pdf-icon-location-x: -1900px;
+      $pdf-icon-location-y: -2100px;
+
+      @include hdpi-sprite;
+      background-position: $pdf-icon-location-x $pdf-icon-location-y;
+      @include hidpi {
+        background-position: half-pos($pdf-icon-location-x, $pdf-icon-location-y);
+      }
+
+      @include medium-screen {
+        $pdf-icon-location-y: -2200px;
+        background-position: $pdf-icon-location-x $pdf-icon-location-y;
+      }
+      @include large-screen {
+        $pdf-icon-location-x: -1897px;
+        $pdf-icon-location-y: -2197px;
+        background-position: $pdf-icon-location-x $pdf-icon-location-y;
+      }
+    }
+  }
+
+  .score-bar-text-labels,
+  .score-bar-number-labels {
+    font-size: $font-size-sm;
+
+    @include clearfix;
+
+    > span {
+      &:first-child {
+        float: left;
+      }
+      &:last-child {
+        float: right;
+      }
+    }
+  }
+
+  .score-bar-text-labels {
+    position: relative;
+  }
+
+  .score-bar-text-label {
+    &.weak {
+      color: #B75A58;
+    }
+    &.good {
+      color: #CFAC47;
+
+      position: absolute;
+      left: 58.5%;
+
+      $label-width: 4em;
+      width: $label-width;
+      margin-left: - $label-width / 2;
+      text-align: center;
+    }
+    &.excellent {
+      color: #31A164;
+    }
+  }
+
+  .score-bar-number-labels {
+    color: $grey;
+  }
+
+  #score-bar {
+    position: relative;
+
+    line-height: 0; // Otherwise gets higher than 30px on large res
+
+    > img {
+      height: 30px;
+      width: 100%;
+
+      border-radius: 2px;
+    }
+
+    > span {
+      position: absolute;
+      top: 0;
+
+      $score-bar-cursor-location-x: 0;
+      $score-bar-cursor-location-y: -100px;
+
+      @include hdpi-sprite;
+      background-position: $score-bar-cursor-location-x $score-bar-cursor-location-y;
+      @include hidpi {
+        background-position: half-pos($score-bar-cursor-location-x, $score-bar-cursor-location-y);
+      }
+
+      $score-bar-cursor-width: 22px;
+
+      width: $score-bar-cursor-width;
+      height: 43px;
+
+      margin-left: - $score-bar-cursor-width / 2;
+    }
+  }
+
+  .report-analysis {
+    li.category {
+      border-top: 3px solid $light-grey;
+
+      $category-icon-location-x: -1892px;
+      $category-icon-location-x-large-screen: -1900px;
+
+      &:last-child > .red-comments {
+        margin-bottom: 0;
+      }
+
+      > header {
+        > div {
+          $icon-spacing: 2.5em;
+
+          padding-left: $icon-spacing;
+          margin: 1em 0 0 #{-$icon-spacing};
+
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+
+          @include medium-screen {
+            @include hdpi-sprite;
+          }
+        }
+
+        > .light-font {
+          font-size: $font-size-sm;
+          font-weight: normal;
+          color: $grey;
+        }
+      }
+
+      &.id-7 > header > div {
+        $category-icon-location-y: -1097px;
+        background-position: $category-icon-location-x $category-icon-location-y;
+        @include large-screen {
+          $category-icon-location-y: -1199px;
+          background-position: $category-icon-location-x-large-screen $category-icon-location-y;
+        }
+      }
+
+      &.id-8,
+      &.id-14,
+      &.id-16 {
+        > header > div {
+          $category-icon-location-y: -1297px;
+          background-position: $category-icon-location-x $category-icon-location-y;
+          @include large-screen {
+            $category-icon-location-y: -1399px;
+            background-position: $category-icon-location-x-large-screen $category-icon-location-y;
+          }
+        }
+      }
+
+      &.id-10,
+      &.id-12,
+      &.id-20 {
+        > header > div {
+          $category-icon-location-y: -1497px;
+          background-position: $category-icon-location-x $category-icon-location-y;
+          @include large-screen {
+            $category-icon-location-y: -1599px;
+            background-position: $category-icon-location-x-large-screen $category-icon-location-y;
+          }
+        }
+      }
+
+      &.id-11,
+      &.id-13,
+      &.id-18 {
+        > header > div {
+          $category-icon-location-y: -1697px;
+          background-position: $category-icon-location-x $category-icon-location-y;
+          @include large-screen {
+            $category-icon-location-y: -1799px;
+            background-position: $category-icon-location-x-large-screen $category-icon-location-y;
+          }
+        }
+      }
+
+      &.id-17 > header > div {
+        $category-icon-location-y: -1897px;
+        background-position: $category-icon-location-x $category-icon-location-y;
+        @include large-screen {
+          $category-icon-location-y: -1999px;
+          background-position: $category-icon-location-x-large-screen $category-icon-location-y;
+        }
+      }
+    }
+
+    h3 {
+      color: $dark-grey;
+      font-weight: bold;
+
+      margin: 0.2em 0 0.5em 0;
+    }
+
+    .highlighted-number {
+      margin-top: 0.2em;
+
+      @include medium-screen {
+        min-width: 4em;
+        max-width: 4em;
+      }
+    }
+
+    .well {
+      font-size: $font-size-sm;
+      text-align: center;
+      color: $light-grey-blue;
+
+      background-color: lighten($light-grey-blue, 40%);
+      border-color: $light-grey-blue;
+
+      margin: 2em auto;
+
+      @include medium-screen {
+        max-width: 75%;
+      }
+    }
+  }
+
+  // Added the `.tab-pane > div` selector to bump up priority of `@include large-screen` declaration
+  .tab-pane > div .red-comments {
+    margin: 2em 0 4em #{-$list-padding-left};
+
+    list-style-type: disc;
+
+    list-style-position: inside;
+
+    @include medium-screen {
+      list-style-position: outside;
+    }
+
+    @include large-screen {
+      font-size: #{$large-screen-ratio-s * $font-size-base-px}px;
+    }
+
+    > li {
+      $border-space: 2em;
+
+      padding-bottom: $border-space;
+      margin-bottom: $border-space;
+      @include dashed-border-bottom;
+
+      &:last-child {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+@include no-flexbox {
+  #report {
+    .summary {
+      > section {
+        @include large-screen {
+          display: block;
+          @include clearfix;
+
+          > .centered-contents {
+            float: right;
+            margin-left: 0;
+          }
+
+          > .light-font {
+            float: left;
+            max-width: 70%
+          }
+        }
+      }
+
+      > article {
+        > section:first-child {
+          display: block;
+          @include clearfix;
+        }
+
+        p {
+          &:first-child {
+            float: left;
+            margin-top: 16px;
+          }
+          &:last-child {
+            float: right;
+          }
+        }
+
+        @include medium-screen {
+          display: block;
+          position: relative;
+          height: 7em;
+
+          > section {
+            position: absolute;
+            top: 0;
+            height: 100%;
+
+            $width-left-section: 31%;
+
+            left: 0;
+            width: $width-left-section;
+            &:last-child {
+              left: $width-left-section;
+              width: 100% - $width-left-section;
+            }
+          }
+
+          p {
+            float: none !important;
+
+            &:first-child {
+              margin-top: 0;
+            }
+          }
+        }
+      }
+    }
+
+    li.category > header > div {
+      display: block;
+      @include clearfix;
+
+      > h3 {
+        float: left;
+        max-width: 85%;
+      }
+
+      > span {
+        float: right;
+      }
+    }
   }
 }

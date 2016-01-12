@@ -1,3 +1,6 @@
+// Pre-import vendor overrides
+@import "vendor-overrides/pre-import/_bootstrap";
+
 // Automatically injected Bower dependencies via wiredep (never manually edit this block)
 // bower:scss
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
@@ -11,9 +14,9 @@
 @import "common/_variables";
 @import "common/_mixins";
 
-// Vendor overrides
-@import "vendor-overrides/_bootstrap";
-@import "vendor-overrides/_awesomeBootstrapCheckbox";
+// Post-import vendor overrides
+@import "vendor-overrides/post-import/_bootstrap";
+@import "vendor-overrides/post-import/_awesomeBootstrapCheckbox";
 
 // Global
 @import "common/_global";

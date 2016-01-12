@@ -56,11 +56,11 @@ CR.Controllers.Dashboard = P(function(c) {
                                     <li key={reactItemId}>
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
                                         <p>
-                                            <span className="dashboard-label light-font">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}
+                                            <span className="assessment-label light-font">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}
                                         </p>
                                         <section className="status-and-edition-wrapper">
                                             <div>
-                                                <span className="dashboard-label light-font">{CR.i18nMessages["order.status.label"]}:</span>
+                                                <span className="assessment-label light-font">{CR.i18nMessages["order.status.label"]}:</span>
                                                 <span className={statusClasses}>{order.getStatusForHtml()}</span>
                                                 {completePaymentLink}
                                             </div>

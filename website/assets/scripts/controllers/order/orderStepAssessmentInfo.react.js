@@ -33,7 +33,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.assessmentInfo} />
 
                         <form onSubmit={this._handleSubmit}>
-                            <section id="documents-section">
+                            <section id="documents-section" className="two-columns">
                                 <header>
                                     <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
                                     <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
@@ -44,7 +44,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     {this._getCoverLetterFormGroup()}
                                 </div>
                             </section>
-                            <section id="job-you-search-section">
+                            <section id="job-you-search-section" className="two-columns">
                                 <header>
                                     <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
                                     <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>

@@ -22,7 +22,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
 
-                        <section id="products-section">
+                        <section id="products-section" className="two-columns">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
                                 {this._getParagraphOfferTwoProductsSameOrder()}
@@ -37,7 +37,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             }.bind(this))}
                             </ul>
                         </section>
-                        <section id="editions-section">
+                        <section id="editions-section" className="two-columns">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
                                 <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
@@ -53,7 +53,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         <section id="cart-section">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.cartSection.title"]}</h2>
-                                <span>{CR.order.getProducts().length}</span>
+                                <span className="highlighted-number">{CR.order.getProducts().length}</span>
                             </header>
                             <div>
                                 <div>

@@ -29,7 +29,7 @@ CR.Controllers.EditOrder = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             {this._getDocumentsSection()}
-                            <section id="job-you-search-section">
+                            <section id="job-you-search-section" className="two-columns">
                                 <header>
                                     <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
                                     <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
@@ -83,7 +83,7 @@ CR.Controllers.EditOrder = P(function(c) {
             }
 
             return (
-                <section id="documents-section">
+                <section id="documents-section" className="two-columns">
                     <header>
                         <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
                         <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
