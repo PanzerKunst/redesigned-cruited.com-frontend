@@ -117,7 +117,7 @@ dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a hr
 report.title=Your Report
 
 report.summary.title=Report Summary
-report.summary.documentLink.text=Open original file
+report.summary.documentLink.text=Original doc
 report.summary.text=This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score. This is a good assessment score.
 report.summary.score.label=Your C-Score
 report.summary.score.bar.label.weak=Weak

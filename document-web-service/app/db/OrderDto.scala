@@ -55,14 +55,14 @@ object OrderDto {
       }
 
       val paidOnClause = if (order.status == Order.statusIdPaid) {
-        DbUtil.formatTimestampForInsertOrUpdate(new Date().getTime)
+        "'" + DbUtil.formatTimestampForInsertOrUpdate(new Date().getTime) + "'"
       } else {
-        "0000-00-00"
+        "null"
       }
 
       val query = """
       insert into documents(name, edition_id, file, file_cv, file_li, li_url, added_at, code, added_by, type, status, position, employer, paid_on, session_id, /* useful fields */
-        hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+        hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test, lang) /* unused but required fields */
       values('""" + nameClause + """', """ +
         order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
@@ -75,10 +75,10 @@ object OrderDto {
         Order.getTypeForDb(order.containedDocTypes) + """', """ +
         order.status + """, '""" +
         positionSoughtClause + """', '""" +
-        employerSoughtClause + """', '""" +
-        paidOnClause + """', '""" +
+        employerSoughtClause + """', """ +
+        paidOnClause + """, '""" +
         order.sessionId + """',
-        0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0, 'sw');"""
 
       Logger.info("OrderDto.create():" + query)
 

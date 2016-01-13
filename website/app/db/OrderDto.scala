@@ -1,6 +1,6 @@
 package db
 
-import java.util.{Calendar, Date, GregorianCalendar}
+import java.util.Date
 
 import anorm.SqlParser._
 import anorm._
@@ -51,7 +51,7 @@ object OrderDto {
 
       val query = """
       insert into documents(id, edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, /* useful fields */
-        li_url, paid_on, hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+        li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test, lang) /* unused but required fields */
       values(""" + order.tempId + """, """ +
         order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
@@ -66,7 +66,7 @@ object OrderDto {
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +
         customerCommentClause + """,
-        '', '1900-01-01 00:00:00', 0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+        '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0, 'sw');"""
 
       Logger.info("OrderDto.createTemporary():" + query)
 
@@ -114,8 +114,8 @@ object OrderDto {
       }
 
       val query = """
-      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, paid_on, /* useful fields */
-        li_url, hireability, open_application, last_rate, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, set_in_progress_at, set_done_at, doc_review, free_test, lang) /* unused but required fields */
+      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, /* useful fields */
+        li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test, lang) /* unused but required fields */
       values(""" + order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
         cvFileNameClause + """',
@@ -129,8 +129,7 @@ object OrderDto {
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +
         customerCommentClause + """,
-        '1900-01-01 00:00:00',
-        '', 0, 0, '0000-00-00', 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 'sw');"""
+        '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0, 'sw');"""
 
       Logger.info("OrderDto.createFinalised():" + query)
 
@@ -235,10 +234,10 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfIdForFrontend():" + query)
 
-      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
-        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDate ~
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
@@ -290,12 +289,9 @@ object OrderDto {
               ))
           }
 
-          val paymentCal = new GregorianCalendar()
-          paymentCal.setTime(paymentDate)
-          val paymentTimestampOpt = if (paymentCal.get(Calendar.YEAR) == 1900) {
-            None
-          } else {
-            Some(paymentDate.getTime)
+          val paymentTimestampOpt = paymentDateOpt match {
+            case None => None
+            case Some(paymentDate) => Some(paymentDate.getTime)
           }
 
           val frontendOrder = FrontendOrder(
@@ -349,10 +345,10 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfAccountIdForFrontend():" + query)
 
-      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~
+      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
-        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDate ~
+        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
@@ -399,12 +395,9 @@ object OrderDto {
               ))
           }
 
-          val paymentCal = new GregorianCalendar()
-          paymentCal.setTime(paymentDate)
-          val paymentTimestampOpt = if (paymentCal.get(Calendar.YEAR) == 1900) {
-            None
-          } else {
-            Some(paymentDate.getTime)
+          val paymentTimestampOpt = paymentDateOpt match {
+            case None => None
+            case Some(paymentDate) => Some(paymentDate.getTime)
           }
 
           val frontendOrder = FrontendOrder(
@@ -449,7 +442,7 @@ object OrderDto {
          left join codes c on c.name = d.code
         where d.id > 0
           and added_by = """ + accountId + """
-          and paid_on = '1900-01-01 00:00:00'
+          and paid_on is null
         order by d.id desc
         limit 1;"""
 
