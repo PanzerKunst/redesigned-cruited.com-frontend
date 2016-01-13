@@ -1,7 +1,7 @@
 package models.client
 
 case class OrderReceivedFromClient(editionId: Long,
-                                   containedDocTypes: List[String],
+                                   containedProductCodes: List[String],
                                    couponCode: Option[String],
                                    cvFileName: Option[String],
                                    coverLetterFileName: Option[String],

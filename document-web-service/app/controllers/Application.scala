@@ -167,7 +167,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       } else if (!requestData.contains("sessionId")) {
         BadRequest("'sessionId' required")
       } else {
-        val containedDocTypes = requestData("docTypes").head.split(",").toList
+        val containedProductCodes = Order.getContainedProductCodesFromTypesString(requestData("docTypes").head)
 
         val positionSoughtOpt = if (requestData.contains("positionSought")) {
           Some(requestData("positionSought").head)
@@ -210,12 +210,12 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
           None
         }
 
-        val orderStatus = getStatusFromOrderInfo(containedDocTypes, couponOpt)
+        val orderStatus = getStatusFromOrderInfo(containedProductCodes.length, couponOpt)
 
         // Create order and get ID
         val orderReceivedFromClient = OrderReceivedFromClient(
           editionId = requestData("editionId").head.toLong,
-          containedDocTypes = containedDocTypes,
+          containedProductCodes = containedProductCodes,
           couponCode = couponCodeOpt,
           cvFileName = None,
           coverLetterFileName = None,
@@ -274,7 +274,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  private def getStatusFromOrderInfo(containedDocTypes: List[String], couponOpt: Option[Coupon]): Int = {
+  private def getStatusFromOrderInfo(orderedProductCount: Int, couponOpt: Option[Coupon]): Int = {
     couponOpt match {
       case None => Order.statusIdNotPaid
       case Some(coupon) =>
@@ -283,9 +283,9 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
         } else {
           val couponAmount = coupon.discountPrice.get.amount
 
-          if ((containedDocTypes.length == 1 && couponAmount == 299) ||
-            (containedDocTypes.length == 2 && couponAmount == 539) ||
-            (containedDocTypes.length == 2 && couponAmount == 749)) {
+          if ((orderedProductCount == 1 && couponAmount == 299) ||
+            (orderedProductCount == 2 && couponAmount == 539) ||
+            (orderedProductCount == 2 && couponAmount == 749)) {
             Order.statusIdPaid
           } else {
             Order.statusIdNotPaid

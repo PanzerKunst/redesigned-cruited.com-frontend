@@ -21,7 +21,7 @@ case class Order(id: Option[Long],
   def this(orderReceivedFromClient: OrderReceivedFromClient, id: Long) = this(
     id = Some(id),
     editionId = orderReceivedFromClient.editionId,
-    containedProductCodes = Order.getContainedProductCodesFromTypesArray(orderReceivedFromClient.containedDocTypes),
+    containedProductCodes = orderReceivedFromClient.containedProductCodes,
     couponId = orderReceivedFromClient.couponCode match {
       case None => None
       case Some(couponCode) => CouponDto.getOfCode(couponCode) match {

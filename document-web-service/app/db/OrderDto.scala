@@ -72,7 +72,7 @@ object OrderDto {
         now(), '""" +
         couponCodeClause + """', """ +
         order.accountId.getOrElse(AccountDto.unknownUserId) + """, '""" +
-        Order.getTypeForDb(order.containedDocTypes) + """', """ +
+        Order.getTypeForDb(order.containedProductCodes) + """', """ +
         order.status + """, '""" +
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
