@@ -250,8 +250,8 @@ CR.Controllers.Report = P(function(c) {
                                             {categoryAndItsComments.redComments.map(function(comment) {
                                                 let reactSubItemId = "comment-" + comment.id;
 
-                                                return <li key={reactSubItemId}>{comment.text}</li>;
-                                            })}
+                                                return <li key={reactSubItemId} dangerouslySetInnerHTML={{__html: this._getCommentWithProcessedLinks(comment.text)}} />;
+                                            }.bind(this))}
                                         </ul>
                                     );
                                 }
@@ -269,7 +269,7 @@ CR.Controllers.Report = P(function(c) {
                                         {redCommentList}
                                     </li>
                                 );
-                            })}
+                            }.bind(this))}
                             </ul>
                         </section>
                     </div>
@@ -306,6 +306,10 @@ CR.Controllers.Report = P(function(c) {
                 default:
                     return this.state.dwsRootUrl + "docs/" + orderId + "/linkedin-profile/thumbnail";
             }
+        },
+
+        _getCommentWithProcessedLinks: function(commentText) {
+            return commentText.replace(/\{link:(.+)\}(.+)\{\/link\}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
         }
     });
 
