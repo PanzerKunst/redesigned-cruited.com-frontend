@@ -18,10 +18,10 @@ CR.Controllers.Dashboard = P(function(c) {
 
             return (
                 <div id="content">
-                    <header>
+                    <header id="header-with-new-assessment-btn">
                         <div>
                             <h1>{CR.i18nMessages["dashboard.title"]}</h1>
-                            <a className="btn btn-danger" id="new-assessment" href="/order">{newAssessmentBtnLabel}
+                            <a className="btn btn-danger new-assessment" href="/order">{newAssessmentBtnLabel}
                                 <i className="fa fa-plus"></i>
                             </a>
                         </div>
@@ -53,7 +53,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                 }
 
                                 return (
-                                    <li key={reactItemId}>
+                                    <li key={reactItemId} className="sheet-of-paper">
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
                                         <p>
                                             <span className="assessment-label light-font">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}

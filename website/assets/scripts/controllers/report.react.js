@@ -25,6 +25,8 @@ CR.Controllers.Report = P(function(c) {
             let editionCode = order.getEdition().code;
             let editionClasses = "edition " + editionCode;
 
+            let newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
+
             let cvTabName = CR.i18nMessages["product.name.CV_REVIEW"];
             if (CR.Services.Browser.isSmallScreen()) {
                 let indexWhereSecondWordEnds = cvTabName.lastIndexOf(" ");
@@ -45,9 +47,12 @@ CR.Controllers.Report = P(function(c) {
 
             return (
                 <div id="content">
-                    <header>
+                    <header id="header-with-new-assessment-btn">
                         <div>
                             <h1>{CR.i18nMessages["report.title"]}</h1>
+                            <a className="btn btn-danger new-assessment" href="/order">{newAssessmentBtnLabel}
+                                <i className="fa fa-plus"></i>
+                            </a>
                         </div>
                     </header>
                     <div className="with-circles">
@@ -192,7 +197,7 @@ CR.Controllers.Report = P(function(c) {
 
                 return (
                     <div>
-                        <section className="summary">
+                        <section className="sheet-of-paper summary">
                             <h2>{CR.i18nMessages["report.summary.title"]}</h2>
                             <section>
                                 <div className="centered-contents">
@@ -225,7 +230,7 @@ CR.Controllers.Report = P(function(c) {
                                 </section>
                             </article>
                         </section>
-                        <section className="report-analysis">
+                        <section className="sheet-of-paper report-analysis">
                             <h2>{CR.i18nMessages["report.analysis.title"]}</h2>
                             <ul className="styleless">
                             {categoriesAndTheirComments.map(function(categoryAndItsComments) {
@@ -271,7 +276,14 @@ CR.Controllers.Report = P(function(c) {
                 );
             }
 
-            return <a>Order this assessment</a>;
+            return (
+                <div className="sheet-of-paper centered-contents">
+                    <p>{CR.i18nMessages["report.unorderedAssessment.text"]}</p>
+                    <a className="btn btn-danger new-assessment" href="/order">{CR.i18nMessages["report.unorderedAssessment.orderBtn.text"]}
+                        <i className="fa fa-plus"></i>
+                    </a>
+                </div>
+            );
         },
 
         _getDocumentUrl: function(orderId, orderIdInBase64, productCode) {

@@ -1,4 +1,6 @@
 #report {
+  @include new-assessment-btn-in-header-top-margin;
+
   .with-circles > header {
     text-align: center;
     margin-bottom: 2em;
@@ -55,27 +57,9 @@
   }
 
   .tab-pane {
-    > div {
-      > section {
-        margin-bottom: 2em;
-        background-color: white;
-        @include bottom-shadow;
-
-        padding: 1.5em $spacer-unit-size;
-        @include medium-screen {
-          padding-left: 2.8em;
-          padding-right: 2.8em;
-        }
-        @include large-screen {
-          padding-left: 5em;
-          padding-right: 5em;
-        }
-      }
-
-      .light-font {
-        @include medium-screen {
-          font-size: #{$medium-screen-ratio-s * $font-size-base-px}px;
-        }
+    .light-font {
+      @include medium-screen {
+        font-size: #{$medium-screen-ratio-s * $font-size-base-px}px;
       }
     }
 

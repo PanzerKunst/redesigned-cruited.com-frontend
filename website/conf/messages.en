@@ -115,6 +115,8 @@ dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a hr
 # Report page
 
 report.title=Your Report
+report.unorderedAssessment.text=You have not ordered this product. If you want to proceed, please place a new order.
+report.unorderedAssessment.orderBtn.text=Order a new assessment
 
 report.summary.title=Report Summary
 report.summary.documentLink.text=Original doc

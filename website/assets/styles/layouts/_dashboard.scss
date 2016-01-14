@@ -1,63 +1,8 @@
 #dashboard {
-  #content > header > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+  @include new-assessment-btn-in-header-top-margin;
 
-  #new-assessment {
-    font-size: $font-size-sm;
-    border-radius: 1.3em;
-
-    padding: 0.5em 0.7em;
-
-    margin-top: 4.6em;
-
-    line-height: 1em;
-    > span {
-      line-height: 1em;
-    }
-
-    @include medium-screen {
-      // Default
-      padding-left: 1em;
-      padding-right: 1em;
-
-      margin-top: 3.65em;
-
-      > span {
-        margin-right: 1em;
-      }
-    }
-
-    @include large-screen {
-      margin-top: 4.3em;
-    }
-
-    > .fa-plus {
-      margin-right: 1px;
-    }
-  }
-
-  .with-circles > ul > li {
-    background-color: white;
-    @include bottom-shadow;
-
-    margin-bottom: 2em;
-
-    padding: 1.5em $spacer-unit-size;
-    @include medium-screen {
-      padding-left: 2.8em;
-      padding-right: 2.8em;
-    }
-    @include large-screen {
-      padding-left: 5em;
-      padding-right: 5em;
-    }
-
-    > h2 {
-      margin-top: 0;
-    }
+  h2 {
+    margin-top: 0;
   }
 
   .status-and-edition-wrapper {
@@ -99,19 +44,6 @@
 
 @include no-flexbox {
   #dashboard {
-    #content > header > div {
-      display: block;
-      @include clearfix;
-
-      > h1 {
-        float: left;
-      }
-
-      > .btn {
-        float: right;
-      }
-    }
-
     .status-and-edition-wrapper {
       display: block;
       @include clearfix;
