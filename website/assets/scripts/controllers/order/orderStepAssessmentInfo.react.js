@@ -224,6 +224,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$customerCommentField = this.$form.find("#customer-comment");
 
             this.$submitBtn = this.$form.find("button[type=submit]");
+
+            this.$headerNav = $("#header-nav");
         },
 
         _initValidation: function() {
@@ -317,17 +319,34 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }.bind(this);
                     httpRequest.open(type, url);
                     httpRequest.send(formData);
+                } else {
+                    if (this.$cvFormGroup.hasClass("has-error")) {
+                        this._scrollToElement(this.$cvFormGroup);
+                    } else if (this.$coverLetterFormGroup.hasClass("has-error")) {
+                        this._scrollToElement(this.$coverLetterFormGroup);
+                    }
                 }
             } else {
                 this.validator.showErrorMessage(this.$notSignedInWithLinkedinError);
 
                 // We want to display other potential validation messages too
                 this.validator.isValid();
+
+                this._scrollToElement(this.$linkedinProfileFormGroup);
             }
         },
 
         _isSignInWithLinkedinBtnThere: function() {
             return this.$signInWithLinkedinBtn.length === 1;
+        },
+
+        _scrollToElement: function($el) {
+            let offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerNav.height();
+
+            TweenLite.to(window, 1, {
+                scrollTo: offset,
+                ease: Power4.easeOut
+            });
         }
     });
 
