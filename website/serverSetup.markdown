@@ -4,7 +4,7 @@ Check the server's IP address via `ifconfig`.
 
 `$ sudo vi /etc/hosts`
 
-Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
+Add line with the IP address and hostname: `188.40.99.15 app.cruited.com`
 
 
 # Web server
@@ -16,10 +16,10 @@ Add line with the IP address and hostname: `188.40.99.15 frontend.cruited.com`
     # Cruited frontend
     server {
             listen 80;
-            server_name frontend.cruited.com;
+            server_name app.cruited.com;
 
             location / {
-                    proxy_pass http://localhost:9005;
+                    proxy_pass http://localhost:9006;
                     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
                     proxy_redirect off;
                     proxy_buffering off;
@@ -63,6 +63,6 @@ Make the `activator` script executable:
     Ctrl + a, c
     $ cd ~/redesigned-cruited.com-frontend/website
     $ ./activator
-    $ start -Dhttp.port=9005
-
-(`run` for auto reload, `start` for better perf)
+    $ stage
+    $ exit
+    $ ./target/universal/stage/bin/website -Dhttp.port=9006

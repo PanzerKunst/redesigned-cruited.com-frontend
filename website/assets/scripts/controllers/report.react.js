@@ -27,6 +27,11 @@ CR.Controllers.Report = P(function(c) {
 
             let newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
 
+            let subTitle = null;
+            if (order.getSoughtPosition() || order.getSoughtEmployer()) {
+                subTitle = <span>{order.getTitleForHtml()}</span>;
+            }
+
             let cvTabName = CR.i18nMessages["product.name.CV_REVIEW"];
             if (CR.Services.Browser.isSmallScreen()) {
                 let indexWhereSecondWordEnds = cvTabName.lastIndexOf(" ");
@@ -56,7 +61,7 @@ CR.Controllers.Report = P(function(c) {
                         </div>
                     </header>
                     <div className="with-circles">
-                        <span>{order.getTitleForHtml()}</span>
+                        {subTitle}
                         <header>
                             <p>
                                 <span className="assessment-label light-font">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}
@@ -201,7 +206,9 @@ CR.Controllers.Report = P(function(c) {
                             <h2>{CR.i18nMessages["report.summary.title"]}</h2>
                             <section>
                                 <div className="centered-contents">
-                                    <a href={documentUrl} target="_blank"><img src={thumbnailUrl} /></a>
+                                    <a href={documentUrl} target="_blank">
+                                        <img src={thumbnailUrl} />
+                                    </a>
                                     <div>
                                         <a href={documentUrl} target="_blank" className="pdf-link">{CR.i18nMessages["report.summary.documentLink.text"]}</a>
                                     </div>

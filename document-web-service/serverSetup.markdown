@@ -63,6 +63,6 @@ Make the `activator` script executable:
     Ctrl + a, c
     $ cd ~/redesigned-cruited.com-frontend/document-web-service
     $ ./activator
-    $ start -Dhttp.port=9005
-
-(`run` for auto reload, `start` for better perf)
+    $ stage
+    $ exit
+    $ ./target/universal/stage/bin/document-web-service -Dhttp.port=9005
