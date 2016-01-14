@@ -1,6 +1,6 @@
 $expires-and-cvc-field-width: 30%;
 
-#order-step-payment .with-circles {
+#order-step-payment {
   #cart-section {
     margin-bottom: 2em;
   }
@@ -44,7 +44,10 @@ $expires-and-cvc-field-width: 30%;
   }
 
   @include large-screen {
-    font-size: #{$medium-screen-ratio-m * $font-size-base-px}px;
+    #cart-section,
+    form {
+      font-size: #{$medium-screen-ratio-m * $font-size-base-px}px;
+    }
 
     #cart-section,
     form {
