@@ -4,6 +4,13 @@
   }
 
   #linkedin-profile-form-group {
+    > div {
+      > ol,
+      > .checkbox {
+        margin-left: 1.7em;
+      }
+    }
+
     .sign-in-with-linkedin {
       padding-left: 22px;
       @include medium-screen {
@@ -19,6 +26,10 @@
     li {
       padding-left: 0.3em;
     }
+  }
+
+  #linkedin-preview {
+    margin-top: 0.5em;
   }
 
   #tos-wrapper {
