@@ -4,6 +4,7 @@ import java.util.{Calendar, GregorianCalendar}
 
 import anorm.SqlParser._
 import anorm._
+import com.fasterxml.jackson.core.JsonParseException
 import models.{Account, Order}
 import play.api.Logger
 import play.api.Play.current
@@ -93,7 +94,7 @@ object AccountDto {
         where id = """ + account.id + """;"""
 
       // This log is commented since it displays the password
-      // Logger.info("AccountDataDto.update():" + query)
+      // Logger.info("AccountDto.update():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -305,6 +306,52 @@ object AccountDto {
       }
 
       SQL(query).as(rowParser.*)
+    }
+  }
+
+  def getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile: List[Long] = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select id, linkedin_basic_profile_fields
+        from useri;"""
+
+      Logger.info("AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile():" + query)
+
+      val nonProbematicId = -1.toLong
+
+      val rowParser = long("id") ~ str("linkedin_basic_profile_fields") map {
+        case id ~ linkedinBasicProfile =>
+          linkedinBasicProfile match {
+            case "" => nonProbematicId
+            case otherString =>
+              try {
+                Json.parse(otherString)
+                nonProbematicId
+              }
+              catch {
+                case jpe: JsonParseException => id
+              }
+          }
+      }
+
+      val allAccountIds = SQL(query).as(rowParser.*)
+
+      allAccountIds filterNot {
+        _ == nonProbematicId
+      }
+    }
+  }
+
+  def cleanLinkedinProfileOfIds(ids: List[Long]) {
+    DB.withConnection { implicit c =>
+      val query = """
+        update useri set
+        linkedin_basic_profile_fields = ''
+        where id in (""" + ids.mkString(", ") + """);"""
+
+      Logger.info("AccountDto.cleanLinkedinProfileOfId():" + query)
+
+      SQL(query).executeUpdate()
     }
   }
 }
