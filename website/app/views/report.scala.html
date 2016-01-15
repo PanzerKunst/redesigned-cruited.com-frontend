@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, selectedProductCode: String, dwsRootUrl: String)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int, nbLastAssessmentsToTakeIntoAccount: Int, selectedProductCode: String, dwsRootUrl: String)(implicit messages: Messages)
 
 @main("Cruited - " + messages("report.title"), "report") {
 <!--
@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         @Html(play.api.libs.json.Json.toJson(assessmentReport).toString()),
         @Html(play.api.libs.json.Json.toJson(assessmentReportScores).toString()),
+        @cvAverageScore,
+        @coverLetterAverageScore,
+        @linkedinProfileAverageScore,
+        @nbLastAssessmentsToTakeIntoAccount,
         "@selectedProductCode",
         "@dwsRootUrl"
     );

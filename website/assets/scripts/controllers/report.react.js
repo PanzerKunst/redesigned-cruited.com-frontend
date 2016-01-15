@@ -11,6 +11,10 @@ CR.Controllers.Report = P(function(c) {
                 cvReportScores: null,
                 coverLetterReportScores: null,
                 linkedinProfileReportScores: null,
+                cvAverageScore: null,
+                coverLetterAverageScore: null,
+                linkedinProfileAverageScore: null,
+                nbLastAssessmentsToTakeIntoAccount: null,
                 selectedProductCode: null,
                 dwsRootUrl: null
             };
@@ -156,50 +160,6 @@ CR.Controllers.Report = P(function(c) {
                     docReportScores = this.state.linkedinProfileReportScores;
                 }
 
-                let categoriesAndTheirComments = [];
-
-                // For each red comment
-                docReport.redComments.forEach(function(comment) {
-                    let categoryIndex = -1;
-                    for (let i = 0; i < categoriesAndTheirComments.length; i++) {
-                        if (categoriesAndTheirComments[i].categoryId === comment.category.id) {
-                            categoryIndex = i;
-                            break;
-                        }
-                    }
-
-                    // If the comment's category is not in categoriesAndTheirComments
-                    if (categoryIndex === -1) {
-                        // Add the category to categoriesAndTheirComments
-                        categoriesAndTheirComments.push({
-                            categoryId: comment.category.id,
-                            redComments: [comment]
-                        });
-                    } else {    // If it's already in categoriesAndTheirComments
-                        // Then add the comment to the list of comments for that category
-                        categoriesAndTheirComments[categoryIndex].redComments.push(comment);
-                    }
-                });
-
-                docReport.topComments.forEach(function(comment) {
-                    let categoryIndex = -1;
-                    for (let i = 0; i < categoriesAndTheirComments.length; i++) {
-                        if (categoriesAndTheirComments[i].categoryId === comment.category.id) {
-                            categoryIndex = i;
-                            break;
-                        }
-                    }
-
-                    if (categoryIndex === -1) {
-                        categoriesAndTheirComments.push({
-                            categoryId: comment.category.id,
-                            topComment: comment
-                        });
-                    } else {
-                        categoriesAndTheirComments[categoryIndex].topComment = comment;
-                    }
-                });
-
                 return (
                     <div>
                         <section className="sheet-of-paper summary">
@@ -213,7 +173,7 @@ CR.Controllers.Report = P(function(c) {
                                         <a href={documentUrl} target="_blank" className="pdf-link">{CR.i18nMessages["report.summary.documentLink.text"]}</a>
                                     </div>
                                 </div>
-                                <p className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["report.summary.text"]}} />
+                                <p className="light-font" dangerouslySetInnerHTML={{__html: this._getSummary(productCode, docReportScores.globalScore)}} />
                             </section>
                             <article>
                                 <section>
@@ -240,7 +200,7 @@ CR.Controllers.Report = P(function(c) {
                         <section className="sheet-of-paper report-analysis">
                             <h2>{CR.i18nMessages["report.analysis.title"]}</h2>
                             <ul className="styleless">
-                            {categoriesAndTheirComments.map(function(categoryAndItsComments) {
+                            {this._getCategoriesAndTheirComments(docReport).map(function(categoryAndItsComments) {
                                 let categoryId = categoryAndItsComments.categoryId;
                                 let reactItemId = "category-" + categoryId;
                                 let categoryClasses = "category id-" + categoryId;
@@ -317,10 +277,91 @@ CR.Controllers.Report = P(function(c) {
 
         _getCommentWithProcessedLinks: function(commentText) {
             return commentText.replace(/\{link:(.+)\}(.+)\{\/link\}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
+        },
+
+        _getCategoriesAndTheirComments: function(docReport) {
+            let categoriesAndTheirComments = [];
+
+            // For each red comment
+            docReport.redComments.forEach(function(comment) {
+                let categoryIndex = -1;
+                for (let i = 0; i < categoriesAndTheirComments.length; i++) {
+                    if (categoriesAndTheirComments[i].categoryId === comment.category.id) {
+                        categoryIndex = i;
+                        break;
+                    }
+                }
+
+                // If the comment's category is not in categoriesAndTheirComments
+                if (categoryIndex === -1) {
+                    // Add the category to categoriesAndTheirComments
+                    categoriesAndTheirComments.push({
+                        categoryId: comment.category.id,
+                        redComments: [comment]
+                    });
+                } else {    // If it's already in categoriesAndTheirComments
+                    // Then add the comment to the list of comments for that category
+                    categoriesAndTheirComments[categoryIndex].redComments.push(comment);
+                }
+            });
+
+            docReport.topComments.forEach(function(comment) {
+                let categoryIndex = -1;
+                for (let i = 0; i < categoriesAndTheirComments.length; i++) {
+                    if (categoriesAndTheirComments[i].categoryId === comment.category.id) {
+                        categoryIndex = i;
+                        break;
+                    }
+                }
+
+                if (categoryIndex === -1) {
+                    categoriesAndTheirComments.push({
+                        categoryId: comment.category.id,
+                        topComment: comment
+                    });
+                } else {
+                    categoriesAndTheirComments[categoryIndex].topComment = comment;
+                }
+            });
+
+            return categoriesAndTheirComments;
+        },
+
+        _getSummary: function(productCode, globalScore) {
+            let reportSummaryKey = this._getTheRightReportSummaryKey(productCode, globalScore);
+            return this._getTemplatedSummary(productCode, globalScore, reportSummaryKey);
+        },
+
+        _getTheRightReportSummaryKey: function(productCode, globalScore) {
+            return _.find(Object.keys(CR.i18nMessages).sort().reverse(), function(key) {
+                let keyPrefix = "reportSummary" + CR.propertyFile.key.word.separator + productCode + CR.propertyFile.key.word.separator;
+                if (_.startsWith(key, keyPrefix)) {
+                    let startIndex = keyPrefix.length;
+                    let minScore = key.substring(startIndex);
+
+                    return globalScore >= minScore;
+                }
+
+                return false;
+            });
+        },
+
+        _getTemplatedSummary: function(productCode, globalScore, reportSummaryKey) {
+            let summaryWithOneVariableReplaced = CR.Services.String.template(CR.i18nMessages[reportSummaryKey], "score", globalScore);
+            let summaryWithTwoVariablesReplaced = CR.Services.String.template(summaryWithOneVariableReplaced, "nbLastAssessmentsToTakeIntoAccount", this.state.nbLastAssessmentsToTakeIntoAccount);
+
+            let thirdReplacementValue = this.state.cvAverageScore;
+            if (productCode === CR.Models.Product.codes.COVER_LETTER_REVIEW) {
+                thirdReplacementValue = this.state.coverLetterAverageScore;
+            } else if (productCode === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
+                thirdReplacementValue = this.state.linkedinProfileAverageScore;
+            }
+
+            return CR.Services.String.template(summaryWithTwoVariablesReplaced, "averageScore", thirdReplacementValue);
         }
     });
 
-    c.init = function(i18nMessages, assessmentReport, assessmentReportScores, selectedProductCode, dwsRootUrl) {
+    c.init = function(i18nMessages, assessmentReport, assessmentReportScores, cvAverageScore, coverLetterAverageScore, linkedinProfileAverageScore, nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl) {
         CR.i18nMessages = i18nMessages;
         this.order = CR.Models.Order(assessmentReport.order);
 
@@ -331,6 +372,12 @@ CR.Controllers.Report = P(function(c) {
         this.cvReportScores = assessmentReportScores.cvReportScores;
         this.coverLetterReportScores = assessmentReportScores.coverLetterReportScores;
         this.linkedinProfileReportScores = assessmentReportScores.linkedinProfileReportScores;
+
+        this.cvAverageScore = cvAverageScore;
+        this.coverLetterAverageScore = coverLetterAverageScore;
+        this.linkedinProfileAverageScore = linkedinProfileAverageScore;
+
+        this.nbLastAssessmentsToTakeIntoAccount = nbLastAssessmentsToTakeIntoAccount;
 
         this.selectedProductCode = selectedProductCode;
         this.dwsRootUrl = dwsRootUrl;
@@ -352,6 +399,10 @@ CR.Controllers.Report = P(function(c) {
             cvReportScores: this.cvReportScores,
             coverLetterReportScores: this.coverLetterReportScores,
             linkedinProfileReportScores: this.linkedinProfileReportScores,
+            cvAverageScore: this.cvAverageScore,
+            coverLetterAverageScore: this.coverLetterAverageScore,
+            linkedinProfileAverageScore: this.linkedinProfileAverageScore,
+            nbLastAssessmentsToTakeIntoAccount: this.nbLastAssessmentsToTakeIntoAccount,
             selectedProductCode: this.selectedProductCode,
             dwsRootUrl: this.dwsRootUrl
         });

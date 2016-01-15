@@ -267,7 +267,8 @@ object ReportDto {
         where id_doc = """ + orderId + """
         order by `type`, id_category, id_default;"""
 
-      Logger.info("ReportDto.getScoresOfOrderId():" + query)
+      // Commented out because spams too much when average scores are calculated
+      // Logger.info("ReportDto.getScoresOfOrderId():" + query)
 
       val rowParser = str("type") ~ long("id_category") ~ long("id_default") ~ int("criteria_score") ~ int("score") map {
         case docType ~ categoryId ~ defaultCommentId ~ score ~ isGreen => (docType, categoryId, defaultCommentId, score, isGreen)
@@ -309,7 +310,13 @@ object ReportDto {
       def add(total: Int, cur: Int) = total + cur
 
       val totalPoints = allPointsColumn.reduce(add)
-      val totalGreenPoints = greenPointsColumn.reduce(add)
+
+      val totalGreenPoints = if (greenPointsColumn.isEmpty) {
+        0
+      } else {
+        greenPointsColumn.reduce(add)
+      }
+
       val totalScore = math.round(totalGreenPoints.toDouble / totalPoints.toDouble * 100).toInt
 
       var pointsPerCategory: Map[String, Int] = Map() // [Category ID, Score] - Because "No Json serializer found for type Map[Long,Int]"
@@ -334,7 +341,13 @@ object ReportDto {
           val categoryGreenPointsColumn = categoryRows.filter(row => row._5 == 1).map(row => row._4)
 
           val categoryPoints = categoryAllPointsColumn.reduce(add)
-          val categoryGreenPoints = categoryGreenPointsColumn.reduce(add)
+
+          val categoryGreenPoints = if (categoryGreenPointsColumn.isEmpty) {
+            0
+          } else {
+            categoryGreenPointsColumn.reduce(add)
+          }
+
           val categoryScore = math.round(categoryGreenPoints.toDouble / categoryPoints.toDouble * 100).toInt
 
           pointsPerCategory += (categoryId.toString -> categoryScore)
@@ -345,6 +358,26 @@ object ReportDto {
         globalScore = totalScore,
         categoryScores = pointsPerCategory
       ))
+    }
+  }
+
+  def getIdsOfTheLastNReports(n: Int, docType: String): List[Long] = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select distinct id
+        from documents d
+        where `type` like '%""" + docType + """%'
+          and status = """ + Order.statusIdComplete + """
+        order by last_rate desc
+        limit """ + n + """;"""
+
+      Logger.info("OrderDto.getIdsOfTheLastNReports():" + query)
+
+      val rowParser = long("id") map {
+        case id => id
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 }

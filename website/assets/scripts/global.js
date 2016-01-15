@@ -24,5 +24,16 @@ CR.localStorageKeys = {
     order: "order"
 };
 
+CR.propertyFile = {
+    key: {
+        word: {
+            separator: "."
+        }
+    },
+    keyValue: {
+        separator: "="
+    }
+};
+
 
 // Global functions

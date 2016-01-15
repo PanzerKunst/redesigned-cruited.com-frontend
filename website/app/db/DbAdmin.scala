@@ -18,7 +18,6 @@ object DbAdmin {
     createTableReduction()
     alterTableEdition()
     alterTableDocuments()
-    fixBothersomeCharactersInLinkedinProfile()
   }
 
   private def createTableProduct() {
@@ -84,11 +83,6 @@ object DbAdmin {
     }
   }
 
-  private def fixBothersomeCharactersInLinkedinProfile() {
-    val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
-    AccountDto.cleanLinkedinProfileOfIds(ids)
-  }
-
   private def dropTable(tableName: String) {
     DB.withConnection { implicit c =>
       val query = "drop table if exists " + tableName + ";"
@@ -127,6 +121,7 @@ object DbAdmin {
   def initData() {
     initDataProduct()
     initDataReduction()
+    fixBothersomeCharactersInLinkedinProfile()
   }
 
   private def initDataProduct() {
@@ -142,5 +137,10 @@ object DbAdmin {
       SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, '" + GlobalConfig.currencyCode + "');").execute()
       SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, '" + GlobalConfig.currencyCode + "');").execute()
     }
+  }
+
+  private def fixBothersomeCharactersInLinkedinProfile() {
+    val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
+    AccountDto.cleanLinkedinProfileOfIds(ids)
   }
 }

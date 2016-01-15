@@ -15,12 +15,15 @@ import services._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService, val emailsToSendTasker: EmailsToSendTasker, val emailService: EmailService) extends Controller with I18nSupport {
+class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService, val emailsToSendTasker: EmailsToSendTasker, val emailService: EmailService, val scoreAverageTasker: ScoreAverageTasker) extends Controller with I18nSupport {
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
   val dwsRootUrl = Play.configuration.getString("dws.rootUrl").get
 
   // Run the EmailsToSendTasker task after 0ms, repeating every 5 seconds
-  new Timer().schedule(emailsToSendTasker, 0, 5 * 1000)
+  // TODO new Timer().schedule(emailsToSendTasker, 0, 5 * 1000)
+
+  // Run the ScoreAverageTasker task after 0ms, repeating every day
+  new Timer().schedule(scoreAverageTasker, 0, 3600 * 24 * 1000)
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
@@ -258,17 +261,17 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           case Some(tuple) =>
             val account = AccountDto.getOfId(accountId).get
 
-            if (tuple._1.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
+            // TODO if (tuple._1.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
               ReportDto.getOfOrderId(orderId) match {
                 case None => BadRequest("No report available for order ID " + orderId)
                 case Some(assessmentReport) =>
                   val accountId = SessionService.getAccountId(request.session).get
 
-                  Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), selectedProductCode, dwsRootUrl))
+                  Ok(views.html.report(getI18nMessages(request), AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
               }
-            } else {
+            /*} else {
               Forbidden("You are not allowed to view reports which are not yours")
-            }
+            }*/
         }
     }
   }
