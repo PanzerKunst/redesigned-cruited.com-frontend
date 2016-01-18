@@ -21,7 +21,11 @@ CR.httpStatusCodes = {
 };
 
 CR.localStorageKeys = {
-    order: "order"
+    order: "order",
+    positionSought: "positionSought",
+    employerSought: "employerSought",
+    jobAdUrl: "jobAdUrl",
+    customerComment: "customerComment"
 };
 
 CR.propertyFile = {

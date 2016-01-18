@@ -1,14 +1,4 @@
 #order-step-account-creation {
-  form {
-    @include medium-screen {
-      margin: 0 auto;
-      max-width: ($small-content-width + $medium-content-width) / 2;
-    }
-    @include large-screen {
-      max-width: $medium-content-width;
-    }
-  }
-
   #register-with-linkedin-section,
   #register-with-email-section {
     display: none;

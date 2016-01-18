@@ -35,7 +35,7 @@ CR.Controllers.MyAccount = P(function(c) {
                     </header>
                     <div className="with-circles">
                         {successAlert}
-                        <form onSubmit={this._handleSubmit}>
+                        <form onSubmit={this._handleSubmit} className="single-column-form">
                             <div className="form-group">
                                 <label htmlFor="email-address">{CR.i18nMessages["myAccount.form.emailAddress.label"]}</label>
                                 <input type="text" className="form-control" id="email-address" defaultValue={this.state.account.emailAddress} disabled />

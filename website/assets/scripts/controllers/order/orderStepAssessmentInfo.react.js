@@ -2,13 +2,6 @@
 
 CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
     c.reactClass = React.createClass({
-        localStorageKeys: {
-            positionSought: "positionSought",
-            employerSought: "employerSought",
-            jobAdUrl: "jobAdUrl",
-            customerComment: "customerComment"
-        },
-
         getInitialState: function() {
             return {
                 linkedinAuthCodeRequestUrl: null,
@@ -27,10 +20,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            let positionSought = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
-            let employerSought = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
-            let jobAdUrl = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
-            let customerComment = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.customerComment) || CR.order.getCustomerComment();
+            let positionSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
+            let employerSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
+            let jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
+            let customerComment = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.customerComment) || CR.order.getCustomerComment();
 
             return (
                 <div id="content">
@@ -362,10 +355,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _saveTextFieldsInLocalStorage: function() {
-            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.positionSought, this.$positionSoughtField.val());
-            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.employerSought, this.$employerSoughtField.val());
-            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.jobAdUrl, this.$jobAdUrlField.val());
-            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.customerComment, this.$customerCommentField.val());
+            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.positionSought, this.$positionSoughtField.val());
+            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.employerSought, this.$employerSoughtField.val());
+            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.jobAdUrl, this.$jobAdUrlField.val());
+            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.customerComment, this.$customerCommentField.val());
         }
     });
 

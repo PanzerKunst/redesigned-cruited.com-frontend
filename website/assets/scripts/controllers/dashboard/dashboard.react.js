@@ -116,6 +116,12 @@ CR.Controllers.Dashboard = P(function(c) {
         // Clearing the current order in local storage
         CR.order = CR.Models.Order();
         CR.order.saveInLocalStorage();
+
+        // Clearing other dirty deeds in local storage
+        CR.Services.Browser.removeFromLocalStorage(CR.localStorageKeys.positionSought);
+        CR.Services.Browser.removeFromLocalStorage(CR.localStorageKeys.employerSought);
+        CR.Services.Browser.removeFromLocalStorage(CR.localStorageKeys.jobAdUrl);
+        CR.Services.Browser.removeFromLocalStorage(CR.localStorageKeys.customerComment);
     };
 
     c.reRender = function() {

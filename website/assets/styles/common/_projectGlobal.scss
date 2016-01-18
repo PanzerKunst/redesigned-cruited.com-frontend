@@ -235,6 +235,17 @@ nav > a,
   }
 }
 
+.single-column-form {
+  @include medium-screen {
+    margin: 0 auto;
+    max-width: ($small-content-width + $medium-content-width) / 2;
+  }
+  @include large-screen {
+    max-width: $medium-content-width;
+  }
+}
+
+
 @include no-flexbox {
   #linkedin-preview {
     display: block;
