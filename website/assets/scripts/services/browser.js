@@ -55,7 +55,7 @@ CR.Services.Browser = {
     },
 
     saveInLocalStorage: function(key, value) {
-        if (Modernizr.localstorage) {
+        if (Modernizr.localstorage && value) {
             localStorage.setItem(key, JSON.stringify(value));
         }
     },

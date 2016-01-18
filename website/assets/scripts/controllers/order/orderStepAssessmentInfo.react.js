@@ -2,6 +2,13 @@
 
 CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
     c.reactClass = React.createClass({
+        localStorageKeys: {
+            positionSought: "positionSought",
+            employerSought: "employerSought",
+            jobAdUrl: "jobAdUrl",
+            customerComment: "customerComment"
+        },
+
         getInitialState: function() {
             return {
                 linkedinAuthCodeRequestUrl: null,
@@ -19,6 +26,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             if (!CR.order) {
                 return null;
             }
+
+            let positionSought = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
+            let employerSought = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
+            let jobAdUrl = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
+            let customerComment = CR.Services.Browser.getFromLocalStorage(this.localStorageKeys.customerComment) || CR.order.getCustomerComment();
 
             return (
                 <div id="content">
@@ -52,22 +64,22 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 <div>
                                     <div className="form-group">
                                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                                        <input type="text" className="form-control" id="position-sought" defaultValue={CR.order.getSoughtPosition()} />
+                                        <input type="text" className="form-control" id="position-sought" defaultValue={positionSought} />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                                        <input type="text" className="form-control" id="employer-sought" defaultValue={CR.order.getSoughtEmployer()} />
+                                        <input type="text" className="form-control" id="employer-sought" defaultValue={employerSought} />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                                        <input type="text" className="form-control" id="job-ad-url" defaultValue={CR.order.getJobAdUrl()} />
+                                        <input type="text" className="form-control" id="job-ad-url" defaultValue={jobAdUrl} />
                                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                                     </div>
                                 </div>
                             </section>
                             <div className="form-group">
                                 <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
-                                <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={CR.order.getCustomerComment()} />
+                                <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={customerComment} />
                                 <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                             </div>
                             {this._getTosFormGroup()}
@@ -119,7 +131,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                 formGroupContents = (
                     <div>
-                        <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
+                        <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl} onClick={this._saveTextFieldsInLocalStorage}>
                             <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                         </a>
                         {signInFailedParagraph}
@@ -347,6 +359,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 scrollTo: offset,
                 ease: Power4.easeOut
             });
+        },
+
+        _saveTextFieldsInLocalStorage: function() {
+            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.positionSought, this.$positionSoughtField.val());
+            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.employerSought, this.$employerSoughtField.val());
+            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.jobAdUrl, this.$jobAdUrlField.val());
+            CR.Services.Browser.saveInLocalStorage(this.localStorageKeys.customerComment, this.$customerCommentField.val());
         }
     });
 
