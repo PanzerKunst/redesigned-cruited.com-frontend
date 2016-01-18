@@ -109,7 +109,7 @@ resetPassword.emailSent.text=Check your inbox!
 
 resetPassword.form.emailAddress.label=Email address
 resetPassword.form.emailAddress.placeholder=your@mail.com
-resetPassword.form.submitBtn.text=Send me that reset email!
+resetPassword.form.submitBtn.text=Reset my password
 
 resetPassword.new.saveSuccessful.text=Your new password is saved. You can <a href="/login">sign in</a>.
 resetPassword.new.validation.passwordTooShort=Password should be at least 5 characters
