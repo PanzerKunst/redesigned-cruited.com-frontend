@@ -77,9 +77,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         case Some(accountId) =>
           val account = AccountDto.getOfId(accountId).get
 
-          AccountService.resetPasswordTokens -= token
-
           Ok(views.html.newPassword(getI18nMessages(request), account))
+            .withSession(request.session + (SessionService.sessionKeyResetPasswordToken -> token))
       }
     } else {
       Unauthorized

@@ -6,6 +6,7 @@ object SessionService {
   val sessionKeyAccountId = "accountId"
   val sessionKeyOrderId = "orderId"
   val sessionKeyAccountSaveSuccessful = "accountSaveSuccessful"
+  val sessionKeyResetPasswordToken = "resetPasswordToken"
 
   def getOrderId(session: Session): Option[Long] = {
     session.get(sessionKeyOrderId) match {

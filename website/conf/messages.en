@@ -105,7 +105,7 @@ myAccount.form.submitBtn.text=Save
 resetPassword.title=Reset your password
 resetPassword.validation.incorrectEmail=This email address looks incorrect
 resetPassword.validation.noAccountFoundForThisEmailAddress=This email address isn't registered in our system
-resetPassword.emailSent.text=Check your inbox!
+resetPassword.emailSent.text=We've sent you an email with a reset link
 
 resetPassword.form.emailAddress.label=Email address
 resetPassword.form.emailAddress.placeholder=your@mail.com

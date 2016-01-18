@@ -6,7 +6,7 @@ import db.{AccountDto, OrderDto}
 import models.frontend.AccountReceivedFromFrontend
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller, Request}
-import services.{HttpService, SessionService}
+import services.{AccountService, HttpService, SessionService}
 
 @Singleton
 class AccountApi extends Controller {
@@ -129,7 +129,12 @@ class AccountApi extends Controller {
 
               AccountDto.update(updatedAccount)
 
-              Ok
+              request.session.get(SessionService.sessionKeyResetPasswordToken) match {
+                case None =>
+                case Some(token) => AccountService.resetPasswordTokens -= token
+              }
+
+              Ok.withSession(request.session - SessionService.sessionKeyResetPasswordToken)
           }
         }
     }
