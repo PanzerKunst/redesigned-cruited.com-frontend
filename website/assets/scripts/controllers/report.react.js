@@ -104,6 +104,7 @@ CR.Controllers.Report = P(function(c) {
 
         componentDidUpdate: function() {
             this._initElements();
+            this.$expandablePanels.makeExpandable();
             this._placeScoreCursors();
             this._selectTabForSelectedProduct();
         },
@@ -122,6 +123,8 @@ CR.Controllers.Report = P(function(c) {
 
             this.$linkedinProfilePanel = $docPanels.filter("#" + CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW + "-report-panel");
             this.$linkedinProfileScoreCursor = this.$linkedinProfilePanel.find("#score-bar").children("span");
+
+            this.$expandablePanels = $docPanels.find(".expandable-panel");
         },
 
         _placeScoreCursors: function() {
@@ -175,7 +178,7 @@ CR.Controllers.Report = P(function(c) {
                                 </div>
                                 <p className="light-font" dangerouslySetInnerHTML={{__html: this._getSummary(productCode, docReportScores.globalScore)}} />
                             </section>
-                            <article>
+                            <article className="global-score-wrapper">
                                 <section>
                                     <p>{CR.i18nMessages["report.summary.score.label"]}:</p>
                                     <p>{docReportScores.globalScore}</p>
@@ -195,6 +198,44 @@ CR.Controllers.Report = P(function(c) {
                                         <span>100</span>
                                     </div>
                                 </section>
+                            </article>
+                            <article className="expandable-panel">
+                                <header>
+                                    <span>{CR.i18nMessages["report.summary.understandYourScore.title"]}</span>
+                                    <button className="styleless"></button>
+                                </header>
+                                <div>
+                                    <p className="score-explanation-paragraph" dangerouslySetInnerHTML={{__html: CR.i18nMessages["report.summary.understandYourScore.cScoreExplanation.text"]}} />
+                                    <ul className="styleless">
+                                        <li>
+                                            <div className="highlighted-number weak">
+                                                <span>0</span>
+                                                <span className="separator small-screen">|</span>
+                                                <span className="separator large-screen">-</span>
+                                                <span>36</span>
+                                            </div>
+                                            <p className="light-font">{CR.i18nMessages["report.summary.understandYourScore.weak.text"]}</p>
+                                        </li>
+                                        <li>
+                                            <div className="highlighted-number good">
+                                                <span>37</span>
+                                                <span className="separator small-screen">|</span>
+                                                <span className="separator large-screen">-</span>
+                                                <span>79</span>
+                                            </div>
+                                            <p className="light-font">{CR.i18nMessages["report.summary.understandYourScore.good.text"]}</p>
+                                        </li>
+                                        <li>
+                                            <div className="highlighted-number excellent">
+                                                <span>80</span>
+                                                <span className="separator small-screen">|</span>
+                                                <span className="separator large-screen">-</span>
+                                                <span>100</span>
+                                            </div>
+                                            <p className="light-font">{CR.i18nMessages["report.summary.understandYourScore.excellent.text"]}</p>
+                                        </li>
+                                    </ul>
+                                </div>
                             </article>
                         </section>
                         <section className="sheet-of-paper report-analysis">

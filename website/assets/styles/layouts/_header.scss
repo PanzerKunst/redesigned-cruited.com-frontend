@@ -18,7 +18,6 @@ $header-bottom-border-height: 1px;
   z-index: $z-index-header;
 
   @include linear-gradient(white 50%, $gradient-light-grey);
-
   border-bottom: $header-bottom-border-height solid $drop-shadow-color;
 
   height: $header-height;

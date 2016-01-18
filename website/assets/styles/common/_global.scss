@@ -38,42 +38,6 @@ blockquote {
   line-height: $line-height-project;
 }
 
-ul,
-ol {
-  padding-left: $list-padding-left;
-
-  &.styleless {
-    padding-left: 0;
-    list-style-type: none;
-  }
-}
-
-button.styleless {
-  @include styleless-btn;
-  padding: 0;
-
-  &:focus {
-    @include styleless-btn;
-    outline: none;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-a,
-a:visited {
-  color: $action-color;
-  cursor: pointer; // To have the pointer on anchors which don't have any href
-  text-decoration: none;
-}
-
-a:hover,
-a:focus {
-  color: $action-color;
-}
-
 textarea {
   resize: vertical;
 }

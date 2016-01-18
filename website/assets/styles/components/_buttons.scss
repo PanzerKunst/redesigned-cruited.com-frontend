@@ -1,3 +1,17 @@
+button.styleless {
+  @include styleless-btn;
+  padding: 0;
+
+  &:focus {
+    @include styleless-btn;
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .btn {
   @include transition(color $default-animation-duration ease, background-color $default-animation-duration ease, border-color $default-animation-duration ease);
   border-radius: 0.25em;

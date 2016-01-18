@@ -1,0 +1,55 @@
+.expandable-panel {
+  border: 1px solid $well-border-color;
+
+  > header,
+  > div {
+    padding: 0.5em 1em;
+  }
+
+  > header {
+    cursor: pointer;
+
+    display: flex;
+    justify-content: space-between;
+
+    @include linear-gradient(white 50%, $gradient-light-grey);
+
+    > span {
+      color: $action-color;
+      font-weight: bold;
+    }
+
+    > button:before {
+      content: "+";
+
+      font-weight: bold;
+      font-size: 1.3em;
+      color: $well-border-color;
+    }
+  }
+
+  > div {
+    display: none;
+  }
+
+  &.expanded {
+    > header > button:before {
+      content: "–";
+    }
+  }
+}
+
+@include no-flexbox {
+  .expandable-panel > header {
+    display: block;
+    @include clearfix;
+
+    > span {
+      float: left;
+    }
+
+    > button {
+      float: right;
+    }
+  }
+}
