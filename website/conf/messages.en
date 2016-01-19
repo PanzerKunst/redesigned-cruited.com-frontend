@@ -77,7 +77,7 @@ signIn.title=Sign in
 signIn.methodSeparatorText=or
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
-signIn.validation.linkedinAccountUnregistered=This Linkedin account is not registered. Registration is done during <a href="/order">your first order</a>.
+signIn.validation.linkedinAccountUnregistered=We could not find an account associated to this LinkedIn identity. Did you signup using e-mail? 
 
 signIn.form.linkedIn.btn.text=Sign in with Linkedin
 signIn.form.email.emailAddress.label=Email address
@@ -109,7 +109,7 @@ resetPassword.emailSent.text=We've sent you an email with a reset link
 
 resetPassword.form.emailAddress.label=Email address
 resetPassword.form.emailAddress.placeholder=your@mail.com
-resetPassword.form.submitBtn.text=Reset my password
+resetPassword.form.submitBtn.text=I need a new password
 
 resetPassword.new.saveSuccessful.text=Your new password is saved. You can <a href="/login">sign in</a>.
 resetPassword.new.validation.passwordTooShort=Password should be at least 5 characters
@@ -134,7 +134,7 @@ report.title=Your Report
 report.unorderedAssessment.text=You have not ordered this product. If you want to proceed, please place a new order.
 report.unorderedAssessment.orderBtn.text=Order a new assessment
 
-report.summary.title=Report Summary
+report.summary.title=Analysis of your document
 report.summary.documentLink.text=Original doc
 report.summary.score.label=Your C-Score
 report.summary.score.bar.label.weak=Weak
@@ -146,7 +146,7 @@ report.summary.understandYourScore.weak.text=Mycket låg chans att komma på job
 report.summary.understandYourScore.good.text=Medelstora chanser att komma på jobbintervju
 report.summary.understandYourScore.excellent.text=Mycket stor chans att komma på jobbintervju
 
-report.analysis.title=Expert Report Analysis
+report.analysis.title=Expert Advice
 
 
 # Order Step Product Selection page
