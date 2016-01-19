@@ -74,7 +74,7 @@ menu.myAccount=Mitt konto
 # Sign In page
 
 signIn.title=Logga in
-signIn.methodSeparatorText=eller...
+signIn.methodSeparatorText=eller
 signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 signIn.validation.invalidCredentials=Vi har inget konto med den här adressen
 signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress? 
