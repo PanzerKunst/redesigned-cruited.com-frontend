@@ -125,7 +125,7 @@ dashboard.subtitle=Välkommen, {firstName}!
 dashboard.completePaymentLink.text=Betala
 dashboard.newAssessmentBtn.text=Skapa ny granskning
 dashboard.viewReportBtn.text=Visa rapport
-dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan <a href="{url}">fortfarande redigera din information</a> om du vill.
+dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan fortfarande <a href="{url}">redigera din information</a> om du vill.
 
 
 # Report page
