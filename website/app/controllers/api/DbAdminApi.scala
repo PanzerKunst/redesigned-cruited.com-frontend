@@ -8,7 +8,7 @@ import services.GlobalConfig
 
 @Singleton
 class DbAdminApi extends Controller {
-  def reCreateTables = Action { request =>
+  def reCreateTables() = Action { request =>
     if (request.queryString.contains("key") &&
       request.queryString.get("key").get.head == GlobalConfig.applicationSecret) {
       DbAdmin.reCreateTables()

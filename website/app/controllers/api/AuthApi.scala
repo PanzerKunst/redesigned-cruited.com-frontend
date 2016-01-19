@@ -16,7 +16,7 @@ import services.{AccountService, EmailService, SessionService}
 class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
   val rootUrl = Play.configuration.getString("rootUrl").get
 
-  def signIn = Action(parse.json) { request =>
+  def signIn() = Action(parse.json) { request =>
     request.body.validate[SignInData] match {
       case e: JsError => BadRequest("Validation of SignInData failed")
 
@@ -30,7 +30,7 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
     }
   }
 
-  def sendResetPasswordEmail = Action { request =>
+  def sendResetPasswordEmail() = Action { request =>
     request.body.asText match {
       case None => BadRequest("Request body must contain email address")
       case Some(emailAddress) =>

@@ -2,7 +2,7 @@ package db
 
 import anorm.SqlParser._
 import anorm._
-import models.{Order, Coupon, Price}
+import models.{Coupon, Price}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
@@ -98,7 +98,7 @@ object CouponDto {
       select count(id) as count
       from documents
       where code = '""" + code + """'""" +
-      addedByClause + """;"""
+        addedByClause + """;"""
 
       Logger.info("CouponDto.useCount():" + query)
 

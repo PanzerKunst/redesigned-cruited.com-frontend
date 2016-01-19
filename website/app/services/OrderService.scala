@@ -4,7 +4,6 @@ import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
 import models.{CruitedProduct, Order}
-import play.api.Logger
 import play.api.libs.json.JsNull
 
 @Singleton

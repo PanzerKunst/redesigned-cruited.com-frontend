@@ -10,7 +10,7 @@ import services.{AccountService, HttpService, SessionService}
 
 @Singleton
 class AccountApi extends Controller {
-  def create = Action(parse.json) { request =>
+  def create() = Action(parse.json) { request =>
     request.body.validate[AccountReceivedFromFrontend] match {
       case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
 
@@ -79,7 +79,7 @@ class AccountApi extends Controller {
     }
   }
 
-  def update = Action(parse.json) { request =>
+  def update() = Action(parse.json) { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) => AccountDto.getOfId(accountId) match {

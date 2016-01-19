@@ -124,7 +124,7 @@ object OrderDto {
         couponCodeClause + """', """ +
         order.accountId.getOrElse(AccountDto.unknownUserId) + """, '""" +
         Order.getTypeForDb(order.containedProductCodes) + """', """ +
-        Order.statusIdNotPaid + """, '""" +
+        order.status + """, '""" +
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +

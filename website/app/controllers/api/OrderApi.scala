@@ -17,7 +17,7 @@ import scala.util.Random
 
 @Singleton
 class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
-  def create = Action(parse.multipartFormData) { request =>
+  def create() = Action(parse.multipartFormData) { request =>
     // We only want to generate negative IDs, because positive ones are for non-temp orders
     val rand = Random.nextLong()
     val tempOrderId = if (rand >= 0) {
@@ -102,7 +102,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     }
   }
 
-  def update = Action(parse.multipartFormData) { request =>
+  def update() = Action(parse.multipartFormData) { request =>
     val requestBody = request.body
     val requestData = requestBody.dataParts
 
@@ -179,14 +179,14 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     }
   }
 
-  def pay = Action { request =>
+  def pay() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) =>
         OrderDto.getMostRecentUnpaidOfAccountId(accountId) match {
           case None => BadRequest("No unpaid order found for this account ID")
           case Some(order) =>
-            val costAfterReductions = order.costAfterReductions
+            val costAfterReductions = order.getCostAfterReductions
 
             if (costAfterReductions == 0) {
               BadRequest("Cannot pay an order whose cost after reductions is zero")

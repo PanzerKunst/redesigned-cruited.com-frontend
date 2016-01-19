@@ -25,7 +25,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   // Run the ScoreAverageTasker task after 0ms, repeating every day
   new Timer().schedule(scoreAverageTasker, 0, 3600 * 24 * 1000)
 
-  def index = Action { request =>
+  def index() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/order")
       case Some(accountId) =>
@@ -38,17 +38,17 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def signOut = Action { request =>
+  def signOut() = Action { request =>
     linkedinService.invalidateAccessToken()
     Redirect("/").withNewSession
   }
 
-  def signIn = Action { request =>
+  def signIn() = Action { request =>
     val isLinkedinAccountUnregistered = false
     Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
   }
 
-  def myAccount = Action { request =>
+  def myAccount() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) =>
@@ -64,11 +64,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def resetPassword = Action { request =>
+  def resetPassword() = Action { request =>
     Ok(views.html.resetPassword(getI18nMessages(request)))
   }
 
-  def confirmResetPassword = Action { request =>
+  def confirmResetPassword() = Action { request =>
     if (request.queryString.contains("token")) {
       val token = request.queryString.get("token").get.head
 
@@ -85,7 +85,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def orderStepProductSelection = Action { request =>
+  def orderStepProductSelection() = Action { request =>
     val accountOpt = SessionService.getAccountId(request.session) match {
       case None => None
       case Some(accountId) =>
@@ -99,7 +99,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     Ok(views.html.order.orderStepProductSelection(getI18nMessages(request), accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all))
   }
 
-  def orderStepAssessmentInfo = Action { request =>
+  def orderStepAssessmentInfo() = Action { request =>
     val (accountOpt, linkedinProfile) = SessionService.getAccountId(request.session) match {
       case None => (None, JsNull)
       case Some(accountId) =>
@@ -117,7 +117,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       .withHeaders(doNotCachePage: _*)
   }
 
-  def orderStepAccountCreation = Action { request =>
+  def orderStepAccountCreation() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None =>
         Ok(views.html.order.orderStepAccountCreation(getI18nMessages(request), None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
@@ -141,7 +141,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def orderStepPayment = Action { request =>
+  def orderStepPayment() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/order/assessment-info")
       case Some(accountId) =>
@@ -157,13 +157,24 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
                 // Else (temp order), we finalize the order
                 case Some(tempOrder) =>
+                  val costAfterReductions = tempOrder.getCostAfterReductions
+
+                  // If the cost is 0, we set the status to paid
+                  val orderToBeFinalised = if (costAfterReductions == 0) {
+                    tempOrder.copy(
+                      status = Order.statusIdPaid,
+                      paymentTimestamp = Some(new Date().getTime)
+                    )
+                  } else {
+                    tempOrder.copy()
+                  }
+
                   // Create finalised order, with data from the old one
-                  val finalisedOrderId = OrderDto.createFinalised(tempOrder).get
+                  val finalisedOrderId = OrderDto.createFinalised(orderToBeFinalised).get
+                  val finalisedOrder = OrderDto.getOfId(finalisedOrderId).get
 
                   // Delete old order
                   OrderDto.deleteOfId(tempOrder.id.get)
-
-                  val finalisedOrder = OrderDto.getOfId(finalisedOrderId).get
 
                   Future {
                     orderService.finaliseFileNames(finalisedOrder, tempOrder.id.get)
@@ -173,18 +184,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     case e => Logger.error(e.getMessage, e)
                   }
 
-                  // If the cost is 0, we set the status to paid and redirect to the dashboard
-                  if (tempOrder.costAfterReductions == 0) {
-                    val paidOrder = tempOrder.copy(
-                      id = Some(finalisedOrderId),
-                      status = Order.statusIdPaid,
-                      paymentTimestamp = Some(new Date().getTime)
-                    )
-
-                    OrderDto.update(paidOrder)
-
+                  // If the cost is 0, we redirect to the dashboard
+                  if (costAfterReductions == 0) {
                     emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, Messages("email.orderComplete.free.subject"))
-
                     Redirect("/")
                   } else {
                     // We display the payment page
@@ -196,7 +198,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def editOrder = Action { request =>
+  def editOrder() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) =>
@@ -224,7 +226,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def completePayment = Action { request =>
+  def completePayment() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) =>
@@ -279,7 +281,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     messagesApi.messages(Lang.preferred(request.acceptLanguages).language)
   }
 
-  def linkedinCallbackSignIn = Action { request =>
+  def linkedinCallbackSignIn() = Action { request =>
     if (request.queryString.contains("error")) {
       val isLinkedinAccountUnregistered = false
       Ok(views.html.signIn(getI18nMessages(request), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
@@ -336,7 +338,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def linkedinCallbackOrderStepAssessmentInfo = Action { request =>
+  def linkedinCallbackOrderStepAssessmentInfo() = Action { request =>
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAssessmentInfo, "/order/assessment-info")
   }
 
@@ -381,7 +383,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def linkedinCallbackOrderStepAccountCreation = Action { request =>
+  def linkedinCallbackOrderStepAccountCreation() = Action { request =>
     linkedinCallbackOrder(request, linkedinService.linkedinRedirectUriOrderStepAccountCreation, "/order/create-account")
   }
 }
