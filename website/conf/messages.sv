@@ -189,7 +189,7 @@ order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Totalt att betala
 
 
-# Order Step Assessment Info page *** continue translating from here
+# Order Step Assessment Info page
 
 order.assessmentInfo.title=Detaljer för din granskning
 order.assessmentInfo.subtitle=Detaljer för din granskning
@@ -223,54 +223,54 @@ order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://c
 # Order Step Account Creation page
 
 order.accountCreation.title=Skapa ditt konto
-order.accountCreation.subtitle=Under which account do you want your assessment to be saved?
-order.accountCreation.submitBtn.text=Register and continue
-order.accountCreation.submitBtn.withEmailPrefix=Register with
-order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This LinkedIn account is already registered. <a href="/login">Sign in</a>.
+order.accountCreation.subtitle=På vilket konto vill du spara din granskning?
+order.accountCreation.submitBtn.text=Registrera och gå vidare
+order.accountCreation.submitBtn.withEmailPrefix=Registrera med
+order.accountCreation.validation.emailAlreadyRegistered=Det finns redan ett konto med den här adressen. <a href="/login">Logga in</a>.
+order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=Du är redan registrerad med LinkedIn. <a href="/login">Logga in</a>.
 
-order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
-order.accountCreation.registerWithLinkedin.btn.text=Register with LinkedIn
-order.accountCreation.registerWithLinkedin.email.label=Preferred email
-order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
+order.accountCreation.registerWithLinkedin.switchLink.text=Vill du hellre registrera med e-post?
+order.accountCreation.registerWithLinkedin.btn.text=Registrera med LinkedIn
+order.accountCreation.registerWithLinkedin.email.label=Använd den här e-postadressen
+order.accountCreation.registerWithLinkedin.validation.incorrectEmail=Den här adressen ser inte korrekt ut
 
-order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your LinkedIn account?
-order.accountCreation.registerWithEmail.firstName.label=First name
+order.accountCreation.registerWithEmail.switchLink.text=Vill du hellre registrera med ditt LinkedIn-konto?
+order.accountCreation.registerWithEmail.firstName.label=Förnamn
 order.accountCreation.registerWithEmail.firstName.placeholder=
-order.accountCreation.registerWithEmail.emailAddress.label=Email address
-order.accountCreation.registerWithEmail.emailAddress.placeholder=your@mail.com
-order.accountCreation.registerWithEmail.password.label=Password
-order.accountCreation.registerWithEmail.password.placeholder=5 chars minimum
-order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
-order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
+order.accountCreation.registerWithEmail.emailAddress.label=E-postadress
+order.accountCreation.registerWithEmail.emailAddress.placeholder=din@e-post.com
+order.accountCreation.registerWithEmail.password.label=Lösenord
+order.accountCreation.registerWithEmail.password.placeholder=Minst 5 tecken
+order.accountCreation.registerWithEmail.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
+order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
 
 
 # Order Step Payment page
 
-order.payment.title=Payment
-order.payment.subtitle=Please enter your card details
-order.payment.submitBtn.text=Complete my order
-order.payment.validation.invalidCardNumber=Invalid card number
-order.payment.validation.invalidExpirationDate=Invalid expiration date
-order.payment.success.text=Your payment was successful. You can access <a href="/">your dashboard</a> to see the status of your assessment.
+order.payment.title=Betalning
+order.payment.subtitle=Ange ditt kortnummmer
+order.payment.submitBtn.text=Genomför beställning
+order.payment.validation.invalidCardNumber=Ogiltigt kortnummer
+order.payment.validation.invalidExpirationDate=Ogiltigt utgångsdatum
+order.payment.success.text=Din betalning lyckades. Du kan nu gå till din <a href="/">översikt</a> för att se status på din granskning.
 
-order.payment.form.cardNumber.label=Card number
+order.payment.form.cardNumber.label=Kortnummer
 order.payment.form.cardNumber.placeholder=
-order.payment.form.expires.month.label=Expires
+order.payment.form.expires.month.label=Utgångsdatum
 order.payment.form.cvc.label=CVC
 order.payment.form.cvc.placeholder=123
-order.payment.form.cardholderName.label=Cardholder name
+order.payment.form.cardholderName.label=Kortinnehavarens namn
 
 
 # Edit Order page
 
-order.edit.saveBtn.text=Save
+order.edit.saveBtn.text=Spara
 
 
 # Emails
 
 email.resetPassword.subject=Nytt lösenord till Cruited
-email.unpaidOrderReminder.subject=Complete your order
+email.unpaidOrderReminder.subject=Färdigställ din beställning
 email.twoDaysAfterAssessmentDelivered.subject=Bara ett steg kvar till en granskning av din jobbansökan
 email.orderComplete.free.subject=Granskning skapad
 email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
