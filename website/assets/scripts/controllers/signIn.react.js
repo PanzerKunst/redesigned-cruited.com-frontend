@@ -19,10 +19,12 @@ CR.Controllers.SignIn = P(function(c) {
                         </div>
                     </header>
                     <div className="with-circles">
-                        <form>
+                        <form className="single-column-panel">
                             {this._getSignInWithLinkedinForm()}
                         </form>
-                        <p>{CR.i18nMessages["signIn.methodSeparatorText"]}</p>
+                        <div className="section-separator single-column-panel centered-contents">
+                            <span>{CR.i18nMessages["signIn.methodSeparatorText"]}</span>
+                        </div>
                         {this._getSignInWithEmailForm()}
                     </div>
                 </div>
@@ -47,7 +49,7 @@ CR.Controllers.SignIn = P(function(c) {
             }
 
             return (
-                <div>
+                <div className="centered-contents">
                     <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
                         <span>{CR.i18nMessages["signIn.form.linkedIn.btn.text"]}</span>
                     </a>
@@ -58,7 +60,7 @@ CR.Controllers.SignIn = P(function(c) {
 
         _getSignInWithEmailForm: function() {
             return (
-                <form onSubmit={this._handleSubmit}>
+                <form onSubmit={this._handleSubmit} className="single-column-panel">
                     <div className="form-group">
                         <label htmlFor="email-address">{CR.i18nMessages["signIn.form.email.emailAddress.label"]}</label>
                         <input type="text" className="form-control" id="email-address" placeholder={CR.i18nMessages["signIn.form.email.emailAddress.placeholder"]} />

@@ -29,10 +29,6 @@ $two-column-form-group-width: 48%;
   }
 }
 
-[role=main] {
-  background-color: $light-grey;
-}
-
 button.styleless.fa {
   padding: 0.93em 1.04em;
   @include medium-screen {
@@ -235,13 +231,44 @@ nav > a,
   }
 }
 
-.single-column-form {
+.single-column-panel {
   @include medium-screen {
     margin: 0 auto;
     max-width: ($small-content-width + $medium-content-width) / 2;
   }
   @include large-screen {
     max-width: $medium-content-width;
+  }
+}
+
+.section-separator {
+  position: relative;
+  color: $well-border-color;
+
+  margin-top: 2em;
+  margin-bottom: 2em;
+
+  > span {
+    background-color: $background-body-color;
+    padding: 0 0.5em;
+
+    &:after {
+      content: "";
+      border-top: 1px solid $well-border-color;
+
+      position: absolute;
+      z-index: -1;
+      left: 0;
+      width: 100%;
+
+      top: 13px;
+      @include medium-screen {
+        top: 17px;
+      }
+      @include large-screen {
+        top: 22px;
+      }
+    }
   }
 }
 

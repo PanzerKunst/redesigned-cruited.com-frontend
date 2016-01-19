@@ -21,7 +21,7 @@ CR.Controllers.NewPassword = P(function(c) {
                         </div>
                     </header>
                     <div className="with-circles">
-                        <form onSubmit={this._handleSubmit} className="single-column-form">
+                        <form onSubmit={this._handleSubmit} className="single-column-panel">
                             <div className="form-group">
                                 <label htmlFor="password">{CR.i18nMessages["resetPassword.new.form.password.label"]}</label>
                                 <input type="password" className="form-control" id="password" placeholder={CR.i18nMessages["resetPassword.new.form.password.placeholder"]} data-min-length="5" />
