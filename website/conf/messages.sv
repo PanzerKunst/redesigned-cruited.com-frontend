@@ -2,82 +2,82 @@
 
 defaultAssessmentTitle=
 
-product.name.CV_REVIEW=
-product.name.COVER_LETTER_REVIEW=
-product.name.LINKEDIN_PROFILE_REVIEW=
+product.name.CV_REVIEW=Granskning av CV
+product.name.COVER_LETTER_REVIEW=Granskning av personligt brev
+product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
 
-edition.name.PRO=
-edition.name.YOUNG_PRO=
-edition.name.EXEC=
-edition.name.short.PRO=
-edition.name.short.YOUNG_PRO=
-edition.name.short.EXEC=
+edition.name.PRO=Professional
+edition.name.YOUNG_PRO=Young Professional
+edition.name.EXEC=Executive
+edition.name.short.PRO=Professional
+edition.name.short.YOUNG_PRO=Young Pro
+edition.name.short.EXEC=Executive
 
-reduction.name.2_PRODUCTS_SAME_ORDER=
-reduction.name.3_PRODUCTS_SAME_ORDER=
+reduction.name.2_PRODUCTS_SAME_ORDER=2 dokument
+reduction.name.3_PRODUCTS_SAME_ORDER=3 dokument
 
-order.status.label=
-order.status.notPaid.text=
-order.status.paid.text=
-order.status.inProgress.text=
-order.status.completed.text=
+order.status.label=Status
+order.status.notPaid.text=Betalning saknas
+order.status.paid.text=Avvaktar granskning
+order.status.inProgress.text=Granskning pågår
+order.status.completed.text=Granskning genomförd
 
-order.creationDate.label=
+order.creationDate.label=Skapad
 
-category.CV_REVIEW.12.title=
-category.CV_REVIEW.12.shortDesc=
-category.CV_REVIEW.13.title=
-category.CV_REVIEW.13.shortDesc=
-category.CV_REVIEW.14.title=
-category.CV_REVIEW.14.shortDesc=
-category.COVER_LETTER_REVIEW.7.title=
-category.COVER_LETTER_REVIEW.7.shortDesc=
-category.COVER_LETTER_REVIEW.8.title=
-category.COVER_LETTER_REVIEW.8.shortDesc=
-category.COVER_LETTER_REVIEW.10.title=
-category.COVER_LETTER_REVIEW.10.shortDesc=
-category.COVER_LETTER_REVIEW.11.title=
-category.COVER_LETTER_REVIEW.11.shortDesc=
-category.LINKEDIN_PROFILE_REVIEW.16.title=
-category.LINKEDIN_PROFILE_REVIEW.16.shortDesc=
-category.LINKEDIN_PROFILE_REVIEW.17.title=
-category.LINKEDIN_PROFILE_REVIEW.17.shortDesc=
-category.LINKEDIN_PROFILE_REVIEW.18.title=
-category.LINKEDIN_PROFILE_REVIEW.18.shortDesc=
-category.LINKEDIN_PROFILE_REVIEW.20.title=
-category.LINKEDIN_PROFILE_REVIEW.20.shortDesc=
+category.CV_REVIEW.12.title=Redovisa resultat och skapa trovärdighet
+category.CV_REVIEW.12.shortDesc=En cv handlar i stor utsträckning om att bekräfta sin kompetens. Det är därför mycket viktigt att redovisa de resultat man uppnått.
+category.CV_REVIEW.13.title=Översiktligt och korrekt
+category.CV_REVIEW.13.shortDesc=Din cv ska ge arbetsgivaren en snabb översikt över dina erfarenheter och meriter. Den ska vara korrekt skriven, kort och koncis. Det finns även ett antal faktorer i språk och upplägget som påverkar hur du uppfattas som person.
+category.CV_REVIEW.14.title=Rikta och var relevant
+category.CV_REVIEW.14.shortDesc=I en effektiv cv är varje del relevant för det aktuella jobbet och den aktuella arbetsgivaren. Det kräver att cvn har en tydlig röd linje och att alla delar pekar i samma riktning.
+category.COVER_LETTER_REVIEW.7.title=Framhäv potential
+category.COVER_LETTER_REVIEW.7.shortDesc=Fokusera mer på din potential och vad du kan åstadkomma i framtiden, än på historia och vad du gjort tidigare.
+category.COVER_LETTER_REVIEW.8.title=Fokusera på arbetsgivaren
+category.COVER_LETTER_REVIEW.8.shortDesc=Förklara varför du valt just den här arbetsgivaren och tjänsten.
+category.COVER_LETTER_REVIEW.10.title=Redovisa resultat och skapa trovärdighet
+category.COVER_LETTER_REVIEW.10.shortDesc=Visa på ett trovärdigt sätt att du har kunskapen och förmågan att åstadkomma resultat för arbetsgivaren.
+category.COVER_LETTER_REVIEW.11.title=Aktivt, kort och korrekt
+category.COVER_LETTER_REVIEW.11.shortDesc=En dåligt skriven ansökan placerar dig som sökande ofta direkt längst ner i högen.
+category.LINKEDIN_PROFILE_REVIEW.16.title=Rikta och var relevant
+category.LINKEDIN_PROFILE_REVIEW.16.shortDesc=Nyckeln till framgång bland miljontals profiler på LinkedIn är att vara relevant. Du behöver visa en röd linje, få fram en bild av vart du är på väg och vad du söker. I vår granskning tittar vi på flera faktorer som rör relevans och riktning.
+category.LINKEDIN_PROFILE_REVIEW.17.title=Skapa effekt och bygg räckvidd
+category.LINKEDIN_PROFILE_REVIEW.17.shortDesc=Att finnas på LinkedIn är grundläggande när man söker jobb. Men för att nå framgång med LinkedIn behöver man synas och underlätta kontaktskapande. Den här kategorin handlar om hur du lyckas skapa effekt och nå ut med din profil.
+category.LINKEDIN_PROFILE_REVIEW.18.title=Översiktligt och korrekt
+category.LINKEDIN_PROFILE_REVIEW.18.shortDesc=Din LinkedIn-profil ska vara korrekt skriven och lätt att ta till sig. För att bli hittad av rekryterare och andra som vill nå dig, är det också viktigt att profilen är komplett och att du fyllt i rätt uppgifter på rätt plats.
+category.LINKEDIN_PROFILE_REVIEW.20.title=Redovisa resultat och skapa trovärdighet
+category.LINKEDIN_PROFILE_REVIEW.20.shortDesc=LinkedIn är världens största cv-bank och att berätta om sina erfarenheter och utbildningar är grundläggande. För att få kontakter och skapa möjligheter till jobb behöver du ge trovärdig bild av din bakgrund.
 
-reportSummary.CV_REVIEW.0=
-reportSummary.CV_REVIEW.25=
-reportSummary.CV_REVIEW.51=
-reportSummary.CV_REVIEW.74=
-reportSummary.CV_REVIEW.92=
-reportSummary.COVER_LETTER_REVIEW.0=
-reportSummary.COVER_LETTER_REVIEW.25=
-reportSummary.COVER_LETTER_REVIEW.51=
-reportSummary.COVER_LETTER_REVIEW.74=
-reportSummary.COVER_LETTER_REVIEW.92=
-reportSummary.LINKEDIN_PROFILE_REVIEW.0=
-reportSummary.LINKEDIN_PROFILE_REVIEW.25=
-reportSummary.LINKEDIN_PROFILE_REVIEW.51=
-reportSummary.LINKEDIN_PROFILE_REVIEW.74=
-reportSummary.LINKEDIN_PROFILE_REVIEW.92=
+reportSummary.CV_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista CV granskningarna är <strong>{averageScore}</strong>.<br /><br />Du har en bra bit kvar innan vi kan rekommendera dig att skicka in denna jobbansökan. Läs gärna våra rekommendationer nedan för att göra en mer genomarbetad version av din CV. Du har möjligheten att göra en stor förbättring ganska lätt om du följer dem!
+reportSummary.CV_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista CV granskningarna är <strong>{averageScore}</strong>.<br /><br />Du borde göra ett nytt försök, för du har en bit kvar innan du har skrivit en jobbansökan som du med stolthet kan skicka in till din potentiella arbetsgivare. Följ gärna våra rekommendationer nedan för att få din ansökan att hålla den klass vi tror att du vill att den ska hålla!
+reportSummary.CV_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista CV granskningarna är <strong>{averageScore}</strong>.<br /><br />Du har gjort en bra insats, det är helt okej, men du borde jobba vidare med din jobbansökan. Följ gärna våra rekommendationer nedan så kan din ansökan bli exemplariskt bra!
+reportSummary.CV_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista CV granskningarna är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt jobbansökan!
+reportSummary.CV_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista CV granskningarna är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Ditt ansökningsbrev är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
+reportSummary.COVER_LETTER_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Du har en bra bit kvar innan vi kan rekommendera dig att skicka in denna jobbansökan. Läs gärna våra rekommendationer nedan för att göra en mer genomarbetad version av ditt personliga brev. Du har möjligheten att göra en stor förbättring ganska lätt om du följer dem!
+reportSummary.COVER_LETTER_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Du borde göra ett nytt försök, för du har en bit kvar innan du har skrivit en jobbansökan som du med stolthet kan skicka in till din potentiella arbetsgivare. Följ gärna våra rekommendationer nedan för att få din ansökan att hålla den klass vi tror att du vill att den ska hålla!
+reportSummary.COVER_LETTER_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Du har gjort en bra insats, det är helt okej, men du borde jobba vidare med din jobbansökan. Följ gärna våra rekommendationer nedan så kan din ansökan bli exemplariskt bra!
+reportSummary.COVER_LETTER_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt jobbansökan!
+reportSummary.COVER_LETTER_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Ditt ansökningsbrev är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
+reportSummary.LINKEDIN_PROFILE_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du har en bra bit kvar innan du har en profil som kommer att locka rekryterare och potentiella arbetsgivare. Läs gärna våra rekommendationer nedan för att göra en mer genomarbetad version av din Linkedin-profil. Du har möjligheten att göra en stor förbättring ganska lätt om du följer dem!
+reportSummary.LINKEDIN_PROFILE_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du borde göra ett nytt försök, för du har en bit kvar innan du har en profil som sticker ut hos en rekryterare eller potentiell arbetsgivare. Följ gärna våra rekommendationer nedan för att få din profil att hålla den klass vi tror att du vill att den ska hålla!
+reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du har gjort en bra insats, det är helt okej, men du borde jobba vidare med din profil. Följ gärna våra rekommendationer nedan så kan din profil bli exemplariskt bra!
+reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt profil!
+reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Din profil är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
 
 
 # Header menu
 
-menu.signIn=
-menu.signOut=
-menu.myAccount=
+menu.signIn=Logga in
+menu.signOut=Logga ut
+menu.myAccount=Mitt konto
 
 
 # Sign In page
 
-signIn.title=
-signIn.methodSeparatorText=
-signIn.validation.incorrectEmail=
-signIn.validation.invalidCredentials=
-signIn.validation.linkedinAccountUnregistered=
+signIn.title=Logga in
+signIn.methodSeparatorText=eller...
+signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
+signIn.validation.invalidCredentials=Vi har inget konto med den här adressen
+signIn.validation.linkedinAccountUnregistered=Du har inget konto kopplat till den här Linkedin . Registrera dig Registration is done during <a href="/order">your first order</a>.
 
 signIn.form.linkedIn.btn.text=
 signIn.form.email.emailAddress.label=
