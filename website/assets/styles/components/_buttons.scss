@@ -167,3 +167,36 @@ a.btn-primary {
     }
   }
 }
+
+.social-icon {
+  $fb-icon-location-x: -100px;
+  $social-icon-location-y: -100px;
+
+  @include hdpi-sprite();
+  background-position: $fb-icon-location-x $social-icon-location-y;
+  @include hidpi {
+    background-position: half-pos($fb-icon-location-x, $social-icon-location-y);
+  }
+
+  height: 30px;
+  width: 30px;
+
+  &.linkedin {
+    $li-icon-location-x: -200px;
+
+    background-position: $li-icon-location-x $social-icon-location-y;
+    @include hidpi {
+      background-position: half-pos($li-icon-location-x, $social-icon-location-y);
+    }
+  }
+
+  &.twitter {
+    $tw-icon-location-x: -300px;
+
+    background-position: $tw-icon-location-x $social-icon-location-y;
+    @include hidpi {
+      background-position: half-pos($tw-icon-location-x, $social-icon-location-y);
+    }
+  }
+}
+

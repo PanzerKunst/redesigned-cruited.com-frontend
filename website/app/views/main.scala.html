@@ -1,4 +1,4 @@
-@(title: String, pageId: String)(header: Html)(javascript: Html)
+@(title: String, pageId: String, i18nMessages: Map[String, String])(header: Html)(javascript: Html)
 
 <!DOCTYPE html>
 
@@ -22,7 +22,19 @@
     <div id="container">
         <header>@header</header>
         <div role="main"></div>
-        <footer></footer>
+        <footer>
+            <div class="centered-contents">
+                <span class="brand">Cruited</span>
+                <div id="footer-contact-wrapper">
+                    <a href="mailto:kontakt@@cruited.com">kontakt@@cruited.com</a>
+                </div>
+                <div id="footer-social-icons-wrapper">
+                    <a class="social-icon facebook" href="https://www.facebook.com/Cruited"></a>
+                    <a class="social-icon linkedin" href="https://www.linkedin.com/company/cruited"></a>
+                    <a class="social-icon twitter" href="https://twitter.com/cruited"></a>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <!-- Javascripts -->

@@ -1,4 +1,4 @@
-@(accountOpt: Option[Account])(implicit messages: Messages)
+@(accountOpt: Option[Account], i18nMessages: Map[String, String])
 
 <nav id="header-nav">
     <a href="/" class="fa fa-home"></a>
@@ -17,13 +17,13 @@
             </article>
         }
     } else {
-        <a href="/login"><i class="fa fa-sign-in"></i>@messages("menu.signIn")</a>
+        <a href="/login"><i class="fa fa-sign-in"></i>@i18nMessages("menu.signIn")</a>
     }
-    </nav>
+</nav>
 <div id="menu">
     <nav>
-        <a href="/my-account"><i class="fa fa-user"></i>@messages("menu.myAccount")</a>
-        <a href="/logout"><i class="fa fa-sign-out"></i>@messages("menu.signOut")</a>
+        <a href="/my-account"><i class="fa fa-user"></i>@i18nMessages("menu.myAccount")</a>
+        <a href="/logout"><i class="fa fa-sign-out"></i>@i18nMessages("menu.signOut")</a>
     </nav>
 </div>
 <div id="content-overlay-when-menu-open"></div>

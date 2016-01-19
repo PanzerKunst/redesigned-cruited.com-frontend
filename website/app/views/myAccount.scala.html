@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], account: Account, isSaveSuccessful: Boolean)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Account, isSaveSuccessful: Boolean)
 
-@main("Cruited - " + messages("myAccount.title"), "my-account") {
+@main("Cruited - " + i18nMessages("myAccount.title"), "my-account", i18nMessages) {
 <!--
     Header
 -->
-@header(Some(account))
+@header(Some(account), i18nMessages)
 
 } {
 /*

@@ -93,13 +93,16 @@ $header-bottom-border-height: 1px;
   }
 
   > .brand {
+    text-align: center;
+
+    $brand-width: 4em;
+
     position: absolute;
     left: 50%;
-    margin-left: -1.6em;
+    width: $brand-width;
+    margin-left: - $brand-width / 2;
 
-    font-size: 22px;
     @include large-screen {
-      font-size: 30px;
       margin-top: 4px;
     }
   }

@@ -5,11 +5,17 @@ p:last-child {
 .brand {
   font-family: "Signika", sans-serif;
   font-weight: bold;
+  color: $dark-grey;
 
-  color: $grey;
+  display: inline-block;
 
   &:hover,
   &:focus {
     text-decoration: none;
+  }
+
+  font-size: 22px;
+  @include large-screen {
+    font-size: 30px;
   }
 }

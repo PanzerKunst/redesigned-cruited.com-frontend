@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], account: Option[Account], order: models.frontend.FrontendOrder)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Option[Account], order: models.frontend.FrontendOrder)
 
-@main("Cruited - " + messages("order.assessmentInfo.title"), "edit-order") {
+@main("Cruited - " + i18nMessages("order.assessmentInfo.title"), "edit-order", i18nMessages) {
 <!--
     Header
 -->
-@header(account)
+@header(account, i18nMessages)
 
 } {
 /*

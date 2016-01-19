@@ -71,6 +71,9 @@ menu.signOut=Logga ut
 menu.myAccount=Mitt konto
 
 
+# Footer
+
+
 # Sign In page
 
 signIn.title=Logga in

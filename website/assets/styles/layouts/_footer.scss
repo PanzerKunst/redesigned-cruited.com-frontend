@@ -10,4 +10,81 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  > footer {
+    background-color: white;
+    min-height: 4.4em;
+
+    > div {
+      padding: 0 $spacer-unit-size;
+
+      @include medium-screen {
+        width: $medium-content-width;
+
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 auto;
+      }
+
+      @include large-screen {
+        width: $large-content-width;
+      }
+    }
+
+    .brand {
+      margin-top: 20px;
+    }
+
+    #footer-contact-wrapper {
+      font-size: $font-size-sm;
+      margin-top: 2.1em;
+    }
+
+    #footer-social-icons-wrapper {
+      margin: 19px 0;
+    }
+
+    .social-icon {
+      display: inline-block;
+      margin: 5px 0 0 10px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    @include medium-screen {
+      > div {
+        @include clearfix;
+        position: relative;
+
+        > span {
+          float: left;
+        }
+
+        > #footer-contact-wrapper {
+          $contact-wrapper-width: 12em;
+
+          position: absolute;
+          left: 50%;
+          width: $contact-wrapper-width;
+          margin-left: - $contact-wrapper-width / 2;
+        }
+
+        > #footer-social-icons-wrapper {
+          float: right;
+        }
+      }
+    }
+
+    @include large-screen {
+      .brand {
+        margin-top: 24px;
+      }
+
+      #footer-social-icons-wrapper {
+        margin-top: 28px
+      }
+    }
+  }
 }

@@ -1,10 +1,10 @@
-@(i18nMessages: Map[String, String], account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int, nbLastAssessmentsToTakeIntoAccount: Int, selectedProductCode: String, dwsRootUrl: String)(implicit messages: Messages)
+@(i18nMessages: Map[String, String], account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int, nbLastAssessmentsToTakeIntoAccount: Int, selectedProductCode: String, dwsRootUrl: String)
 
-@main("Cruited - " + messages("report.title"), "report") {
+@main("Cruited - " + i18nMessages("report.title"), "report", i18nMessages) {
 <!--
     Header
 -->
-@header(account)
+@header(account, i18nMessages)
 
 } {
 /*
