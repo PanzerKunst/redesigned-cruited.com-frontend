@@ -77,77 +77,76 @@ signIn.title=Logga in
 signIn.methodSeparatorText=eller...
 signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 signIn.validation.invalidCredentials=Vi har inget konto med den här adressen
-signIn.validation.linkedinAccountUnregistered=Du har inget konto kopplat till den här Linkedin . Registrera dig Registration is done during <a href="/order">your first order</a>.
+signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress? 
 
-signIn.form.linkedIn.btn.text=
-signIn.form.email.emailAddress.label=
-signIn.form.email.emailAddress.placeholder=
-signIn.form.email.password.label=
-signin.form.email.submitBtn.text=
-signIn.form.forgottenPasswordLink.text=
+signIn.form.linkedIn.btn.text=Logga in med LinkedIn
+signIn.form.email.emailAddress.label=E-postadress
+signIn.form.email.emailAddress.placeholder=din@e-post.com
+signIn.form.email.password.label=Lösenord
+signin.form.email.submitBtn.text=Logga in
+signIn.form.forgottenPasswordLink.text=Jag behöver ett nytt lösenord
 
 
 # My Account page
 
-myAccount.title=
-myAccount.validation.passwordTooShort=
-myAccount.saveSuccessful.text=
+myAccount.title=Mitt konto
+myAccount.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
+myAccount.saveSuccessful.text=Ditt konto har uppdaterats
 
-myAccount.form.emailAddress.label=
-myAccount.form.firstName.label=
-myAccount.form.password.label=
-myAccount.form.password.placeholder=
-myAccount.form.submitBtn.text=
+myAccount.form.emailAddress.label=E-postadress
+myAccount.form.firstName.label=Förnamn
+myAccount.form.password.label=Nytt lösenord (bara om du vill byta)
+myAccount.form.password.placeholder=Minst 5 tecken
+myAccount.form.submitBtn.text=Spara
 
 
 # Reset password pages
 
-resetPassword.title=
-resetPassword.validation.incorrectEmail=
-resetPassword.validation.noAccountFoundForThisEmailAddress=
-resetPassword.emailSent.text=
+resetPassword.title=Återställ ditt lösenord
+resetPassword.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
+resetPassword.validation.noAccountFoundForThisEmailAddress=Vi har inget konto med den här adressen
+resetPassword.emailSent.text=Vi har skickat ett mejl till dig med instruktioner om hur du återställer ditt lösenord
 
-resetPassword.form.emailAddress.label=
-resetPassword.form.emailAddress.placeholder=
-resetPassword.form.submitBtn.text=
+resetPassword.form.emailAddress.label=E-postadress
+resetPassword.form.emailAddress.placeholder=din@e-post.com
+resetPassword.form.submitBtn.text=Jag behöver ett nytt lösenord
 
-resetPassword.new.saveSuccessful.text=
-resetPassword.new.validation.passwordTooShort=
-resetPassword.new.form.password.label=
-resetPassword.new.form.password.placeholder=
-resetPassword.new.form.submitBtn.text=
+resetPassword.new.saveSuccessful.text=Ditt nya lösenord är sparat. Nu kan du <a href="/login">logga in</a>.
+resetPassword.new.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
+resetPassword.new.form.password.label=Nytt lösenord
+resetPassword.new.form.password.placeholder=Minst 5 tecken
+resetPassword.new.form.submitBtn.text=Spara
 
 
 # Dashboard page
 
-dashboard.title=
-dashboard.subtitle=
-dashboard.completePaymentLink.text=
-dashboard.newAssessmentBtn.text=
-dashboard.viewReportBtn.text=
-dashboard.editOrder.text=
+dashboard.title=Mina granskningar
+dashboard.subtitle=Välkommen, {firstName}!
+dashboard.completePaymentLink.text=Betala
+dashboard.newAssessmentBtn.text=Skapa ny granskning
+dashboard.viewReportBtn.text=Visa rapport
+dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan <a href="{url}">fortfarande redigera din information</a> om du vill.
 
 
 # Report page
 
-report.title=
-report.unorderedAssessment.text=
-report.unorderedAssessment.orderBtn.text=
+report.title=Din granskningsrapport
+report.unorderedAssessment.text=Du har inte beställt den här produkten. Om du vill fortsätta behöver du beställa en ny granskning.
+report.unorderedAssessment.orderBtn.text=Beställ ny granskning
 
-report.summary.title=
-report.summary.documentLink.text=
-report.summary.score.label=
-report.summary.score.bar.label.weak=
-report.summary.score.bar.label.good=
-report.summary.score.bar.label.excellent=
-report.summary.understandYourScore.title=
-report.summary.understandYourScore.cScoreExplanation.text=
-report.summary.understandYourScore.weak.text=
-report.summary.understandYourScore.good.text=
-report.summary.understandYourScore.excellent.text=
+report.summary.title=Report Summary
+report.summary.documentLink.text=Original
+report.summary.score.label=Your C-Score
+report.summary.score.bar.label.weak=Weak
+report.summary.score.bar.label.good=Good
+report.summary.score.bar.label.excellent=Excellent
+report.summary.understandYourScore.title=Understand your score
+report.summary.understandYourScore.cScoreExplanation.text=C-Score mäter hur effektiv din ansökan är på en skala från 0 till 100. <a href="https://www.cruited.com/var-metod" target="_blank">Läs mer</a>
+report.summary.understandYourScore.weak.text=Mycket låg chans att komma på jobbintervju
+report.summary.understandYourScore.good.text=Medelstora chanser att komma på jobbintervju
+report.summary.understandYourScore.excellent.text=Mycket stor chans att komma på jobbintervju
 
-report.analysis.title=
-
+report.analysis.title=Expert Report Analysis
 
 # Order Step Product Selection page
 
