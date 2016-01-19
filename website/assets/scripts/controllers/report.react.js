@@ -36,23 +36,9 @@ CR.Controllers.Report = P(function(c) {
                 subTitle = <span>{order.getTitleForHtml()}</span>;
             }
 
-            let cvTabName = CR.i18nMessages["product.name.CV_REVIEW"];
-            if (CR.Services.Browser.isSmallScreen()) {
-                let indexWhereSecondWordEnds = cvTabName.lastIndexOf(" ");
-                cvTabName = cvTabName.substring(0, indexWhereSecondWordEnds);
-            }
-
-            let coverLetterTabName = CR.i18nMessages["product.name.COVER_LETTER_REVIEW"];
-            if (CR.Services.Browser.isSmallScreen()) {
-                let indexWhereSecondWordEnds = coverLetterTabName.lastIndexOf(" ");
-                coverLetterTabName = coverLetterTabName.substring(0, indexWhereSecondWordEnds);
-            }
-
-            let linkedinProfileTabName = CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"];
-            if (CR.Services.Browser.isSmallScreen()) {
-                let indexWhereSecondWordEnds = linkedinProfileTabName.lastIndexOf(" ");
-                linkedinProfileTabName = linkedinProfileTabName.substring(0, indexWhereSecondWordEnds);
-            }
+            let cvTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.CV_REVIEW"] : CR.i18nMessages["product.name.CV_REVIEW"];
+            let coverLetterTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.COVER_LETTER_REVIEW"] : CR.i18nMessages["product.name.COVER_LETTER_REVIEW"];
+            let linkedinProfileTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW"] : CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"];
 
             return (
                 <div id="content">

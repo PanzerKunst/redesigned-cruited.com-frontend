@@ -4,7 +4,7 @@ defaultAssessmentTitle=Assessment
 
 product.name.CV_REVIEW=CV Review
 product.name.COVER_LETTER_REVIEW=Cover Letter Review
-product.name.LINKEDIN_PROFILE_REVIEW=Linkedin Review
+product.name.LINKEDIN_PROFILE_REVIEW=LinkedIn Review
 
 edition.name.PRO=Professional
 edition.name.YOUNG_PRO=Young Professional
@@ -57,11 +57,11 @@ reportSummary.COVER_LETTER_REVIEW.25=Du fick resultatet <strong>{score} av 100<
 reportSummary.COVER_LETTER_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Du har gjort en bra insats, det är helt okej, men du borde jobba vidare med din jobbansökan. Följ gärna våra rekommendationer nedan så kan din ansökan bli exemplariskt bra!
 reportSummary.COVER_LETTER_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt jobbansökan!
 reportSummary.COVER_LETTER_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av personligt brev är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Ditt ansökningsbrev är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
-reportSummary.LINKEDIN_PROFILE_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du har en bra bit kvar innan du har en profil som kommer att locka rekryterare och potentiella arbetsgivare. Läs gärna våra rekommendationer nedan för att göra en mer genomarbetad version av din Linkedin-profil. Du har möjligheten att göra en stor förbättring ganska lätt om du följer dem!
-reportSummary.LINKEDIN_PROFILE_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du borde göra ett nytt försök, för du har en bit kvar innan du har en profil som sticker ut hos en rekryterare eller potentiell arbetsgivare. Följ gärna våra rekommendationer nedan för att få din profil att hålla den klass vi tror att du vill att den ska hålla!
-reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du har gjort en bra insats, det är helt okej, men du borde jobba vidare med din profil. Följ gärna våra rekommendationer nedan så kan din profil bli exemplariskt bra!
-reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt profil!
-reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din Linkedin-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av Linkedin-profil är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Din profil är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
+reportSummary.LINKEDIN_PROFILE_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Du har en bra bit kvar innan du har en profil som kommer att locka rekryterare och potentiella arbetsgivare. Läs gärna våra rekommendationer nedan för att göra en mer genomarbetad version av din LinkedIn-profil. Du har möjligheten att göra en stor förbättring ganska lätt om du följer dem!
+reportSummary.LINKEDIN_PROFILE_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Du borde göra ett nytt försök, för du har en bit kvar innan du har en profil som sticker ut hos en rekryterare eller potentiell arbetsgivare. Följ gärna våra rekommendationer nedan för att få din profil att hålla den klass vi tror att du vill att den ska hålla!
+reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Du har gjort en bra insats, det är helt okej, men du borde jobba vidare med din profil. Följ gärna våra rekommendationer nedan så kan din profil bli exemplariskt bra!
+reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt profil!
+reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Din profil är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
 
 
 # Header menu
@@ -79,7 +79,7 @@ signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
 signIn.validation.linkedinAccountUnregistered=We could not find an account associated to this LinkedIn identity. Did you signup using e-mail? 
 
-signIn.form.linkedIn.btn.text=Sign in with Linkedin
+signIn.form.linkedIn.btn.text=Sign in with LinkedIn
 signIn.form.email.emailAddress.label=Email address
 signIn.form.email.emailAddress.placeholder=your@mail.com
 signIn.form.email.password.label=Password
@@ -133,6 +133,9 @@ dashboard.editOrder.text=Since this assessment hasn't started yet, you can <a hr
 report.title=Your Report
 report.unorderedAssessment.text=You have not ordered this product. If you want to proceed, please place a new order.
 report.unorderedAssessment.orderBtn.text=Order a new assessment
+report.tabNameSmallScreen.CV_REVIEW=CV
+report.tabNameSmallScreen.COVER_LETTER_REVIEW=Cover Letter
+report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW=LinkedIn
 
 report.summary.title=Analysis of your document
 report.summary.documentLink.text=Original doc
@@ -162,7 +165,7 @@ order.productSelection.productsSection.offerThreeProductsSameOrder.text=Save <st
 order.productSelection.productsSection.allOffersActivated.text=You're saving <strong>{reductionPrice}</strong> on the full price.
 order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my Linkedin Profile
+order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my LinkedIn Profile
 
 order.productSelection.editionsSection.title=Product Edition
 order.productSelection.editionsSection.subtitle=Please choose which edition best suits you.
@@ -192,13 +195,13 @@ order.assessmentInfo.documentsSection.subtitle=This is what we will assess.
 order.assessmentInfo.jobYouSearchSection.title=The job you search
 order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we can help you. All optional information.
 order.assessmentInfo.submitBtn.text=Proceed to next step
-order.assessmentInfo.validation.notSignedIn=We cannot assess your Linkedin profile unless you sign in
+order.assessmentInfo.validation.notSignedIn=We cannot assess your LinkedIn profile unless you sign in
 order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
 order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
 
 order.assessmentInfo.form.browseBtn.text=Browse...
-order.assessmentInfo.form.linkedinProfile.label=Your Linkedin profile
-order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with Linkedin
+order.assessmentInfo.form.linkedinProfile.label=Your LinkedIn profile
+order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
@@ -221,14 +224,14 @@ order.accountCreation.subtitle=Under which account do you want your assessment t
 order.accountCreation.submitBtn.text=Register and continue
 order.accountCreation.submitBtn.withEmailPrefix=Register with
 order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered. <a href="/login">Sign in</a>.
+order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This LinkedIn account is already registered. <a href="/login">Sign in</a>.
 
 order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
-order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
+order.accountCreation.registerWithLinkedin.btn.text=Register with LinkedIn
 order.accountCreation.registerWithLinkedin.email.label=Preferred email
 order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
 
-order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your Linkedin account?
+order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your LinkedIn account?
 order.accountCreation.registerWithEmail.firstName.label=First name
 order.accountCreation.registerWithEmail.firstName.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=Email address
