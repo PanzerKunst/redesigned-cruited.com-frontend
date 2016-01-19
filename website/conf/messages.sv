@@ -128,30 +128,41 @@ dashboard.viewReportBtn.text=Visa rapport
 dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan <a href="{url}">fortfarande redigera din information</a> om du vill.
 
 
-# Report page *** continue translating from here
-
-report.title=Din granskningsrapport
-report.unorderedAssessment.text=Du har inte beställt den här produkten. Om du vill fortsätta behöver du beställa en ny granskning.
-report.unorderedAssessment.orderBtn.text=Beställ ny granskning
-report.tabNameSmallScreen.CV_REVIEW=CV
-report.tabNameSmallScreen.COVER_LETTER_REVIEW=Personligt bref
-report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW=LinkedIn
-
-report.summary.title=Report Summary
-report.summary.documentLink.text=Original
-report.summary.score.label=Your C-Score
-report.summary.score.bar.label.weak=Weak
-report.summary.score.bar.label.good=Good
-report.summary.score.bar.label.excellent=Excellent
-report.summary.understandYourScore.title=Understand your score
-report.summary.understandYourScore.cScoreExplanation.text=C-Score mäter hur effektiv din ansökan är på en skala från 0 till 100. <a href="https://www.cruited.com/var-metod" target="_blank">Läs mer</a>
-report.summary.understandYourScore.weak.text=Mycket låg chans att komma på jobbintervju
-report.summary.understandYourScore.good.text=Medelstora chanser att komma på jobbintervju
-report.summary.understandYourScore.excellent.text=Mycket stor chans att komma på jobbintervju
-
-report.analysis.title=Expert Report Analysis
-
 # Order Step Product Selection page
+
+order.productSelection.title=Välj produkt
+order.productSelection.subtitle=Hur kan vi hjälpa dig? 
+order.productSelection.submitBtn.text=Fortsätt till nästa steg
+order.productSelection.validation.emptyCart=Du behöver välja minst 1 produkt för att fortsätta
+
+order.productSelection.productsSection.title=Produkter
+order.productSelection.productsSection.offerTwoProductsSameOrder.text=Spara <strong>{reductionPrice}</strong> när du beställer 2 produkter!
+order.productSelection.productsSection.offerThreeProductsSameOrder.text=Spara <strong>{reductionPrice}</strong> när du beställer alla 3 produkterna!
+order.productSelection.productsSection.allOffersActivated.text=Du sparar <strong>{reductionPrice}</strong>!
+order.productSelection.productsSection.productName.CV_REVIEW=Granska min cv
+order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Granska mitt personliga brev
+order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Granska min LinkedIn-profil
+
+order.productSelection.editionsSection.title=Välj version
+order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
+order.productSelection.editionsSection.editionDescription.text.PRO=Du har några års arbetslivserfarenhet
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 2 år, eller är student
+order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (eller söker) en roll med personalansvar eller verksamhetsansvar
+
+order.productSelection.cartSection.title=Din beställning
+order.productSelection.cartSection.productsHeader.products=Produkter
+order.productSelection.cartSection.productsHeader.defaultPrice=Pris
+order.productSelection.cartSection.coupon.label=Har du ett presentkort eller en rabattkod från någon av våra partner?
+order.productSelection.cartSection.coupon.placeholder=Rabattkod
+order.productSelection.cartSection.coupon.addBtn.text=Lägg till
+order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod... 
+order.productSelection.cartSection.coupon.notFoundError=Koden kunde inte hittas eller har utgått. Vänligen kontakta kundtjänst på kontakt@cruited.com
+order.productSelection.cartSection.coupon.hasReachedMaxUsesError=Koden är förbrukad. Vänligen kontakta kundtjänst på kontakt@cruited.com
+order.productSelection.cartSection.subTotal=Delsumma
+order.productSelection.cartSection.total=Totalt att betala
+
+
+# Order Step Assessment Info page *** continue translating from here
 
 order.productSelection.title=Product Selection
 order.productSelection.subtitle=How can we help you?
