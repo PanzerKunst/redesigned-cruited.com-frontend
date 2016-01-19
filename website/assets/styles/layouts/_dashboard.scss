@@ -40,6 +40,10 @@
       }
     }
   }
+
+  .sheet-of-paper > .light-font {
+    font-size: $font-size-sm;
+  }
 }
 
 @include no-flexbox {
