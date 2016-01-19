@@ -128,7 +128,7 @@ dashboard.viewReportBtn.text=Visa rapport
 dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan <a href="{url}">fortfarande redigera din information</a> om du vill.
 
 
-# Report page
+# Report page *** continue translating from here
 
 report.title=Din granskningsrapport
 report.unorderedAssessment.text=Du har inte beställt den här produkten. Om du vill fortsätta behöver du beställa en ny granskning.
@@ -150,121 +150,122 @@ report.analysis.title=Expert Report Analysis
 
 # Order Step Product Selection page
 
-order.productSelection.title=
-order.productSelection.subtitle=
-order.productSelection.submitBtn.text=
-order.productSelection.validation.emptyCart=
+order.productSelection.title=Product Selection
+order.productSelection.subtitle=How can we help you?
+order.productSelection.submitBtn.text=Proceed to next step
+order.productSelection.validation.emptyCart=You need to select at least 1 product to continue
 
-order.productSelection.productsSection.title=
-order.productSelection.productsSection.offerTwoProductsSameOrder.text=
-order.productSelection.productsSection.offerThreeProductsSameOrder.text=
-order.productSelection.productsSection.allOffersActivated.text=
-order.productSelection.productsSection.productName.CV_REVIEW=
-order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=
+order.productSelection.productsSection.title=Products
+order.productSelection.productsSection.offerTwoProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select 2 items!
+order.productSelection.productsSection.offerThreeProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select all 3 items!
+order.productSelection.productsSection.allOffersActivated.text=You're saving <strong>{reductionPrice}</strong> on the full price.
+order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
+order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
+order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my Linkedin Profile
 
-order.productSelection.editionsSection.title=
-order.productSelection.editionsSection.subtitle=
-order.productSelection.editionsSection.editionDescription.text.PRO=
-order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=
-order.productSelection.editionsSection.editionDescription.text.EXEC=
+order.productSelection.editionsSection.title=Product Edition
+order.productSelection.editionsSection.subtitle=Please choose which edition best suits you.
+order.productSelection.editionsSection.editionDescription.text.PRO=You have worked for at least a year
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working a year or less, or you are a student
+order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
 
-order.productSelection.cartSection.title=
-order.productSelection.cartSection.productsHeader.products=
-order.productSelection.cartSection.productsHeader.defaultPrice=
-order.productSelection.cartSection.coupon.label=
-order.productSelection.cartSection.coupon.placeholder=
-order.productSelection.cartSection.coupon.addBtn.text=
-order.productSelection.cartSection.coupon.addBtn.loadingText=
-order.productSelection.cartSection.coupon.notFoundError=
-order.productSelection.cartSection.coupon.hasReachedMaxUsesError=
-order.productSelection.cartSection.subTotal=
-order.productSelection.cartSection.total=
+order.productSelection.cartSection.title=Your Order
+order.productSelection.cartSection.productsHeader.products=Products
+order.productSelection.cartSection.productsHeader.defaultPrice=Price
+order.productSelection.cartSection.coupon.label=Have a Promotion Code or a Gift Card from one of our partners?
+order.productSelection.cartSection.coupon.placeholder=Coupon Code
+order.productSelection.cartSection.coupon.addBtn.text=Apply coupon
+order.productSelection.cartSection.coupon.addBtn.loadingText=Applying coupon...
+order.productSelection.cartSection.coupon.notFoundError=Coupon not found or expired
+order.productSelection.cartSection.coupon.hasReachedMaxUsesError=Coupon has already been used
+order.productSelection.cartSection.subTotal=Sub-total
+order.productSelection.cartSection.total=Total You Pay
 
 
 # Order Step Assessment Info page
 
-order.assessmentInfo.title=
-order.assessmentInfo.subtitle=
-order.assessmentInfo.documentsSection.title=
-order.assessmentInfo.documentsSection.subtitle=
-order.assessmentInfo.jobYouSearchSection.title=
-order.assessmentInfo.jobYouSearchSection.subtitle=
-order.assessmentInfo.submitBtn.text=
-order.assessmentInfo.validation.notSignedIn=
-order.assessmentInfo.validation.jobAdUrlIncorrect=
-order.assessmentInfo.validation.customerCommentTooLong=
+order.assessmentInfo.title=Assessment details
+order.assessmentInfo.subtitle=Tell us a bit about you
+order.assessmentInfo.documentsSection.title=Your documents
+order.assessmentInfo.documentsSection.subtitle=This is what we will assess.
+order.assessmentInfo.jobYouSearchSection.title=The job you search
+order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we can help you. All optional information.
+order.assessmentInfo.submitBtn.text=Proceed to next step
+order.assessmentInfo.validation.notSignedIn=We cannot assess your Linkedin profile unless you sign in
+order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
+order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
 
-order.assessmentInfo.form.browseBtn.text=
-order.assessmentInfo.form.linkedinProfile.label=
-order.assessmentInfo.form.linkedinProfile.signInBtn.text=
-order.assessmentInfo.form.linkedinProfile.check.step1.text=
-order.assessmentInfo.form.linkedinProfile.check.step2.text=
-order.assessmentInfo.form.linkedinProfile.check.checkbox.label=
-order.assessmentInfo.form.cvFile.label=
-order.assessmentInfo.form.cvFile.placeHolder=
-order.assessmentInfo.form.coverLetterFile.label=
-order.assessmentInfo.form.coverLetterFile.placeHolder=
-order.assessmentInfo.form.employerSought.label=
-order.assessmentInfo.form.positionSought.label=
-order.assessmentInfo.form.jobAdUrl.label=
-order.assessmentInfo.form.customerComment.label=
-order.assessmentInfo.form.customerComment.description=
-order.assessmentInfo.form.tos.text=
+order.assessmentInfo.form.browseBtn.text=Browse...
+order.assessmentInfo.form.linkedinProfile.label=Your Linkedin profile
+order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with Linkedin
+order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
+order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
+order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
+order.assessmentInfo.form.cvFile.label=Your CV
+order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
+order.assessmentInfo.form.coverLetterFile.label=Your cover letter
+order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
+order.assessmentInfo.form.employerSought.label=Employer sought
+order.assessmentInfo.form.positionSought.label=Position sought
+order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
+order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?
+order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
+order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Terms of Service</a>
 
 
 # Order Step Account Creation page
 
-order.accountCreation.title=
-order.accountCreation.subtitle=
-order.accountCreation.submitBtn.text=
-order.accountCreation.submitBtn.withEmailPrefix=
-order.accountCreation.validation.emailAlreadyRegistered=
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=
+order.accountCreation.title=Create your account
+order.accountCreation.subtitle=Under which account do you want your assessment to be saved?
+order.accountCreation.submitBtn.text=Register and continue
+order.accountCreation.submitBtn.withEmailPrefix=Register with
+order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
+order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This Linkedin account is already registered. <a href="/login">Sign in</a>.
 
-order.accountCreation.registerWithLinkedin.switchLink.text=
-order.accountCreation.registerWithLinkedin.btn.text=
-order.accountCreation.registerWithLinkedin.email.label=
-order.accountCreation.registerWithLinkedin.validation.incorrectEmail=
+order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
+order.accountCreation.registerWithLinkedin.btn.text=Register with Linkedin
+order.accountCreation.registerWithLinkedin.email.label=Preferred email
+order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
 
-order.accountCreation.registerWithEmail.switchLink.text=
-order.accountCreation.registerWithEmail.firstName.label=
+order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your Linkedin account?
+order.accountCreation.registerWithEmail.firstName.label=First name
 order.accountCreation.registerWithEmail.firstName.placeholder=
-order.accountCreation.registerWithEmail.emailAddress.label=
-order.accountCreation.registerWithEmail.emailAddress.placeholder=
-order.accountCreation.registerWithEmail.password.label=
-order.accountCreation.registerWithEmail.password.placeholder=
-order.accountCreation.registerWithEmail.validation.incorrectEmail=
-order.accountCreation.registerWithEmail.validation.passwordTooShort=
+order.accountCreation.registerWithEmail.emailAddress.label=Email address
+order.accountCreation.registerWithEmail.emailAddress.placeholder=your@mail.com
+order.accountCreation.registerWithEmail.password.label=Password
+order.accountCreation.registerWithEmail.password.placeholder=5 chars minimum
+order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
+order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
 
 
 # Order Step Payment page
 
-order.payment.title=
-order.payment.subtitle=
-order.payment.submitBtn.text=
-order.payment.validation.invalidCardNumber=
-order.payment.validation.invalidExpirationDate=
-order.payment.success.text=
+order.payment.title=Payment
+order.payment.subtitle=Please enter your card details
+order.payment.submitBtn.text=Complete my order
+order.payment.validation.invalidCardNumber=Invalid card number
+order.payment.validation.invalidExpirationDate=Invalid expiration date
+order.payment.success.text=Your payment was successful. You can access <a href="/">your dashboard</a> to see the status of your assessment.
 
-order.payment.form.cardNumber.label=
+order.payment.form.cardNumber.label=Card number
 order.payment.form.cardNumber.placeholder=
-order.payment.form.expires.month.label=
-order.payment.form.cvc.label=
-order.payment.form.cvc.placeholder=
-order.payment.form.cardholderName.label=
+order.payment.form.expires.month.label=Expires
+order.payment.form.cvc.label=CVC
+order.payment.form.cvc.placeholder=123
+order.payment.form.cardholderName.label=Cardholder name
 
 
 # Edit Order page
 
-order.edit.saveBtn.text=
+order.edit.saveBtn.text=Save
 
 
 # Emails
 
-email.resetPassword.subject=
-email.unpaidOrderReminder.subject=
-email.twoDaysAfterAssessmentDelivered.subject=
-email.orderComplete.free.subject=
-email.orderComplete.paid.subject=
-email.orderComplete.paid.orderedProductsSeparator=
+email.resetPassword.subject=Nytt lösenord till Cruited
+email.unpaidOrderReminder.subject=Complete your order
+email.twoDaysAfterAssessmentDelivered.subject=Bara ett steg kvar till en granskning av din jobbansökan
+email.orderComplete.free.subject=Granskning skapad
+email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
+email.orderComplete.paid.orderedProductsSeparator=och
+
