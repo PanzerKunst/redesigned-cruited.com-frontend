@@ -377,6 +377,10 @@
   }
 
   .report-analysis {
+    > ul {
+      margin-top: 3.6em;
+    }
+
     li.category {
       border-top: 3px solid $light-grey;
 

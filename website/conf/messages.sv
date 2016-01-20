@@ -153,6 +153,10 @@ report.summary.understandYourScore.good.text=Medelstora chanser att komma på jo
 report.summary.understandYourScore.excellent.text=Mycket stor chans att komma på jobbintervju
 
 report.analysis.title=Expert Advice
+report.analysis.explanation.text=Våra experter har tittat på {docLabel} för att ge dit den bästa och mest relevant feedback. <strong>Följ gärna våra rekommendationer nedan, för att göra en utmärk jobbansökan!</strong>
+report.analysis.explanation.docLabel.CV_REVIEW=din CV
+report.analysis.explanation.docLabel.COVER_LETTER_REVIEW=ditt personligt brev
+report.analysis.explanation.docLabel.LINKEDIN_PROFILE_REVIEW=din LinkedIn-profil
 
 
 # Order Step Product Selection page

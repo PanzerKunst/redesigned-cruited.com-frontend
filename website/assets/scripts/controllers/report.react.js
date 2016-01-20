@@ -149,6 +149,10 @@ CR.Controllers.Report = P(function(c) {
                     docReportScores = this.state.linkedinProfileReportScores;
                 }
 
+                let reportAnalysisExplanationText = CR.i18nMessages["report.analysis.explanation.text"];
+                let docLabel = CR.i18nMessages["report.analysis.explanation.docLabel." + productCode];
+                let templatedExplanationText = CR.Services.String.template(reportAnalysisExplanationText, "docLabel", docLabel);
+
                 return (
                     <div>
                         <section className="sheet-of-paper summary">
@@ -226,6 +230,7 @@ CR.Controllers.Report = P(function(c) {
                         </section>
                         <section className="sheet-of-paper report-analysis">
                             <h2>{CR.i18nMessages["report.analysis.title"]}</h2>
+                            <p className="light-font" dangerouslySetInnerHTML={{__html: templatedExplanationText}} />
                             <ul className="styleless">
                             {this._getCategoriesAndTheirComments(docReport).map(function(categoryAndItsComments) {
                                 let categoryId = categoryAndItsComments.categoryId;
