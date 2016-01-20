@@ -80,7 +80,7 @@ signIn.title=Logga in
 signIn.methodSeparatorText=eller
 signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 signIn.validation.invalidCredentials=Vi har inget konto med den här adressen
-signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress? 
+signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress?
 
 signIn.form.linkedIn.btn.text=Logga in med LinkedIn
 signIn.form.email.emailAddress.label=E-postadress
@@ -182,7 +182,7 @@ order.productSelection.cartSection.productsHeader.defaultPrice=Pris
 order.productSelection.cartSection.coupon.label=Har du ett presentkort eller en rabattkod från någon av våra partner?
 order.productSelection.cartSection.coupon.placeholder=Rabattkod
 order.productSelection.cartSection.coupon.addBtn.text=Lägg till
-order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod... 
+order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
 order.productSelection.cartSection.coupon.notFoundError=Koden kunde inte hittas eller har utgått. Vänligen kontakta kundtjänst på kontakt@cruited.com
 order.productSelection.cartSection.coupon.hasReachedMaxUsesError=Koden är förbrukad. Vänligen kontakta kundtjänst på kontakt@cruited.com
 order.productSelection.cartSection.subTotal=Delsumma
@@ -202,7 +202,7 @@ order.assessmentInfo.validation.notSignedIn=För att vi ska kunna granska din Li
 order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
 order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
 
-order.assessmentInfo.form.browseBtn.text=Bläddra... 
+order.assessmentInfo.form.browseBtn.text=Bläddra...
 order.assessmentInfo.form.linkedinProfile.label=Din LinkedIn-profil
 order.assessmentInfo.form.linkedinProfile.signInBtn.text=Logga in med LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.

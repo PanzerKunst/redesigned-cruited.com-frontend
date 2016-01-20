@@ -80,7 +80,7 @@ signIn.title=Sign in
 signIn.methodSeparatorText=or
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.invalidCredentials=Invalid credentials, please try again
-signIn.validation.linkedinAccountUnregistered=We could not find an account associated to this LinkedIn identity. Did you signup using e-mail? 
+signIn.validation.linkedinAccountUnregistered=We could not find an account associated to this LinkedIn identity. Did you signup using e-mail?
 
 signIn.form.linkedIn.btn.text=Sign in with LinkedIn
 signIn.form.email.emailAddress.label=Email address
