@@ -248,7 +248,7 @@ order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet 
 # Order Step Payment page
 
 order.payment.title=Betalning
-order.payment.subtitle=Ange ditt kortnummmer
+order.payment.subtitle=Ange dina betaluppgifter
 order.payment.submitBtn.text=Genomför beställning
 order.payment.validation.invalidCardNumber=Ogiltigt kortnummer
 order.payment.validation.invalidExpirationDate=Ogiltigt utgångsdatum
