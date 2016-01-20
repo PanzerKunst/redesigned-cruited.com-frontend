@@ -6,12 +6,12 @@ product.name.CV_REVIEW=Granskning av CV
 product.name.COVER_LETTER_REVIEW=Granskning av personligt brev
 product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
 
-edition.name.PRO=Professional
-edition.name.YOUNG_PRO=Young Professional
-edition.name.EXEC=Executive
-edition.name.short.PRO=Professional
-edition.name.short.YOUNG_PRO=Young Pro
-edition.name.short.EXEC=Executive
+edition.name.PRO=Erfaren
+edition.name.YOUNG_PRO=Ny i yrkeslivet
+edition.name.EXEC=Chef
+edition.name.short.PRO=Erfaren
+edition.name.short.YOUNG_PRO=Ny i yrkeslivet
+edition.name.short.EXEC=Chef
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2 dokument
 reduction.name.3_PRODUCTS_SAME_ORDER=3 dokument
@@ -133,20 +133,20 @@ dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan f
 
 # Report page
 
-report.title=Your Report
-report.unorderedAssessment.text=You have not ordered this product. If you want to proceed, please place a new order.
-report.unorderedAssessment.orderBtn.text=Order a new assessment
+report.title=Din granskningsrapport
+report.unorderedAssessment.text=Du har inte beställt den är produkten. Du behöver göra en ny beställning för att komma åt den här produkten.
+report.unorderedAssessment.orderBtn.text=Beställ en ny granskning
 report.tabNameSmallScreen.CV_REVIEW=CV
-report.tabNameSmallScreen.COVER_LETTER_REVIEW=Cover Letter
+report.tabNameSmallScreen.COVER_LETTER_REVIEW=Personligt brev
 report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW=LinkedIn
 
-report.summary.title=Analysis of your document
-report.summary.documentLink.text=Original doc
-report.summary.score.label=Your C-Score
-report.summary.score.bar.label.weak=Weak
-report.summary.score.bar.label.good=Good
-report.summary.score.bar.label.excellent=Excellent
-report.summary.understandYourScore.title=Understand your score
+report.summary.title=Resultat av din granskning
+report.summary.documentLink.text=Original
+report.summary.score.label=Din C-Score
+report.summary.score.bar.label.weak=Svag
+report.summary.score.bar.label.good=Bra
+report.summary.score.bar.label.excellent=Utmärkt
+report.summary.understandYourScore.title=Förstå din C-Score
 report.summary.understandYourScore.cScoreExplanation.text=C-Score mäter hur effektiv din ansökan är på en skala från 0 till 100. <a href="https://www.cruited.com/var-metod" target="_blank">Läs mer</a>
 report.summary.understandYourScore.weak.text=Mycket låg chans att komma på jobbintervju
 report.summary.understandYourScore.good.text=Medelstora chanser att komma på jobbintervju
@@ -189,88 +189,88 @@ order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Totalt att betala
 
 
-# Order Step Assessment Info page *** continue translating from here
+# Order Step Assessment Info page
 
-order.assessmentInfo.title=Assessment details
-order.assessmentInfo.subtitle=Tell us a bit about you
-order.assessmentInfo.documentsSection.title=Your documents
-order.assessmentInfo.documentsSection.subtitle=This is what we will assess.
-order.assessmentInfo.jobYouSearchSection.title=The job you search
-order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we can help you. All optional information.
-order.assessmentInfo.submitBtn.text=Proceed to next step
-order.assessmentInfo.validation.notSignedIn=We cannot assess your LinkedIn profile unless you sign in
-order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
-order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
+order.assessmentInfo.title=Detaljer för din granskning
+order.assessmentInfo.subtitle=Detaljer för din granskning
+order.assessmentInfo.documentsSection.title=Dina dokument
+order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att granska.
+order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
+order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre kan vi hjälpa dig. Frivilliga uppgifter.
+order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
+order.assessmentInfo.validation.notSignedIn=För att vi ska kunna granska din LinkedIn-profil behöver du logga in
+order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
+order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
 
-order.assessmentInfo.form.browseBtn.text=Browse...
-order.assessmentInfo.form.linkedinProfile.label=Your LinkedIn profile
-order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with LinkedIn
+order.assessmentInfo.form.browseBtn.text=Bläddra... 
+order.assessmentInfo.form.linkedinProfile.label=Din LinkedIn-profil
+order.assessmentInfo.form.linkedinProfile.signInBtn.text=Logga in med LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
 order.assessmentInfo.form.cvFile.label=Your CV
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
-order.assessmentInfo.form.coverLetterFile.label=Your cover letter
+order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev
 order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
-order.assessmentInfo.form.employerSought.label=Employer sought
-order.assessmentInfo.form.positionSought.label=Position sought
-order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
-order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?
+order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
+order.assessmentInfo.form.positionSought.label=Tjänst du söker
+order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
+order.assessmentInfo.form.customerComment.label=Har du några specifika frågor kring din granskning?
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
-order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Terms of Service</a>
+order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Användningsvillkor</a>
 
 
 # Order Step Account Creation page
 
-order.accountCreation.title=Create your account
-order.accountCreation.subtitle=Under which account do you want your assessment to be saved?
-order.accountCreation.submitBtn.text=Register and continue
-order.accountCreation.submitBtn.withEmailPrefix=Register with
-order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This LinkedIn account is already registered. <a href="/login">Sign in</a>.
+order.accountCreation.title=Skapa ditt konto
+order.accountCreation.subtitle=På vilket konto vill du spara din granskning?
+order.accountCreation.submitBtn.text=Registrera och gå vidare
+order.accountCreation.submitBtn.withEmailPrefix=Registrera med
+order.accountCreation.validation.emailAlreadyRegistered=Det finns redan ett konto med den här adressen. <a href="/login">Logga in</a>.
+order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=Du är redan registrerad med LinkedIn. <a href="/login">Logga in</a>.
 
-order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
-order.accountCreation.registerWithLinkedin.btn.text=Register with LinkedIn
-order.accountCreation.registerWithLinkedin.email.label=Preferred email
-order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
+order.accountCreation.registerWithLinkedin.switchLink.text=Vill du hellre registrera med e-post?
+order.accountCreation.registerWithLinkedin.btn.text=Registrera med LinkedIn
+order.accountCreation.registerWithLinkedin.email.label=Använd den här e-postadressen
+order.accountCreation.registerWithLinkedin.validation.incorrectEmail=Den här adressen ser inte korrekt ut
 
-order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your LinkedIn account?
-order.accountCreation.registerWithEmail.firstName.label=First name
+order.accountCreation.registerWithEmail.switchLink.text=Vill du hellre registrera med ditt LinkedIn-konto?
+order.accountCreation.registerWithEmail.firstName.label=Förnamn
 order.accountCreation.registerWithEmail.firstName.placeholder=
-order.accountCreation.registerWithEmail.emailAddress.label=Email address
-order.accountCreation.registerWithEmail.emailAddress.placeholder=your@mail.com
-order.accountCreation.registerWithEmail.password.label=Password
-order.accountCreation.registerWithEmail.password.placeholder=5 chars minimum
-order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
-order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
+order.accountCreation.registerWithEmail.emailAddress.label=E-postadress
+order.accountCreation.registerWithEmail.emailAddress.placeholder=din@e-post.com
+order.accountCreation.registerWithEmail.password.label=Lösenord
+order.accountCreation.registerWithEmail.password.placeholder=Minst 5 tecken
+order.accountCreation.registerWithEmail.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
+order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
 
 
 # Order Step Payment page
 
-order.payment.title=Payment
-order.payment.subtitle=Please enter your card details
-order.payment.submitBtn.text=Complete my order
-order.payment.validation.invalidCardNumber=Invalid card number
-order.payment.validation.invalidExpirationDate=Invalid expiration date
-order.payment.success.text=Your payment was successful. You can access <a href="/">your dashboard</a> to see the status of your assessment.
+order.payment.title=Betalning
+order.payment.subtitle=Ange ditt kortnummmer
+order.payment.submitBtn.text=Genomför beställning
+order.payment.validation.invalidCardNumber=Ogiltigt kortnummer
+order.payment.validation.invalidExpirationDate=Ogiltigt utgångsdatum
+order.payment.success.text=Din betalning lyckades. Du kan nu gå till din <a href="/">översikt</a> för att se status på din granskning.
 
-order.payment.form.cardNumber.label=Card number
+order.payment.form.cardNumber.label=Kortnummer
 order.payment.form.cardNumber.placeholder=
-order.payment.form.expires.month.label=Expires
+order.payment.form.expires.month.label=Utgångsdatum
 order.payment.form.cvc.label=CVC
 order.payment.form.cvc.placeholder=123
-order.payment.form.cardholderName.label=Cardholder name
+order.payment.form.cardholderName.label=Kortinnehavarens namn
 
 
 # Edit Order page
 
-order.edit.saveBtn.text=Save
+order.edit.saveBtn.text=Spara
 
 
 # Emails
 
 email.resetPassword.subject=Nytt lösenord till Cruited
-email.unpaidOrderReminder.subject=Complete your order
+email.unpaidOrderReminder.subject=Färdigställ din beställning
 email.twoDaysAfterAssessmentDelivered.subject=Bara ett steg kvar till en granskning av din jobbansökan
 email.orderComplete.free.subject=Granskning skapad
 email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
