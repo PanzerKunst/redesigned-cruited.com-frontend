@@ -27,14 +27,20 @@ $expires-and-cvc-field-width: 30%;
       max-width: ($small-content-width + $medium-content-width) / 2;
     }
 
-    #cart-section > header {
-      margin-bottom: 0.3em;
+    #cart-section {
+      > header {
+        margin-bottom: 0.3em;
 
-      > h2 {
-        font-size: 1em;
-        padding: 0.3em 0 0 2em;
+        > h2 {
+          font-size: 1em;
+          padding: 0.3em 0 0 2em;
 
-        background-position: -1900px -294px;
+          background-position: -1900px -294px;
+        }
+      }
+
+      > div li > span:first-child {
+        max-width: 77%;
       }
     }
 

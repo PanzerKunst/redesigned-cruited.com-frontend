@@ -253,9 +253,13 @@
     }
 
     @include medium-screen {
+      > div li > span:first-child {
+        max-width: 100%;
+      }
+
       .cart-product-name {
         display: inline-block;
-        width: 12em;
+        width: 17em;
       }
     }
   }
