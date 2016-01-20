@@ -186,7 +186,7 @@ order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
 order.productSelection.cartSection.coupon.notFoundError=Koden kunde inte hittas eller har utgått. Vänligen kontakta kundtjänst på kontakt@cruited.com
 order.productSelection.cartSection.coupon.hasReachedMaxUsesError=Koden är förbrukad. Vänligen kontakta kundtjänst på kontakt@cruited.com
 order.productSelection.cartSection.subTotal=Delsumma
-order.productSelection.cartSection.total=Totalt att betala
+order.productSelection.cartSection.total=Att betala
 
 
 # Order Step Assessment Info page
