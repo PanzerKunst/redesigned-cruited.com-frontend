@@ -27,8 +27,7 @@ form {
 
   .field-error,
   .other-form-error {
-    height: 0;
-    overflow: hidden;
+    display: none;
 
     font-style: italic;
     color: $state-danger-text;
@@ -36,7 +35,7 @@ form {
     margin: 0;
 
     &.shown-by-default {
-      height: auto;
+      display: block;
     }
   }
 

@@ -11,10 +11,6 @@ CR.Services.Validator = P(function(c) {
     c.checkDecimal = "decimal";
     c.checkUrl = "url";
 
-    c.errorMessageHeight = "21px";
-    c.errorMessageHeightMediumScreen = "27px";
-    c.errorMessageHeightLargeScreen = "34px";
-
     c.errorMessageAnimationDuration = 0.5;
 
     c.init = function(fieldIds) {
@@ -64,20 +60,14 @@ CR.Services.Validator = P(function(c) {
 
     c.showErrorMessage = function($errorMsg) {
         if ($errorMsg.html()) {
-            let height = this.errorMessageHeight;
-            if (CR.Services.Browser.isMediumScreen()) {
-                height = this.errorMessageHeightMediumScreen;
-            } else if (CR.Services.Browser.isLargeScreen()) {
-                height = this.errorMessageHeightLargeScreen;
-            }
-
-            TweenLite.to($errorMsg, this.errorMessageAnimationDuration, {height: height});
+            $errorMsg.css("display", "block");
+            TweenLite.to($errorMsg, this.errorMessageAnimationDuration, {opacity: 1});
         }
     };
 
     c.hideErrorMessage = function($errorMsg) {
         if ($errorMsg.html()) {
-            TweenLite.to($errorMsg, this.errorMessageAnimationDuration, {height: 0});
+            $errorMsg.css({"display": "none", "opacity": 0});
         }
     };
 
