@@ -22,10 +22,11 @@ CR.Controllers.OrderStepPayment = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, products, reductions, orderId) {
+    c.init = function(i18nMessages, products, reductions, orderId, loggedInAccount) {
         CR.i18nMessages = i18nMessages;
         CR.products = products;
         CR.reductions = reductions;
+        CR.loggedInAccount = loggedInAccount;
 
         let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);

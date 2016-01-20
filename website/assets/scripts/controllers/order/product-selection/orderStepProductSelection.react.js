@@ -196,11 +196,12 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, products, reductions, editions) {
+    c.init = function(i18nMessages, products, reductions, editions, loggedInAccount) {
         CR.i18nMessages = i18nMessages;
         CR.products = products;
         CR.editions = editions;
         CR.reductions = reductions;
+        CR.loggedInAccount = loggedInAccount;
 
         let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);

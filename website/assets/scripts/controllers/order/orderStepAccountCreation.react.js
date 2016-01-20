@@ -29,7 +29,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                                 {this._getRegisterWithLinkedinFormSection()}
                                 <div className="centered-contents">
                                     <p className="switch-registration-method">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.question"]}
-                                        <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.link.text"]}</a>&#63;
+                                        <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.link.text"]}</a>
+                                    &#63;
                                     </p>
                                 </div>
                             </section>
@@ -37,7 +38,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                                 {this._getRegisterWithEmailFormSection()}
                                 <div className="centered-contents">
                                     <p className="switch-registration-method">{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.question"]}
-                                        <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.link.text"]}</a>&#63;
+                                        <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.link.text"]}</a>
+                                    &#63;
                                     </p>
                                 </div>
                             </section>

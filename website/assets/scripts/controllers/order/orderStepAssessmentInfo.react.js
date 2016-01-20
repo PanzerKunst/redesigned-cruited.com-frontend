@@ -362,12 +362,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage, account) {
+    c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage, loggedInAccount) {
         CR.i18nMessages = i18nMessages;
         this.linkedinAuthCodeRequestUrl = linkedinAuthCodeRequestUrl;
         this.linkedinProfile = linkedinProfile;
         this.linkedinErrorMessage = linkedinErrorMessage;
-        this.account = account;
+        CR.loggedInAccount = loggedInAccount;
 
         let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);

@@ -32,11 +32,19 @@
       border-top-right-radius: $border-radius-large;
       border-bottom-right-radius: $border-radius-large;
     }
+
+    &.disabled {
+      text-decoration: line-through;
+    }
   }
 
   > a {
     background-color: $action-color;
     color: white;
+
+    &.disabled {
+      cursor: auto;
+    }
   }
 
   > span {
