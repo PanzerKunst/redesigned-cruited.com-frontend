@@ -229,12 +229,14 @@ order.accountCreation.submitBtn.withEmailPrefix=Register with
 order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
 order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This LinkedIn account is already registered. <a href="/login">Sign in</a>.
 
-order.accountCreation.registerWithLinkedin.switchLink.text=Prefer to register with email?
+order.accountCreation.registerWithLinkedin.switch.question=Prefer to register
+order.accountCreation.registerWithLinkedin.switch.link.text=with email
 order.accountCreation.registerWithLinkedin.btn.text=Register with LinkedIn
 order.accountCreation.registerWithLinkedin.email.label=Preferred email
 order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
 
-order.accountCreation.registerWithEmail.switchLink.text=Prefer to register using your LinkedIn account?
+order.accountCreation.registerWithEmail.switch.question=Prefer to register
+order.accountCreation.registerWithEmail.switch.link.text=using your LinkedIn account
 order.accountCreation.registerWithEmail.firstName.label=First name
 order.accountCreation.registerWithEmail.firstName.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=Email address

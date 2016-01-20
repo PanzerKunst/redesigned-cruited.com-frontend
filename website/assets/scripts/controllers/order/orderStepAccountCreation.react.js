@@ -26,16 +26,20 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
                         <form onSubmit={this._handleSubmit} className="single-column-panel">
                             <section id="register-with-linkedin-section">
-                                <div className="centered-contents">
-                                    <a className="switch-registration-method-link" onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switchLink.text"]}</a>
-                                </div>
                                 {this._getRegisterWithLinkedinFormSection()}
+                                <div className="centered-contents">
+                                    <p className="switch-registration-method">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.question"]}
+                                        <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.link.text"]}</a>&#63;
+                                    </p>
+                                </div>
                             </section>
                             <section id="register-with-email-section">
-                                <div className="centered-contents">
-                                    <a className="switch-registration-method-link" onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switchLink.text"]}</a>
-                                </div>
                                 {this._getRegisterWithEmailFormSection()}
+                                <div className="centered-contents">
+                                    <p className="switch-registration-method">{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.question"]}
+                                        <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.link.text"]}</a>&#63;
+                                    </p>
+                                </div>
                             </section>
                             <div className="centered-contents">
                                 <p className="other-form-error" id="email-already-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.accountCreation.validation.emailAlreadyRegistered"]}}></p>

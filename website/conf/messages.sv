@@ -229,12 +229,14 @@ order.accountCreation.submitBtn.withEmailPrefix=Registrera med
 order.accountCreation.validation.emailAlreadyRegistered=Det finns redan ett konto med den här adressen. <a href="/login">Logga in</a>.
 order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=Du är redan registrerad med LinkedIn. <a href="/login">Logga in</a>.
 
-order.accountCreation.registerWithLinkedin.switchLink.text=Vill du hellre registrera med e-post?
+order.accountCreation.registerWithLinkedin.switch.question=Vill du hellre registrera
+order.accountCreation.registerWithLinkedin.switch.link.text=med e-post
 order.accountCreation.registerWithLinkedin.btn.text=Registrera med LinkedIn
 order.accountCreation.registerWithLinkedin.email.label=Använd den här e-postadressen
 order.accountCreation.registerWithLinkedin.validation.incorrectEmail=Den här adressen ser inte korrekt ut
 
-order.accountCreation.registerWithEmail.switchLink.text=Vill du hellre registrera med ditt LinkedIn-konto?
+order.accountCreation.registerWithEmail.switch.question=Vill du hellre registrera
+order.accountCreation.registerWithEmail.switch.link.text=med ditt LinkedIn-konto
 order.accountCreation.registerWithEmail.firstName.label=Förnamn
 order.accountCreation.registerWithEmail.firstName.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=E-postadress
