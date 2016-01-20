@@ -6,10 +6,10 @@ product.name.CV_REVIEW=Granskning av CV
 product.name.COVER_LETTER_REVIEW=Granskning av personligt brev
 product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
 
-edition.name.PRO=Erfaren
+edition.name.PRO=Erfaren (3+ år)
 edition.name.YOUNG_PRO=Ny i yrkeslivet
 edition.name.EXEC=Chef
-edition.name.short.PRO=Erfaren
+edition.name.short.PRO=Erfaren (3+ år)
 edition.name.short.YOUNG_PRO=Ny i yrkeslivet
 edition.name.short.EXEC=Chef
 
@@ -152,10 +152,10 @@ report.summary.understandYourScore.weak.text=Mycket låg chans att komma på job
 report.summary.understandYourScore.good.text=Medelstora chanser att komma på jobbintervju
 report.summary.understandYourScore.excellent.text=Mycket stor chans att komma på jobbintervju
 
-report.analysis.title=Expert Advice
-report.analysis.explanation.text=Våra experter har tittat på {docLabel} för att ge dit den bästa och mest relevant feedback. <strong>Följ gärna våra rekommendationer nedan, för att göra en utmärk jobbansökan!</strong>
+report.analysis.title=Det här behöver du förbättra
+report.analysis.explanation.text=Vi har bedömt {docLabel} och identifierat vad du kan förbättra. Vi har sammanställt de åtgärder som är viktigast för att ta vidare {docLabel}. Läs igenom alla råd och börja sen förbättra {docLabel}.
 report.analysis.explanation.docLabel.CV_REVIEW=din CV
-report.analysis.explanation.docLabel.COVER_LETTER_REVIEW=ditt personligt brev
+report.analysis.explanation.docLabel.COVER_LETTER_REVIEW=ditt personliga brev
 report.analysis.explanation.docLabel.LINKEDIN_PROFILE_REVIEW=din LinkedIn-profil
 
 
@@ -177,7 +177,7 @@ order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Grans
 order.productSelection.editionsSection.title=Välj version
 order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
 order.productSelection.editionsSection.editionDescription.text.PRO=Du har några års arbetslivserfarenhet
-order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 2 år, eller är student
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 3 år, eller är student
 order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (eller söker) en roll med personalansvar eller verksamhetsansvar
 
 order.productSelection.cartSection.title=Din beställning
