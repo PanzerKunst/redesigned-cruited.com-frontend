@@ -30,8 +30,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                                 <div className="centered-contents">
                                     <p className="switch-registration-method">{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.question"]}
                                         <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.switch.link.text"]}</a>
-                                    &#63;
-                                    </p>
+                                    &#63;</p>
                                 </div>
                             </section>
                             <section id="register-with-email-section">
@@ -39,8 +38,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                                 <div className="centered-contents">
                                     <p className="switch-registration-method">{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.question"]}
                                         <a onClick={this._toggleSectionsRegisterWith}>{CR.i18nMessages["order.accountCreation.registerWithEmail.switch.link.text"]}</a>
-                                    &#63;
-                                    </p>
+                                    &#63;</p>
                                 </div>
                             </section>
                             <div className="centered-contents">
@@ -59,6 +57,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this._initValidation();
             this._showRelevantElements();
             this._updateSubmitBtnText();
+            this._fillEmailFormFields();
         },
 
         _getRegisterWithLinkedinFormSection: function() {
@@ -213,6 +212,16 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             }
         },
 
+        // Doing so in `_getRegisterWithEmailFormSection()`, via `defaultValue` doesn't work, and I don't understand why
+        _fillEmailFormFields: function() {
+            let linkedinProfile = this.state.linkedinProfile;
+
+            if (linkedinProfile) {
+                this.$firstNameField.val(linkedinProfile.firstName);
+                this.$emailAddressField.val(linkedinProfile.emailAddress);
+            }
+        },
+
         _handleSubmit: function(e) {
             e.preventDefault();
 
@@ -296,8 +305,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         this.reactInstance.replaceState({
             linkedinAuthCodeRequestUrl: this.linkedinAuthCodeRequestUrl,
             linkedinProfile: this.linkedinProfile,
-            linkedinErrorMessage: this.linkedinErrorMessage,
-            isRegisterWithLinkedinDefault: this.linkedinProfile !== undefined
+            linkedinErrorMessage: this.linkedinErrorMessage
         });
     };
 });
