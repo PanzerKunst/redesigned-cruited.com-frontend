@@ -192,7 +192,7 @@ order.productSelection.cartSection.total=Totalt att betala
 # Order Step Assessment Info page
 
 order.assessmentInfo.title=Detaljer för din granskning
-order.assessmentInfo.subtitle=Detaljer för din granskning
+order.assessmentInfo.subtitle=Information vi behöver
 order.assessmentInfo.documentsSection.title=Dina dokument
 order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att granska.
 order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
@@ -208,7 +208,7 @@ order.assessmentInfo.form.linkedinProfile.signInBtn.text=Logga in med LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
-order.assessmentInfo.form.cvFile.label=Your CV
+order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev
 order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
@@ -248,7 +248,7 @@ order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet 
 # Order Step Payment page
 
 order.payment.title=Betalning
-order.payment.subtitle=Ange ditt kortnummmer
+order.payment.subtitle=Ange dina betaluppgifter
 order.payment.submitBtn.text=Genomför beställning
 order.payment.validation.invalidCardNumber=Ogiltigt kortnummer
 order.payment.validation.invalidExpirationDate=Ogiltigt utgångsdatum
