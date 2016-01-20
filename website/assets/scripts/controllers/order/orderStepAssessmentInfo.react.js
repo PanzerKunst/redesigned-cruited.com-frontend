@@ -57,15 +57,15 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 <div>
                                     <div className="form-group">
                                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                                        <input type="text" className="form-control" id="position-sought" defaultValue={positionSought} />
+                                        <input type="text" className="form-control" id="position-sought" maxLength="255" defaultValue={positionSought} />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                                        <input type="text" className="form-control" id="employer-sought" defaultValue={employerSought} />
+                                        <input type="text" className="form-control" id="employer-sought" maxLength="255" defaultValue={employerSought} />
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                                        <input type="text" className="form-control" id="job-ad-url" defaultValue={jobAdUrl} />
+                                        <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl} />
                                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                                     </div>
                                 </div>

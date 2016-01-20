@@ -21,7 +21,7 @@ where id < 0;
 
 
 select * from documents
-order by added_by desc
+order by added_at desc
 limit 30;
 
 delete from documents
