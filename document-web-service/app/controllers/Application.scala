@@ -229,37 +229,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
 
         val orderId = OrderDto.create(orderReceivedFromClient).get
 
-        val newCvFileName = requestBody.file("cvFile") match {
-          case None => None
-          case Some(cvFile) =>
-            val fileName = orderId + Order.fileNamePrefixSeparator + cvFile.filename
-            cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-            Some(fileName)
-        }
-
-        val newCoverLetterFileName = requestBody.file("coverLetterFile") match {
-          case None => None
-          case Some(coverLetterFile) =>
-            val fileName = orderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
-            coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-            Some(fileName)
-        }
-
-        val linkedinProfileFileName = linkedinPublicProfileUrlOpt match {
-          case None => None
-          case Some(linkedinPublicProfileUrl) => Some(orderId + Order.fileNamePrefixSeparator + GlobalConfig.linkedinProfilePdfFileNameWithoutPrefix)
-        }
-
-        val updatedOrder = new Order(orderReceivedFromClient, orderId).copy(
-          cvFileName = newCvFileName,
-          coverLetterFileName = newCoverLetterFileName,
-          linkedinProfileFileName = linkedinProfileFileName
-        )
-
-        OrderDto.update(updatedOrder)
-
         Future {
-          val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder)
+          val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(new Order(orderReceivedFromClient, orderId), linkedinPublicProfileUrlOpt)
           orderService.generateDocThumbnails(updatedOrderWithPdfFileNames)
         } onFailure {
           case e => Logger.error(e.getMessage, e)
