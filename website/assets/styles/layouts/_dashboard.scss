@@ -8,10 +8,19 @@
   .status-and-edition-wrapper {
     display: flex;
     justify-content: space-between;
+
+    @include medium-screen {
+      > div {
+        display: flex;
+      }
+    }
   }
 
   .btn-primary.btn-xs {
-    margin-left: 1em;
+    margin-left: 5.2em;
+    @include medium-screen {
+      margin-left: 1em;
+    }
   }
 
   .view-report-list {
@@ -58,6 +67,16 @@
         }
         &:last-child {
           float: right;
+        }
+      }
+
+      @include medium-screen {
+        > div {
+          @include clearfix;
+
+          > div {
+            float: left;
+          }
         }
       }
     }

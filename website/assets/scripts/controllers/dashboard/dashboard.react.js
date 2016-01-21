@@ -34,7 +34,9 @@ CR.Controllers.Dashboard = P(function(c) {
 
                                 if (order.getStatus() === CR.Models.OrderStaticProps.statusIds.notPaid) {
                                     let url = "/order/complete-payment?orderId=" + order.getId();
-                                    completePaymentLink = <a href={url} className="btn btn-primary btn-xs">{CR.i18nMessages["dashboard.completePaymentLink.text"]}</a>;
+                                    completePaymentLink = (<div>
+                                        <a href={url} className="btn btn-primary btn-xs">{CR.i18nMessages["dashboard.completePaymentLink.text"]}</a>
+                                    </div>);
                                 }
 
                                 let editOrderMarkup = null;
@@ -60,8 +62,10 @@ CR.Controllers.Dashboard = P(function(c) {
                                         </p>
                                         <section className="status-and-edition-wrapper">
                                             <div>
-                                                <span className="assessment-label light-font">{CR.i18nMessages["order.status.label"]}:</span>
-                                                <span className={statusClasses}>{order.getStatusForHtml()}</span>
+                                                <div>
+                                                    <span className="assessment-label light-font">{CR.i18nMessages["order.status.label"]}:</span>
+                                                    <span className={statusClasses}>{order.getStatusForHtml()}</span>
+                                                </div>
                                                 {completePaymentLink}
                                             </div>
                                             <div>

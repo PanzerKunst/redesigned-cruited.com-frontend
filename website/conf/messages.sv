@@ -6,10 +6,10 @@ product.name.CV_REVIEW=Granskning av CV
 product.name.COVER_LETTER_REVIEW=Granskning av personligt brev
 product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
 
-edition.name.PRO=Erfaren (3+ år)
+edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
 edition.name.EXEC=Chef
-edition.name.short.PRO=Erfaren (3+ år)
+edition.name.short.PRO=Erfaren
 edition.name.short.YOUNG_PRO=Ny i yrkeslivet
 edition.name.short.EXEC=Chef
 
