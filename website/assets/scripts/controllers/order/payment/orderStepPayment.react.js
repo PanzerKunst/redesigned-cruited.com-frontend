@@ -28,7 +28,7 @@ CR.Controllers.OrderStepPayment = P(function(c) {
         CR.reductions = reductions;
         CR.loggedInAccount = loggedInAccount;
 
-        let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+        const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
         CR.order.setId(orderId);
         CR.order.saveInLocalStorage();

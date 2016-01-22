@@ -29,7 +29,7 @@ CR.Controllers.Common = P(function(c) {
     };
 
     c._onScroll = function() {
-        let isScrolledDownEnough = this.$window.scrollTop() > 0;
+        const isScrolledDownEnough = this.$window.scrollTop() > 0;
 
         this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
     };
@@ -53,7 +53,7 @@ CR.Controllers.Common = P(function(c) {
     };
 
     c._getMenuDisplayClass = function() {
-        let $html = $("html");
+        const $html = $("html");
 
         if ($html.hasClass("no-flexbox") || _.includes($html.data("useragent"), "OS 7_")) {
             return "block";

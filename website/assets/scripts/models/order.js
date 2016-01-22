@@ -18,7 +18,7 @@ CR.Models.Order = P(function(c) {
         if (_.isEmpty(this._products) && order && !_.isEmpty(order.containedProductCodes)) {
             this._products = order.containedProductCodes.map(function(productCode) {
                 if (!_.isEmpty(CR.products)) {
-                    let product = _.find(CR.products, "code", productCode);
+                    const product = _.find(CR.products, "code", productCode);
                     if (product) {
                         return product;
                     }
@@ -77,7 +77,7 @@ CR.Models.Order = P(function(c) {
     };
 
     c.addProduct = function(product) {
-        let foundProduct = _.find(this._products, function(orderProduct) {
+        const foundProduct = _.find(this._products, function(orderProduct) {
             return orderProduct.id === product.id;
         });
 
@@ -220,7 +220,7 @@ CR.Models.Order = P(function(c) {
             totalPrice -= reduction.price.amount;
         });
 
-        let orderCoupon = this._coupon;
+        const orderCoupon = this._coupon;
         if (orderCoupon) {
             if (orderCoupon.discountPercentage) {
                 totalPrice = Math.round(totalPrice - totalPrice * orderCoupon.discountPercentage / 100);
@@ -269,11 +269,11 @@ CR.Models.Order = P(function(c) {
     c._calculateReductions = function() {
         this._resetReductions();
 
-        let reductionForTwoProductsSameOrder = _.find(CR.reductions, function(reduction) {
+        const reductionForTwoProductsSameOrder = _.find(CR.reductions, function(reduction) {
             return reduction.code === CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER;
         });
 
-        let rductionForThreeProductsSameOrdr = _.find(CR.reductions, function(reduction) {
+        const rductionForThreeProductsSameOrdr = _.find(CR.reductions, function(reduction) {
             return reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER;
         });
 

@@ -14,7 +14,7 @@ CR.Controllers.Dashboard = P(function(c) {
                 return null;
             }
 
-            let newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
+            const newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
 
             return (
                 <div id="content">
@@ -33,7 +33,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                 let completePaymentLink = null;
 
                                 if (order.getStatus() === CR.Models.OrderStaticProps.statusIds.notPaid) {
-                                    let url = "/order/complete-payment?orderId=" + order.getId();
+                                    const url = "/order/complete-payment?orderId=" + order.getId();
                                     completePaymentLink = (<div>
                                         <a href={url} className="btn btn-primary btn-xs">{CR.i18nMessages["dashboard.completePaymentLink.text"]}</a>
                                     </div>);
@@ -41,13 +41,13 @@ CR.Controllers.Dashboard = P(function(c) {
 
                                 let editOrderMarkup = null;
                                 if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
-                                    let url = "/order/edit?id=" + order.getId();
+                                    const url = "/order/edit?id=" + order.getId();
                                     editOrderMarkup = <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
                                 }
 
-                                let reactItemId = "order-" + index;
-                                let editionClasses = "edition " + order.getEdition().code;
-                                let statusClasses = "status " + order.getStatusForHtml();
+                                const reactItemId = "order-" + index;
+                                const editionClasses = "edition " + order.getEdition().code;
+                                const statusClasses = "status " + order.getStatusForHtml();
 
                                 let editionKey = "edition.name." + order.getEdition().code;
                                 if (CR.Services.Browser.isSmallScreen()) {
@@ -75,7 +75,7 @@ CR.Controllers.Dashboard = P(function(c) {
 
                                         <ul className="styleless view-report-list">
                                             {order.getProducts().map(function(product, i) {
-                                                let reactItmId = "product-" + i;
+                                                const reactItmId = "product-" + i;
 
                                                 return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} order={order} productCode={product.code} />;
                                             })}
@@ -91,13 +91,13 @@ CR.Controllers.Dashboard = P(function(c) {
         },
 
         _getOrderTitle: function(order) {
-            let inner = order.getTitleForHtml();
+            const inner = order.getTitleForHtml();
 
             if (!order.jobAdUrl) {
                 return inner;
             }
 
-            let outer = "<a href=\"" + order.jobAdUrl + "\" target=\"_blank\">{inner}</a>";
+            const outer = "<a href=\"" + order.jobAdUrl + "\" target=\"_blank\">{inner}</a>";
             return CR.Services.String.template(outer, "inner", inner);
         }
     });

@@ -91,10 +91,10 @@ CR.Controllers.MyAccount = P(function(c) {
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
-                let type = "PUT";
-                let url = "/api/accounts";
+                const type = "PUT";
+                const url = "/api/accounts";
 
-                let httpRequest = new XMLHttpRequest();
+                const httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === CR.httpStatusCodes.ok) {

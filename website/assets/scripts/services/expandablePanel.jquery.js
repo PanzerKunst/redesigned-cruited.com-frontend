@@ -3,9 +3,9 @@
 (function($) {
     $.fn.makeExpandable = function() {
         $(this).each(function() {
-            let $el = $(this);
-            let $allExpandablePanels = $el.parent().children(".expandable-panel");
-            let $allExpandablePanelBodies = $allExpandablePanels.children("div");
+            const $el = $(this);
+            const $allExpandablePanels = $el.parent().children(".expandable-panel");
+            const $allExpandablePanelBodies = $allExpandablePanels.children("div");
 
             function _expandBody($body) {
                 $body.css({"display": "block", "opacity": 0});
@@ -13,8 +13,8 @@
             }
 
             function _toggleBody(e) {
-                let $panel = $(e.currentTarget).parent();
-                let isOpen = $panel.hasClass("expanded");
+                const $panel = $(e.currentTarget).parent();
+                const isOpen = $panel.hasClass("expanded");
 
                 // We close all open
                 $allExpandablePanels.removeClass("expanded");

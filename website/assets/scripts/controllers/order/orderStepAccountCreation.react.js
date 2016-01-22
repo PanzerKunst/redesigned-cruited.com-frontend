@@ -82,7 +82,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 );
             }
 
-            let signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
+            const signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
 
             return (
                 <div className="centered-contents">
@@ -163,7 +163,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _toggleSectionsRegisterWith: function() {
             this._hideOtherFormErrors();
 
-            let animationDuration = 0.2;
+            const animationDuration = 0.2;
 
             if (this._isRegisterWithLinkedinSectionVisible()) {
                 this.$registerWithLinkedinSection.fadeOut({
@@ -214,7 +214,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
         // Doing so in `_getRegisterWithEmailFormSection()`, via `defaultValue` doesn't work, and I don't understand why
         _fillEmailFormFields: function() {
-            let linkedinProfile = this.state.linkedinProfile;
+            const linkedinProfile = this.state.linkedinProfile;
 
             if (linkedinProfile) {
                 this.$firstNameField.val(linkedinProfile.firstName);
@@ -241,10 +241,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         _submitAccountCreation: function() {
             this.$submitBtn.enableLoading();
 
-            let type = "POST";
-            let url = "/api/accounts";
+            const type = "POST";
+            const url = "/api/accounts";
 
-            let httpRequest = new XMLHttpRequest();
+            const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === CR.httpStatusCodes.created) {

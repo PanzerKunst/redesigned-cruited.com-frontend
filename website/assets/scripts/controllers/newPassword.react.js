@@ -71,10 +71,10 @@ CR.Controllers.NewPassword = P(function(c) {
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
-                let type = "PUT";
-                let url = "/api/accounts/password";
+                const type = "PUT";
+                const url = "/api/accounts/password";
 
-                let httpRequest = new XMLHttpRequest();
+                const httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         this.$submitBtn.disableLoading();

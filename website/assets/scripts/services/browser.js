@@ -8,15 +8,15 @@ CR.Services.Browser = {
 
         CR.Services.Browser.allCssRules = {};
 
-        let styleSheets = document.styleSheets;
+        const styleSheets = document.styleSheets;
 
         for (let i = 0; i < styleSheets.length; i++) {
-            let styleSheet = styleSheets[i];
-            let styleSheetRules = styleSheet.cssRules || styleSheet.rules;  // .rules for IE, .cssRules for other browsers
+            const styleSheet = styleSheets[i];
+            const styleSheetRules = styleSheet.cssRules || styleSheet.rules;  // .rules for IE, .cssRules for other browsers
 
             if (styleSheetRules) {
                 for (let j = 0; j < styleSheetRules.length; j++) {
-                    let rule = styleSheetRules[j];
+                    const rule = styleSheetRules[j];
                     CR.Services.Browser.allCssRules[rule.selectorText] = rule.style;
                 }
             }
@@ -34,7 +34,7 @@ CR.Services.Browser = {
     },
 
     isMediumScreen: function() {
-        let content = window.getComputedStyle(
+        const content = window.getComputedStyle(
             document.querySelector("body"), ":after"
         ).getPropertyValue("content");
 
@@ -43,7 +43,7 @@ CR.Services.Browser = {
     },
 
     isLargeScreen: function() {
-        let content = window.getComputedStyle(
+        const content = window.getComputedStyle(
             document.querySelector("body"), ":after"
         ).getPropertyValue("content");
 

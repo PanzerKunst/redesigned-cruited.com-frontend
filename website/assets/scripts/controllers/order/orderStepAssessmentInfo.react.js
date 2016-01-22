@@ -20,10 +20,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            let positionSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
-            let employerSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
-            let jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
-            let customerComment = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.customerComment) || CR.order.getCustomerComment();
+            const positionSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
+            const employerSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
+            const jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
+            const customerComment = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.customerComment) || CR.order.getCustomerComment();
 
             return (
                 <div id="content">
@@ -91,7 +91,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getSignInWithLinkedinFormGroup: function() {
-            let orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
+            const orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
             });
 
@@ -120,7 +120,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     </div>
                 );
             } else {
-                let signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
+                const signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
 
                 formGroupContents = (
                     <div>
@@ -143,7 +143,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCvFormGroup: function() {
-            let orderedCv = _.find(CR.order.getProducts(), function(product) {
+            const orderedCv = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.CV_REVIEW;
             });
 
@@ -168,7 +168,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCoverLetterFormGroup: function() {
-            let orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
+            const orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
             });
 
@@ -265,7 +265,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 if (this.validator.isValid()) {
                     this.$submitBtn.enableLoading();
 
-                    let formData = new FormData();
+                    const formData = new FormData();
                     formData.append("editionId", CR.order.getEdition().id);
                     formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));
                     if (CR.order.getCoupon()) {
@@ -278,10 +278,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
                     }
 
-                    let positionSought = this.$positionSoughtField.val();
-                    let employerSought = this.$employerSoughtField.val();
-                    let jobAdUrl = this.$jobAdUrlField.val();
-                    let customerComment = this.$customerCommentField.val();
+                    const positionSought = this.$positionSoughtField.val();
+                    const employerSought = this.$employerSoughtField.val();
+                    const jobAdUrl = this.$jobAdUrlField.val();
+                    const customerComment = this.$customerCommentField.val();
 
                     if (positionSought) {
                         formData.append("positionSought", positionSought);
@@ -296,14 +296,14 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         formData.append("customerComment", customerComment);
                     }
 
-                    let type = "POST";
-                    let url = "/api/orders";
+                    const type = "POST";
+                    const url = "/api/orders";
 
-                    let httpRequest = new XMLHttpRequest();
+                    const httpRequest = new XMLHttpRequest();
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             if (httpRequest.status === CR.httpStatusCodes.created) {
-                                let order = JSON.parse(httpRequest.responseText);
+                                const order = JSON.parse(httpRequest.responseText);
                                 CR.order.setId(order.id);
                                 CR.order.setIdInBase64(order.idInBase64);
                                 CR.order.setCvFileName(order.cvFileName);
@@ -346,7 +346,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _scrollToElement: function($el) {
-            let offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerNav.height();
+            const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerNav.height();
 
             TweenLite.to(window, 1, {
                 scrollTo: offset,
@@ -369,7 +369,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         this.linkedinErrorMessage = linkedinErrorMessage;
         CR.loggedInAccount = loggedInAccount;
 
-        let orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+        const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this.reactInstance = ReactDOM.render(

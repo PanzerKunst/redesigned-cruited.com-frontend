@@ -2,8 +2,8 @@
 
 CR.Controllers.OrderSummary = React.createClass({
     render: function() {
-        let order = this.props.order;
-        let currencyCode = order.getProducts()[0].price.currencyCode;
+        const order = this.props.order;
+        const currencyCode = order.getProducts()[0].price.currencyCode;
 
         return (
             <section id="cart-section">
@@ -18,9 +18,9 @@ CR.Controllers.OrderSummary = React.createClass({
                     </div>
                     <ul className="styleless">
                         {order.getProducts().map(function(product, index) {
-                            let reactItemId = "cart-product-" + index;
-                            let editionCode = order.getEdition().code;
-                            let editionSpanClasses = "edition " + editionCode;
+                            const reactItemId = "cart-product-" + index;
+                            const editionCode = order.getEdition().code;
+                            const editionSpanClasses = "edition " + editionCode;
 
                             return (
                                 <li key={reactItemId}>
@@ -40,7 +40,7 @@ CR.Controllers.OrderSummary = React.createClass({
                                 <td>{order.getBasePrice()} {currencyCode}</td>
                             </tr>
                             {order.getReductions().map(function(reduction, index) {
-                                let reactItemId = "cart-reduction-" + index;
+                                const reactItemId = "cart-reduction-" + index;
 
                                 return (
                                     <tr key={reactItemId} className="reduction-row">
@@ -65,14 +65,14 @@ CR.Controllers.OrderSummary = React.createClass({
     },
 
     _getCouponRow: function() {
-        let orderCoupon = this.props.order.getCoupon();
+        const orderCoupon = this.props.order.getCoupon();
 
         if (!orderCoupon) {
             return null;
         }
 
-        let amount = orderCoupon.discountPercentage || orderCoupon.discountPrice.amount;
-        let unit = orderCoupon.discountPercentage ? "%" : " " + orderCoupon.discountPrice.currencyCode;
+        const amount = orderCoupon.discountPercentage || orderCoupon.discountPrice.amount;
+        const unit = orderCoupon.discountPercentage ? "%" : " " + orderCoupon.discountPrice.currencyCode;
 
         return (
             <tr className="coupon-row">

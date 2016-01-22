@@ -99,10 +99,10 @@ CR.Controllers.PaymentForm = React.createClass({
     },
 
     _populateYearDropdown: function() {
-        let currentYear = parseInt(moment().format("YYYY"), 10);
+        const currentYear = parseInt(moment().format("YYYY"), 10);
 
         for (let i = 0; i < 4; i++) {
-            let year = currentYear + i;
+            const year = currentYear + i;
             this.$expiresYearField.append("<option value=\"" + year + "\">" + year + "</option>");
         }
     },
@@ -113,9 +113,9 @@ CR.Controllers.PaymentForm = React.createClass({
         if (this.validator.isValid()) {
             this.$submitBtn.enableLoading();
 
-            let cardNumber = this.$cardNumberField.val();
-            let cardExpiryMonth = this.$expiresMonthField.val();
-            let cardExpiryYear = this.$expiresYearField.val();
+            const cardNumber = this.$cardNumberField.val();
+            const cardExpiryMonth = this.$expiresMonthField.val();
+            const cardExpiryYear = this.$expiresYearField.val();
 
             if (!paymill.validateCardNumber(cardNumber)) {
                 this.validator.showErrorMessage(this.$invalidCardNumberError);
@@ -144,10 +144,10 @@ CR.Controllers.PaymentForm = React.createClass({
         if (error) {
             console.log("error.apierror: " + error.apierror);
         } else {
-            let type = "PUT";
-            let url = "/api/orders/pay";
+            const type = "PUT";
+            const url = "/api/orders/pay";
 
-            let httpRequest = new XMLHttpRequest();
+            const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     this.$submitBtn.disableLoading();

@@ -3,8 +3,8 @@
 (function($) {
     $.fn.fadeIn = function(params) {
         if (!this.is(":visible")) {
-            let animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
-            let alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
+            const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
+            const alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
 
             TweenLite.set(this, {display: "block", alpha: 0});
             TweenLite.to(this, animationDuration, {
@@ -20,7 +20,7 @@
 
     $.fn.fadeOut = function(params) {
         if (this.is(":visible")) {
-            let animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
+            const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
 
             TweenLite.to(this, animationDuration, {
                 alpha: 0,
@@ -36,8 +36,8 @@
 
     $.fn.enableLoading = function(text) {
         if (this.prop("tagName") === "BUTTON") {
-            let defaultText = this.html();
-            let loadingText = text || defaultText;
+            const defaultText = this.html();
+            const loadingText = text || defaultText;
 
             this.data("defaultText", defaultText);
             this.prop("disabled", true);

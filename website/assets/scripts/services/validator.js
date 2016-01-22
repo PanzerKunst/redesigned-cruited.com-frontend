@@ -17,7 +17,7 @@ CR.Services.Validator = P(function(c) {
         this.fieldIds = fieldIds || [];
 
         for (let i = 0; i < this.fieldIds.length; i++) {
-            let $field = $("#" + this.fieldIds[i]);
+            const $field = $("#" + this.fieldIds[i]);
 
             this._addBlurEvent($field);
             this._addValueChangedEvent($field);
@@ -274,26 +274,26 @@ CR.Services.Validator = P(function(c) {
             return true;
         }
 
-        let reg = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
+        const reg = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
         return reg.test(email);
     };
 
     c._isUsername = function(username) {
-        let reg = /^([a-z0-9_\-])+$/i;
+        const reg = /^([a-z0-9_\-])+$/i;
         return reg.test(username);
     };
 
     c._isInFuture = function(dateStr) {
-        let yearMonthDay = dateStr.split("-");
-        let year = parseInt(yearMonthDay[0], 10);
-        let month = parseInt(yearMonthDay[1], 10);
-        let day = parseInt(yearMonthDay[2], 10);
+        const yearMonthDay = dateStr.split("-");
+        const year = parseInt(yearMonthDay[0], 10);
+        const month = parseInt(yearMonthDay[1], 10);
+        const day = parseInt(yearMonthDay[2], 10);
 
-        let date = new Date(year, month - 1, day);
-        let now = new Date();
+        const date = new Date(year, month - 1, day);
+        const now = new Date();
 
-        let oneDayInMillis = 1000 * 60 * 60 * 24;
-        let nbDaysDifference = Math.ceil((date - now) / oneDayInMillis);
+        const oneDayInMillis = 1000 * 60 * 60 * 24;
+        const nbDaysDifference = Math.ceil((date - now) / oneDayInMillis);
 
         return nbDaysDifference > 0;
     };
@@ -315,12 +315,12 @@ CR.Services.Validator = P(function(c) {
     };
 
     c._isInteger = function(value) {
-        let reg = /^\d*$/;
+        const reg = /^\d*$/;
         return reg.test(value);
     };
 
     c._isDecimal = function(value) {
-        let reg = /^\d*\.?\d*$/;
+        const reg = /^\d*\.?\d*$/;
         return reg.test(value);
     };
 
@@ -329,7 +329,7 @@ CR.Services.Validator = P(function(c) {
             return true;
         }
 
-        let reg = /^(https?|ftp):\/\/(-\.)?([^\s/?\.#-]+\.?)+(\/[^\s]*)?$/i;
+        const reg = /^(https?|ftp):\/\/(-\.)?([^\s/?\.#-]+\.?)+(\/[^\s]*)?$/i;
         return reg.test(url);
     };
 

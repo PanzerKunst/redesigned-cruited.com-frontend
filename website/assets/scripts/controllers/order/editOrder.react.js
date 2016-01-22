@@ -184,7 +184,7 @@ CR.Controllers.EditOrder = P(function(c) {
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
-                let formData = new FormData();
+                const formData = new FormData();
                 formData.append("id", this.state.order.getId());
 
                 if (this.cvFile) {
@@ -194,10 +194,10 @@ CR.Controllers.EditOrder = P(function(c) {
                     formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
                 }
 
-                let positionSought = this.$positionSoughtField.val();
-                let employerSought = this.$employerSoughtField.val();
-                let jobAdUrl = this.$jobAdUrlField.val();
-                let customerComment = this.$customerCommentField.val();
+                const positionSought = this.$positionSoughtField.val();
+                const employerSought = this.$employerSoughtField.val();
+                const jobAdUrl = this.$jobAdUrlField.val();
+                const customerComment = this.$customerCommentField.val();
 
                 if (positionSought) {
                     formData.append("positionSought", positionSought);
@@ -212,10 +212,10 @@ CR.Controllers.EditOrder = P(function(c) {
                     formData.append("customerComment", customerComment);
                 }
 
-                let type = "PUT";
-                let url = "/api/orders";
+                const type = "PUT";
+                const url = "/api/orders";
 
-                let httpRequest = new XMLHttpRequest();
+                const httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === CR.httpStatusCodes.ok) {

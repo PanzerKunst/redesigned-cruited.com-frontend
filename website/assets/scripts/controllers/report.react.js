@@ -25,20 +25,20 @@ CR.Controllers.Report = P(function(c) {
                 return null;
             }
 
-            let order = this.state.order;
-            let editionCode = order.getEdition().code;
-            let editionClasses = "edition " + editionCode;
+            const order = this.state.order;
+            const editionCode = order.getEdition().code;
+            const editionClasses = "edition " + editionCode;
 
-            let newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
+            const newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
 
             let subTitle = null;
             if (order.getSoughtPosition() || order.getSoughtEmployer()) {
                 subTitle = <span>{order.getTitleForHtml()}</span>;
             }
 
-            let cvTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.CV_REVIEW"] : CR.i18nMessages["product.name.CV_REVIEW"];
-            let coverLetterTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.COVER_LETTER_REVIEW"] : CR.i18nMessages["product.name.COVER_LETTER_REVIEW"];
-            let linkedinProfileTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW"] : CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"];
+            const cvTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.CV_REVIEW"] : CR.i18nMessages["product.name.CV_REVIEW"];
+            const coverLetterTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.COVER_LETTER_REVIEW"] : CR.i18nMessages["product.name.COVER_LETTER_REVIEW"];
+            const linkedinProfileTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW"] : CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"];
 
             return (
                 <div id="content">
@@ -99,7 +99,7 @@ CR.Controllers.Report = P(function(c) {
             this.$tabList = $("#content").find("ul[role=tablist]");
             this.$tabs = this.$tabList.find("a");
 
-            let $docPanels = $(".tab-pane");
+            const $docPanels = $(".tab-pane");
 
             this.$cvPanel = $docPanels.filter("#" + CR.Models.Product.codes.CV_REVIEW + "-report-panel");
             this.$cvScoreCursor = this.$cvPanel.find("#score-bar").children("span");
@@ -114,17 +114,17 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _placeScoreCursors: function() {
-            let cvReportScores = this.state.cvReportScores;
+            const cvReportScores = this.state.cvReportScores;
             if (cvReportScores) {
                 this.$cvScoreCursor.css("left", cvReportScores.globalScore + "%");
             }
 
-            let coverLetterReportScores = this.state.coverLetterReportScores;
+            const coverLetterReportScores = this.state.coverLetterReportScores;
             if (coverLetterReportScores) {
                 this.$coverLetterScoreCursor.css("left", coverLetterReportScores.globalScore + "%");
             }
 
-            let linkedinProfileReportScores = this.state.linkedinProfileReportScores;
+            const linkedinProfileReportScores = this.state.linkedinProfileReportScores;
             if (linkedinProfileReportScores) {
                 this.$linkedinProfileScoreCursor.css("left", linkedinProfileReportScores.globalScore + "%");
             }
@@ -136,8 +136,8 @@ CR.Controllers.Report = P(function(c) {
 
         _getDocumentReportSection: function(productCode) {
             if (_.find(this.state.order.getProducts(), "code", productCode)) {
-                let documentUrl = this._getDocumentUrl(this.state.order.getId(), this.state.order.getIdInBase64(), productCode);
-                let thumbnailUrl = this._getThumbnailUrl(this.state.order.getId(), productCode);
+                const documentUrl = this._getDocumentUrl(this.state.order.getId(), this.state.order.getIdInBase64(), productCode);
+                const thumbnailUrl = this._getThumbnailUrl(this.state.order.getId(), productCode);
 
                 let docReport = this.state.cvReport;
                 let docReportScores = this.state.cvReportScores;
@@ -149,9 +149,9 @@ CR.Controllers.Report = P(function(c) {
                     docReportScores = this.state.linkedinProfileReportScores;
                 }
 
-                let reportAnalysisExplanationText = CR.i18nMessages["report.analysis.explanation.text"];
-                let docLabel = CR.i18nMessages["report.analysis.explanation.docLabel." + productCode];
-                let templatedExplanationText = CR.Services.String.template(reportAnalysisExplanationText, "docLabel", docLabel);
+                const reportAnalysisExplanationText = CR.i18nMessages["report.analysis.explanation.text"];
+                const docLabel = CR.i18nMessages["report.analysis.explanation.docLabel." + productCode];
+                const templatedExplanationText = CR.Services.String.template(reportAnalysisExplanationText, "docLabel", docLabel);
 
                 return (
                     <div>
@@ -233,9 +233,9 @@ CR.Controllers.Report = P(function(c) {
                             <p className="light-font" dangerouslySetInnerHTML={{__html: templatedExplanationText}} />
                             <ul className="styleless">
                             {this._getCategoriesAndTheirComments(docReport).map(function(categoryAndItsComments) {
-                                let categoryId = categoryAndItsComments.categoryId;
-                                let reactItemId = "category-" + categoryId;
-                                let categoryClasses = "category id-" + categoryId;
+                                const categoryId = categoryAndItsComments.categoryId;
+                                const reactItemId = "category-" + categoryId;
+                                const categoryClasses = "category id-" + categoryId;
 
                                 let topCommentParagraph = null;
                                 if (categoryAndItsComments.topComment) {
@@ -247,7 +247,7 @@ CR.Controllers.Report = P(function(c) {
                                     redCommentList = (
                                         <ul className="red-comments light-font">
                                             {categoryAndItsComments.redComments.map(function(comment) {
-                                                let reactSubItemId = "comment-" + comment.id;
+                                                const reactSubItemId = "comment-" + comment.id;
 
                                                 return <li key={reactSubItemId} dangerouslySetInnerHTML={{__html: this._getCommentWithProcessedLinks(comment.text)}} />;
                                             }.bind(this))}
@@ -312,7 +312,7 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _getCategoriesAndTheirComments: function(docReport) {
-            let categoriesAndTheirComments = [];
+            const categoriesAndTheirComments = [];
 
             // For each red comment
             docReport.redComments.forEach(function(comment) {
@@ -360,16 +360,16 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _getSummary: function(productCode, globalScore) {
-            let reportSummaryKey = this._getTheRightReportSummaryKey(productCode, globalScore);
+            const reportSummaryKey = this._getTheRightReportSummaryKey(productCode, globalScore);
             return this._getTemplatedSummary(productCode, globalScore, reportSummaryKey);
         },
 
         _getTheRightReportSummaryKey: function(productCode, globalScore) {
             return _.find(Object.keys(CR.i18nMessages).sort().reverse(), function(key) {
-                let keyPrefix = "reportSummary" + CR.propertyFile.key.word.separator + productCode + CR.propertyFile.key.word.separator;
+                const keyPrefix = "reportSummary" + CR.propertyFile.key.word.separator + productCode + CR.propertyFile.key.word.separator;
                 if (_.startsWith(key, keyPrefix)) {
-                    let startIndex = keyPrefix.length;
-                    let minScore = key.substring(startIndex);
+                    const startIndex = keyPrefix.length;
+                    const minScore = key.substring(startIndex);
 
                     return globalScore >= minScore;
                 }
@@ -379,8 +379,8 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _getTemplatedSummary: function(productCode, globalScore, reportSummaryKey) {
-            let summaryWithOneVariableReplaced = CR.Services.String.template(CR.i18nMessages[reportSummaryKey], "score", globalScore);
-            let summaryWithTwoVariablesReplaced = CR.Services.String.template(summaryWithOneVariableReplaced, "nbLastAssessmentsToTakeIntoAccount", this.state.nbLastAssessmentsToTakeIntoAccount);
+            const summaryWithOneVariableReplaced = CR.Services.String.template(CR.i18nMessages[reportSummaryKey], "score", globalScore);
+            const summaryWithTwoVariablesReplaced = CR.Services.String.template(summaryWithOneVariableReplaced, "nbLastAssessmentsToTakeIntoAccount", this.state.nbLastAssessmentsToTakeIntoAccount);
 
             let thirdReplacementValue = this.state.cvAverageScore;
             if (productCode === CR.Models.Product.codes.COVER_LETTER_REVIEW) {

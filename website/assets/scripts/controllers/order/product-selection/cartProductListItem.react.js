@@ -2,9 +2,9 @@
 
 CR.Controllers.CartProductListItem = React.createClass({
     render: function() {
-        let product = this.props.product;
-        let editionCode = CR.order.getEdition().code;
-        let editionSpanClasses = "edition " + editionCode;
+        const product = this.props.product;
+        const editionCode = CR.order.getEdition().code;
+        const editionSpanClasses = "edition " + editionCode;
 
         return (
             <li>

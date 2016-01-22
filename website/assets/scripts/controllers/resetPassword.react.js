@@ -63,10 +63,10 @@ CR.Controllers.ResetPassword = P(function(c) {
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
-                let type = "POST";
-                let url = "/api/auth/reset-password";
+                const type = "POST";
+                const url = "/api/auth/reset-password";
 
-                let httpRequest = new XMLHttpRequest();
+                const httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         this.$submitBtn.disableLoading();

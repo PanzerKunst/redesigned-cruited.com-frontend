@@ -62,10 +62,10 @@ CR.Controllers.CouponForm = React.createClass({
         if (this.validator.isValid()) {
             this.$addCouponBtn.enableLoading(CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.loadingText"]);
 
-            let type = "GET";
-            let url = "/api/coupons/" + this.$couponCodeField.val();
+            const type = "GET";
+            const url = "/api/coupons/" + this.$couponCodeField.val();
 
-            let httpRequest = new XMLHttpRequest();
+            const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     this.$addCouponBtn.disableLoading();
@@ -78,7 +78,7 @@ CR.Controllers.CouponForm = React.createClass({
                             this.validator.showErrorMessage(this.$couponHasReachedMaxUsesError);
                             break;
                         case CR.httpStatusCodes.ok:
-                            let coupon = JSON.parse(httpRequest.responseText);
+                            const coupon = JSON.parse(httpRequest.responseText);
                             if (coupon) {
                                 this.$form[0].reset();
 

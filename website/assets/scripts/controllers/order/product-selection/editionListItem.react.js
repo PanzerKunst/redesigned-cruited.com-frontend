@@ -2,11 +2,11 @@
 
 CR.Controllers.EditionListItem = React.createClass({
     render: function() {
-        let editionId = this.props.edition.id;
-        let editionCode = this.props.edition.code;
-        let radioId = "edition-" + editionId;
+        const editionId = this.props.edition.id;
+        const editionCode = this.props.edition.code;
+        const radioId = "edition-" + editionId;
 
-        let isThisEditionSelected = this._isThisEditionSelected();
+        const isThisEditionSelected = this._isThisEditionSelected();
 
         let liClasses = editionCode;
         if (isThisEditionSelected) {

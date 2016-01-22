@@ -2,20 +2,20 @@
 
 CR.Controllers.ProductListItem = React.createClass({
     render: function() {
-        let product = this.props.product;
-        let checkboxId = "product-" + product.id;
+        const product = this.props.product;
+        const checkboxId = "product-" + product.id;
 
-        let fullPriceParagraph = product.reducedPrice ? <p className="full-price">{product.price.amount} {product.price.currencyCode}</p> : null;
+        const fullPriceParagraph = product.reducedPrice ? <p className="full-price">{product.price.amount} {product.price.currencyCode}</p> : null;
 
-        let isInOrder = this._isInOrder();
-        let liClasses = isInOrder ? "selected" : null;
+        const isInOrder = this._isInOrder();
+        const liClasses = isInOrder ? "selected" : null;
 
         let pricesClasses = "prices";
         if (product.reducedPrice) {
             pricesClasses += " with-reduction";
         }
 
-        let currentPrice = product.reducedPrice || product.price;
+        const currentPrice = product.reducedPrice || product.price;
 
         return (
             <li ref="li" className={liClasses} onClick={this._handleListItemClick}>
@@ -45,7 +45,7 @@ CR.Controllers.ProductListItem = React.createClass({
     },
 
     _isInOrder: function() {
-        let foundProduct = _.find(CR.order.getProducts(), function(product) {
+        const foundProduct = _.find(CR.order.getProducts(), function(product) {
             return product.id === this.props.product.id;
         }.bind(this));
 
