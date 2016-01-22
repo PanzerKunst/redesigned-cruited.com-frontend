@@ -37,7 +37,7 @@ Copy the following source files to `~/redesigned-cruited.com-frontend/document-w
 
 * app
 * conf
-* project (cleaned from the `target` directories)
+* project (cleaned of the `target` directories)
 * public
 * activator
 * activator-launch-X.Y.Z.jar
@@ -48,6 +48,13 @@ Make the `activator` script executable:
     $ cd ~/redesigned-cruited.com-frontend/document-web-service
     $ dos2unix activator
     $ chmod u+x activator
+
+
+# Configuration changes
+
+`$ vi ~/redesigned-cruited.com-frontend/document-web-service/conf/logback.xml`
+
+Edit the path in the `application.home` declaration, and uncomment that line.
 
 
 # JVM params

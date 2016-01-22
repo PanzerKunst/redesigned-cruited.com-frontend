@@ -9,9 +9,9 @@ Add line with the IP address and hostname: `188.40.99.15 app.cruited.com`
 
 # Web server
 
-`$ sudo cp /etc/nginx/sites-available/cruited-api /etc/nginx/sites-available/cruited-frontend`
+`$ sudo cp /etc/nginx/sites-available/cruited-api /etc/nginx/sites-available/cruited-app`
 
-`$ sudo vi /etc/nginx/sites-available/cruited-frontend`
+`$ sudo vi /etc/nginx/sites-available/cruited-app`
 
     # Cruited frontend
     server {
@@ -29,7 +29,7 @@ Add line with the IP address and hostname: `188.40.99.15 app.cruited.com`
             }
     }
 
-`$ sudo ln -s /etc/nginx/sites-available/cruited-frontend /etc/nginx/sites-enabled/cruited-frontend`
+`$ sudo ln -s /etc/nginx/sites-available/cruited-app /etc/nginx/sites-enabled/cruited-app`
 
 `$ sudo service nginx restart`
 
@@ -37,7 +37,7 @@ Copy the following source files to `~/redesigned-cruited.com-frontend/website`:
 
 * app
 * conf
-* project (cleaned from the `target` directories)
+* project (cleaned of the `target` directories)
 * public
 * activator
 * activator-launch-X.Y.Z.jar
@@ -48,6 +48,13 @@ Make the `activator` script executable:
     $ cd ~/redesigned-cruited.com-frontend/website
     $ dos2unix activator
     $ chmod u+x activator
+
+
+# Configuration changes
+
+`$ vi ~/redesigned-cruited.com-frontend/website/conf/logback.xml`
+
+Edit the path in the `application.home` declaration, and uncomment that line.
 
 
 # JVM params

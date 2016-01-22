@@ -1,10 +1,10 @@
 # Basic Nginx configuration
 
-`$ sudo cp /etc/nginx/sites-available/camp5 /etc/nginx/sites-available/cruited-frontend`
-`$ sudo ln -s /etc/nginx/sites-available/cruited-frontend /etc/nginx/sites-enabled/cruited-frontend`
+`$ sudo cp /etc/nginx/sites-available/camp5 /etc/nginx/sites-available/cruited-wordpress`
+`$ sudo ln -s /etc/nginx/sites-available/cruited-wordpress /etc/nginx/sites-enabled/cruited-wordpress`
 
 Modify the Nginx config file to enable PHP:
-`$ sudo vi /etc/nginx/sites-available/cruited-frontend`
+`$ sudo vi /etc/nginx/sites-available/cruited-wordpress`
 
 Modify those lines:
 

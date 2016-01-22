@@ -1,5 +1,8 @@
 <configuration>
-    
+  <!-- Uncomment on UNIX environments
+  <variable name="application.home" value="/home/play/redesigned-cruited.com-frontend/website" />
+  -->
+
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -26,5 +29,4 @@
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE" />
   </root>
-
 </configuration>
