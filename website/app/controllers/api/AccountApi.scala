@@ -81,7 +81,7 @@ class AccountApi extends Controller {
 
   def update() = Action(parse.json) { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
+      case None => Unauthorized(views.html.unauthorised())
       case Some(accountId) => AccountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>

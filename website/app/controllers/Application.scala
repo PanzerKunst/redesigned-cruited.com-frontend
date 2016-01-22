@@ -51,10 +51,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def myAccount() = Action { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
+      case None => Unauthorized(views.html.unauthorised())
       case Some(accountId) =>
         if (AccountService.isTemporary(accountId)) {
-          Unauthorized
+          Unauthorized(views.html.unauthorised())
         } else {
           val account = AccountDto.getOfId(accountId).get
           val isSaveSuccessful = SessionService.isAccountSaveSuccessful(request.session)
@@ -82,7 +82,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             .withSession(request.session + (SessionService.sessionKeyResetPasswordToken -> token))
       }
     } else {
-      Unauthorized
+      Unauthorized(views.html.unauthorised())
     }
   }
 
@@ -201,7 +201,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def editOrder() = Action { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
+      case None => Unauthorized(views.html.unauthorised())
       case Some(accountId) =>
         AccountDto.getOfId(accountId) match {
           case None => InternalServerError("No account found in database for ID '" + accountId + "'")
@@ -229,7 +229,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def completePayment() = Action { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
+      case None => Unauthorized(views.html.unauthorised())
       case Some(accountId) =>
         AccountDto.getOfId(accountId) match {
           case None => InternalServerError("No account found in database for ID '" + accountId + "'")
@@ -250,7 +250,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def report(orderId: Long) = Action { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
+      case None => Unauthorized(views.html.unauthorised())
       case Some(accountId) =>
         val selectedProductCode = if (request.queryString.contains("productCode")) {
           request.queryString.get("productCode").get.head

@@ -183,7 +183,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
 
   def pay() = Action { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
+      case None => Unauthorized(views.html.unauthorised())
       case Some(accountId) =>
         OrderDto.getMostRecentUnpaidOfAccountId(accountId) match {
           case None => BadRequest("No unpaid order found for this account ID")
