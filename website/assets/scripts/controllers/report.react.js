@@ -90,8 +90,8 @@ CR.Controllers.Report = P(function(c) {
 
         componentDidUpdate: function() {
             this._initElements();
+            this.$tabs.on("shown.bs.tab", this._placeScoreCursors.bind(this));
             this.$expandablePanels.makeExpandable();
-            this._placeScoreCursors();
             this._selectTabForSelectedProduct();
         },
 
@@ -116,18 +116,23 @@ CR.Controllers.Report = P(function(c) {
         _placeScoreCursors: function() {
             const cvReportScores = this.state.cvReportScores;
             if (cvReportScores) {
-                this.$cvScoreCursor.css("left", cvReportScores.globalScore + "%");
+                this._animateScoreCursor(this.$cvScoreCursor, cvReportScores.globalScore);
             }
 
             const coverLetterReportScores = this.state.coverLetterReportScores;
             if (coverLetterReportScores) {
-                this.$coverLetterScoreCursor.css("left", coverLetterReportScores.globalScore + "%");
+                this._animateScoreCursor(this.$coverLetterScoreCursor, coverLetterReportScores.globalScore);
             }
 
             const linkedinProfileReportScores = this.state.linkedinProfileReportScores;
             if (linkedinProfileReportScores) {
-                this.$linkedinProfileScoreCursor.css("left", linkedinProfileReportScores.globalScore + "%");
+                this._animateScoreCursor(this.$linkedinProfileScoreCursor, linkedinProfileReportScores.globalScore);
             }
+        },
+
+        _animateScoreCursor: function($cursor, score) {
+            $cursor.css("left", 0);
+            TweenLite.to($cursor, 1, {left: score + "%", ease: Power4.easeInOut});
         },
 
         _selectTabForSelectedProduct: function() {
