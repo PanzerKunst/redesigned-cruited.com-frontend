@@ -7,14 +7,15 @@ import db.AccountDto
 import models.frontend.SignInData
 import play.api.Play
 import play.api.Play.current
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
-import services.{AccountService, EmailService, SessionService}
+import services.{AccountService, EmailService, GlobalConfig, SessionService}
 
 @Singleton
 class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
   val rootUrl = Play.configuration.getString("rootUrl").get
+  val i18nMessages = GlobalConfig.getI18nMessages(messagesApi)
 
   def signIn() = Action(parse.json) { request =>
     request.body.validate[SignInData] match {
@@ -42,7 +43,7 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
 
             AccountService.resetPasswordTokens += (token -> account.id)
 
-            emailService.sendResetPasswordEmail(emailAddress, account.firstName.get, resetPasswordUrl, Messages("email.resetPassword.subject"))
+            emailService.sendResetPasswordEmail(emailAddress, account.firstName.get, resetPasswordUrl, i18nMessages("email.resetPassword.subject"))
 
             Ok
         }
