@@ -10,7 +10,7 @@
     justify-content: space-between;
 
     @include medium-screen {
-      > div {
+      > div:first-child {
         display: flex;
       }
     }
@@ -71,7 +71,7 @@
       }
 
       @include medium-screen {
-        > div {
+        > div:first-child {
           @include clearfix;
 
           > div {

@@ -17,7 +17,7 @@ CR.Controllers.MyAccount = P(function(c) {
             let successAlert = null;
             if (this.state.isSaveSuccessful) {
                 successAlert = (
-                    <div className="alert alert-success alert-dismissible" role="alert">
+                    <div className="alert alert-success alert-dismissible single-column-panel" role="alert">
                         <button type="button" className="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
