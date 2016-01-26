@@ -11,6 +11,11 @@ body {
   flex-direction: column;
   justify-content: space-between;
 
+  // Fixed the problem of having space between the header and the main content in FF
+  > [role="main"] {
+    flex-grow: 1;
+  }
+
   > footer {
     background-color: white;
     min-height: 4.4em;
