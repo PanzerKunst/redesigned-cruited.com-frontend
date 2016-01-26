@@ -260,6 +260,8 @@
   }
 
   .expandable-panel {
+    margin-bottom: 1em;
+
     $info-icon-location-x: -1900px;
 
     .score-explanation-paragraph {
@@ -377,18 +379,17 @@
   }
 
   .report-analysis {
-    > ul {
-      margin-top: 3.6em;
+    > header {
+      margin-bottom: 0;
+      box-shadow: none;
     }
 
     li.category {
-      border-top: 3px solid $light-grey;
-
       $category-icon-location-x: -1892px;
       $category-icon-location-x-large-screen: -1900px;
 
-      &:last-child > .red-comments {
-        margin-bottom: 0;
+      &:first-child > header {
+        border-top: 3px solid $light-grey;
       }
 
       > header {
@@ -476,6 +477,7 @@
       color: $dark-grey;
       font-weight: bold;
 
+      // TODO
       margin: 0.2em 0 0.5em 0;
     }
 
@@ -506,7 +508,7 @@
 
   // Added the `.tab-pane > div` selector to bump up priority of `@include large-screen` declaration
   .tab-pane > div .red-comments {
-    margin: 2em 0 4em #{-$list-padding-left};
+    margin: 2em 0 2em #{-$list-padding-left};
 
     list-style-type: disc;
 

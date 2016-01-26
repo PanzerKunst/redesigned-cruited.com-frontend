@@ -90,7 +90,7 @@ CR.Controllers.Report = P(function(c) {
 
         componentDidUpdate: function() {
             this._initElements();
-            this.$tabs.on("shown.bs.tab", this._placeScoreCursors.bind(this));
+            this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
             this.$expandablePanels.makeExpandable();
             this._selectTabForSelectedProduct();
         },
@@ -233,14 +233,16 @@ CR.Controllers.Report = P(function(c) {
                                 </div>
                             </article>
                         </section>
-                        <section className="sheet-of-paper report-analysis">
-                            <h2>{CR.i18nMessages["report.analysis.title"]}</h2>
-                            <p className="light-font" dangerouslySetInnerHTML={{__html: templatedExplanationText}} />
+                        <section className="report-analysis">
+                            <header className="sheet-of-paper">
+                                <h2>{CR.i18nMessages["report.analysis.title"]}</h2>
+                                <p className="light-font" dangerouslySetInnerHTML={{__html: templatedExplanationText}} />
+                            </header>
                             <ul className="styleless">
                             {this._getCategoriesAndTheirComments(docReport).map(function(categoryAndItsComments) {
                                 const categoryId = categoryAndItsComments.categoryId;
                                 const reactItemId = "category-" + categoryId;
-                                const categoryClasses = "category id-" + categoryId;
+                                const categoryClasses = "category sheet-of-paper id-" + categoryId;
 
                                 let topCommentParagraph = null;
                                 if (categoryAndItsComments.topComment) {
