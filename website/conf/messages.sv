@@ -221,7 +221,7 @@ order.assessmentInfo.form.positionSought.label=Tjänst du söker
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
 order.assessmentInfo.form.customerComment.label=Har du några specifika frågor kring din granskning?
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
-order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Användningsvillkor</a>
+order.assessmentInfo.form.tos.text=Jag accepterar <a href="https://cruited.com/villkor/" target="_blank">användningsvillkoren</a>
 
 
 # Order Step Account Creation page
