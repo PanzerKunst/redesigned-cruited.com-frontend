@@ -12,3 +12,4 @@ node_modules
 /document-web-service/conf/application.conf
 /document-web-service/conf/application-test.conf
 /document-web-service/conf/application-prod.conf
+/dws-test-client/conf/application.conf
