@@ -72,9 +72,6 @@ class OrderService @Inject()(val documentService: DocumentService) {
           fileName + "." + documentService.extensionPdf
         }
 
-        // TODO: remove
-        Logger.info("fileNameWithPdfExtension: " + fileNameWithPdfExtension)
-
         if (!documentService.isFilePresent(order.id.get + Order.fileNamePrefixSeparator + fileNameWithPdfExtension)) {
           throw new Exception("OrderService.getNewCvFileName() > CV file name found in DB for order " + order.id.get + " but no corresponding file found")
         }
@@ -113,9 +110,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   def generateDocThumbnails(order: Order) {
-
-    // TODO: remove
-    Logger.info("OrderService > generateDocThumbnails: " + order.id.get)
+    Logger.info("OrderService.generateDocThumbnails() > order ID: " + order.id.get)
 
     generateThumbnailForFile(order.id.get, order.cvFileName)
     generateThumbnailForFile(order.id.get, order.coverLetterFileName)
@@ -123,9 +118,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def generateThumbnailForFile(orderId: Long, fileNameOpt: Option[String]) {
-
-    // TODO: remove
-    Logger.info("OrderService > generateThumbnailForFile: " + fileNameOpt)
+    Logger.info("OrderService.generateThumbnailForFile() > fileNameOpt: " + fileNameOpt)
 
     fileNameOpt match {
       case None =>

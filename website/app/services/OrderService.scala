@@ -4,6 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
 import models.{CruitedProduct, Order}
+import play.api.Logger
 import play.api.libs.json.JsNull
 
 @Singleton
@@ -91,12 +92,16 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   def generateDocThumbnails(order: Order) {
+    Logger.info("OrderService.generateDocThumbnails() > order ID: " + order.id.get)
+
     generateThumbnailForFile(order.id.get, order.cvFileName)
     generateThumbnailForFile(order.id.get, order.coverLetterFileName)
     generateThumbnailForFile(order.id.get, order.linkedinProfileFileName)
   }
 
   private def generateThumbnailForFile(orderId: Long, fileNameOpt: Option[String]) {
+    Logger.info("OrderService.generateThumbnailForFile() > fileNameOpt: " + fileNameOpt)
+
     fileNameOpt match {
       case None =>
       case Some(fileNameWithoutPrefix) =>

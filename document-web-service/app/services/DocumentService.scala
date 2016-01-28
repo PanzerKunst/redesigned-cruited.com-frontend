@@ -108,9 +108,7 @@ class DocumentService @Inject()(val ws: WSClient) {
   }
 
   def generateThumbnail(fileName: String) {
-
-    // TODO: remove
-    Logger.info("DocumentService > generating thumbnail for file: " + fileName)
+    Logger.info("DocumentService.generateThumbnail() > generating thumbnail for file: " + fileName)
 
     val pdfPath = assessedDocumentsRootDir + fileName
     val imgPath = assessedDocumentsThumbnailsRootDir + getFileNameWithoutExtension(fileName) + "." + docThumbnailFileExtension
@@ -126,8 +124,7 @@ class DocumentService @Inject()(val ws: WSClient) {
     img.flush()
     document.close()
 
-    // TODO: remove
-    Logger.info("DocumentService > Thumbnail for file: " + fileName + " generated successfully")
+    Logger.info("DocumentService.generateThumbnail() > Thumbnail for file: " + fileName + " generated successfully")
   }
 
   private def filesOfExtensionsForOrder(extensions: String, orderId: Long): List[File] = {
