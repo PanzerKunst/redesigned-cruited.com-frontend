@@ -61,7 +61,7 @@ class DocumentService @Inject()(val ws: WSClient) {
 
   def getFileExtension(fileName: String): String = {
     val lastDotIndex = fileName.lastIndexOf(".")
-    fileName.substring(lastDotIndex + 1)
+    fileName.substring(lastDotIndex + 1).toLowerCase
   }
 
   def getFileNameWithoutExtension(fileName: String): String = {

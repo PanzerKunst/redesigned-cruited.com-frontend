@@ -32,10 +32,14 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def convertLinkedinPublicProfilePageToPdf(order: Order) {
-    val linkedinProfile = AccountDto.getOfId(order.accountId.get).get.linkedinProfile
+    order.accountId match {
+      case None =>
+      case Some(accountId) =>
+        val linkedinProfile = AccountDto.getOfId(order.accountId.get).get.linkedinProfile
 
-    if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && linkedinProfile != JsNull) {
-      documentService.convertLinkedinProfilePageToPdf(order.id.get, (linkedinProfile \ "publicProfileUrl").as[String])
+        if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && linkedinProfile != JsNull) {
+          documentService.convertLinkedinProfilePageToPdf(order.id.get, (linkedinProfile \ "publicProfileUrl").as[String])
+        }
     }
   }
 
@@ -67,6 +71,9 @@ class OrderService @Inject()(val documentService: DocumentService) {
         } else {
           fileName + "." + documentService.extensionPdf
         }
+
+        // TODO: remove
+        Logger.info("fileNameWithPdfExtension: " + fileNameWithPdfExtension)
 
         if (!documentService.isFilePresent(order.id.get + Order.fileNamePrefixSeparator + fileNameWithPdfExtension)) {
           throw new Exception("OrderService.getNewCvFileName() > CV file name found in DB for order " + order.id.get + " but no corresponding file found")

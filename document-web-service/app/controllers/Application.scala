@@ -44,8 +44,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
                   result = Forbidden("A CV file was already uploaded for this order. If you want to replace it, do a 'PUT' request instead of 'POST'")
                   None
                 } else {
-                  val fileName = orderId + Order.fileNamePrefixSeparator + cvFile.filename
-                  cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+                  val fileName = cvFile.filename
+                  cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
                   Some(fileName)
                 }
             }
@@ -57,8 +57,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
                   result = Forbidden("A cover letter file was already uploaded for this order. If you want to replace it, do a 'PUT' request instead of 'POST'")
                   None
                 } else {
-                  val fileName = orderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
-                  coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+                  val fileName = coverLetterFile.filename
+                  coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
                   Some(fileName)
                 }
             }
@@ -110,8 +110,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
                   case Some(existingCvFileName) =>
                     //deleteDocumentFile(existingCvFileName)
 
-                    val fileName = orderId + Order.fileNamePrefixSeparator + cvFile.filename
-                    cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+                    val fileName = cvFile.filename
+                    cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
                     Some(fileName)
                 }
             }
@@ -126,8 +126,8 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
                   case Some(existingCoverLetterFileName) =>
                     //deleteDocumentFile(existingCoverLetterFileName)
 
-                    val fileName = orderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
-                    coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+                    val fileName = coverLetterFile.filename
+                    coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
                     Some(fileName)
                 }
             }
@@ -229,8 +229,33 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
 
         val orderId = OrderDto.create(orderReceivedFromClient).get
 
+        val createdOrder = new Order(orderReceivedFromClient, orderId)
+
+        val newCvFileName = requestBody.file("cvFile") match {
+          case None => None
+          case Some(cvFile) =>
+            val fileName = cvFile.filename
+            cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
+            Some(fileName)
+        }
+
+        val newCoverLetterFileName = requestBody.file("coverLetterFile") match {
+          case None => None
+          case Some(coverLetterFile) =>
+            val fileName = coverLetterFile.filename
+            coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
+            Some(fileName)
+        }
+
+        val updatedOrder = createdOrder.copy(
+          cvFileName = newCvFileName,
+          coverLetterFileName = newCoverLetterFileName
+        )
+
+        OrderDto.update(updatedOrder)
+
         Future {
-          val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(new Order(orderReceivedFromClient, orderId), linkedinPublicProfileUrlOpt)
+          val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder, linkedinPublicProfileUrlOpt)
           orderService.generateDocThumbnails(updatedOrderWithPdfFileNames)
         } onFailure {
           case e => Logger.error(e.getMessage, e)
