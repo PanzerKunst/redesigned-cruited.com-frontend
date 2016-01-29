@@ -24,7 +24,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
       subject,
       accountName + "<" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(views.html.email.orderComplete.free(firstName).toString())
+      bodyHtml = Some(views.html.email.orderComplete.free(firstName).toString)
     ))
   }
 
@@ -51,7 +51,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
       subject,
       accountName + "<" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(views.html.email.twoDaysAfterAssessmentDelivered(firstName).toString())
+      bodyHtml = Some(views.html.email.twoDaysAfterAssessmentDelivered(firstName).toString)
     ))
   }
 }

@@ -36,12 +36,14 @@ object Account {
   def getValidLinkedinProfileJson(linkedinProfileAsJsValue: JsValue): JsValue = {
     var linkedinProfile = linkedinProfileAsJsValue.as[JsObject]
 
+    // Main summary
     val validSummary = safetizeJsonStringValue(linkedinProfile \ "summary")
     linkedinProfile = linkedinProfile - "summary"
     if (validSummary != JsNull) {
       linkedinProfile = linkedinProfile + ("summary" -> validSummary)
     }
 
+    // Summary for each position
     val positions = (linkedinProfile \ "positions").as[JsObject]
     var writablePositions = positions.copy()
 
@@ -66,6 +68,20 @@ object Account {
 
     linkedinProfile = linkedinProfile - "positions"
     linkedinProfile = linkedinProfile + ("positions" -> writablePositions)
+
+    // Current share > Comment
+    (linkedinProfile \ "currentShare").asOpt[JsObject] match {
+      case None =>
+      case Some(currentShare) =>
+        var writableCurrentShare = currentShare.copy()
+
+        val validComment = safetizeJsonStringValue(currentShare \ "comment")
+        writableCurrentShare = writableCurrentShare - "comment"
+        writableCurrentShare = writableCurrentShare + ("comment" -> validComment)
+
+        linkedinProfile = linkedinProfile - "currentShare"
+        linkedinProfile = linkedinProfile + ("currentShare" -> writableCurrentShare)
+    }
 
     linkedinProfile
   }
