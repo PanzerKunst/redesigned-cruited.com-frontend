@@ -16,22 +16,23 @@ Clone `https://github.com/letsencrypt/letsencrypt` and copy the `letsencrypt` di
 Free port 80 temporarily: `$ sudo service nginx stop`
 
     $ ./letsencrypt-auto certonly -t
-Enter email `services@cruited.com` and domains `app.cruited.com api.cruited.com`
+
+Enter email `services@cruited.com` and domains `api.cruited.com app.cruited.com`
 
 Restart Nginx: `$ sudo service nginx start`
 
 
 # Install certificate on Nginx
 
-    $ sudo vi /etc/nginx/sites-available/cruited-app
+    $ sudo vi /etc/nginx/sites-available/cruited-api
 
 Change `listen 80` to `listen 443`
 
 Under the `server_name` line, add:
 
     ssl on;
-    ssl_certificate /etc/letsencrypt/live/test.app.cruited.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/test.app.cruited.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/api.cruited.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.cruited.com/privkey.pem;
 
 Save, then restart Nginx: `$ sudo service nginx reload`
 
@@ -42,6 +43,8 @@ Add the following section right under the main one:
 
     server {
         listen 80;
-        server_name app.cruited.com/api.cruited.com;
+        server_name api.cruited.com;
         return 301 https://$host$request_uri;
     }
+
+Save, then restart Nginx: `$ sudo service nginx reload`

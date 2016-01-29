@@ -45,18 +45,20 @@ object Account {
     val positions = (linkedinProfile \ "positions").as[JsObject]
     var writablePositions = positions.copy()
 
-    val positionValues = (positions \ "values").as[JsArray]
+    val positionValuesOpt = (positions \ "values").asOpt[JsArray]
     var validPositionValues = new JsArray()
 
-    for (positionValue: JsValue <- positionValues.value.toArray) {
-      var writablePositionValue = positionValue.as[JsObject].copy()
-      val validSummary = safetizeJsonStringValue(positionValue \ "summary")
-      writablePositionValue = writablePositionValue - "summary"
-      if (validSummary != JsNull) {
-        writablePositionValue = writablePositionValue + ("summary" -> validSummary)
-      }
+    if (positionValuesOpt.isDefined) {
+      for (positionValue: JsValue <- positionValuesOpt.get.value.toArray) {
+        var writablePositionValue = positionValue.as[JsObject].copy()
+        val validSummary = safetizeJsonStringValue(positionValue \ "summary")
+        writablePositionValue = writablePositionValue - "summary"
+        if (validSummary != JsNull) {
+          writablePositionValue = writablePositionValue + ("summary" -> validSummary)
+        }
 
-      validPositionValues = validPositionValues :+ writablePositionValue
+        validPositionValues = validPositionValues :+ writablePositionValue
+      }
     }
 
     writablePositions = writablePositions - "values"

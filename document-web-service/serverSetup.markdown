@@ -4,16 +4,62 @@ Check the server's IP address via `ifconfig`.
 
 `$ sudo vi /etc/hosts`
 
-Add line with the IP address and hostname: `188.40.99.15 api.cruited.com`
+Add line with the IP address and hostname: `46.4.78.11 api.cruited.com`
+
+
+# Install packages
+
+Install `add-apt-repository` command: `$ apt-get install software-properties-common`
+
+Add the user repo for OpenJDK 8: `$ sudo add-apt-repository ppa:openjdk-r/ppa`
+
+Install packages:
+
+	$ sudo apt-get update
+	$ sudo apt-get install nginx openjdk-8-jdk dos2unix mysql-server mysql-client
+
+
+# Database creation
+
+Harden MySQL installation: `$ sudo mysql_secure_installation`
+
+Create a new user named "cruited" and new database named "cruited":
+
+        $ mysql -u root -p
+		> CREATE USER 'cruited'@'localhost' IDENTIFIED BY 'AcB65oRo!F';
+        > CREATE DATABASE `cruited` CHARACTER SET utf8 COLLATE utf8_swedish_ci;
+        > GRANT ALL ON `cruited`.* TO `cruited`@'%' IDENTIFIED BY 'AcB65oRo!F';
+        > FLUSH PRIVILEGES;
+
+Update `my.cnf` to allow remote access: `$ sudo vi /etc/mysql/my.cnf` then comment line `bind-address`.
+
+Restart MySQL server to apply changes to the config file: `$ sudo service mysql restart`.
+
+
+# Database import
+
+Export existing prod database: Open `https://bart.q360.se:2083/cpsess1691196444/frontend/x3/index.html?post_login=20894866655313` and use password "KmIDGkfwx00O", then go to PhpMyAdmin and export
+
+Import DB: Launch MySQL Workbench, connect to the prod DB, open SQL file and execute it.
+
+
+# Documents import
+
+    $ mkdir -p ~/Cruited_V2/documents
+    $ mkdir -p ~/Cruited_V2/doc-thumbnails
+
+- Download locally all documents and thumbnails which have been added to Mebo since the last copy
+- Upload to Hetzner all those new docs and thumbnails
 
 
 # Web server
 
-`$ sudo cp /etc/nginx/sites-available/careerstudio /etc/nginx/sites-available/cruited-api`
+    $ sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/cruited-api
+    $ sudo vi /etc/nginx/sites-available/cruited-api
 
-`$ sudo vi /etc/nginx/sites-available/cruited-api`
+Comment everything, and add this new section:
 
-    # Cruited API
+    # Cruited API / Document Web Service
     server {
             listen 80;
             server_name api.cruited.com;
@@ -29,32 +75,38 @@ Add line with the IP address and hostname: `188.40.99.15 api.cruited.com`
             }
     }
 
-`$ sudo ln -s /etc/nginx/sites-available/cruited-api /etc/nginx/sites-enabled/cruited-api`
+Finish Nginx config:
 
-`$ sudo service nginx restart`
+	$ sudo ln -s /etc/nginx/sites-available/cruited-api /etc/nginx/sites-enabled/cruited-api
+	$ sudo service nginx reload
 
-Copy the following source files to `~/redesigned-cruited.com-frontend/document-web-service`:
 
-* app
-* conf
-* project (cleaned of the `target` directories)
-* public
-* activator
-* activator-launch-X.Y.Z.jar
-* build.sbt
+# Copying source files
+
+Copy the following source files to `~/Cruited_V2/document-web-service`:
+
+- app
+- conf
+- project (cleaned of the `target` directories)
+- activator
+- activator-launch-X.Y.Z.jar
+- build.sbt
 
 Make the `activator` script executable:
 
-    $ cd ~/redesigned-cruited.com-frontend/document-web-service
+    $ cd ~/Cruited_V2/document-web-service
     $ dos2unix activator
     $ chmod u+x activator
 
 
 # Configuration changes
 
-`$ vi ~/redesigned-cruited.com-frontend/document-web-service/conf/logback.xml`
+    $ vi ~/Cruited_V2/document-web-service/conf/logback.xml
 
 Edit the path in the `application.home` declaration, and uncomment that line.
+
+    $ cd ~/Cruited_V2/document-web-service/conf
+    $ mv -f application-prod.conf application.conf
 
 
 # JVM params
@@ -68,7 +120,7 @@ Edit the path in the `application.home` declaration, and uncomment that line.
 
     $ screen -dR
     Ctrl + a, c
-    $ cd ~/redesigned-cruited.com-frontend/document-web-service
+    $ cd ~/Cruited_V2/document-web-service
     $ ./activator
     $ stage
     $ exit

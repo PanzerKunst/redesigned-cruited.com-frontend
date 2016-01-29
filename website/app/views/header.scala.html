@@ -8,8 +8,8 @@
             <article>
                 <span>@account.firstName @account.lastName</span>
                 @if(account.linkedinProfile != play.api.libs.json.JsNull) {
-                    @defining((account.linkedinProfile \ "pictureUrl").as[String]) { pictureUrl =>
-                        <div class="profile-picture" style="background-image: url(@pictureUrl)"></div>
+                    @defining((account.linkedinProfile \ "pictureUrl").asOpt[String]) { pictureUrlOpt =>
+                        <div class="profile-picture" style="background-image: url(@pictureUrlOpt)"></div>
                     }
                 } else {
                     <button class="styleless fa fa-bars"></button>

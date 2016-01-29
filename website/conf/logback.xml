@@ -1,6 +1,6 @@
 <configuration>
   <!-- Uncomment on UNIX environments
-  <variable name="application.home" value="/home/play/redesigned-cruited.com-frontend/website" />
+  <variable name="application.home" value="/home/play/Cruited_V2/website" />
   -->
 
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
