@@ -4,6 +4,9 @@ CR.Controllers.Common = P(function(c) {
     c.menuOpacityTweenDuration = 0.15;
 
     c.init = function() {
+        CR.Services.Browser.addUserAgentAttributeToHtmlTag();
+        CR.Services.Browser.fixFlexboxIndicatorClass();
+
         this._initElements();
         this._initEvents();
     };

@@ -21,7 +21,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   val i18nMessages = GlobalConfig.getI18nMessages(messagesApi)
 
   // Run the EmailsToSendTasker task after 0ms, repeating every 5 seconds
-  // TODO new Timer().schedule(emailsToSendTasker, 0, 5 * 1000)
+  new Timer().schedule(emailsToSendTasker, 0, 5 * 1000)
 
   // Run the ScoreAverageTasker task after 0ms, repeating every day
   new Timer().schedule(scoreAverageTasker, 0, 3600 * 24 * 1000)

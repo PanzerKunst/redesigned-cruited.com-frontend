@@ -477,7 +477,6 @@
       color: $dark-grey;
       font-weight: bold;
 
-      // TODO
       margin: 0.2em 0 0.5em 0;
     }
 
@@ -538,7 +537,7 @@
   }
 }
 
-@include no-flexbox {
+.no-flexbox {
   #report {
     .summary {
       > section {

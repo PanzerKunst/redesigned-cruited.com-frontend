@@ -41,7 +41,7 @@
     <script type="text/javascript" src="@routes.Assets.versioned("scripts/main.js")"></script>
 
     <script type="text/javascript">
-        CR.Services.Browser.addUserAgentAttributeToHtmlTag();
+        CR.Controllers.Common();
 
         // FastClick init
         window.addEventListener('load', function() {
@@ -57,8 +57,6 @@
             r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
             a.appendChild(r);
         })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
-
-        CR.Controllers.Common();
 
         @javascript
     </script>

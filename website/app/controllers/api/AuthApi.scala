@@ -14,7 +14,6 @@ import services.{AccountService, EmailService, GlobalConfig, SessionService}
 
 @Singleton
 class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
-  val rootUrl = Play.configuration.getString("rootUrl").get
   val i18nMessages = GlobalConfig.getI18nMessages(messagesApi)
 
   def signIn() = Action(parse.json) { request =>
@@ -39,7 +38,7 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
           case None => NoContent
           case Some(account) =>
             val token = UUID.randomUUID.toString
-            val resetPasswordUrl = rootUrl + "reset-password/confirm?token=" + token
+            val resetPasswordUrl = GlobalConfig.rootUrl + "reset-password/confirm?token=" + token
 
             AccountService.resetPasswordTokens += (token -> account.id)
 

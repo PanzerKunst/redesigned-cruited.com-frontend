@@ -17,7 +17,7 @@ class EmailsToSendTasker @Inject()(val messagesApi: MessagesApi, val emailServic
 
       // Retrieve the finalised orders which have status "not paid", and a creation date > 1 day, and 1day_email_sent = 0
       for ((emailAddress, firstName, orderId) <- AccountDto.getWhoNeedUnpaidOrderReminderEmail) {
-        val paymentUrl = "/order/complete-payment?orderId=" + orderId
+        val paymentUrl = GlobalConfig.rootUrl + "order/complete-payment?orderId=" + orderId
 
         emailService.sendUnpaidOrderReminderEmail(emailAddress, firstName, paymentUrl, i18nMessages("email.unpaidOrderReminder.subject"))
         OrderDto.setUnpaidOrderReminderEmailSent(orderId)

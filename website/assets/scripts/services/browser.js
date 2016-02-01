@@ -1,6 +1,14 @@
 "use strict";
 
 CR.Services.Browser = {
+    regexOfUserAgentsNotSupportingFlexbox: [
+        "OS 8_",
+        "OS 7_",
+        "OS 6_",
+        "OS 5_",
+        "OS 4_"
+    ],
+
     cssRules: function() {
         if (CR.Services.Browser.allCssRules) {
             return CR.Services.Browser.allCssRules;
@@ -78,5 +86,24 @@ CR.Services.Browser = {
 
     isWindows: function() {
         return navigator.platform === "Win32" || navigator.platform === "Win64";
+    },
+
+    fixFlexboxIndicatorClass: function() {
+        const $html = $("html");
+        let isFound = false;
+
+        for (let i = 0; i < this.regexOfUserAgentsNotSupportingFlexbox.length; i++) {
+            const userAgent = $html.data("useragent");
+
+            if (new RegExp(this.regexOfUserAgentsNotSupportingFlexbox[i]).test(userAgent)) {
+                isFound = true;
+                break;
+            }
+        }
+
+        if (isFound) {
+            $html.removeClass("flexbox");
+            $html.addClass("no-flexbox");
+        }
     }
 };

@@ -55,7 +55,7 @@
   }
 }
 
-@include no-flexbox {
+.no-flexbox {
   #dashboard {
     .status-and-edition-wrapper {
       display: block;

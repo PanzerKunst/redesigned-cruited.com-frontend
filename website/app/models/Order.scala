@@ -54,7 +54,6 @@ case class Order(id: Option[Long],
     val orderPriceAmounts = orderedProducts.map(p => p.price.amount)
     var costAfterReductions = orderPriceAmounts.reduce((total, cur) => total + cur)
 
-    // TODO: remove
     Logger.info("costAfterReductions - 1:" + costAfterReductions)
 
 
@@ -71,7 +70,6 @@ case class Order(id: Option[Long],
       costAfterReductions = costAfterReductions - reduction.get.price.amount
     }
 
-    // TODO: remove
     Logger.info("costAfterReductions - 2:" + costAfterReductions)
 
 
@@ -90,7 +88,6 @@ case class Order(id: Option[Long],
       }
     }
 
-    // TODO: remove
     Logger.info("costAfterReductions - 3:" + costAfterReductions)
 
     costAfterReductions.toInt

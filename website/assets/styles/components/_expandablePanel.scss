@@ -39,7 +39,7 @@
   }
 }
 
-@include no-flexbox {
+.no-flexbox {
   .expandable-panel > header {
     display: block;
     @include clearfix;

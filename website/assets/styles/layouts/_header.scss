@@ -218,7 +218,7 @@ $header-bottom-border-height: 1px;
   }
 }
 
-@include no-flexbox {
+.no-flexbox {
   #header-nav > article {
     display: block;
     margin-top: 0.2em;

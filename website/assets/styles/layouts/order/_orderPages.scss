@@ -323,7 +323,7 @@
   }
 }
 
-@include no-flexbox {
+.no-flexbox {
   #order-steps-breadcrumbs {
     display: table;
 

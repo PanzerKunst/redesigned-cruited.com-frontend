@@ -9,10 +9,10 @@ import services.GlobalConfig
 
 object DbAdmin {
   def reCreateTables() {
-    removeAlterationOnTableDocuments()
+    /* TODO removeAlterationOnTableDocuments()
     removeAlterationOnTableEdition()
     dropTable("reduction")
-    dropTable("product")
+    dropTable("product") */
 
     createTableProduct()
     createTableReduction()
@@ -121,6 +121,7 @@ object DbAdmin {
   def initData() {
     initDataProduct()
     initDataReduction()
+    initDataEmailReminders()
     fixBothersomeCharactersInLinkedinProfile()
   }
 
@@ -136,6 +137,12 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, '" + GlobalConfig.currencyCode + "');").execute()
       SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, '" + GlobalConfig.currencyCode + "');").execute()
+    }
+  }
+
+  private def initDataEmailReminders() = {
+    DB.withConnection { implicit c =>
+      SQL("update documents set 2days_after_assessment_delivered_email_sent = 1;").execute()
     }
   }
 

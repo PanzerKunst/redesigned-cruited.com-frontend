@@ -275,7 +275,7 @@ nav > a,
 }
 
 
-@include no-flexbox {
+.no-flexbox {
   #linkedin-preview {
     display: block;
 

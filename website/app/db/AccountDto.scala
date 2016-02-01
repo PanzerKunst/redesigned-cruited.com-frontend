@@ -267,7 +267,8 @@ object AccountDto {
         creationDateClause + """
         group by email, prenume;"""
 
-      Logger.info("OrderDto.getWhoNeedUnpaidOrderReminderEmail():" + query)
+      // Commented because spams too much
+      // Logger.info("AccountDto.getWhoNeedUnpaidOrderReminderEmail():" + query)
 
       val rowParser = str("email") ~ str("prenume") ~
         long("order_id") map {
@@ -297,7 +298,8 @@ object AccountDto {
         assessmentCompletedDateClause + """
         group by email, prenume;"""
 
-      Logger.info("OrderDto.getWhoNeedTheTwoDayAfterAssessmentDeliveredEmail():" + query)
+      // Commented because spams too much
+      // Logger.info("AccountDto.getWhoNeedTheTwoDayAfterAssessmentDeliveredEmail():" + query)
 
       val rowParser = str("email") ~ str("prenume") ~
         long("order_id") map {

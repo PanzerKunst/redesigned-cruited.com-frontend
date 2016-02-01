@@ -71,13 +71,3 @@
 @mixin no-transition {
   @include transition(none !important);
 }
-
-@mixin no-flexbox {
-  .no-flexbox,
-  html[data-useragent*="OS 7_"],
-  html[data-useragent*="OS 6_"],
-  html[data-useragent*="OS 5_"],
-  html[data-useragent*="OS 4_"] {
-    @content;
-  }
-}

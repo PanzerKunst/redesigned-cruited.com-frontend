@@ -124,7 +124,7 @@ CR.Controllers.PaymentForm = React.createClass({
                 this.validator.showErrorMessage(this.$invalidExpirationDateError);
                 this.$submitBtn.disableLoading();
             } else {
-                /* TODO paymill.createToken({
+                paymill.createToken({
                     number: cardNumber,
                     exp_month: cardExpiryMonth,
                     exp_year: cardExpiryYear,
@@ -132,10 +132,7 @@ CR.Controllers.PaymentForm = React.createClass({
                     cardholder: this.$cardholderNameField.val(),
                     amount: this.props.price * 100,
                     currency: this.props.currency
-                }, this._handlePaymillResponse); */
-
-                // TODO: remove
-                this._handlePaymillResponse(null, {token: "af"});
+                }, this._handlePaymillResponse);
             }
         }
     },
