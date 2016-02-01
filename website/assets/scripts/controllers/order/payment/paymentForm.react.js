@@ -117,6 +117,9 @@ CR.Controllers.PaymentForm = React.createClass({
             const cardExpiryMonth = this.$expiresMonthField.val();
             const cardExpiryYear = this.$expiresYearField.val();
 
+            const currencyCodesWhereAmountIsMultipliedBy100 = ["USD", "EUR"];
+            const transactionAmount = _.includes(currencyCodesWhereAmountIsMultipliedBy100, this.props.currencyCode) ? this.props.price * 100 : this.props.price;
+
             if (!paymill.validateCardNumber(cardNumber)) {
                 this.validator.showErrorMessage(this.$invalidCardNumberError);
                 this.$submitBtn.disableLoading();
@@ -124,15 +127,21 @@ CR.Controllers.PaymentForm = React.createClass({
                 this.validator.showErrorMessage(this.$invalidExpirationDateError);
                 this.$submitBtn.disableLoading();
             } else {
-                paymill.createToken({
-                    number: cardNumber,
-                    exp_month: cardExpiryMonth,
-                    exp_year: cardExpiryYear,
-                    cvc: this.$cvcField.val(),
-                    cardholder: this.$cardholderNameField.val(),
-                    amount: this.props.price * 100,
-                    currency: this.props.currency
-                }, this._handlePaymillResponse);
+                /* TODO paymill.createToken({
+                 number: cardNumber,
+                 exp_month: cardExpiryMonth,
+                 exp_year: cardExpiryYear,
+                 cvc: this.$cvcField.val(),
+                 cardholder: this.$cardholderNameField.val(),
+                 amount: transactionAmount,
+                 currency: this.props.currencyCode
+                 }, this._handlePaymillResponse); */
+
+                // TODO: remove
+                console.log("transactionAmount", transactionAmount);
+                this._handlePaymillResponse(null, {token: "aoidfjaiosjfajf"});
+                // this.$submitBtn.remove();
+                // this.$successAlert.show();
             }
         }
     },
@@ -147,7 +156,7 @@ CR.Controllers.PaymentForm = React.createClass({
             const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                    this.$submitBtn.disableLoading();
+                    this.$submitBtn.remove();
 
                     if (httpRequest.status === CR.httpStatusCodes.ok) {
                         this.$successAlert.show();

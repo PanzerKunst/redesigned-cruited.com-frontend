@@ -24,7 +24,7 @@ CR.Controllers.CompletePayment = P(function(c) {
                         <span>{CR.i18nMessages["order.payment.subtitle"]}</span>
 
                         <CR.Controllers.OrderSummary order={this.state.order} />
-                        <CR.Controllers.PaymentForm price={this.state.order.getTotalPrice()} currency={this.state.order.getProducts()[0].price.currencyCode} />
+                        <CR.Controllers.PaymentForm price={this.state.order.getTotalPrice()} currencyCode={this.state.order.getProducts()[0].price.currencyCode} />
                     </div>
                 </div>
             );

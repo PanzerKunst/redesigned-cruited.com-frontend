@@ -11,19 +11,19 @@ object PaymillService {
 
   val transactionService = new PaymillContext(paymillAccountPrivateKey).getTransactionService
 
-  def doPayment(token: String, amount: Double) {
+  def doPayment(token: String, amount: Int) {
     val currencyCode = GlobalConfig.paymentCurrencyCode
     val currencyCodesWhereAmountIsMultipliedBy100 = List("USD", "EUR")
 
-    val amountForApi = if(currencyCodesWhereAmountIsMultipliedBy100.contains(currencyCode)) {
-      (amount * 100).toInt
+    val transactionAmount = if(currencyCodesWhereAmountIsMultipliedBy100.contains(currencyCode)) {
+      amount * 100
     } else {
-      amount.toInt
+      amount
     }
 
     transactionService.createWithToken(
       token,
-      amountForApi,
+      transactionAmount,
       currencyCode,
       paymentTransactionName
     )

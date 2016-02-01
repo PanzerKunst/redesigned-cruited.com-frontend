@@ -15,7 +15,7 @@ CR.Controllers.OrderStepPayment = P(function(c) {
 
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.payment} />
                         <CR.Controllers.OrderSummary order={CR.order} />
-                        <CR.Controllers.PaymentForm price={CR.order.getTotalPrice()} currency={CR.order.getProducts()[0].price.currencyCode} />
+                        <CR.Controllers.PaymentForm price={CR.order.getTotalPrice()} currencyCode={CR.order.getProducts()[0].price.currencyCode} />
                     </div>
                 </div>
             );

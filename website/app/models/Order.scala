@@ -88,9 +88,9 @@ case class Order(id: Option[Long],
       }
     }
 
-    Logger.info("costAfterReductions - 3:" + costAfterReductions)
+    Logger.info("costAfterReductions - 3:" + math.round(costAfterReductions).toInt)
 
-    costAfterReductions.toInt
+    math.round(costAfterReductions).toInt
   }
 }
 

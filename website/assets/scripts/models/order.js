@@ -229,7 +229,7 @@ CR.Models.Order = P(function(c) {
             }
         }
 
-        return parseInt(totalPrice, 10);
+        return Math.round(totalPrice);
     };
 
     c.getTitleForHtml = function() {
