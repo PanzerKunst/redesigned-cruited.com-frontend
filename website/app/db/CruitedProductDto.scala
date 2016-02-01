@@ -14,7 +14,7 @@ object CruitedProductDto {
       val query = """
         select id, code, price_amount
         from product
-        where price_currency_code = '""" + GlobalConfig.currencyCode + """'
+        where price_currency_code = '""" + GlobalConfig.paymentCurrencyCode + """'
         order by id;"""
 
       Logger.info("CruitedProductDto.getAll():" + query)
@@ -26,7 +26,7 @@ object CruitedProductDto {
             code = code,
             price = Price(
               amount = priceAmount,
-              currencyCode = GlobalConfig.currencyCode
+              currencyCode = GlobalConfig.paymentCurrencyCode
             )
           )
       }
@@ -39,7 +39,7 @@ object CruitedProductDto {
     DB.withConnection { implicit c =>
       val query = """select code, price_amount
       from product
-      where price_currency_code = '""" + GlobalConfig.currencyCode + """'
+      where price_currency_code = '""" + GlobalConfig.paymentCurrencyCode + """'
         and id = """ + id + """
       limit 1;"""
 
@@ -52,7 +52,7 @@ object CruitedProductDto {
             code = code,
             price = Price(
               amount = priceAmount,
-              currencyCode = GlobalConfig.currencyCode
+              currencyCode = GlobalConfig.paymentCurrencyCode
             )
           )
       }

@@ -273,7 +273,7 @@ object OrderDto {
                 case "by_percent" => (amountOpt, None)
                 case "by_value" => (None, Some(Price(
                   amount = amountOpt.get,
-                  currencyCode = GlobalConfig.currencyCode
+                  currencyCode = GlobalConfig.paymentCurrencyCode
                 )))
               }
 
@@ -379,7 +379,7 @@ object OrderDto {
                 case "by_percent" => (amountOpt, None)
                 case "by_value" => (None, Some(Price(
                   amount = amountOpt.get,
-                  currencyCode = GlobalConfig.currencyCode
+                  currencyCode = GlobalConfig.paymentCurrencyCode
                 )))
               }
 

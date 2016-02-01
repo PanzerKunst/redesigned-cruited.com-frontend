@@ -27,7 +27,7 @@ object CouponDto {
             case "by_percent" => (Some(amount), None)
             case "by_value" => (None, Some(Price(
               amount = amount,
-              currencyCode = GlobalConfig.currencyCode
+              currencyCode = GlobalConfig.paymentCurrencyCode
             )))
           }
 
@@ -65,7 +65,7 @@ object CouponDto {
             case "by_percent" => (Some(amount), None)
             case "by_value" => (None, Some(Price(
               amount = amount,
-              currencyCode = GlobalConfig.currencyCode
+              currencyCode = GlobalConfig.paymentCurrencyCode
             )))
           }
 

@@ -28,12 +28,12 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
     ))
   }
 
-  def sendPaidOrderCompleteEmail(emailAddress: String, firstName: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, currencyCode: String, vatAmount: Double, orderDateTime: String, subject: String) {
+  def sendPaidOrderCompleteEmail(emailAddress: String, firstName: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, vatAmount: Double, orderDateTime: String, subject: String) {
     mailerClient.send(Email(
       subject,
       accountName + "<" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(views.html.email.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, currencyCode, vatAmount, orderDateTime).toString())
+      bodyHtml = Some(views.html.email.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, GlobalConfig.paymentCurrencyCode, vatAmount, orderDateTime).toString())
     ))
   }
 

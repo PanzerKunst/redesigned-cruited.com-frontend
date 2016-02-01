@@ -7,7 +7,7 @@ import play.api.mvc.{Request, AnyContent}
 
 object GlobalConfig {
   val applicationSecret = Play.configuration.getString("play.crypto.secret").get
-  val currencyCode = Play.configuration.getString("currencyCode").get
+  val paymentCurrencyCode = Play.configuration.getString("payment.currencyCode").get
   val supportedLanguages = Play.configuration.getStringList("play.i18n.langs").get
   val rootUrl = Play.configuration.getString("rootUrl").get
 

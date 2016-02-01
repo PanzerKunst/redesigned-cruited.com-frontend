@@ -14,7 +14,7 @@ object ReductionDto {
       val query = """
         select id, code, reduction_amount
         from reduction
-        where reduction_currency_code = '""" + GlobalConfig.currencyCode + """'
+        where reduction_currency_code = '""" + GlobalConfig.paymentCurrencyCode + """'
         order by id;"""
 
       Logger.info("ReductionDto.getAll():" + query)
@@ -27,7 +27,7 @@ object ReductionDto {
             code = code,
             price = Price(
               amount = reductionAmount,
-              currencyCode = GlobalConfig.currencyCode
+              currencyCode = GlobalConfig.paymentCurrencyCode
             )
           )
       }

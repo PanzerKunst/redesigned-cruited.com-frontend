@@ -196,7 +196,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
               request.body.asText match {
                 case None => BadRequest("Request body must contain the Paymill token")
                 case Some(paymillToken) =>
-                  PaymillService.doPayment(paymillToken, costAfterReductions, GlobalConfig.currencyCode)
+                  PaymillService.doPayment(paymillToken, costAfterReductions)
 
                   val paidOrder = order.copy(
                     status = Order.statusIdPaid,
@@ -227,6 +227,6 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     val datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
     val orderDateTime = datetimeFormat.format(new Date(order.paymentTimestamp.get))
 
-    emailService.sendPaidOrderCompleteEmail(account.emailAddress.get, account.firstName.get, orderedProducts, order.id.get, costAfterReductions, GlobalConfig.currencyCode, vatAmount, orderDateTime, i18nMessages("email.orderComplete.paid.subject"))
+    emailService.sendPaidOrderCompleteEmail(account.emailAddress.get, account.firstName.get, orderedProducts, order.id.get, costAfterReductions, vatAmount, orderDateTime, i18nMessages("email.orderComplete.paid.subject"))
   }
 }
