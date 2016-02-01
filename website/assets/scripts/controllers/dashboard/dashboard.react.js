@@ -49,11 +49,6 @@ CR.Controllers.Dashboard = P(function(c) {
                                 const editionClasses = "edition " + order.getEdition().code;
                                 const statusClasses = "status " + order.getStatusForHtml();
 
-                                let editionKey = "edition.name." + order.getEdition().code;
-                                if (CR.Services.Browser.isSmallScreen()) {
-                                    editionKey = "edition.name.short." + order.getEdition().code;
-                                }
-
                                 return (
                                     <li key={reactItemId} className="sheet-of-paper">
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
@@ -68,8 +63,8 @@ CR.Controllers.Dashboard = P(function(c) {
                                                 </div>
                                                 {completePaymentLink}
                                             </div>
-                                            <div>
-                                                <span className={editionClasses}>{CR.i18nMessages[editionKey]}</span>
+                                            <div className="centered-contents">
+                                                <span className={editionClasses}>{CR.i18nMessages["edition.name." + order.getEdition().code]}</span>
                                             </div>
                                         </section>
 

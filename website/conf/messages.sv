@@ -9,9 +9,6 @@ product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
 edition.name.EXEC=Chef
-edition.name.short.PRO=Erfaren
-edition.name.short.YOUNG_PRO=Ny i yrkeslivet
-edition.name.short.EXEC=Chef
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2 dokument
 reduction.name.3_PRODUCTS_SAME_ORDER=3 dokument

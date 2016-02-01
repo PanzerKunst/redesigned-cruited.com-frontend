@@ -5,7 +5,12 @@ CR.Controllers.OrderedDocumentAssessment = React.createClass({
         const isBtnDisabled = this.props.order.getStatus() !== CR.Models.OrderStaticProps.statusIds.completed;
 
         return (
-            <li><span>{CR.i18nMessages["product.name." + this.props.productCode]}</span><button className="btn btn-default" onClick={this._handleClick} disabled={isBtnDisabled}>{CR.i18nMessages["dashboard.viewReportBtn.text"]}</button></li>
+            <li>
+                <p>{CR.i18nMessages["product.name." + this.props.productCode]}</p>
+                <div className="centered-contents">
+                    <button className="btn btn-default" onClick={this._handleClick} disabled={isBtnDisabled}>{CR.i18nMessages["dashboard.viewReportBtn.text"]}</button>
+                </div>
+            </li>
             );
     },
 

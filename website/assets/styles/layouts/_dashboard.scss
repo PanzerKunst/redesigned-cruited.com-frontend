@@ -6,21 +6,23 @@
   }
 
   .status-and-edition-wrapper {
-    display: flex;
-    justify-content: space-between;
+    > div:first-child {
+      display: flex;
+      margin-bottom: $content-element-margin-bottom;
+    }
 
     @include medium-screen {
+      display: flex;
+      justify-content: space-between;
+
       > div:first-child {
-        display: flex;
+        margin-bottom: 0;
       }
     }
   }
 
   .btn-primary.btn-xs {
-    margin-left: 5.2em;
-    @include medium-screen {
-      margin-left: 1em;
-    }
+    margin-left: 1em;
   }
 
   .view-report-list {
@@ -36,16 +38,22 @@
         margin-bottom: 0;
       }
 
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      > span {
+      > p {
         font-weight: bold;
+        text-align: center;
+        margin-bottom: 0;
       }
 
-      > button {
+      button {
         margin: 0.5em 0;
+      }
+    }
+
+    @include medium-screen {
+      > li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
     }
   }
@@ -58,50 +66,42 @@
 .no-flexbox {
   #dashboard {
     .status-and-edition-wrapper {
-      display: block;
-      @include clearfix;
+      > div:first-child {
+        display: block;
+        @include clearfix;
 
-      > div {
-        &:first-child {
+        > div {
           float: left;
-        }
-        &:last-child {
-          float: right;
         }
       }
 
       @include medium-screen {
-        > div:first-child {
-          @include clearfix;
+        display: block;
+        @include clearfix;
 
-          > div {
-            float: left;
+        > div {
+          float: left;
+
+          &.centered-contents {
+            float: right;
           }
         }
       }
     }
 
     .view-report-list > li {
-      display: block;
-      @include clearfix;
+      @include medium-screen {
+        display: block;
+        @include clearfix;
 
-      $floated-el-width: 50%;
-      $floated-el-separator-width: 2%;
+        > p {
+          float: left;
+          margin: 0.8em 0;
+        }
 
-      > span,
-      > button {
-        max-width: $floated-el-width - $floated-el-separator-width / 2;
-      }
-
-      > span {
-        float: left;
-        margin: 0.8em 0;
-      }
-
-      > button {
-        float: right;
-
-        margin-left: $floated-el-separator-width;
+        > div {
+          float: right;
+        }
       }
     }
   }
