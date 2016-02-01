@@ -86,6 +86,8 @@ CR.Controllers.CouponForm = React.createClass({
                                 CR.order.saveInLocalStorage();
 
                                 this.props.controller.reRender();
+
+                                this.$couponCodeField.blur();
                             }
                             break;
                         default:
