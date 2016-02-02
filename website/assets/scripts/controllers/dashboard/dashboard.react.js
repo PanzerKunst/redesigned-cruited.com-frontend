@@ -28,6 +28,12 @@ CR.Controllers.Dashboard = P(function(c) {
                     </header>
                     <div className="with-circles">
                         <span>{CR.Services.String.template(CR.i18nMessages["dashboard.subtitle"], "firstName", this.state.account.firstName)}</span>
+                        <div className="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["dashboard.orderCompleted.alert.text"]}} />
+                        </div>
                         <ul className="styleless">
                             {this.state.orders.map(function(order, index) {
                                 let completePaymentLink = null;
@@ -94,6 +100,27 @@ CR.Controllers.Dashboard = P(function(c) {
 
             const outer = "<a href=\"" + order.jobAdUrl + "\" target=\"_blank\">{inner}</a>";
             return CR.Services.String.template(outer, "inner", inner);
+        },
+
+
+        componentDidUpdate: function() {
+            this._initElements();
+            this._showOrderSuccessAlertIfNeeded();
+        },
+
+        _initElements: function() {
+            this.$content = $("#content");
+            this.$orderCompletedAlert = this.$content.find(".alert");
+        },
+
+        _showOrderSuccessAlertIfNeeded: function() {
+            if (!this.$orderCompletedAlert.is(":visible")) {
+                const queryStrings = CR.Services.Browser.getUrlQueryStrings();
+
+                if (queryStrings.action === "orderCompleted") {
+                    this.$orderCompletedAlert.fadeIn();
+                }
+            }
         }
     });
 

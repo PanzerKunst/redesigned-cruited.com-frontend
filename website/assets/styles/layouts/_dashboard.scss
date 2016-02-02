@@ -5,6 +5,10 @@
     margin-top: 0;
   }
 
+  .alert {
+    display: none;
+  }
+
   .status-and-edition-wrapper {
     > div:first-child {
       display: flex;

@@ -51,12 +51,6 @@ CR.Controllers.PaymentForm = React.createClass({
                     <input type="text" className="form-control" id="cardholder-name" />
                     <p className="field-error" data-check="empty" />
                 </div>
-                <div className="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.payment.success.text"]}} />
-                </div>
                 <div className="centered-contents">
                     <p className="other-form-error"></p>
                     <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.payment.submitBtn.text"]}</button>
@@ -84,8 +78,6 @@ CR.Controllers.PaymentForm = React.createClass({
         this.$invalidExpirationDateError = this.$form.find("#invalid-expiration-date");
 
         this.$cardholderNameField = this.$expiresAndCvcWrapper.find("#cardholder-name");
-
-        this.$successAlert = this.$form.children(".alert");
 
         this.$submitBtn = this.$form.find("button[type=submit]");
     },
@@ -153,20 +145,13 @@ CR.Controllers.PaymentForm = React.createClass({
             const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                    this.$cardNumberField.prop("disabled", true);
-                    this.$expiresMonthField.prop("disabled", true);
-                    this.$expiresYearField.prop("disabled", true);
-                    this.$cvcField.prop("disabled", true);
-                    this.$cardholderNameField.prop("disabled", true);
-                    this.$submitBtn.remove();
-
                     if (httpRequest.status === CR.httpStatusCodes.ok) {
-                        this.$successAlert.show();
+                        location.href = "/?action=orderCompleted&type=1";
                     } else {
                         alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                     }
                 }
-            }.bind(this);
+            };
             httpRequest.open(type, url);
             httpRequest.send(result.token);
         }

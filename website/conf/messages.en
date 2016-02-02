@@ -122,6 +122,7 @@ resetPassword.new.form.submitBtn.text=Save
 
 dashboard.title=My Assessments
 dashboard.subtitle=Welcome to your Assessments Dashboard, {firstName}!
+dashboard.orderCompleted.alert.text=Your purchase was completed, thanks for your order.<br />You will receive an email notification once we start your assessment.
 dashboard.completePaymentLink.text=Pay
 dashboard.newAssessmentBtn.text=Get a new assessment
 dashboard.viewReportBtn.text=View report
@@ -255,7 +256,6 @@ order.payment.subtitle=Please enter your card details
 order.payment.submitBtn.text=Complete my order
 order.payment.validation.invalidCardNumber=Invalid card number
 order.payment.validation.invalidExpirationDate=Invalid expiration date
-order.payment.success.text=Your payment was successful. You can access <a href="/">your dashboard</a> to see the status of your assessment.
 
 order.payment.form.cardNumber.label=Card number
 order.payment.form.cardNumber.placeholder=

@@ -122,6 +122,7 @@ resetPassword.new.form.submitBtn.text=Spara
 
 dashboard.title=Mina granskningar
 dashboard.subtitle=Välkommen, {firstName}!
+dashboard.orderCompleted.alert.text=Din beställning har tagits emot, tack!<br />Vi kommer att meddela dig via e-post när din granskning påbörjas.
 dashboard.completePaymentLink.text=Betala
 dashboard.newAssessmentBtn.text=Skapa ny granskning
 dashboard.viewReportBtn.text=Visa rapport
@@ -255,7 +256,6 @@ order.payment.subtitle=Ange dina betaluppgifter
 order.payment.submitBtn.text=Genomför beställning
 order.payment.validation.invalidCardNumber=Ogiltigt kortnummer
 order.payment.validation.invalidExpirationDate=Ogiltigt utgångsdatum
-order.payment.success.text=Din betalning lyckades. Du kan nu gå till din <a href="/">översikt</a> för att se status på din granskning.
 
 order.payment.form.cardNumber.label=Kortnummer
 order.payment.form.cardNumber.placeholder=

@@ -14,10 +14,6 @@ $expires-and-cvc-field-width: 30%;
     }
   }
 
-  .alert {
-    display: none;
-  }
-
   @include medium-screen {
     #cart-section,
     form {

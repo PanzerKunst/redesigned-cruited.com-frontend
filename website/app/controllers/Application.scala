@@ -188,7 +188,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   // If the cost is 0, we redirect to the dashboard
                   if (costAfterReductions == 0) {
                     emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, i18nMessages("email.orderComplete.free.subject"))
-                    Redirect("/")
+                    Redirect("/?action=orderCompleted")
                   } else {
                     // We display the payment page
                     Ok(views.html.order.orderStepPayment(i18nMessages, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, finalisedOrderId))
