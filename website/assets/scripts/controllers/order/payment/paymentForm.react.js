@@ -2,11 +2,13 @@
 
 CR.Controllers.PaymentForm = React.createClass({
     render: function() {
+        const cardNumberAndCvcInputType = Modernizr.touchevents ? "number" : "text";
+
         return (
             <form ref="form" onSubmit={this._handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="card-number" className="for-required-field">{CR.i18nMessages["order.payment.form.cardNumber.label"]}</label>
-                    <input type="number" className="form-control" id="card-number" placeholder={CR.i18nMessages["order.payment.form.cardNumber.placeholder"]} onBlur={this._handleCardNumberFieldBlur} />
+                    <input type={cardNumberAndCvcInputType} className="form-control" id="card-number" placeholder={CR.i18nMessages["order.payment.form.cardNumber.placeholder"]} onBlur={this._handleCardNumberFieldBlur} />
                     <p className="field-error" data-check="empty" />
                     <p className="field-error" id="invalid-card-number">{CR.i18nMessages["order.payment.validation.invalidCardNumber"]}</p>
                 </div>
@@ -39,7 +41,7 @@ CR.Controllers.PaymentForm = React.createClass({
                     </div>
                     <div className="form-group">
                         <label htmlFor="cvc" className="for-required-field">{CR.i18nMessages["order.payment.form.cvc.label"]}</label>
-                        <input type="number" className="form-control" id="cvc" placeholder={CR.i18nMessages["order.payment.form.cvc.placeholder"]} />
+                        <input type={cardNumberAndCvcInputType} className="form-control" id="cvc" placeholder={CR.i18nMessages["order.payment.form.cvc.placeholder"]} />
                         <p className="field-error" data-check="empty" />
                     </div>
                 </div>
@@ -127,28 +129,23 @@ CR.Controllers.PaymentForm = React.createClass({
                 this.validator.showErrorMessage(this.$invalidExpirationDateError);
                 this.$submitBtn.disableLoading();
             } else {
-                /* TODO paymill.createToken({
-                 number: cardNumber,
-                 exp_month: cardExpiryMonth,
-                 exp_year: cardExpiryYear,
-                 cvc: this.$cvcField.val(),
-                 cardholder: this.$cardholderNameField.val(),
-                 amount: transactionAmount,
-                 currency: this.props.currencyCode
-                 }, this._handlePaymillResponse); */
-
-                // TODO: remove
-                console.log("transactionAmount", transactionAmount);
-                this._handlePaymillResponse(null, {token: "aoidfjaiosjfajf"});
-                // this.$submitBtn.remove();
-                // this.$successAlert.show();
+                paymill.createToken({
+                    number: cardNumber,
+                    exp_month: cardExpiryMonth,
+                    exp_year: cardExpiryYear,
+                    cvc: this.$cvcField.val(),
+                    cardholder: this.$cardholderNameField.val(),
+                    amount: transactionAmount,
+                    currency: this.props.currencyCode
+                }, this._handlePaymillResponse);
             }
         }
     },
 
     _handlePaymillResponse: function(error, result) {
         if (error) {
-            console.log("error.apierror: " + error.apierror);
+            alert("Paymill error: " + error.apierror);
+            this.$submitBtn.disableLoading();
         } else {
             const type = "PUT";
             const url = "/api/orders/pay";
@@ -156,6 +153,11 @@ CR.Controllers.PaymentForm = React.createClass({
             const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    this.$cardNumberField.prop("disabled", true);
+                    this.$expiresMonthField.prop("disabled", true);
+                    this.$expiresYearField.prop("disabled", true);
+                    this.$cvcField.prop("disabled", true);
+                    this.$cardholderNameField.prop("disabled", true);
                     this.$submitBtn.remove();
 
                     if (httpRequest.status === CR.httpStatusCodes.ok) {
