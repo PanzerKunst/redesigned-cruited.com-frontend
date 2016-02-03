@@ -186,7 +186,7 @@ nav > a,
   font-size: $font-size-sm;
   border-radius: 1.3em;
 
-  padding: 0.5em 0.7em;
+  padding: 0.5em 0.6em 0.4em 0.7em;
 
   line-height: 1em;
   > span {
@@ -194,9 +194,7 @@ nav > a,
   }
 
   @include medium-screen {
-    // Default
-    padding-left: 1em;
-    padding-right: 1em;
+    padding: .45em 1em 0.55em 1em;
 
     > span {
       margin-right: 1em;
