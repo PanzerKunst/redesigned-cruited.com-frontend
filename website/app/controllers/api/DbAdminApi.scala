@@ -18,4 +18,9 @@ class DbAdminApi extends Controller {
     else
       Forbidden("Wrong key")
   }
+
+  def fixBothersomeCharactersInLinkedinProfile() = Action { request =>
+    DbAdmin.fixBothersomeCharactersInLinkedinProfile()
+    Ok
+  }
 }

@@ -125,6 +125,11 @@ object DbAdmin {
     fixBothersomeCharactersInLinkedinProfile()
   }
 
+  def fixBothersomeCharactersInLinkedinProfile() {
+    val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
+    AccountDto.cleanLinkedinProfileOfIds(ids)
+  }
+
   private def initDataProduct() {
     DB.withConnection { implicit c =>
       SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCvReview + "', 299, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
@@ -144,10 +149,5 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       SQL("update documents set 2days_after_assessment_delivered_email_sent = 1;").execute()
     }
-  }
-
-  private def fixBothersomeCharactersInLinkedinProfile() {
-    val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
-    AccountDto.cleanLinkedinProfileOfIds(ids)
   }
 }

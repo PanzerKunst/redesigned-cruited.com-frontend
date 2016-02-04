@@ -27,6 +27,7 @@ GET         /order/complete-payment                               controllers.Ap
 
 # API
 POST        /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables
+POST        /api/db/fix-linkedin-json                             controllers.api.DbAdminApi.fixBothersomeCharactersInLinkedinProfile
 GET         /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
 POST        /api/orders                                           controllers.api.OrderApi.create
 PUT         /api/orders                                           controllers.api.OrderApi.update
