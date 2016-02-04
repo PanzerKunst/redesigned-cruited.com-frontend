@@ -113,8 +113,13 @@ object OrderDto {
         case Some(customerComment) => "'" + DbUtil.safetize(customerComment) + "'"
       }
 
+      val paymentDateClause = order.paymentTimestamp match {
+        case None => "NULL"
+        case Some(paymentTimestamp) => "'" + DbUtil.dateFormat.format(new Date(paymentTimestamp)) + "'"
+      }
+
       val query = """
-      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, /* useful fields */
+      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, paid_on, /* useful fields */
         li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test, lang) /* unused but required fields */
       values(""" + order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
@@ -128,7 +133,8 @@ object OrderDto {
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +
-        customerCommentClause + """,
+        customerCommentClause + """, """ +
+        paymentDateClause + """,
         '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0, 'sw');"""
 
       Logger.info("OrderDto.createFinalised():" + query)
