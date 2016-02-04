@@ -17,7 +17,8 @@ CR.httpStatusCodes = {
     noContent: 204,
     emailAlreadyRegistered: 230,
     linkedinAccountIdAlreadyRegistered: 231,
-    couponHasReachedMaxUses: 230
+    couponHasReachedMaxUses: 230,
+    paymillError: 230
 };
 
 CR.localStorageKeys = {

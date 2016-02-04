@@ -196,17 +196,22 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
               request.body.asText match {
                 case None => BadRequest("Request body must contain the Paymill token")
                 case Some(paymillToken) =>
-                  // TODO PaymillService.doPayment(paymillToken, costAfterReductions)
+                  try {
+                    PaymillService.doPayment(paymillToken, costAfterReductions)
 
-                  val paidOrder = order.copy(
-                    status = Order.statusIdPaid,
-                    paymentTimestamp = Some(new Date().getTime)
-                  )
-                  OrderDto.update(paidOrder)
+                    val paidOrder = order.copy(
+                      status = Order.statusIdPaid,
+                      paymentTimestamp = Some(new Date().getTime)
+                    )
+                    OrderDto.update(paidOrder)
 
-                  callSendPaidOrderCompleteEmail(AccountDto.getOfId(accountId).get, paidOrder, costAfterReductions)
+                    callSendPaidOrderCompleteEmail(AccountDto.getOfId(accountId).get, paidOrder, costAfterReductions)
 
-                  Ok
+                    Ok
+                  }
+                  catch {
+                    case pe: PaymentException => Status(HttpService.httpStatusPaymillError).apply(pe.getMessage)
+                  }
               }
             }
         }

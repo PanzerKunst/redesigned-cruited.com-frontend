@@ -1,7 +1,7 @@
 package services
 
 import com.paymill.context.PaymillContext
-import play.api.Play
+import play.api.{Logger, Play}
 import play.api.Play.current
 
 object PaymillService {
@@ -9,23 +9,27 @@ object PaymillService {
   val paymillAccountPrivateKey = Play.configuration.getString("paymill.account.privateKey").get
   val paymentTransactionName = Play.configuration.getString("payment.transactionName").get
 
+  val paymillResponseCodeSuccess = 20000
   val transactionService = new PaymillContext(paymillAccountPrivateKey).getTransactionService
 
   def doPayment(token: String, amount: Int) {
-    val currencyCode = GlobalConfig.paymentCurrencyCode
-    val currencyCodesWhereAmountIsMultipliedBy100 = List("USD", "EUR")
-
-    val transactionAmount = if(currencyCodesWhereAmountIsMultipliedBy100.contains(currencyCode)) {
-      amount * 100
-    } else {
-      amount
-    }
-
-    transactionService.createWithToken(
+    val transaction = transactionService.createWithToken(
       token,
-      transactionAmount,
-      currencyCode,
+      amount * 100,
+      GlobalConfig.paymentCurrencyCode,
       paymentTransactionName
     )
+
+    val transactionResponseCode = transaction.getResponseCode
+    val transactionResponseText = transaction.getResponseCodeDetail
+
+    // See https://developers.paymill.com/API/index#response-codes
+    Logger.info("Payment transaction completed: " + transactionResponseText + " (" + transactionResponseCode + ")")
+
+    if (transactionResponseCode != paymillResponseCodeSuccess) {
+      throw new PaymentException(transactionResponseText + " (" + transactionResponseCode + ")")
+    }
   }
 }
+
+case class PaymentException(msg: String) extends Exception(msg)

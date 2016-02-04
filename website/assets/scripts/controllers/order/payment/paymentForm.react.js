@@ -148,10 +148,16 @@ CR.Controllers.PaymentForm = React.createClass({
                     if (httpRequest.status === CR.httpStatusCodes.ok) {
                         location.href = "/?action=orderCompleted&type=1";
                     } else {
-                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        this.$submitBtn.disableLoading();
+
+                        if (httpRequest.status === CR.httpStatusCodes.paymillError) {
+                            alert("Payment error: " + httpRequest.responseText);
+                        } else {
+                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        }
                     }
                 }
-            };
+            }.bind(this);
             httpRequest.open(type, url);
             httpRequest.send(result.token);
         }
