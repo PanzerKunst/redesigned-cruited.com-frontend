@@ -194,7 +194,7 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
         }
 
         val (couponCodeOpt, couponOpt) = if (requestData.contains("couponCode")) {
-          val couponCode = requestData("couponCode").head
+          val couponCode = requestData("couponCode").head.trim
 
           CouponDto.getOfCode(couponCode) match {
             case None => throw new Exception("No coupon found for code " + couponCode)
