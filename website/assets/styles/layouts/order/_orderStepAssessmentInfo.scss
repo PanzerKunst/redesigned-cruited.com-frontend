@@ -32,6 +32,17 @@
     margin-top: 0.5em;
   }
 
+  // TODO: remove once the customer comment is added to the rating page
+  #job-you-search-section {
+    border-bottom: none;
+  }
+
+  // TODO: remove once the customer comment is added to the rating page
+  // and also remove "id" attribute from the markup
+  #customer-comment-form-group {
+    display: none;
+  }
+
   #tos-wrapper {
     > .checkbox {
       display: inline-block;

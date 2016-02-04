@@ -70,7 +70,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     </div>
                                 </div>
                             </section>
-                            <div className="form-group">
+                            <div id="customer-comment-form-group" className="form-group">
                                 <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
                                 <textarea className="form-control" id="customer-comment" maxLength="512" defaultValue={customerComment} />
                                 <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
