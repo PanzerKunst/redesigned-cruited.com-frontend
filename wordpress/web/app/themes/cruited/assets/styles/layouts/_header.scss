@@ -37,7 +37,8 @@
       display: flex;
       justify-content: flex-end;
 
-      > a[href="/users/"] {
+      > a[href="/users/"],
+      > a[href="https://app.cruited.com/login"] {
         margin-right: 3 * $spacer-unit-size;
       }
 
@@ -130,7 +131,8 @@
     }
 
     .other-nav-ux {
-      > a[href="/users/"] {
+      > a[href="/users/"],
+      > a[href="https://app.cruited.com/login"] {
         margin-top: 5px;
       }
 
@@ -242,7 +244,8 @@
       }
 
       .other-nav-ux {
-        > a[href="/users/"] {
+        > a[href="/users/"],
+        > a[href="https://app.cruited.com/login"] {
           margin-top: 18px;
         }
 
