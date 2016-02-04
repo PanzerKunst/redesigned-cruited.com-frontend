@@ -290,7 +290,6 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         CR.i18nMessages = i18nMessages;
         this.linkedinAuthCodeRequestUrl = linkedinAuthCodeRequestUrl;
         this.linkedinProfile = linkedinProfile;
-
         this.linkedinErrorMessage = linkedinErrorMessage;
 
         this.reactInstance = ReactDOM.render(
@@ -305,7 +304,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         this.reactInstance.replaceState({
             linkedinAuthCodeRequestUrl: this.linkedinAuthCodeRequestUrl,
             linkedinProfile: this.linkedinProfile,
-            linkedinErrorMessage: this.linkedinErrorMessage
+            linkedinErrorMessage: this.linkedinErrorMessage,
+            isRegisterWithLinkedinDefault: this.linkedinProfile !== null
         });
     };
 });
