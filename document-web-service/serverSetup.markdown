@@ -63,6 +63,7 @@ Comment everything, and add this new section:
     server {
             listen 80;
             server_name api.cruited.com;
+            client_max_body_size 10M;
 
             location / {
                     proxy_pass http://localhost:9005;

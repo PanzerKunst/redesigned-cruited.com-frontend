@@ -18,9 +18,10 @@ Update last section into:
     server {
             listen 80;
             server_name app.cruited.com;
+            client_max_body_size 10M;
 
             location / {
-                    proxy_pass http://localhost:9006;
+                    proxy_pass http://localhost:9007;
                     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
                     proxy_redirect off;
                     proxy_buffering off;
@@ -80,6 +81,6 @@ Edit the path in the `application.home` declaration, and uncomment that line.
     $ ./activator
     $ stage
     $ exit
-    $ ./target/universal/stage/bin/website -Dhttp.port=9006
+    $ ./target/universal/stage/bin/website -Dhttp.port=9007
 
 # Run DB update script
