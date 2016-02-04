@@ -16,9 +16,9 @@
                 ?>
 
                 <div class="other-nav-ux">
-                    <a href="/users/">Logga in</a>
+                    <a href="https://app.cruited.com/login">Logga in</a>
 
-                    <a href="/users/select-document/" class="btn secondary">Börja nu</a>
+                    <a href="https://app.cruited.com/order" class="btn secondary">Börja nu</a>
 
                     <!-- select class="form-control">
                         <option value="sv">Sv</option>
