@@ -102,12 +102,11 @@ Make the `activator` script executable:
 
 # Configuration changes
 
-    $ vi ~/Cruited_V2/document-web-service/conf/logback.xml
+    $ vi conf/logback.xml
 
 Edit the path in the `application.home` declaration, and uncomment that line.
 
-    $ cd ~/Cruited_V2/document-web-service/conf
-    $ mv -f application-prod.conf application.conf
+    $ mv -f conf/application-prod.conf conf/application.conf
 
 
 # JVM params
