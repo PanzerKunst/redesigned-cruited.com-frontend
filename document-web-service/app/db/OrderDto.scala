@@ -169,7 +169,8 @@ object OrderDto {
         from documents d
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
-        where d.id = """ + id + """;"""
+        where d.id = """ + id + """
+          and d.shw = 1;"""
 
       Logger.info("OrderDto.getOfId():" + query)
 

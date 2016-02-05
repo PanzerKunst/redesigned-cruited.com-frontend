@@ -236,7 +236,8 @@ object OrderDto {
         from documents d
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
-        where d.id = """ + id + """;"""
+        where d.id = """ + id + """
+          and d.shw = 1;"""
 
       Logger.info("OrderDto.getOfIdForFrontend():" + query)
 
@@ -347,6 +348,7 @@ object OrderDto {
           inner join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
         where added_by = """ + accountId + """
+          and d.shw = 1
         order by d.id desc;"""
 
       Logger.info("OrderDto.getOfAccountIdForFrontend():" + query)
@@ -449,6 +451,7 @@ object OrderDto {
         where d.id > 0
           and added_by = """ + accountId + """
           and paid_on is null
+          and d.shw = 1
         order by d.id desc
         limit 1;"""
 
