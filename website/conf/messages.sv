@@ -124,7 +124,7 @@ dashboard.title=Mina granskningar
 dashboard.subtitle=Välkommen, {firstName}!
 dashboard.orderCompleted.alert.text=Din beställning har tagits emot, tack!<br />Vi kommer att meddela dig via e-post när din granskning påbörjas.
 dashboard.completePaymentLink.text=Betala
-dashboard.newAssessmentBtn.text=Skapa ny granskning
+dashboard.newAssessmentBtn.text=Ny granskning
 dashboard.viewReportBtn.text=Visa rapport
 dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan fortfarande <a href="{url}">redigera din information</a> om du vill.
 
