@@ -66,6 +66,11 @@ class DocumentService @Inject()(val ws: WSClient) {
 
   def getFileNameWithoutExtension(fileName: String): String = {
     val lastDotIndex = fileName.lastIndexOf(".")
+
+    // TODO: remove
+    Logger.info("DocumentService.getFileNameWithoutExtension() > filename: " + fileName)
+    Logger.info("DocumentService.getFileNameWithoutExtension() > lastDotIndex: " + lastDotIndex)
+
     fileName.substring(0, lastDotIndex)
   }
 

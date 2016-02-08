@@ -329,6 +329,10 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       case None => NoContent
       case Some(fileName) =>
         val file = new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName)
+
+        // TODO: remove
+        Logger.info("Application.sendDocument() > file path: " + documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName)
+
         if (file.exists()) {
           Ok.sendFile(
             content = file,
