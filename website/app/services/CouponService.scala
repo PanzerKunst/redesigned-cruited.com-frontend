@@ -13,7 +13,10 @@ object CouponService {
         case None => false
         case Some(accountId) => CouponDto.useCount(coupon.code, Some(accountId)) >= 1
       }
-      case _ => CouponDto.useCount(coupon.code, Some(accountIdOpt.get)) >= coupon.maxUseCount
+      case _ => accountIdOpt match {
+        case None => false
+        case Some(accountId) => CouponDto.useCount(coupon.code, Some(accountId)) >= coupon.maxUseCount
+      }
     }
   }
 }
