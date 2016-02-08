@@ -38,20 +38,20 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
   }
 
   def sendUnpaidOrderReminderEmail(emailAddress: String, firstName: String, paymentUrl: String, subject: String) = {
-    /* TODO mailerClient.send(Email(
+    mailerClient.send(Email(
       subject,
       accountName + "<" + accountAddress + ">",
       Seq(emailAddress),
       bodyHtml = Some(views.html.email.unpaidOrderReminder(firstName, paymentUrl).toString())
-    )) */
+    ))
   }
 
   def sendTheTwoDaysAfterAssessmentDeliveredEmail(emailAddress: String, firstName: String, subject: String) = {
-    /* TODO mailerClient.send(Email(
+    mailerClient.send(Email(
       subject,
       accountName + "<" + accountAddress + ">",
       Seq(emailAddress),
       bodyHtml = Some(views.html.email.twoDaysAfterAssessmentDelivered(firstName).toString)
-    )) */
+    ))
   }
 }
