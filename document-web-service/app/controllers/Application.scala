@@ -324,6 +324,22 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
+  private def sendDocument(orderId: Long, fileNameOpt: Option[String]) = {
+    fileNameOpt match {
+      case None => NoContent
+      case Some(fileName) =>
+        val file = new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName)
+        if (file.exists()) {
+          Ok.sendFile(
+            content = file,
+            inline = true
+          )
+        } else {
+          NotFound
+        }
+    }
+  }
+
   def getLinkedinProfileOfOrder(orderId: Long) = Action { request =>
     if (request.queryString.contains("token")) {
       val orderIdBase64 = request.queryString.get("token").get.head
@@ -341,16 +357,6 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  private def sendDocument(orderId: Long, fileNameOpt: Option[String]) = {
-    fileNameOpt match {
-      case None => NoContent
-      case Some(fileName) => Ok.sendFile(
-        content = new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName),
-        inline = true
-      )
-    }
-  }
-
   def getCvThumbnailOfOrder(orderId: Long) = Action { request =>
     OrderDto.getOfId(orderId) match {
       case None => BadRequest("No order found for ID " + orderId)
@@ -365,23 +371,28 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action { request =>
-    OrderDto.getOfId(orderId) match {
-      case None => BadRequest("No order found for ID " + orderId)
-      case Some(order) => sendThumbnail(orderId, order.linkedinProfileFileName)
-    }
-  }
-
   private def sendThumbnail(orderId: Long, docFileNameOpt: Option[String]) = {
     docFileNameOpt match {
       case None => NoContent
       case Some(docFileName) =>
         val thumbnailFileName = orderId + Order.fileNamePrefixSeparator + documentService.getFileNameWithoutExtension(docFileName) + "." + documentService.docThumbnailFileExtension
+        val file = new File(documentService.assessedDocumentsThumbnailsRootDir + thumbnailFileName)
+        
+        if (file.exists()) {
+          Ok.sendFile(
+            content = file,
+            inline = true
+          )
+        } else {
+          NotFound
+        }
+    }
+  }
 
-        Ok.sendFile(
-          content = new File(documentService.assessedDocumentsThumbnailsRootDir + thumbnailFileName),
-          inline = true
-        )
+  def getLinkedinProfileThumbnailOfOrder(orderId: Long) = Action { request =>
+    OrderDto.getOfId(orderId) match {
+      case None => BadRequest("No order found for ID " + orderId)
+      case Some(order) => sendThumbnail(orderId, order.linkedinProfileFileName)
     }
   }
 
