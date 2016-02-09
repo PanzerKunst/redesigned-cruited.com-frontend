@@ -1,6 +1,7 @@
 package services
 
 import com.paymill.context.PaymillContext
+import models.Order
 import play.api.{Logger, Play}
 import play.api.Play.current
 
@@ -12,12 +13,12 @@ object PaymillService {
   val paymillResponseCodeSuccess = 20000
   val transactionService = new PaymillContext(paymillAccountPrivateKey).getTransactionService
 
-  def doPayment(token: String, amount: Int) {
+  def doPayment(token: String, amount: Int, order: Order) {
     val transaction = transactionService.createWithToken(
       token,
       amount * 100,
       GlobalConfig.paymentCurrencyCode,
-      paymentTransactionName
+      paymentTransactionName + " " + order.id.get + "-" + order.accountId.get
     )
 
     val transactionResponseCode = transaction.getResponseCode

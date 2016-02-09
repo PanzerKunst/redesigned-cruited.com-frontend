@@ -197,7 +197,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
                 case None => BadRequest("Request body must contain the Paymill token")
                 case Some(paymillToken) =>
                   try {
-                    PaymillService.doPayment(paymillToken, costAfterReductions)
+                    PaymillService.doPayment(paymillToken, costAfterReductions, order)
 
                     val paidOrder = order.copy(
                       status = Order.statusIdPaid,
