@@ -274,7 +274,7 @@ order.edit.saveBtn.text=Spara
 
 email.resetPassword.subject=Nytt lösenord till Cruited
 email.unpaidOrderReminder.subject=Färdigställ din beställning
-email.twoDaysAfterAssessmentDelivered.subject=Bara ett steg kvar till en granskning av din jobbansökan
+email.twoDaysAfterAssessmentDelivered.subject=Ett personligt råd om din granskning
 email.orderComplete.free.subject=Granskning skapad
 email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
 email.orderComplete.paid.orderedProductsSeparator=och
