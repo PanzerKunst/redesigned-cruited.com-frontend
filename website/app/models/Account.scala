@@ -69,15 +69,29 @@ object Account {
     linkedinProfile = linkedinProfile - "positions"
     linkedinProfile = linkedinProfile + ("positions" -> writablePositions)
 
-    // Current share > Comment
     (linkedinProfile \ "currentShare").asOpt[JsObject] match {
       case None =>
       case Some(currentShare) =>
         var writableCurrentShare = currentShare.copy()
 
+        // Current share > Comment
         val validComment = safetizeJsonStringValue(currentShare \ "comment")
         writableCurrentShare = writableCurrentShare - "comment"
         writableCurrentShare = writableCurrentShare + ("comment" -> validComment)
+
+        // Current share > Content > Title
+        (currentShare \ "content").asOpt[JsObject] match {
+          case None =>
+          case Some(currentShareContent) =>
+            var writableCurrentShareContent = currentShareContent.copy()
+
+            val validContentTitle = safetizeJsonStringValue(currentShareContent \ "title")
+            writableCurrentShareContent = writableCurrentShareContent - "title"
+            writableCurrentShareContent = writableCurrentShareContent + ("title" -> validContentTitle)
+
+            writableCurrentShare = writableCurrentShare - "content"
+            writableCurrentShare = writableCurrentShare + ("content" -> writableCurrentShareContent)
+        }
 
         linkedinProfile = linkedinProfile - "currentShare"
         linkedinProfile = linkedinProfile + ("currentShare" -> writableCurrentShare)
