@@ -212,8 +212,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$form = $("#content").find("form");
 
             this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
+            this.$linkedinPreviewWrapper = this.$linkedinProfileFormGroup.children("div");
             this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin");
             this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
+            this.$linkedinProfileCheckedCheckboxWrapper = this.$linkedinPreviewWrapper.children(".checkbox");
 
             this.$cvFormGroup = this.$form.find("#cv-form-group");
             this.$cvFileField = this.$cvFormGroup.find("#cv");
@@ -230,7 +232,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             this.$submitBtn = this.$form.find("button[type=submit]");
 
-            this.$headerNav = $("#header-nav");
+            this.$headerBar = $("#container").children("header");
         },
 
         _initValidation: function() {
@@ -325,7 +327,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     httpRequest.open(type, url);
                     httpRequest.send(formData);
                 } else {
-                    if (this.$cvFormGroup.hasClass("has-error")) {
+                    if (this.$linkedinPreviewWrapper.hasClass("has-error") &&
+                        this.$linkedinProfileCheckedCheckboxWrapper[0].getBoundingClientRect().top < this.$headerBar.height()) {
+                        this._scrollToElement(this.$linkedinProfileFormGroup);
+                    } else if (this.$cvFormGroup.hasClass("has-error")) {
                         this._scrollToElement(this.$cvFormGroup);
                     } else if (this.$coverLetterFormGroup.hasClass("has-error")) {
                         this._scrollToElement(this.$coverLetterFormGroup);
@@ -346,7 +351,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _scrollToElement: function($el) {
-            const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerNav.height();
+            const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerBar.height();
 
             TweenLite.to(window, 1, {
                 scrollTo: offset,
