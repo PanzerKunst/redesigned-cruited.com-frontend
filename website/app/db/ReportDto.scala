@@ -19,7 +19,7 @@ object ReportDto {
       val query = """
         select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on,
           e.id as edition_id, edition,
-          c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name,
+          c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
           cat.id as red_comment_cat_id, cat.type as red_comment_doc_type,
           tc.id as top_comment_id, tc.comment as top_comment_text,
@@ -40,14 +40,14 @@ object ReportDto {
       // Use of `getAliased` because of bug when using the regular `get`
       val rowParser = str("file") ~ str("file_cv") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~
         long("edition_id") ~ str("edition") ~
-        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~
+        (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) ~
         (long("red_comment_id") ?) ~ (str("red_comment_text") ?) ~ (int("points") ?) ~
         getAliased[Option[Long]]("red_comment_cat_id") ~ getAliased[Option[String]]("red_comment_doc_type") ~
         (long("top_comment_id") ?) ~ (str("top_comment_text") ?) ~
         (long("top_comment_cat_id") ?) ~ (str("top_comment_doc_type") ?) map {
         case coverLetterFileName ~ cvFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ paymentDate ~
           editionId ~ editionCode ~
-          couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~
+          couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt ~
           redCommentId ~ redCommentText ~ weight ~
           redCommentCategoryId ~ redCommentDocType ~
           topCommentId ~ topCommentText ~
@@ -97,7 +97,8 @@ object ReportDto {
                 discountPercentage = discountPercentageOpt,
                 discountPrice = discountPriceOpt,
                 `type` = couponTypeOpt.get,
-                maxUseCount = couponMaxUseCountOpt.get
+                maxUseCount = couponMaxUseCountOpt.get,
+                couponExpiredMsg = couponExpiredMsgOpt
               ))
           }
 

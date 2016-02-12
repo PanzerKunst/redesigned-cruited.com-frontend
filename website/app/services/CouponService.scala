@@ -1,9 +1,15 @@
 package services
 
+import java.util.Date
+
 import db.CouponDto
 import models.Coupon
 
 object CouponService {
+  def hasExpired(coupon: Coupon): Boolean = {
+    coupon.expirationTimestamp < new Date().getTime
+  }
+
   def hasReachedMaxUses(coupon: Coupon, accountIdOpt: Option[Long]): Boolean = {
     coupon.`type` match {
       case Coupon.typeNoRestriction => false

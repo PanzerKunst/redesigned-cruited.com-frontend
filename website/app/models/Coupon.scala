@@ -10,7 +10,8 @@ case class Coupon(id: Long,
                   discountPercentage: Option[Int],
                   discountPrice: Option[Price],
                   `type`: Int,
-                  maxUseCount: Int)
+                  maxUseCount: Int,
+                  couponExpiredMsg: Option[String])
 
 object Coupon {
   implicit val writes: Writes[Coupon] = (
@@ -21,7 +22,8 @@ object Coupon {
       (JsPath \ "discountPercentage").writeNullable[Int] and
       (JsPath \ "discountPrice").writeNullable[Price] and
       (JsPath \ "type").write[Int] and
-      (JsPath \ "maxUseCount").write[Int]
+      (JsPath \ "maxUseCount").write[Int] and
+      (JsPath \ "couponExpiredMsg").writeNullable[String]
     )(unlift(Coupon.unapply))
 
   val typeNoRestriction = 0

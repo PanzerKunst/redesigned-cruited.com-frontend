@@ -12,12 +12,11 @@ import services.{CouponService, HttpService, SessionService}
 class CouponApi extends Controller {
   def get(code: String) = Action { request =>
     CouponDto.getOfCode(code) match {
-      case None =>
-        Logger.info("Someone tried to use the following incorrect or expired coupon: '" + code + "'")
-        NoContent
+      case None => NoContent
       case Some(coupon) =>
-        if (CouponService.hasReachedMaxUses(coupon, SessionService.getAccountId(request.session))) {
-          Status(HttpService.httpStatusCouponHasReachedMaxUses)
+        if (CouponService.hasExpired(coupon) || CouponService.hasReachedMaxUses(coupon, SessionService.getAccountId(request.session))) {
+          Logger.info("Someone tried to use the following expired (or used) coupon: '" + code + "'")
+          Status(HttpService.httpStatusCouponExpired).apply(Json.toJson(coupon))
         } else {
           Ok(Json.toJson(coupon))
         }

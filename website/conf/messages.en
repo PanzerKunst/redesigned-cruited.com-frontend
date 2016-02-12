@@ -185,8 +185,7 @@ order.productSelection.cartSection.coupon.label=Have a Promotion Code or a Gift 
 order.productSelection.cartSection.coupon.placeholder=Coupon Code
 order.productSelection.cartSection.coupon.addBtn.text=Apply coupon
 order.productSelection.cartSection.coupon.addBtn.loadingText=Applying coupon...
-order.productSelection.cartSection.coupon.notFoundError=Coupon not found or expired
-order.productSelection.cartSection.coupon.hasReachedMaxUsesError=Coupon has already been used
+order.productSelection.cartSection.coupon.notFoundError=Coupon not found
 order.productSelection.cartSection.subTotal=Sub-total
 order.productSelection.cartSection.total=Total You Pay
 

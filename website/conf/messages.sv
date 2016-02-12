@@ -185,8 +185,7 @@ order.productSelection.cartSection.coupon.label=Har du ett presentkort eller en 
 order.productSelection.cartSection.coupon.placeholder=Rabattkod
 order.productSelection.cartSection.coupon.addBtn.text=Lägg till
 order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
-order.productSelection.cartSection.coupon.notFoundError=Koden kunde inte hittas eller har utgått. Vänligen kontakta kundtjänst på kontakt@cruited.com
-order.productSelection.cartSection.coupon.hasReachedMaxUsesError=Koden är förbrukad. Vänligen kontakta kundtjänst på kontakt@cruited.com
+order.productSelection.cartSection.coupon.notFoundError=Koden kunde inte hittas. Vänligen kontakta kundtjänst på kontakt@cruited.com
 order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Att betala
 

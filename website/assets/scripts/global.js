@@ -17,7 +17,7 @@ CR.httpStatusCodes = {
     noContent: 204,
     emailAlreadyRegistered: 230,
     linkedinAccountIdAlreadyRegistered: 231,
-    couponHasReachedMaxUses: 230,
+    couponExpired: 230,
     paymillError: 230
 };
 

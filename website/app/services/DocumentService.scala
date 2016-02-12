@@ -167,7 +167,7 @@ class DocumentService @Inject()(val ws: WSClient) {
       val rcHeader = response.getFirstHeader("result")
 
       if (rcHeader.getValue != "True") {
-        throw new Exception("Failure while calling " + httpPost.getURI + " for document " + file.getAbsolutePath)
+        Logger.error("Failure while calling " + httpPost.getURI + " for document " + file.getAbsolutePath)
       } else {
         val outputStream = new FileOutputStream(file.getAbsolutePath + ".pdf")
         try {

@@ -31,7 +31,7 @@ select * from term_accceptation
 order by userid desc;
 
 select * from codes
-where valid_date > now();
+where shw = 1;
 
 delete from useri
 where email = 'cbramdit@gmail.com';
