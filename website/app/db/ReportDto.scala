@@ -19,7 +19,7 @@ object ReportDto {
       val query = """
         select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on,
           e.id as edition_id, edition,
-          c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
+          c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message,
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
           cat.id as red_comment_cat_id, cat.type as red_comment_doc_type,
           tc.id as top_comment_id, tc.comment as top_comment_text,
