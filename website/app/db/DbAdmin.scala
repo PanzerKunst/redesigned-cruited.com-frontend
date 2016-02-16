@@ -9,10 +9,10 @@ import services.GlobalConfig
 
 object DbAdmin {
   def reCreateTables() {
-    /* TODO removeAlterationOnTableDocuments()
+    removeAlterationOnTableDocuments()
     removeAlterationOnTableEdition()
     dropTable("reduction")
-    dropTable("product") */
+    dropTable("product")
 
     createTableProduct()
     createTableReduction()

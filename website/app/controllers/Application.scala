@@ -263,17 +263,17 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           case Some(tuple) =>
             val account = AccountDto.getOfId(accountId).get
 
-            // TODO if (tuple._1.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
-            ReportDto.getOfOrderId(orderId) match {
-              case None => BadRequest("No report available for order ID " + orderId)
-              case Some(assessmentReport) =>
-                val accountId = SessionService.getAccountId(request.session).get
+            if (tuple._1.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
+              ReportDto.getOfOrderId(orderId) match {
+                case None => BadRequest("No report available for order ID " + orderId)
+                case Some(assessmentReport) =>
+                  val accountId = SessionService.getAccountId(request.session).get
 
-                Ok(views.html.report(i18nMessages, AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
+                  Ok(views.html.report(i18nMessages, AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
+              }
+            } else {
+              Forbidden("You are not allowed to view reports which are not yours")
             }
-          /*} else {
-            Forbidden("You are not allowed to view reports which are not yours")
-          }*/
         }
     }
   }
