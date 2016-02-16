@@ -22,7 +22,7 @@ where id < 0;
 
 select * from documents
 order by added_at desc
-limit 30;
+limit 100;
 
 delete from documents
 where id > 2788;

@@ -34,6 +34,18 @@ CR.Controllers.Dashboard = P(function(c) {
                             </button>
                             <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["dashboard.orderCompleted.alert.text"]}} />
                         </div>
+                        <div className="alert alert-info alert-dismissible" role="alert" id="assessment-waiting-alert">
+                            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["dashboard.assessmentWaiting.alert.text"]}} />
+                        </div>
+                        <div className="alert alert-info alert-dismissible" role="alert" id="assessment-in-progress-alert">
+                            <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["dashboard.assessmentInProgress.alert.text"]}} />
+                        </div>
                         <ul className="styleless">
                             {this.state.orders.map(function(order, index) {
                                 let completePaymentLink = null;
@@ -105,21 +117,27 @@ CR.Controllers.Dashboard = P(function(c) {
 
         componentDidUpdate: function() {
             this._initElements();
-            this._showOrderSuccessAlertIfNeeded();
+            this._showAlertIfNeeded();
         },
 
         _initElements: function() {
             this.$content = $("#content");
-            this.$orderCompletedAlert = this.$content.find(".alert");
+            this.$orderCompletedAlert = this.$content.find(".alert-success");
+            this.$assessmentWaitingAlert = this.$content.find("#assessment-waiting-alert");
+            this.$assessmentInProgressAlert = this.$content.find("#assessment-in-progress-alert");
         },
 
-        _showOrderSuccessAlertIfNeeded: function() {
-            if (!this.$orderCompletedAlert.is(":visible")) {
-                const queryStrings = CR.Services.Browser.getUrlQueryStrings();
+        _showAlertIfNeeded: function() {
+            const queryStrings = CR.Services.Browser.getUrlQueryStrings();
+            const latestOrder = _.head(this.state.orders);
+            const latestOrderStatus = latestOrder ? latestOrder.getStatus() : CR.Models.OrderStaticProps.statusIds.notPaid;
 
-                if (queryStrings.action === "orderCompleted") {
-                    this.$orderCompletedAlert.fadeIn();
-                }
+            if (queryStrings.action === "orderCompleted" && !this.$orderCompletedAlert.is(":visible")) {
+                this.$orderCompletedAlert.fadeIn();
+            } else if (latestOrderStatus === CR.Models.OrderStaticProps.statusIds.paid && !this.$assessmentWaitingAlert.is(":visible")) {
+                this.$assessmentWaitingAlert.fadeIn();
+            } else if (latestOrderStatus === CR.Models.OrderStaticProps.statusIds.inProgress && !this.$assessmentInProgressAlert.is(":visible")) {
+                this.$assessmentInProgressAlert.fadeIn();
             }
         }
     });
