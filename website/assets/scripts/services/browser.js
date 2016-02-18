@@ -88,6 +88,12 @@ CR.Services.Browser = {
         }
     },
 
+    clearLocalStorage: function() {
+        if (Modernizr.localstorage) {
+            localStorage.clear();
+        }
+    },
+
     isIOS: function() {
         return /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
     },

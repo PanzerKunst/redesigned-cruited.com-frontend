@@ -41,3 +41,11 @@ where added_by in (
 	select id from useri
 	where email = 'cbramdit@gmail.com'
 );
+
+select *
+from documents
+where code = ''
+and added_at > '2016-02-07'
+and added_at < '2016-02-15'
+and status != -1
+order by id desc;

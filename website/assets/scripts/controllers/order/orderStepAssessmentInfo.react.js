@@ -377,6 +377,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
+        // We remove file names to avoid bugs of missing uploaded files
+        CR.order.setCvFileName(null);
+        CR.order.setCoverLetterFileName(null);
+
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
             document.querySelector("[role=main]")
