@@ -18,8 +18,7 @@ class AccountApi extends Controller {
         val frontendAccount = s.get
 
         val accountWithSameEmailAddressOpt = AccountDto.getOfEmailAddress(frontendAccount.emailAddress)
-        val accountIdInSession = SessionService.getAccountId(request.session)
-        if (accountWithSameEmailAddressOpt.isDefined && accountIdInSession.isDefined && accountWithSameEmailAddressOpt.get.id != accountIdInSession.get) {
+        if (accountWithSameEmailAddressOpt.isDefined) {
           Status(HttpService.httpStatusEmailAlreadyRegistered)
         } else {
           val accountWithSameLinkedinIdOpt = frontendAccount.linkedinProfile match {
@@ -27,10 +26,11 @@ class AccountApi extends Controller {
             case jsObject => AccountDto.getOfLinkedinAccountId((jsObject \ "id").as[String])
           }
 
-          if (accountWithSameLinkedinIdOpt.isDefined && accountIdInSession.isDefined && accountWithSameLinkedinIdOpt.get.id != accountIdInSession.get) {
+          if (accountWithSameLinkedinIdOpt.isDefined) {
             Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
           } else {
             val newAccountId = createAccountAndUpdateOrder(frontendAccount, request)
+            val accountIdInSession = SessionService.getAccountId(request.session)
 
             if (accountIdInSession.isDefined) {
               val accountId = accountIdInSession.get

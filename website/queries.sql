@@ -8,9 +8,6 @@ where id < 0;
 select * from useri
 order by registered_at desc;
 
-delete from useri
-where id > 1932;
-
 
 select * from documents
 where id < 0
@@ -23,9 +20,6 @@ where id < 0;
 select * from documents
 order by added_at desc
 limit 100;
-
-delete from documents
-where id > 2788;
 
 select * from term_accceptation
 order by userid desc;
