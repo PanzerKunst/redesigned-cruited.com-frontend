@@ -53,11 +53,22 @@
   font-weight: 100;
 }
 
-/* @font-face {
-  font-family: "Linotte";
-  src: url("../fonts/Linotte-SemiBold-webfont.eot") format("embedded-opentype"),
-    url("../fonts/Linotte-SemiBold-webfont.woff2") format("woff2"),
-    url("../fonts/Linotte-SemiBold-webfont.woff") format("woff"),
-    url("../fonts/Linotte-SemiBold-webfont.ttf") format("truetype"),
-    url("../fonts/Linotte-SemiBold-webfont.svg") format("svg");
-} */
+@font-face {
+    font-family: "Source Sans Pro";
+    src: url("../fonts/SourceSansPro-Regular.otf");
+}
+@font-face {
+    font-family: "Source Sans Pro";
+    src: url("../fonts/SourceSansPro-Semibold.otf");
+    font-weight: 700;
+}
+@font-face {
+    font-family: "Source Sans Pro";
+    src: url("../fonts/SourceSansPro-Light.otf");
+    font-weight: 100;
+}
+@font-face {
+    font-family: "Source Sans Pro";
+    src: url("../fonts/SourceSansPro-Bold.otf");
+    font-weight: 900;
+}

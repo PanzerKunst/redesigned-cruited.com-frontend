@@ -1,157 +1,164 @@
 .wrap {
-  font-weight: lighter;
+    font-weight: lighter;
 }
 
 .main > .page-content,
 .entry-content {
-  $section-padding-top: $spacer-unit-size * 6;
-  $section-padding-bottom: $spacer-unit-size * 2.5;
+    $section-padding-top: $spacer-unit-size * 6;
+    $section-padding-bottom: $spacer-unit-size * 2.5;
 
-  padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+    padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
 
-  @include medium-screen {
-    padding-top: $section-padding-top * $medium-screen-ratio-l;
-    padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
-
-    width: $medium-content-width;
-
-    padding-left: 0;
-    padding-right: 0;
-    margin: 0 auto;
-  }
-
-  @include large-screen {
-    font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
-    width: $large-content-width-more-readable;
-  }
-
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  a {
-    display: inline;
-  }
-
-  > article.well {
-    background-color: $lighter-grey;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-
-    > img {
-      display: block;
-      margin: 0 auto 1em auto;
-    }
-
-    padding: $well-padding;
     @include medium-screen {
-      padding: $well-padding * $medium-screen-ratio-l;
+        padding-top: $section-padding-top * $medium-screen-ratio-l;
+        padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
 
-      display: flex;
-      align-items: flex-start;  // TODO: not supported on Android browser
+        width: $medium-content-width;
 
-      > img {
-        margin: 0 1em 1em 0;
-      }
-
-      > div {
-        flex-grow: 1;
-      }
-    }
-  }
-
-  // To disable the stupid "width" and "height" attributes added by the Wordpress composer on images
-  img {
-    width: auto;
-    height: auto;
-  }
-
-  blockquote {
-    font-style: italic;
-    font-weight: normal;
-
-    padding: $well-padding;
-    @include medium-screen {
-      padding: $well-padding * $medium-screen-ratio-l;
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0 auto;
     }
 
-    &.highlighted {
-      border-left: 0.3em solid transparentize($secondary-action-color, 0.6);
-      background-color: transparentize($secondary-action-color, 0.8);
-
-      font-style: normal;
-      font-weight: lighter;
-      text-align: left;
-
-      margin-left: 2em;
-      margin-right: 2em;
+    @include large-screen {
+        font-size: #{$font-size-base-px * $medium-screen-ratio-m}px;
+        width: $large-content-width-more-readable;
     }
-  }
 
-  ul,
-  ol {
-    > li {
-      margin-top: 1em;
+    > p,
+    > ul,
+    > ol,
+    article.post {
+        font-family: "Source Sans Pro", Arial, sans-serif;
     }
-  }
 
-  strong {
-    background-color: transparentize($secondary-action-color, 0.6);
-    font-weight: lighter;
-    padding: 0.2em;
-  }
+    ul,
+    ol {
+        > li {
+            margin-top: 1em;
+        }
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    a {
+        display: inline;
+    }
+
+    strong {
+        background-color: transparentize($secondary-action-color, 0.6);
+        font-weight: lighter;
+        padding: 0.2em;
+    }
+
+    // To disable the stupid "width" and "height" attributes added by the Wordpress composer on images
+    img {
+        width: auto;
+        height: auto;
+    }
+
+    blockquote {
+        font-style: italic;
+        font-weight: normal;
+
+        padding: $well-padding;
+        @include medium-screen {
+            padding: $well-padding * $medium-screen-ratio-l;
+        }
+
+        &.highlighted {
+            border-left: 0.3em solid transparentize($secondary-action-color, 0.6);
+            background-color: transparentize($secondary-action-color, 0.8);
+
+            font-style: normal;
+            font-weight: lighter;
+            text-align: left;
+
+            margin-left: 2em;
+            margin-right: 2em;
+        }
+    }
+
+    > article.well {
+        background-color: $lighter-grey;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+
+        > img {
+            display: block;
+            margin: 0 auto 1em auto;
+        }
+
+        padding: $well-padding;
+        @include medium-screen {
+            padding: $well-padding * $medium-screen-ratio-l;
+
+            display: flex;
+            align-items: flex-start; // TODO: not supported on Android browser
+
+            > img {
+                margin: 0 1em 1em 0;
+            }
+
+            > div {
+                flex-grow: 1;
+            }
+        }
+    }
 }
 
 .img-bg {
-  background-position: center top;
-  background-attachment: fixed;
-  background-size: cover;
-  background-color: $grey-text-color;
+    background-position: center top;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: $grey-text-color;
 
-  color: $background-body-color;
-  h2 {
     color: $background-body-color;
-  }
+    h2 {
+        color: $background-body-color;
+    }
 }
 
 .with-circles {
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-image: url(../images/section-circles_263.png);
-  @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
-    background-image: url(../images/section-circles_526.png);
-    background-size: 263px 80px;
-  }
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-image: url(../images/section-circles_263.png);
+    @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
+        background-image: url(../images/section-circles_526.png);
+        background-size: 263px 80px;
+    }
 
-  @include medium-screen {
-    background-image: url(../images/section-circles-large.png);
-  }
+    @include medium-screen {
+        background-image: url(../images/section-circles-large.png);
+    }
 }
 
 .img-bg .with-circles {
-  background-image: url(../images/section-circles-dark-bg_263.png);
-  @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
-    background-image: url(../images/section-circles-dark-bg_526.png);
-  }
+    background-image: url(../images/section-circles-dark-bg_263.png);
+    @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
+        background-image: url(../images/section-circles-dark-bg_526.png);
+    }
 
-  @include medium-screen {
-    background-image: url(../images/section-circles-large-dark-bg.png);
-  }
+    @include medium-screen {
+        background-image: url(../images/section-circles-large-dark-bg.png);
+    }
 }
 
 a[href$="#faq"] {
-  font-weight: lighter;
-  color: $background-body-color;
-  font-size: $font-size-small;
-  opacity: 0.8;
+    font-weight: lighter;
+    color: $background-body-color;
+    font-size: $font-size-small;
+    opacity: 0.8;
 
-  display: block;
-  margin-top: 0.5em;
+    display: block;
+    margin-top: 0.5em;
 }

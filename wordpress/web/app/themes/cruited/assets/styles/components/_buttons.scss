@@ -1,85 +1,87 @@
 .btn {
-  padding: 0.7em 2em;
+    padding: 0.7em 2em;
 
-  @include transition(all $default-animation-duration ease);
+    @include transition(all $default-animation-duration ease);
+
+    font-family: "Gotham Rounded", "Arial Rounded MT", sans-serif;
 }
 
 .btn-default,
 a.btn-default {
-  @include styleless-btn;
+    @include styleless-btn;
 
-  color: $grey-text-color;
-  border: 2px solid $grey-text-color;
+    color: $grey-text-color;
+    border: 2px solid $grey-text-color;
 
-  &:active,
-  &:focus,
-  &:hover {
-    color: $background-body-color;
-    background-color: darken($grey-text-color, 15%);
-    border-color: darken($grey-text-color, 25%);
-  }
+    &:active,
+    &:focus,
+    &:hover {
+        color: $background-body-color;
+        background-color: darken($grey-text-color, 15%);
+        border-color: darken($grey-text-color, 25%);
+    }
 }
 
 .btn-primary,
 a.btn-primary {
-  color: $background-body-color;
-  background-color: $primary-btn-color;
-  border-color: $primary-btn-color;
-  opacity: 0.9;
+    color: $background-body-color;
+    background-color: $primary-btn-color;
+    border-color: $primary-btn-color;
+    opacity: 0.9;
 
-  &:active,
-  &:focus,
-  &:hover,
-  &:active:focus {
-    background-color: darken($primary-btn-color, 15%);
-    border-color: darken($primary-btn-color, 25%);
-    opacity: 1;
-  }
+    &:active,
+    &:focus,
+    &:hover,
+    &:active:focus {
+        background-color: darken($primary-btn-color, 15%);
+        border-color: darken($primary-btn-color, 25%);
+        opacity: 1;
+    }
 }
 
 .btn.secondary {
-  @include styleless-btn;
+    @include styleless-btn;
 
-  color: $secondary-action-color;
-  border: 2px solid $secondary-action-color;
+    color: $secondary-action-color;
+    border: 2px solid $secondary-action-color;
 
-  &:active,
-  &:focus,
-  &:hover {
-    color: $background-body-color;
-    background-color: darken($secondary-action-color, 15%);
-    border-color: darken($secondary-action-color, 25%);
-  }
+    &:active,
+    &:focus,
+    &:hover {
+        color: $background-body-color;
+        background-color: darken($secondary-action-color, 15%);
+        border-color: darken($secondary-action-color, 25%);
+    }
 }
 
 .social-icon {
-  $fb-icon-image-location-x: -1200px;
-  $icon-image-location-y: -500px;
+    $fb-icon-image-location-x: -1200px;
+    $icon-image-location-y: -500px;
 
-  @include hdpi-sprite();
-  background-position: $fb-icon-image-location-x $icon-image-location-y;
-  @include hidpi {
-    background-position: half-pos($fb-icon-image-location-x, $icon-image-location-y);
-  }
-
-  height: 30px;
-  width: 30px;
-
-  &.linkedin {
-    $li-icon-image-location-x: -1300px;
-
-    background-position: $li-icon-image-location-x $icon-image-location-y;
+    @include hdpi-sprite();
+    background-position: $fb-icon-image-location-x $icon-image-location-y;
     @include hidpi {
-      background-position: half-pos($li-icon-image-location-x, $icon-image-location-y);
+        background-position: half-pos($fb-icon-image-location-x, $icon-image-location-y);
     }
-  }
 
-  &.twitter {
-    $tw-icon-image-location-x: -1400px;
+    height: 30px;
+    width: 30px;
 
-    background-position: $tw-icon-image-location-x $icon-image-location-y;
-    @include hidpi {
-      background-position: half-pos($tw-icon-image-location-x, $icon-image-location-y);
+    &.linkedin {
+        $li-icon-image-location-x: -1300px;
+
+        background-position: $li-icon-image-location-x $icon-image-location-y;
+        @include hidpi {
+            background-position: half-pos($li-icon-image-location-x, $icon-image-location-y);
+        }
     }
-  }
+
+    &.twitter {
+        $tw-icon-image-location-x: -1400px;
+
+        background-position: $tw-icon-image-location-x $icon-image-location-y;
+        @include hidpi {
+            background-position: half-pos($tw-icon-image-location-x, $icon-image-location-y);
+        }
+    }
 }
