@@ -22,9 +22,7 @@ $.fn.parallax = function(posX, speed) {
     }
 
     function canBrowserBenefitFromASmootherParallax() {
-        // Windows, except FF
-        return (navigator.platform === "Win32" || navigator.platform === "Win64") &&
-            navigator.userAgent.indexOf("Firefox") === -1;
+        return false;
     }
 
     if (!Modernizr.touch) {
