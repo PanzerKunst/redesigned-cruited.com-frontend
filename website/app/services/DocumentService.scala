@@ -128,7 +128,8 @@ class DocumentService @Inject()(val ws: WSClient) {
     Logger.info("DocumentService.generateThumbnail() > Thumbnail for file: " + fileName + " generated successfully")
   }
 
-  def getSafetizedFileName(fileName: String): String = {
+  // Unused
+  def removeAccents(fileName: String): String = {
     fileName.toLowerCase.replaceAll("à", "a").replaceAll("á", "a").replaceAll("â", "a").replaceAll("ã", "a").replaceAll("ä", "a").replaceAll("å", "a").replaceAll("æ", "ae")
       .replaceAll("è", "e").replaceAll("é", "e").replaceAll("ê", "e").replaceAll("ë", "e")
       .replaceAll("ì", "i").replaceAll("í", "i").replaceAll("î", "i").replaceAll("ï", "i")

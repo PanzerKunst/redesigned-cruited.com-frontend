@@ -35,7 +35,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     val cvFileNameOpt = requestBody.file("cvFile") match {
       case None => None
       case Some(cvFile) =>
-        val fileName = tempOrderId + Order.fileNamePrefixSeparator + documentService.getSafetizedFileName(cvFile.filename)
+        val fileName = tempOrderId + Order.fileNamePrefixSeparator + cvFile.filename
         cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
         Some(fileName)
     }
@@ -43,7 +43,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
       case None => None
       case Some(coverLetterFile) =>
-        val fileName = tempOrderId + Order.fileNamePrefixSeparator + documentService.getSafetizedFileName(coverLetterFile.filename)
+        val fileName = tempOrderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
         coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
         Some(fileName)
     }
