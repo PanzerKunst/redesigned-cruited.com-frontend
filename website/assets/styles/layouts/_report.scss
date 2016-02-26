@@ -71,7 +71,7 @@
   .summary {
     > section {
       > .centered-contents,
-      > .light-font {
+      > .report-summary-text-wrapper {
         margin-bottom: 1.5em;
       }
 
@@ -86,6 +86,11 @@
         margin-bottom: 0.5em;
       }
 
+      > .report-summary-text-wrapper {
+        font-size: $font-size-sm;
+        color: $grey;
+      }
+
       @include large-screen {
         display: flex;
         justify-content: space-between;
@@ -97,7 +102,7 @@
           margin-left: 2em;
         }
 
-        > .light-font {
+        > .report-summary-text-wrapper {
           order: 1;
           max-width: 70%;
         }
@@ -408,9 +413,8 @@
           }
         }
 
-        > .light-font {
+        > p {
           font-size: $font-size-sm;
-          font-weight: normal;
           color: $grey;
         }
       }

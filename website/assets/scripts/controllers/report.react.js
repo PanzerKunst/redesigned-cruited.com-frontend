@@ -158,6 +158,8 @@ CR.Controllers.Report = P(function(c) {
                 const docLabel = CR.i18nMessages["report.analysis.explanation.docLabel." + productCode];
                 const templatedExplanationText = CR.Services.String.template(reportAnalysisExplanationText, "docLabel", docLabel);
 
+                const overallCommentParagraph = docReport.overallComment ? <p>{docReport.overallComment}</p> : null;
+
                 return (
                     <div>
                         <section className="sheet-of-paper summary">
@@ -171,7 +173,10 @@ CR.Controllers.Report = P(function(c) {
                                         <a href={documentUrl} target="_blank" className="pdf-link">{CR.i18nMessages["report.summary.documentLink.text"]}</a>
                                     </div>
                                 </div>
-                                <p className="light-font" dangerouslySetInnerHTML={{__html: this._getSummary(productCode, docReportScores.globalScore)}} />
+                                <div className="report-summary-text-wrapper">
+                                    {overallCommentParagraph}
+                                    <p className="light-font" dangerouslySetInnerHTML={{__html: this._getSummary(productCode, docReportScores.globalScore)}} />
+                                </div>
                             </section>
                             <article className="global-score-wrapper">
                                 <section>
@@ -269,7 +274,7 @@ CR.Controllers.Report = P(function(c) {
                                                 <h3>{CR.i18nMessages["category." + productCode + "." + categoryId + ".title"]}</h3>
                                                 <span className="highlighted-number">{docReportScores.categoryScores[categoryId]}</span>
                                             </div>
-                                            <p className="light-font">{CR.i18nMessages["category." + productCode + "." + categoryId + ".shortDesc"]}</p>
+                                            <p>{CR.i18nMessages["category." + productCode + "." + categoryId + ".shortDesc"]}</p>
                                         </header>
                                         {topCommentParagraph}
                                         {redCommentList}
