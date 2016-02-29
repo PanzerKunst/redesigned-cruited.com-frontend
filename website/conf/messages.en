@@ -76,8 +76,11 @@ menu.myAccount=My account
 signIn.title=Sign in
 signIn.methodSeparatorText=or
 signIn.validation.incorrectEmail=This email address looks incorrect
-signIn.validation.invalidCredentials=Invalid credentials, please try again
 signIn.validation.linkedinAccountUnregistered=We could not find an account associated to this LinkedIn identity. Did you signup using e-mail?
+signIn.validation.emailNotRegistered=No account found for this e-mail address
+signIn.validation.emailRegisteredPasswordNull=It looks like you registered with LinkedIn.<br />Please sign in with Linkedin.
+signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered=Incorrect password.
+signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Incorrect password.<br />We found a LinkedIn profile with this email address, so signing up with LinkedIn may be easier.
 
 signIn.form.linkedIn.btn.text=Sign in with LinkedIn
 signIn.form.email.emailAddress.label=Email address

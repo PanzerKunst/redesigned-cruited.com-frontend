@@ -76,7 +76,10 @@ CR.Controllers.SignIn = P(function(c) {
                         <a href="/reset-password">{CR.i18nMessages["signIn.form.forgottenPasswordLink.text"]}</a>
                     </div>
                     <div className="centered-contents">
-                        <p className="other-form-error" id="invalid-credentials">{CR.i18nMessages["signIn.validation.invalidCredentials"]}</p>
+                        <p className="other-form-error" id="unregistered-email">{CR.i18nMessages["signIn.validation.emailNotRegistered"]}</p>
+                        <p className="other-form-error" id="email-registered-password-null" dangerouslySetInnerHTML={{__html: CR.i18nMessages["signIn.validation.emailRegisteredPasswordNull"]}} />
+                        <p className="other-form-error" id="email-registered-password-mismatch-linkedin-not-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered"]}} />
+                        <p className="other-form-error" id="email-registered-password-mismatch-linkedin-registered" dangerouslySetInnerHTML={{__html: CR.i18nMessages["signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered"]}} />
                         <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["signin.form.email.submitBtn.text"]}</button>
                     </div>
                 </form>
@@ -87,7 +90,13 @@ CR.Controllers.SignIn = P(function(c) {
             this.$form = $("#content").find("form");
             this.$emailAddressField = this.$form.find("#email-address");
             this.$passwordField = this.$form.find("#password");
-            this.$invalidCredentialsError = this.$form.find("#invalid-credentials");
+
+            this.$otherFormErrors = this.$form.find(".other-form-error");
+            this.$unregisteredEmailError = this.$otherFormErrors.filter("#unregistered-email");
+            this.$emailRegisteredPasswordNullError = this.$otherFormErrors.filter("#email-registered-password-null");
+            this.$emailRegisteredPasswordMismatchLinkedinNotRegisteredError = this.$otherFormErrors.filter("#email-registered-password-mismatch-linkedin-not-registered");
+            this.$emailRegisteredPasswordMismatchLinkedinRegisteredError = this.$otherFormErrors.filter("#email-registered-password-mismatch-linkedin-registered");
+            
             this.$submitBtn = this.$form.find("[type=submit]");
         },
 
@@ -101,7 +110,7 @@ CR.Controllers.SignIn = P(function(c) {
         _handleSubmit: function(e) {
             e.preventDefault();
 
-            this.validator.hideErrorMessage(this.$invalidCredentialsError);
+            this.validator.hideErrorMessage(this.$otherFormErrors);
 
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
@@ -117,10 +126,21 @@ CR.Controllers.SignIn = P(function(c) {
                         } else {
                             this.$submitBtn.disableLoading();
 
-                            if (httpRequest.status === CR.httpStatusCodes.noContent) {
-                                this.validator.showErrorMessage(this.$invalidCredentialsError);
-                            } else {
-                                alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                            switch (httpRequest.status) {
+                                case CR.httpStatusCodes.noContent:
+                                    this.validator.showErrorMessage(this.$unregisteredEmailError);
+                                    break;
+                                case CR.httpStatusCodes.signInNoPassword:
+                                    this.validator.showErrorMessage(this.$emailRegisteredPasswordNullError);
+                                    break;
+                                case CR.httpStatusCodes.signInPasswordMismatchLinkedinNotRegistered:
+                                    this.validator.showErrorMessage(this.$emailRegisteredPasswordMismatchLinkedinNotRegisteredError);
+                                    break;
+                                case CR.httpStatusCodes.signInPasswordMismatchLinkedinRegistered:
+                                    this.validator.showErrorMessage(this.$emailRegisteredPasswordMismatchLinkedinRegisteredError);
+                                    break;
+                                default:
+                                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                             }
                         }
                     }

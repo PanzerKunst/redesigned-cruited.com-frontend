@@ -5,12 +5,10 @@ import javax.inject.{Inject, Singleton}
 
 import db.AccountDto
 import models.frontend.SignInData
-import play.api.Play
-import play.api.Play.current
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
-import services.{AccountService, EmailService, GlobalConfig, SessionService}
+import services._
 
 @Singleton
 class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller with I18nSupport {
@@ -23,9 +21,22 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
       case s: JsSuccess[SignInData] =>
         val signInData = s.get
 
-        AccountDto.getOfEmailAndPassword(signInData.emailAddress, signInData.password) match {
-          case None => NoContent
-          case Some(account) => Ok.withSession(request.session + (SessionService.sessionKeyAccountId -> account.id.toString))
+        AccountDto.getOfEmailAddress(signInData.emailAddress) match {
+          case None => NoContent  // Email not registered
+          case Some(account) =>
+            if (!account.password.isDefined) {
+              Status(HttpService.httpStatusSignInNoPassword)
+            } else {
+              AccountDto.getOfEmailAndPassword(signInData.emailAddress, signInData.password) match {
+                case Some(acc) => Ok.withSession(request.session + (SessionService.sessionKeyAccountId -> acc.id.toString))
+                case None =>
+                  if (account.linkedinProfile == JsNull) {
+                    Status(HttpService.httpStatusSignInPasswordMismatchLinkedinNotRegistered)
+                  } else {
+                    Status(HttpService.httpStatusSignInPasswordMismatchLinkedinRegistered)
+                  }
+              }
+            }
         }
     }
   }

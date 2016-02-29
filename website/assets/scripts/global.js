@@ -18,7 +18,10 @@ CR.httpStatusCodes = {
     emailAlreadyRegistered: 230,
     linkedinAccountIdAlreadyRegistered: 231,
     couponExpired: 230,
-    paymillError: 230
+    paymillError: 230,
+    signInNoPassword: 230,
+    signInPasswordMismatchLinkedinNotRegistered: 231,
+    signInPasswordMismatchLinkedinRegistered: 232
 };
 
 CR.localStorageKeys = {

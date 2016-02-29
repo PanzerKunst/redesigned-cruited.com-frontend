@@ -147,16 +147,17 @@ object AccountDto {
   def getOfEmailAddress(emailAddress: String): Option[Account] = {
     DB.withConnection { implicit c =>
       val query = """
-        select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp
+        select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, pass
         from useri
         where id > 0
           and email = '""" + DbUtil.safetize(emailAddress) + """'
         limit 1;"""
 
-      Logger.info("AccountDto.getOfEmailAddress():" + query)
+      // This log is commented since it displays the password
+      //Logger.info("AccountDto.getOfEmailAddress():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
-        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType =>
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ (str("pass")?) map {
+        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType ~ passwordOpt =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString => Json.parse(otherString)
@@ -167,7 +168,7 @@ object AccountDto {
             firstName = firstName,
             lastName = lastName,
             emailAddress = Some(emailAddress),
-            password = None,
+            password = passwordOpt,
             linkedinProfile = linkedinBasicProfileOpt,
             `type` = accountType,
             creationTimestamp = creationDate.getTime
