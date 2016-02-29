@@ -80,7 +80,7 @@ signIn.validation.linkedinAccountUnregistered=We could not find an account assoc
 signIn.validation.emailNotRegistered=No account found for this e-mail address
 signIn.validation.emailRegisteredPasswordNull=It looks like you registered with LinkedIn.<br />Please sign in with Linkedin.
 signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered=Incorrect password.
-signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Incorrect password.<br />We found a LinkedIn profile with this email address, so signing up with LinkedIn may be easier.
+signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Incorrect password.<br />We found a LinkedIn profile with this email address, so signing in with LinkedIn may be easier.
 
 signIn.form.linkedIn.btn.text=Sign in with LinkedIn
 signIn.form.email.emailAddress.label=Email address

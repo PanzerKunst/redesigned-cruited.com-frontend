@@ -96,7 +96,7 @@ CR.Controllers.SignIn = P(function(c) {
             this.$emailRegisteredPasswordNullError = this.$otherFormErrors.filter("#email-registered-password-null");
             this.$emailRegisteredPasswordMismatchLinkedinNotRegisteredError = this.$otherFormErrors.filter("#email-registered-password-mismatch-linkedin-not-registered");
             this.$emailRegisteredPasswordMismatchLinkedinRegisteredError = this.$otherFormErrors.filter("#email-registered-password-mismatch-linkedin-registered");
-            
+
             this.$submitBtn = this.$form.find("[type=submit]");
         },
 
