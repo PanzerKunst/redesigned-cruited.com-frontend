@@ -11,6 +11,9 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
   val accountAddress = Play.application().configuration().getString("play.mailer.user")
   val accountName = Play.application().configuration().getString("play.mailer.account.name")
 
+  val accountAddressErik = Play.application().configuration().getString("play.mailer.forsandree.user")
+  val accountNameErik = Play.application().configuration().getString("play.mailer.forsandree.account.name")
+
   def sendResetPasswordEmail(emailAddress: String, firstName: String, resetPasswordUrl: String, subject: String) {
     mailerClient.send(Email(
       subject,
@@ -58,7 +61,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
   def sendTheTwoDaysAfterAssessmentDeliveredEmail(emailAddress: String, firstName: String, subject: String) = {
     mailerClient.send(Email(
       subject,
-      accountName + "<" + accountAddress + ">",
+      accountNameErik + "<" + accountAddressErik + ">",
       Seq(emailAddress),
       bodyHtml = Some(views.html.email.twoDaysAfterAssessmentDelivered(firstName).toString)
     ))

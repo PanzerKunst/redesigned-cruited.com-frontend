@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   "org.apache.pdfbox" % "pdfbox" % "1.8.10",
   "org.imgscalr" % "imgscalr-lib" % "4.2",
   "com.paymill" % "paymill-java" % "5.1.3",
-  "com.typesafe.play" %% "play-mailer" % "3.0.1"
+  "com.typesafe.play" %% "play-mailer" % "4.0.0-M1"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
