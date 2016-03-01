@@ -78,9 +78,9 @@ signIn.methodSeparatorText=eller
 signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress?
 signIn.validation.emailNotRegistered=Vi har inget konto med den här adressen
-signIn.validation.emailRegisteredPasswordNull=It looks like you registered with LinkedIn.<br />Please sign in with Linkedin.
-signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered=Incorrect password.
-signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Incorrect password.<br />We found a LinkedIn profile with this email address, so signing in with LinkedIn may be easier.
+signIn.validation.emailRegisteredPasswordNull=Det ser ut som att du registrerade dig hos oss med ditt LinkedIn-konto.<br />Använd LinkedIn för att logga in.
+signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered=Fel lösenord
+signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Fel lösenord.<br />Vi hittade en LinkedIn-profil med den här e-postadressen, så logga gärna in med LinkedIn istället.
 
 signIn.form.linkedIn.btn.text=Logga in med LinkedIn
 signIn.form.email.emailAddress.label=E-postadress
