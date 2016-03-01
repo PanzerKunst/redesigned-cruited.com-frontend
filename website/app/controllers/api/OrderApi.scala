@@ -34,17 +34,19 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     // Saving files in "documents" folder
     val cvFileNameOpt = requestBody.file("cvFile") match {
       case None => None
-      case Some(cvFile) =>
-        val fileName = tempOrderId + Order.fileNamePrefixSeparator + cvFile.filename
-        cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+      case Some(file) =>
+        val fileExtension = documentService.getFileExtension(file.filename)
+        val fileName = tempOrderId + Order.fileNamePrefixSeparator + "CV." + fileExtension
+        file.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
         Some(fileName)
     }
 
     val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
       case None => None
-      case Some(coverLetterFile) =>
-        val fileName = tempOrderId + Order.fileNamePrefixSeparator + coverLetterFile.filename
-        coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
+      case Some(file) =>
+        val fileExtension = documentService.getFileExtension(file.filename)
+        val fileName = tempOrderId + Order.fileNamePrefixSeparator + "cover-letter." + fileExtension
+        file.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
         Some(fileName)
     }
 
