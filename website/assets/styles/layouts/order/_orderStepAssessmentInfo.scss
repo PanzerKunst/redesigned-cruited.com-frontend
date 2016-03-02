@@ -6,8 +6,24 @@
   #linkedin-profile-form-group {
     > div {
       > ol,
+      > ul,
       > .checkbox {
         margin-left: 1.7em;
+      }
+
+      > ol,
+      > p.light-font {
+        margin-top: 0.5em;
+      }
+
+      > p.light-font,
+      > ul {
+        color: $state-danger-text;
+      }
+
+      > p.light-font {
+        margin-bottom: 0;
+        margin-left: 3.5em;
       }
     }
 
@@ -17,10 +33,6 @@
         padding-left: 41px;
         padding-top: 0.5em;
       }
-    }
-
-    ol {
-      margin-top: 0.5em;
     }
 
     li {

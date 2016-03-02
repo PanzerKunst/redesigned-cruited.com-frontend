@@ -78,9 +78,9 @@ signIn.methodSeparatorText=eller
 signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress?
 signIn.validation.emailNotRegistered=Vi har inget konto med den här adressen
-signIn.validation.emailRegisteredPasswordNull=Det ser ut som att du registrerade dig hos oss med ditt LinkedIn-konto.<br />Använd LinkedIn för att logga in.
-signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered=Fel lösenord
-signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Fel lösenord.<br />Vi hittade en LinkedIn-profil med den här e-postadressen, så logga gärna in med LinkedIn istället.
+signIn.validation.emailRegisteredPasswordNull=Du har registrerat dig med ditt LinkedIn-konto.<br />Använd LinkedIn för att logga in.
+signIn.validation.emailRegisteredPasswordMismatchLinkedinNotRegistered=Felaktigt lösenord. Vänligen försök igen!
+signIn.validation.emailRegisteredPasswordMismatchLinkedinRegistered=Felaktigt lösenord.<br />Vi hittade en LinkedIn-profil med den här e-postadressen, så logga gärna in med LinkedIn istället.
 
 signIn.form.linkedIn.btn.text=Logga in med LinkedIn
 signIn.form.email.emailAddress.label=E-postadress
@@ -204,7 +204,12 @@ order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att gr
 order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre kan vi hjälpa dig. Frivilliga uppgifter.
 order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
-order.assessmentInfo.validation.notSignedIn=För att vi ska kunna granska din LinkedIn-profil behöver du logga in
+order.assessmentInfo.validation.linkedin.notSignedIn=För att vi ska kunna granska din LinkedIn-profil behöver du logga in
+order.assessmentInfo.validation.linkedin.publicProfileUrlMissing=Du har inte gjort din profil offentlig ännu och vi kan därför inte granska den
+order.assessmentInfo.validation.linkedin.incompleteProfile.label=Din LinkedIn-profil saknar viktig information:
+order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Sammanfattning (summary) av din profil
+order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
+order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
 order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
 order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
 
@@ -214,6 +219,7 @@ order.assessmentInfo.form.linkedinProfile.signInBtn.text=Logga in med LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min granskning kommer att bli begränsad eftersom min profil saknar viktiga delar. Fortsätt ändå.
 order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev

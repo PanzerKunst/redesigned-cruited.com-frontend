@@ -99,32 +99,86 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
+            const linkedinProfile = this.state.linkedinProfile;
+            const linkedinAuthCodeRequestUrl = this.state.linkedinAuthCodeRequestUrl;
             let formGroupContents = null;
 
-            if (this.state.linkedinProfile) {
-                formGroupContents = (
-                    <div>
-                        <article id="linkedin-preview">
-                            <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
-                            <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>
-                        </article>
-                        <ol>
-                            <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
-                            <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
-                        </ol>
-                        <div className="checkbox checkbox-primary">
-                            <input type="checkbox" id="linkedin-profile-checked" />
-                            <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.checkbox.label"]}</label>
+            if (linkedinProfile) {
+                if (linkedinProfile.publicProfileUrl) {
+                    let isLinkedinProfileIncomplete = false;
+                    const errorMessages = [];
+
+                    if (!linkedinProfile.summary) {
+                        isLinkedinProfileIncomplete = true;
+                        errorMessages.push(CR.i18nMessages["order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing"]);
+                    }
+                    if (!linkedinProfile.positions || _.isEmpty(linkedinProfile.positions.values)) {
+                        isLinkedinProfileIncomplete = true;
+                        errorMessages.push(CR.i18nMessages["order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing"]);
+                    } else if (!linkedinProfile.positions.values[0].summary) {
+                        isLinkedinProfileIncomplete = true;
+                        errorMessages.push(CR.i18nMessages["order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing"]);
+                    }
+
+                    if (isLinkedinProfileIncomplete) {
+                        formGroupContents = (
+                            <div>
+                                <article id="linkedin-preview">
+                                    <div className="profile-picture" style={{backgroundImage: "url(" + linkedinProfile.pictureUrl + ")"}} />
+                                    <span>{linkedinProfile.firstName} {linkedinProfile.lastName}</span>
+                                </article>
+                                <p className="light-font">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.incompleteProfile.label"]}</p>
+                                <ul>
+                                    {errorMessages.map(function(error) {
+                                        const reactItemId = _.findIndex(errorMessages, function(e) {
+                                            return e === error;
+                                        });
+
+                                        return <li key={reactItemId} className="light-font">{error}</li>;
+                                    })}
+                                </ul>
+                                <div className="checkbox checkbox-primary">
+                                    <input type="checkbox" id="linkedin-profile-checked" />
+                                    <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label"]}</label>
+                                </div>
+                                <p className="field-error" data-check="empty" />
+                            </div>
+                        );
+                    } else {
+                        formGroupContents = (
+                            <div>
+                                <article id="linkedin-preview">
+                                    <div className="profile-picture" style={{backgroundImage: "url(" + linkedinProfile.pictureUrl + ")"}} />
+                                    <span>{linkedinProfile.firstName} {linkedinProfile.lastName}</span>
+                                </article>
+                                <ol>
+                                    <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
+                                    <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
+                                </ol>
+                                <div className="checkbox checkbox-primary">
+                                    <input type="checkbox" id="linkedin-profile-checked" />
+                                    <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.checkbox.label"]}</label>
+                                </div>
+                                <p className="field-error" data-check="empty" />
+                            </div>
+                        );
+                    }
+                } else {
+                    formGroupContents = (
+                        <div>
+                            <a className="btn sign-in-with-linkedin" href={linkedinAuthCodeRequestUrl} onClick={this._saveTextFieldsInLocalStorage}>
+                                <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
+                            </a>
+                            <p className="other-form-error shown-by-default">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.publicProfileUrlMissing"]}</p>
                         </div>
-                        <p className="field-error" data-check="empty" />
-                    </div>
-                );
+                    );
+                }
             } else {
                 const signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
 
                 formGroupContents = (
                     <div>
-                        <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl} onClick={this._saveTextFieldsInLocalStorage}>
+                        <a className="btn sign-in-with-linkedin" href={linkedinAuthCodeRequestUrl} onClick={this._saveTextFieldsInLocalStorage}>
                             <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                         </a>
                         {signInFailedParagraph}
@@ -137,7 +191,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.label"]}</label>
 
                     {formGroupContents}
-                    <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.notSignedIn"]}</p>
+                    <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.notSignedIn"]}</p>
                 </div>
             );
         },
