@@ -25,7 +25,8 @@ select * from term_accceptation
 order by userid desc;
 
 select * from codes
-where shw = 1;
+where shw = 1
+order by valid_date desc;
 
 delete from useri
 where email = 'cbramdit@gmail.com';

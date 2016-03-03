@@ -15,6 +15,7 @@ CR.httpStatusCodes = {
     ok: 200,
     created: 201,
     noContent: 204,
+    requestEntityTooLarge: 413,
     emailAlreadyRegistered: 230,
     linkedinAccountIdAlreadyRegistered: 231,
     couponExpired: 230,

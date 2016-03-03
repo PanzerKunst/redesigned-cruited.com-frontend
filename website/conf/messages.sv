@@ -212,6 +212,7 @@ order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExp
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
 order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
 order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
+order.assessmentInfo.validation.requestEntityTooLarge=Filerna får inte vara större än 10MB totalt
 
 order.assessmentInfo.form.browseBtn.text=Bläddra...
 order.assessmentInfo.form.linkedinProfile.label=Din LinkedIn-profil

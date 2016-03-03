@@ -44,6 +44,10 @@
     margin-top: 0.5em;
   }
 
+  #request-entity-too-large-error {
+    margin-top: - $content-element-margin-bottom / 2;
+  }
+
   #tos-wrapper {
     > .checkbox {
       display: inline-block;

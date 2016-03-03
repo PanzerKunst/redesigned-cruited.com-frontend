@@ -47,6 +47,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     {this._getSignInWithLinkedinFormGroup()}
                                     {this._getCvFormGroup()}
                                     {this._getCoverLetterFormGroup()}
+                                    <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
                                 </div>
                             </section>
                             <section id="job-you-search-section" className="two-columns">
@@ -279,6 +280,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
             this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
 
+            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
+
             this.$positionSoughtField = this.$form.find("#position-sought");
             this.$employerSoughtField = this.$form.find("#employer-sought");
             this.$jobAdUrlField = this.$form.find("#job-ad-url");
@@ -316,6 +319,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$notSignedInWithLinkedinError);
+            this.validator.hideErrorMessage(this.$requestEntityTooLargeError);
 
             if (!this.state.linkedinErrorMessage && !this._isSignInWithLinkedinBtnThere()) {
                 if (this.validator.isValid()) {
@@ -374,7 +378,25 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 location.href = "/order/create-account";
                             } else {
                                 this.$submitBtn.disableLoading();
-                                alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+
+                                if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
+                                    this.validator.showErrorMessage(this.$requestEntityTooLargeError);
+
+                                    if (!_.isEmpty(this.$cvFormGroup)) {
+                                        this.$cvFormGroup.addClass("has-error");
+                                    }
+                                    if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                        this.$coverLetterFormGroup.addClass("has-error");
+                                    }
+
+                                    if (!_.isEmpty(this.$cvFormGroup)) {
+                                        this._scrollToElement(this.$cvFormGroup);
+                                    } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                        this._scrollToElement(this.$coverLetterFormGroup);
+                                    }
+                                } else {
+                                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                                }
                             }
                         }
                     }.bind(this);
