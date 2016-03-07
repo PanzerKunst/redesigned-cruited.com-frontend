@@ -379,24 +379,26 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             } else {
                                 this.$submitBtn.disableLoading();
 
-                                if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
-                                    this.validator.showErrorMessage(this.$requestEntityTooLargeError);
+                                // Doesn't work on test server: status == 0 :(
+                                // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
 
-                                    if (!_.isEmpty(this.$cvFormGroup)) {
-                                        this.$cvFormGroup.addClass("has-error");
-                                    }
-                                    if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                        this.$coverLetterFormGroup.addClass("has-error");
-                                    }
+                                this.validator.showErrorMessage(this.$requestEntityTooLargeError);
 
-                                    if (!_.isEmpty(this.$cvFormGroup)) {
-                                        this._scrollToElement(this.$cvFormGroup);
-                                    } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                        this._scrollToElement(this.$coverLetterFormGroup);
-                                    }
-                                } else {
-                                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                                if (!_.isEmpty(this.$cvFormGroup)) {
+                                    this.$cvFormGroup.addClass("has-error");
                                 }
+                                if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                    this.$coverLetterFormGroup.addClass("has-error");
+                                }
+
+                                if (!_.isEmpty(this.$cvFormGroup)) {
+                                    this._scrollToElement(this.$cvFormGroup);
+                                } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                    this._scrollToElement(this.$coverLetterFormGroup);
+                                }
+                                /* } else {
+                                 alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                                 } */
                             }
                         }
                     }.bind(this);
