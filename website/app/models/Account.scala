@@ -45,16 +45,14 @@ object Account {
 
     // Summary for each position
     val positions = (linkedinProfile \ "positions").as[JsObject]
-    var writablePositions = positions.copy()
 
     val positionValuesOpt = (positions \ "values").asOpt[JsArray]
     var validPositionValues = new JsArray()
 
     if (positionValuesOpt.isDefined) {
       for (positionValue: JsValue <- positionValuesOpt.get.value.toArray) {
-        var writablePositionValue = positionValue.as[JsObject].copy()
         val validSummary = safetizeJsonStringValue(positionValue \ "summary")
-        writablePositionValue = writablePositionValue - "summary"
+        var writablePositionValue = positionValue.as[JsObject].copy() - "summary"
         if (validSummary != JsNull) {
           writablePositionValue = writablePositionValue + ("summary" -> validSummary)
         }
@@ -63,7 +61,7 @@ object Account {
       }
     }
 
-    writablePositions = writablePositions - "values"
+    var writablePositions = positions.copy() - "values"
     writablePositions = writablePositions + ("values" -> validPositionValues)
 
     linkedinProfile = linkedinProfile - "positions"
@@ -72,25 +70,43 @@ object Account {
     (linkedinProfile \ "currentShare").asOpt[JsObject] match {
       case None =>
       case Some(currentShare) =>
-        var writableCurrentShare = currentShare.copy()
-
         // Current share > Comment
         val validComment = safetizeJsonStringValue(currentShare \ "comment")
-        writableCurrentShare = writableCurrentShare - "comment"
+
+        var writableCurrentShare = currentShare.copy() - "comment"
         writableCurrentShare = writableCurrentShare + ("comment" -> validComment)
 
         // Current share > Content > Title
         (currentShare \ "content").asOpt[JsObject] match {
           case None =>
           case Some(currentShareContent) =>
-            var writableCurrentShareContent = currentShareContent.copy()
-
             val validContentTitle = safetizeJsonStringValue(currentShareContent \ "title")
-            writableCurrentShareContent = writableCurrentShareContent - "title"
+
+            var writableCurrentShareContent = currentShareContent.copy() - "title"
             writableCurrentShareContent = writableCurrentShareContent + ("title" -> validContentTitle)
 
             writableCurrentShare = writableCurrentShare - "content"
             writableCurrentShare = writableCurrentShare + ("content" -> writableCurrentShareContent)
+        }
+
+        // Current share > Attribution > Share > Comment
+        (currentShare \ "attribution").asOpt[JsObject] match {
+          case None =>
+          case Some(currentShareAttribution) =>
+            (currentShareAttribution \ "share").asOpt[JsObject] match {
+              case None =>
+              case Some(currentShareAttributionShare) =>
+                val validShareComment = safetizeJsonStringValue(currentShareAttributionShare \ "comment")
+
+                var writableCurrentShareAttributionShare = currentShareAttributionShare.copy() - "comment"
+                writableCurrentShareAttributionShare = writableCurrentShareAttributionShare + ("comment" -> validShareComment)
+
+                var writableCurrentShareAttribution = currentShareAttribution.copy() - "share"
+                writableCurrentShareAttribution = writableCurrentShareAttribution + ("share" -> writableCurrentShareAttributionShare)
+
+                writableCurrentShare = writableCurrentShare - "attribution"
+                writableCurrentShare = writableCurrentShare + ("attribution" -> writableCurrentShareAttribution)
+            }
         }
 
         linkedinProfile = linkedinProfile - "currentShare"
