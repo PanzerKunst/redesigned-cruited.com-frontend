@@ -47,7 +47,7 @@ object AccountDto {
       insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, /* useful fields */
         tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
-        DbUtil.safetize(emailAddress) + """', """ +
+        DbUtil.safetize(emailAddress.toLowerCase) + """', """ +
         passwordClause + """,
         now(), '""" +
         linkedinProfileClause + """', """ +
@@ -86,7 +86,7 @@ object AccountDto {
 
       val query = """
         update useri set
-        email = '""" + DbUtil.safetize(account.emailAddress.get) + """'""" +
+        email = '""" + DbUtil.safetize(account.emailAddress.get.toLowerCase) + """'""" +
         firstNameClause +
         lastNameClause +
         passwordClause +
@@ -150,7 +150,7 @@ object AccountDto {
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, pass
         from useri
         where id > 0
-          and email = '""" + DbUtil.safetize(emailAddress) + """'
+          and email = '""" + DbUtil.safetize(emailAddress.toLowerCase) + """'
         limit 1;"""
 
       // This log is commented since it displays the password
@@ -219,7 +219,7 @@ object AccountDto {
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp
         from useri
         where id > 0
-          and email = '""" + DbUtil.safetize(emailAddress) + """'
+          and email = '""" + DbUtil.safetize(emailAddress.toLowerCase) + """'
           and pass = password('""" + password + """')
         limit 1;"""
 
