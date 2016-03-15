@@ -20,6 +20,16 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
+            this.state.orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
+            });
+            this.state.orderedCv = _.find(CR.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.CV_REVIEW;
+            });
+            this.state.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
+                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
+            });
+
             const positionSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
             const employerSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
             const jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
@@ -92,11 +102,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getSignInWithLinkedinFormGroup: function() {
-            const orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
-            });
-
-            if (!this.state.linkedinAuthCodeRequestUrl || !orderedLinkedin) {
+            if (!this.state.linkedinAuthCodeRequestUrl || !this.state.orderedLinkedin) {
                 return null;
             }
 
@@ -198,11 +204,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCvFormGroup: function() {
-            const orderedCv = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.CV_REVIEW;
-            });
-
-            if (!orderedCv) {
+            if (!this.state.orderedCv || (this.state.orderedLinkedin && !this.state.linkedinProfile)) {
                 return null;
             }
 
@@ -223,11 +225,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCoverLetterFormGroup: function() {
-            const orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
-
-            if (!orderedCoverLetter) {
+            if (!this.state.orderedCoverLetter || (this.state.orderedLinkedin && !this.state.linkedinProfile)) {
                 return null;
             }
 
