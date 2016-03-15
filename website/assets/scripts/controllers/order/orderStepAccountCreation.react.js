@@ -68,6 +68,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             if (this.state.linkedinProfile) {
                 return (
                     <div>
+                        <label>{CR.i18nMessages["order.accountCreation.registerWithLinkedin.profile.label"]}</label>
                         <article id="linkedin-preview">
                             <div className="profile-picture" style={{backgroundImage: "url(" + this.state.linkedinProfile.pictureUrl + ")"}} />
                             <span>{this.state.linkedinProfile.firstName} {this.state.linkedinProfile.lastName}</span>

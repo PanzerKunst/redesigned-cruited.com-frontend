@@ -245,6 +245,7 @@ order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=Du är redan
 order.accountCreation.registerWithLinkedin.switch.question=Vill du hellre registrera
 order.accountCreation.registerWithLinkedin.switch.link.text=med e-post
 order.accountCreation.registerWithLinkedin.btn.text=Registrera med LinkedIn
+order.accountCreation.registerWithLinkedin.profile.label=LinkedIn-profil
 order.accountCreation.registerWithLinkedin.email.label=Använd den här e-postadressen
 order.accountCreation.registerWithLinkedin.validation.incorrectEmail=Den här adressen ser inte korrekt ut
 

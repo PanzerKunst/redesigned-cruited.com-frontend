@@ -245,6 +245,7 @@ order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This LinkedI
 order.accountCreation.registerWithLinkedin.switch.question=Prefer to register
 order.accountCreation.registerWithLinkedin.switch.link.text=with email
 order.accountCreation.registerWithLinkedin.btn.text=Register with LinkedIn
+order.accountCreation.registerWithLinkedin.profile.label=LinkedIn profile
 order.accountCreation.registerWithLinkedin.email.label=Preferred email
 order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
 
