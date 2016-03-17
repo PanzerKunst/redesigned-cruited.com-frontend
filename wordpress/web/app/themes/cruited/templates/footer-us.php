@@ -2,11 +2,11 @@
   <div class="container">
     <section id="bottom-hero" class="img-bg centered-contents">
       <div>
-        <h2>Börja förbättra din jobbansökan nu!</h2>
+        <h2>Improve Your Job Application Today</h2>
 
-        <a href="https://app.cruited.com/order" class="btn btn-primary">Starta din granskning</a>
+        <a href="https://app.cruited.com/order" class="btn btn-primary">Get Started Now</a>
 
-        <a href="/#faq">100% nöjd - eller pengarna tillbaka<br/>Svar inom 24 timmar</a>
+        <a href="/#faq">Personal Advice That Actually Help You,<br/>within 24 hrs, or 100% Refund.</a>
       </div>
     </section>
 
