@@ -144,6 +144,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                         return <li key={reactItemId} className="light-font">{error}</li>;
                                     })}
                                 </ul>
+                                <a className="btn btn-xs sign-in-with-linkedin" href={linkedinAuthCodeRequestUrl} onClick={this._saveTextFieldsInLocalStorage}>
+                                    <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text"]}</span>
+                                </a>
                                 <div className="checkbox checkbox-primary">
                                     <input type="checkbox" id="linkedin-profile-checked" />
                                     <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label"]}</label>

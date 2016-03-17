@@ -128,6 +128,8 @@ a.btn-primary {
 }
 
 .btn.sign-in-with-linkedin {
+  $li-btn-default-font-size: 11px;
+  $li-btn-default-btn-height: 21px;
   $sign-in-with-linked-in-button-image-location-x: 0;
   $sign-in-with-linked-in-button-image-location-y: 0;
 
@@ -138,7 +140,7 @@ a.btn-primary {
   }
 
   width: 156px;
-  height: 21px;
+  height: $li-btn-default-btn-height;
 
   padding: 0;
 
@@ -161,9 +163,30 @@ a.btn-primary {
   }
 
   > span {
-    font-size: 11px;
+    font-size: $li-btn-default-font-size;
     @include medium-screen {
       font-size: 15px;
+    }
+  }
+
+  // xs
+  &.btn-xs {
+    $sign-in-with-linked-in-button-image-location-x: -900px;
+
+    width: 108px;
+    height: $li-btn-default-btn-height;
+
+    @include medium-screen {
+      background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+      @include hidpi {
+        background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+      }
+    }
+
+    > span {
+      @include medium-screen {
+        font-size: $li-btn-default-font-size;
+      }
     }
   }
 }

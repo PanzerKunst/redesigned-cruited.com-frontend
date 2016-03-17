@@ -220,6 +220,7 @@ order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Re-read
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min granskning kommer att bli begränsad eftersom min profil saknar viktiga delar. Fortsätt ändå.
 order.assessmentInfo.form.cvFile.label=Your CV
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
