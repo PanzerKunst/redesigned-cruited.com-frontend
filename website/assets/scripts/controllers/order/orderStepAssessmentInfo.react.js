@@ -269,7 +269,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
             this.$linkedinPreviewWrapper = this.$linkedinProfileFormGroup.children("div");
-            this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin");
+            this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin").not(".btn-xs");
             this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
             this.$linkedinProfileCheckedCheckboxWrapper = this.$linkedinPreviewWrapper.children(".checkbox");
 
