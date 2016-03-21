@@ -76,14 +76,18 @@ object Account {
         var writableCurrentShare = currentShare.copy() - "comment"
         writableCurrentShare = writableCurrentShare + ("comment" -> validComment)
 
-        // Current share > Content > Title
         (currentShare \ "content").asOpt[JsObject] match {
           case None =>
           case Some(currentShareContent) =>
+            // Current share > Content > Title
             val validContentTitle = safetizeJsonStringValue(currentShareContent \ "title")
-
             var writableCurrentShareContent = currentShareContent.copy() - "title"
             writableCurrentShareContent = writableCurrentShareContent + ("title" -> validContentTitle)
+
+            // Current share > Content > Description
+            val validContentDescription = safetizeJsonStringValue(currentShareContent \ "description")
+            writableCurrentShareContent = writableCurrentShareContent - "description"
+            writableCurrentShareContent = writableCurrentShareContent + ("description" -> validContentDescription)
 
             writableCurrentShare = writableCurrentShare - "content"
             writableCurrentShare = writableCurrentShare + ("content" -> writableCurrentShareContent)
