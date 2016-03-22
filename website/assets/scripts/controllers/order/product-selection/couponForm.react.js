@@ -23,7 +23,7 @@ CR.Controllers.CouponForm = React.createClass({
                     <label htmlFor="coupon-code">{CR.i18nMessages["order.productSelection.cartSection.coupon.label"]}</label>
                     <div>
                         <input type="text" className="form-control" id="coupon-code" placeholder={CR.i18nMessages["order.productSelection.cartSection.coupon.placeholder"]} />
-                        <button type="submit" className="btn btn-default">{CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.text"]}</button>
+                        <button type="submit" className="btn btn-default" id="add-coupon-btn">{CR.i18nMessages["order.productSelection.cartSection.coupon.addBtn.text"]}</button>
                     </div>
                     <p className="field-error" data-check="empty" />
                     <p className="other-form-error" id="coupon-not-found-error">{CR.i18nMessages["order.productSelection.cartSection.coupon.notFoundError"]}</p>
@@ -41,7 +41,7 @@ CR.Controllers.CouponForm = React.createClass({
     _initElements: function() {
         this.$form = $(ReactDOM.findDOMNode(this.refs.form));
         this.$couponCodeField = this.$form.find("#coupon-code");
-        this.$addCouponBtn = this.$form.find("button");
+        this.$addCouponBtn = this.$form.find("#add-coupon-btn");
 
         this.$otherFormErrors = this.$form.find(".other-form-error");
         this.$couponNotFoundError = this.$otherFormErrors.filter("#coupon-not-found-error");

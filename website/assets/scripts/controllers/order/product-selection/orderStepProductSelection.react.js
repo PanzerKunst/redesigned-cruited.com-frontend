@@ -93,7 +93,16 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         _initElements: function() {
-            this.$emptyCartError = $("#content").find("form").children("#empty-cart");
+            const $content = $("#content");
+            this.$otherFormErrors = $content.find(".other-form-error");
+            this.$emptyCartError = this.$otherFormErrors.filter("#empty-cart");
+
+            // Coupon form
+            this.$couponForm = $content.find("#cart-section").find("form");
+            this.$couponCodeField = this.$couponForm.find("#coupon-code");
+            this.$addCouponBtn = this.$couponForm.find("#add-coupon-btn");
+            this.$couponNotFoundError = this.$otherFormErrors.filter("#coupon-not-found-error");
+            this.$couponExpiredError = this.$otherFormErrors.filter("#coupon-expired-error");
         },
 
         _initValidation: function() {
@@ -186,12 +195,54 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         _handleSubmit: function(e) {
             e.preventDefault();
 
-            this.validator.hideErrorMessage(this.$emptyCartError);
+            this.validator.hideErrorMessage(this.$otherFormErrors);
 
             if (_.isEmpty(CR.order.getProducts())) {
                 this.validator.showErrorMessage(this.$emptyCartError);
             } else {
-                location.href = "/order/assessment-info";
+                const couponCodeField = this.$couponCodeField.val();
+
+                if (couponCodeField) {
+                    const type = "GET";
+                    const url = "/api/coupons/" + couponCodeField;
+
+                    const httpRequest = new XMLHttpRequest();
+                    httpRequest.onreadystatechange = function() {
+                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                            this.$addCouponBtn.disableLoading();
+                            this.$couponCodeField.blur();
+
+                            let coupon;
+
+                            switch (httpRequest.status) {
+                                case CR.httpStatusCodes.noContent:
+                                    this.validator.showErrorMessage(this.$couponNotFoundError);
+                                    break;
+                                case CR.httpStatusCodes.couponExpired:
+                                    coupon = JSON.parse(httpRequest.responseText);
+                                    this.$couponExpiredError[0].innerText = coupon.couponExpiredMsg;
+                                    this.validator.showErrorMessage(this.$couponExpiredError);
+                                    break;
+                                case CR.httpStatusCodes.ok:
+                                    coupon = JSON.parse(httpRequest.responseText);
+                                    this.$couponForm[0].reset();
+
+                                    CR.order.setCoupon(coupon);
+                                    CR.order.saveInLocalStorage();
+
+                                    location.href = "/order/assessment-info";
+                                    break;
+                                default:
+                                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                            }
+                        }
+                    }.bind(this);
+                    httpRequest.open(type, url);
+                    httpRequest.setRequestHeader("Content-Type", "application/json");
+                    httpRequest.send();
+                } else {
+                    location.href = "/order/assessment-info";
+                }
             }
         }
     });
