@@ -38,7 +38,7 @@ button {
     }
   }
 
-  > p+p {
+  > p + p {
     $alert-p-margin-top: $spacer-unit-size / 2;
 
     margin-top: $alert-p-margin-top;
@@ -90,12 +90,18 @@ textarea.form-control {
   height: 8em;
 }
 
-h1, .h1,
-h2, .h2,
-h3, .h3,
-h4, .h4,
-h5, .h5,
-h6, .h6 {
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
   margin-top: 0;
 }
 

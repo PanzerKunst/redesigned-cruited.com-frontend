@@ -12,6 +12,10 @@ var mainBowerFiles = require("main-bower-files");
 var runSequence = require("run-sequence");
 var streamSeries = require("stream-series");
 var wiredep = require("wiredep");
+var postcss = require('gulp-postcss');
+var reporter = require('postcss-reporter');
+var syntax_scss = require('postcss-scss');
+var stylelint = require('stylelint');
 
 // ## Settings
 var srcDir = "assets/";
@@ -58,6 +62,103 @@ gulp.task("styles", ["wiredep"], function() {
         .pipe(gulp.dest(styleDistDir));
 });
 
+// ### Wiredep
+// `gulp wiredep` - Automatically inject Less and Sass Bower dependencies. See
+// https://github.com/taptapship/wiredep
+gulp.task("wiredep", ["scss-lint"], function() {
+    return gulp.src(styleMainSrcFiles)
+        .pipe(wiredep.stream())
+        .pipe(gulp.dest(styleSrcDir));
+});
+
+// ### SCSS Lint
+// `gulp scss-lint` - Lints SCSS files
+gulp.task("scss-lint", function() {
+    // Stylelint config rules
+    var stylelintConfig = {
+        "rules": {
+            "block-closing-brace-newline-after": "always",
+            "block-closing-brace-newline-before": "always-multi-line",
+            "block-closing-brace-space-before": "always-single-line",
+            "block-no-empty": true,
+            "block-opening-brace-newline-after": "always-multi-line",
+            "block-opening-brace-space-after": "always-single-line",
+            "block-opening-brace-space-before": "always",
+            "color-hex-case": "lower",
+            "color-hex-length": "short",
+            "color-no-invalid-hex": true,
+            "comment-empty-line-before": ["always", {
+                except: ["first-nested"],
+                ignore: ["stylelint-commands"]
+            }],
+            "comment-whitespace-inside": "always",
+            "declaration-bang-space-after": "never",
+            "declaration-bang-space-before": "always",
+            "declaration-block-no-shorthand-property-overrides": true,
+            "declaration-block-semicolon-newline-after": "always-multi-line",
+            "declaration-block-semicolon-space-after": "always-single-line",
+            "declaration-block-semicolon-space-before": "never",
+            "declaration-block-single-line-max-declarations": 1,
+            "declaration-block-trailing-semicolon": "always",
+            "declaration-colon-newline-after": "always-multi-line",
+            "declaration-colon-space-after": "always-single-line",
+            "declaration-colon-space-before": "never",
+            "font-family-name-quotes": "double-where-recommended",
+            "function-calc-no-unspaced-operator": true,
+            "function-comma-newline-after": "always-multi-line",
+            "function-comma-space-after": "always-single-line",
+            "function-comma-space-before": "never",
+            "function-linear-gradient-no-nonstandard-direction": true,
+            "function-parentheses-newline-inside": "always-multi-line",
+            "function-parentheses-space-inside": "never-single-line",
+            "function-url-quotes": "double",
+            "function-whitespace-after": "always",
+            "indentation": 2,
+            "max-empty-lines": 3,
+            "media-feature-colon-space-after": "always",
+            "media-feature-colon-space-before": "never",
+            "media-feature-no-missing-punctuation": true,
+            "media-feature-range-operator-space-after": "always",
+            "media-feature-range-operator-space-before": "always",
+            "media-query-list-comma-newline-after": "always-multi-line",
+            "media-query-list-comma-space-after": "always-single-line",
+            "media-query-list-comma-space-before": "never",
+            "media-query-parentheses-space-inside": "never",
+            "no-eol-whitespace": true,
+            "no-invalid-double-slash-comments": true,
+            "no-missing-eof-newline": true,
+            "number-leading-zero": "always",
+            "number-no-trailing-zeros": true,
+            "number-zero-length-no-unit": true,
+            "rule-non-nested-empty-line-before": ["always-multi-line", {
+                ignore: ["after-comment"]
+            }],
+            "selector-combinator-space-after": "always",
+            "selector-combinator-space-before": "always",
+            "selector-list-comma-newline-after": "always",
+            "selector-list-comma-space-before": "never",
+            "selector-pseudo-element-colon-notation": "double",
+            "string-no-newline": true,
+            "string-quotes": "double",
+            "value-list-comma-newline-after": "always-multi-line",
+            "value-list-comma-space-after": "always-single-line",
+            "value-list-comma-space-before": "never",
+            "max-nesting-depth": 6
+        }
+    };
+
+    var processors = [
+        stylelint(stylelintConfig),
+        reporter({
+            clearMessages: true,
+            throwError: true
+        })
+    ];
+
+    return gulp.src([styleSrcFiles, "!" + styleMainSrcFiles])
+        .pipe(postcss(processors, {syntax: syntax_scss}));
+});
+
 // ### Scripts
 // `gulp scripts` - Merges all lib files with app.js, into distDir
 // and project JS.
@@ -72,7 +173,7 @@ gulp.task("scripts", ["react"], function() {
 
 // ### React
 // `gulp react` - Compiles React JSX
-gulp.task("react", ["lint"], function() {
+gulp.task("react", ["js-lint"], function() {
     return gulp.src(scriptSrcFiles)
         .pipe(babel({
             presets: ["es2015", "react"]
@@ -81,8 +182,23 @@ gulp.task("react", ["lint"], function() {
         .pipe(gulp.dest(scriptDistDir));
 });
 
-gulp.task("cleanSrcScriptsDistFile", function() {
+gulp.task("clean-src-scripts-dist-file", function() {
     return del(srcScriptsDistFilePath);
+});
+
+// ### ESLint
+// `gulp js-lint` - Lints project JS.
+gulp.task("js-lint", function() {
+    return gulp.src(scriptSrcFiles)
+        // eslint() attaches the lint output to the eslint property
+        // of the file object so it can be used by other modules.
+        .pipe(eslint())
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failOnError last.
+        .pipe(eslint.failOnError());
 });
 
 // ### Fonts
@@ -94,7 +210,7 @@ gulp.task("fonts", function() {
 
 // ### Icon fonts
 // `gulp fontAwesomeFonts`
-gulp.task("fontAwesomeFonts", function() {
+gulp.task("fontawesome-fonts", function() {
     return gulp.src("bower_components/font-awesome/fonts/*")
         .pipe(gulp.dest(fontDistDir));
 });
@@ -112,21 +228,6 @@ gulp.task("images", function() {
             ]
         }))
         .pipe(gulp.dest(imageDistDir));
-});
-
-// ### ESLint
-// `gulp lint` - Lints project JS.
-gulp.task("lint", function() {
-    return gulp.src(scriptSrcFiles)
-        // eslint() attaches the lint output to the eslint property
-        // of the file object so it can be used by other modules.
-        .pipe(eslint())
-        // eslint.format() outputs the lint results to the console.
-        // Alternatively use eslint.formatEach() (see Docs).
-        .pipe(eslint.format())
-        // To have the process exit with an error code (1) on
-        // lint error, return the stream and pipe to failOnError last.
-        .pipe(eslint.failOnError());
 });
 
 // ### Clean
@@ -155,18 +256,9 @@ gulp.task("watch", function() {
 gulp.task("build", function(callback) {
     runSequence("styles",
         "scripts",
-        "cleanSrcScriptsDistFile",
-        ["fonts", "fontAwesomeFonts", "images"],
+        "clean-src-scripts-dist-file",
+        ["fonts", "fontawesome-fonts", "images"],
         callback);
-});
-
-// ### Wiredep
-// `gulp wiredep` - Automatically inject Less and Sass Bower dependencies. See
-// https://github.com/taptapship/wiredep
-gulp.task("wiredep", function() {
-    return gulp.src(styleMainSrcFiles)
-        .pipe(wiredep.stream())
-        .pipe(gulp.dest(styleSrcDir));
 });
 
 // ### Gulp

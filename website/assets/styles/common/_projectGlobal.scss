@@ -48,7 +48,7 @@ a > i.fa {
 }
 
 .edition {
-  padding: 0.3em .7em 0.3em 2.3em;
+  padding: 0.3em 0.7em 0.3em 2.3em;
   border-radius: 0.15em;
 
   font-size: $font-size-sm;
@@ -194,7 +194,7 @@ nav > a,
   }
 
   @include medium-screen {
-    padding: .45em 1em 0.55em 1em;
+    padding: 0.45em 1em 0.55em 1em;
 
     > span {
       margin-right: 1em;
@@ -252,7 +252,7 @@ nav > a,
     background-color: $background-body-color;
     padding: 0 0.5em;
 
-    &:after {
+    &::after {
       content: "";
       border-top: 1px solid $well-border-color;
 

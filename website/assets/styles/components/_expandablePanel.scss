@@ -19,7 +19,7 @@
       font-weight: bold;
     }
 
-    > button:before {
+    > button::before {
       content: "+";
 
       font-weight: bold;
@@ -33,7 +33,7 @@
   }
 
   &.expanded {
-    > header > button:before {
+    > header > button::before {
       content: "–";
     }
   }
