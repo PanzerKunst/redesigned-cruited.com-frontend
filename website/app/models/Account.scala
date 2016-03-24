@@ -43,6 +43,13 @@ object Account {
       linkedinProfile = linkedinProfile + ("summary" -> validSummary)
     }
 
+    // Headline
+    val validHeadline = safetizeJsonStringValue(linkedinProfile \ "headline")
+    linkedinProfile = linkedinProfile - "headline"
+    if (validHeadline != JsNull) {
+      linkedinProfile = linkedinProfile + ("headline" -> validHeadline)
+    }
+
     // Summary for each position
     val positions = (linkedinProfile \ "positions").as[JsObject]
 
