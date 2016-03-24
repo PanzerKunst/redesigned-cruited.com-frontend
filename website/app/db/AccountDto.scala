@@ -15,7 +15,7 @@ object AccountDto {
   val unknownUserId = 1053
 
   def createTemporary(accountId: Long): Option[Long] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
       insert into useri(id, registered_at, /* useful fields */
         tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
@@ -30,7 +30,7 @@ object AccountDto {
   }
 
   def create(emailAddress: String, firstName: String, password: Option[String], linkedinProfile: JsValue): Option[Long] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val passwordClause = password match {
         case None => "NULL"
         case Some(pass) => "password('" + pass + "')"
@@ -61,7 +61,7 @@ object AccountDto {
   }
 
   def update(account: Account) {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val firstNameClause = account.firstName match {
         case None => ""
         case Some(firstName) => ", prenume = '" + DbUtil.safetize(firstName) + "'"
@@ -101,7 +101,7 @@ object AccountDto {
   }
 
   def deleteOfId(id: Long) {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         delete from useri
         where id = """ + id + """;"""
@@ -113,7 +113,7 @@ object AccountDto {
   }
 
   def getOfId(id: Long): Option[Account] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         select prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
         from useri
@@ -145,7 +145,7 @@ object AccountDto {
   }
 
   def getOfEmailAddress(emailAddress: String): Option[Account] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, pass
         from useri
@@ -156,7 +156,7 @@ object AccountDto {
       // This log is commented since it displays the password
       //Logger.info("AccountDto.getOfEmailAddress():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ (str("pass")?) map {
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ (str("pass") ?) map {
         case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType ~ passwordOpt =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
@@ -180,7 +180,7 @@ object AccountDto {
   }
 
   def getOfLinkedinAccountId(linkedInAccountId: String): Option[Account] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
         from useri
@@ -214,7 +214,7 @@ object AccountDto {
   }
 
   def getOfEmailAndPassword(emailAddress: String, password: String): Option[Account] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp
         from useri
@@ -249,71 +249,88 @@ object AccountDto {
     }
   }
 
+  /**
+   * @return List[(emailAddress, firstName, orderId)]
+   */
   def getWhoNeedUnpaidOrderReminderEmail: List[(String, String, Long)] = {
-    DB.withConnection { implicit c =>
+    val nonTempAccounts = getNonTemporary
+
+    val listOfAccountIdAndLatestOrderId = DB.withConnection("users") { implicit c =>
+      val accountIds = nonTempAccounts.map(_.id)
+
       val cal = new GregorianCalendar()
       cal.add(Calendar.DATE, -1)
       val creationDateClause = """
         and added_at < '""" + DbUtil.dateFormat.format(cal.getTime) + """'"""
 
       val query = """
-        select distinct email, prenume,
-          max(d.id) as order_id
-        from useri u
-          inner join documents d on d.added_by = u.id
-        where added_by = u.id
-          and d.id > 0
-          and d.status = """ + Order.statusIdNotPaid + """
+        select added_by, max(id) as order_id
+        from documents
+        where added_by in (""" + accountIds.mkString(", ") + """)
+          and id > 0
+          and status = """ + Order.statusIdNotPaid + """
           and 1day_email_sent = 0""" +
         creationDateClause + """
-        group by email, prenume;"""
+        group by added_by;"""
 
       // Commented because spams too much
       // Logger.info("AccountDto.getWhoNeedUnpaidOrderReminderEmail():" + query)
 
-      val rowParser = str("email") ~ str("prenume") ~
-        long("order_id") map {
-        case emailAddress ~ firstName ~
-          orderId => (emailAddress, firstName, orderId)
+      val rowParser = long("added_by") ~ long("order_id") map {
+        case accountId ~ orderId => (accountId, orderId)
       }
 
       SQL(query).as(rowParser.*)
     }
+
+    listOfAccountIdAndLatestOrderId map { tuple =>
+      val account = nonTempAccounts.find(_.id == tuple._1).get
+      (account.emailAddress.get, account.firstName.get, tuple._2)
+    }
   }
 
+  /**
+   * @return List[(emailAddress, firstName, orderId)]
+   */
   def getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail: List[(String, String, Long)] = {
-    DB.withConnection { implicit c =>
+    val nonTempAccounts = getNonTemporary
+
+    val listOfAccountIdAndLatestOrderId = DB.withConnection("users") { implicit c =>
+      val accountIds = nonTempAccounts.map(_.id)
+
       val cal = new GregorianCalendar()
       cal.add(Calendar.DATE, -2)
       val assessmentCompletedDateClause = """
         and set_done_at < '""" + DbUtil.dateFormat.format(cal.getTime) + """'"""
 
       val query = """
-        select distinct email, prenume,
-          max(d.id) as order_id
-        from useri u
-          inner join documents d on d.added_by = u.id
-        where d.id > 0
-          and d.status = """ + Order.statusIdComplete + """
+        select added_by, max(id) as order_id
+        from documents
+        where added_by in (""" + accountIds.mkString(", ") + """)
+          and id > 0
+          and status = """ + Order.statusIdNotPaid + """
           and 2days_after_assessment_delivered_email_sent = 0""" +
         assessmentCompletedDateClause + """
-        group by email, prenume;"""
+        group by added_by;"""
 
       // Commented because spams too much
-      // Logger.info("AccountDto.getWhoNeedTheTwoDayAfterAssessmentDeliveredEmail():" + query)
+      // Logger.info("AccountDto.getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail():" + query)
 
-      val rowParser = str("email") ~ str("prenume") ~
-        long("order_id") map {
-        case emailAddress ~ firstName ~
-          orderId => (emailAddress, firstName, orderId)
+      val rowParser = long("added_by") ~ long("order_id") map {
+        case accountId ~ orderId => (accountId, orderId)
       }
 
       SQL(query).as(rowParser.*)
     }
+
+    listOfAccountIdAndLatestOrderId map { tuple =>
+      val account = nonTempAccounts.find(_.id == tuple._1).get
+      (account.emailAddress.get, account.firstName.get, tuple._2)
+    }
   }
 
   def getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile: List[Long] = {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         select id, linkedin_basic_profile_fields
         from useri;"""
@@ -339,14 +356,12 @@ object AccountDto {
 
       val allAccountIds = SQL(query).as(rowParser.*)
 
-      allAccountIds filterNot {
-        _ == nonProbematicId
-      }
+      allAccountIds filterNot {_ == nonProbematicId}
     }
   }
 
   def cleanLinkedinProfileOfIds(ids: List[Long]) {
-    DB.withConnection { implicit c =>
+    DB.withConnection("users") { implicit c =>
       val query = """
         update useri set
         linkedin_basic_profile_fields = ''
@@ -355,6 +370,39 @@ object AccountDto {
       Logger.info("AccountDto.cleanLinkedinProfileOfId():" + query)
 
       SQL(query).executeUpdate()
+    }
+  }
+
+  private def getNonTemporary: List[Account] = {
+    DB.withConnection("users") { implicit c =>
+      val query = """
+        select distinct id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
+        from useri
+        where id > 0;"""
+
+      // This log is commented since it spams too much
+      // Logger.info("AccountDto.getNonTemporary():" + query)
+
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
+        case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType =>
+          val linkedinBasicProfileOpt = linkedinBasicProfile match {
+            case "" => JsNull
+            case otherString => Json.parse(otherString)
+          }
+
+          Account(
+            id = id,
+            firstName = firstName,
+            lastName = lastName,
+            emailAddress = emailAddress,
+            password = None,
+            linkedinProfile = linkedinBasicProfileOpt,
+            `type` = accountType,
+            creationTimestamp = creationDate.getTime
+          )
+      }
+
+      SQL(query).as(rowParser.*)
     }
   }
 }
