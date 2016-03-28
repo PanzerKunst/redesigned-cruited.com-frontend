@@ -71,7 +71,11 @@ a.btn-default {
   &[disabled],
   &[disabled]:active,
   &[disabled]:focus,
-  &[disabled]:hover {
+  &[disabled]:hover,
+  &.disabled,
+  &.disabled:active,
+  &.disabled:focus,
+  &.disabled:hover {
     background-color: lighten($grey, 35%);
     border-color: lighten($grey, 35%);
   }
@@ -93,7 +97,11 @@ a.btn-primary {
   &[disabled],
   &[disabled]:active,
   &[disabled]:focus,
-  &[disabled]:hover {
+  &[disabled]:hover,
+  &.disabled,
+  &.disabled:active,
+  &.disabled:focus,
+  &.disabled:hover {
     background-color: $primary-btn-color;
     border-color: $primary-btn-color;
   }
@@ -116,7 +124,11 @@ a.btn-primary {
   &[disabled],
   &[disabled]:active,
   &[disabled]:focus,
-  &[disabled]:hover {
+  &[disabled]:hover,
+  &.disabled,
+  &.disabled:active,
+  &.disabled:focus,
+  &.disabled:hover {
     color: $secondary-action-color;
     border-color: $secondary-action-color;
     background-color: $background-body-color;

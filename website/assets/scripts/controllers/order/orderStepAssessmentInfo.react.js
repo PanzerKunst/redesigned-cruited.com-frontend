@@ -207,45 +207,65 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getCvFormGroup: function() {
-            if (!this.state.orderedCv || (this.state.orderedLinkedin && !this.state.linkedinProfile)) {
+            if (!this.state.orderedCv) {
                 return null;
             }
+
+            const isBtnDisabled = this.state.orderedLinkedin && !this.state.linkedinProfile;
 
             return (
                 <div className="form-group fg-file-upload" id="cv-form-group">
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.cvFile.label"]}</label>
 
                     <div>
-                        <label className="btn btn-default btn-file-upload" htmlFor="cv">
-                            <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} />
+                        <label className={this._getUploadLabelClasses(isBtnDisabled)} htmlFor="cv">
+                            <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} disabled={isBtnDisabled} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
                         <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={CR.order.getCvFileName()} disabled />
                     </div>
+                    {this._getUploadDisabledExplanationParagraph(isBtnDisabled)}
                     <p className="field-error" data-check="empty" />
                 </div>
             );
         },
 
         _getCoverLetterFormGroup: function() {
-            if (!this.state.orderedCoverLetter || (this.state.orderedLinkedin && !this.state.linkedinProfile)) {
+            if (!this.state.orderedCoverLetter) {
                 return null;
             }
+
+            const isBtnDisabled = this.state.orderedLinkedin && !this.state.linkedinProfile;
 
             return (
                 <div className="form-group fg-file-upload" id="cover-letter-form-group">
                     <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.label"]}</label>
 
                     <div>
-                        <label className="btn btn-default btn-file-upload" htmlFor="cover-letter">
-                            <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} />
+                        <label className={this._getUploadLabelClasses(isBtnDisabled)} htmlFor="cover-letter">
+                            <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} disabled={isBtnDisabled} />
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
                         <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={CR.order.getCoverLetterFileName()} disabled />
                     </div>
+                    {this._getUploadDisabledExplanationParagraph(isBtnDisabled)}
                     <p className="field-error" data-check="empty" />
                 </div>
             );
+        },
+
+        _getUploadLabelClasses: function(isBtnDisabled) {
+            let classes = "btn btn-default btn-file-upload";
+
+            if (isBtnDisabled) {
+                classes += " disabled";
+            }
+
+            return classes;
+        },
+
+        _getUploadDisabledExplanationParagraph: function(isBtnDisabled) {
+            return isBtnDisabled ? <p className="sign-in-with-linkedin-first">{CR.i18nMessages["order.assessmentInfo.validation.signInWithLinkedinFirst"]}</p> : null;
         },
 
         _getTosFormGroup: function() {

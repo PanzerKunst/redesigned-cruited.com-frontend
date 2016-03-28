@@ -55,6 +55,11 @@
     margin-top: 0.5em;
   }
 
+  .sign-in-with-linkedin-first {
+    color: $sky-blue;
+    font-style: italic;
+  }
+
   #request-entity-too-large-error {
     margin-top: - $content-element-margin-bottom / 2;
   }

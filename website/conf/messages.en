@@ -213,6 +213,7 @@ order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExp
 order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
 order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
 order.assessmentInfo.validation.requestEntityTooLarge=Uploaded files mustn't exceed a total of 10MB
+order.assessmentInfo.validation.signInWithLinkedinFirst=Sign in with LinkedIn first
 
 order.assessmentInfo.form.browseBtn.text=Browse...
 order.assessmentInfo.form.linkedinProfile.label=Your LinkedIn profile
