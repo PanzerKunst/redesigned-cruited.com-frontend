@@ -48,3 +48,13 @@ Add the following section right under the main one:
     }
 
 Save, then restart Nginx: `$ sudo service nginx reload`
+
+
+# Renewing certificates
+
+Certificates which will expire in 30 days or less can be renewed.
+
+1. Free port 80 temporarily: `$ sudo service nginx stop`
+2. Execute the renew command in test mode: `$ ./letsencrypt-auto renew --dry-run`
+3. If the test command is successful, execute it in real mode: `$ ./letsencrypt-auto renew`
+4. Restart Nginx: `$ sudo service nginx start`
