@@ -243,7 +243,7 @@ gulp.task("clean", function() {
 // build step for that asset and inject the changes into the page.
 // See: http://www.browsersync.io
 gulp.task("watch", function() {
-    gulp.watch([styleSrcFiles], ["styles"]);
+    gulp.watch([[styleSrcFiles, "!" + styleMainSrcFiles]], ["styles"]);
     gulp.watch([scriptSrcFiles], ["scripts"]);
     gulp.watch([fontSrcFiles], ["fonts"]);
     gulp.watch([imageSrcFiles], ["images"]);
