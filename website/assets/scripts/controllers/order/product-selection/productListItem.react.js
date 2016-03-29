@@ -5,16 +5,40 @@ CR.Controllers.ProductListItem = React.createClass({
         const product = this.props.product;
         const checkboxId = "product-" + product.id;
 
-        const fullPriceParagraph = product.reducedPrice ? <p className="full-price">{product.price.amount} {product.price.currencyCode}</p> : null;
-
         const isInOrder = this._isInOrder();
-        const liClasses = isInOrder ? "selected" : null;
+        const cartProductsCount = CR.order.getProducts().length;
+
+        if (!isInOrder && cartProductsCount > 0) {
+            const reductionForTwoProductsSameOrder = _.find(CR.reductions, function(reduction) {
+                return reduction.code === CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER;
+            });
+
+            const rductionForThreeProductsSameOrdr = _.find(CR.reductions, function(reduction) {
+                return reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER;
+            });
+
+            if (cartProductsCount === 1) {
+                product.reducedPrice = {
+                    amount: product.price.amount - reductionForTwoProductsSameOrder.price.amount,
+                    currencyCode: product.price.currencyCode
+                };
+            } else if (cartProductsCount === 2) {
+                product.reducedPrice = {
+                    amount: product.price.amount - (rductionForThreeProductsSameOrdr.price.amount - reductionForTwoProductsSameOrder.price.amount),
+                    currencyCode: product.price.currencyCode
+                };
+            }
+        }
 
         let pricesClasses = "prices";
+        let fullPriceParagraph = null;
+
         if (product.reducedPrice) {
+            fullPriceParagraph = <p className="full-price">{product.price.amount} {product.price.currencyCode}</p>;
             pricesClasses += " with-reduction";
         }
 
+        const liClasses = isInOrder ? "selected" : null;
         const currentPrice = product.reducedPrice || product.price;
 
         return (

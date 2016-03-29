@@ -172,9 +172,6 @@ order.productSelection.submitBtn.text=Fortsätt till nästa steg
 order.productSelection.validation.emptyCart=Du behöver välja minst 1 produkt för att fortsätta
 
 order.productSelection.productsSection.title=Produkter
-order.productSelection.productsSection.offerTwoProductsSameOrder.text=Spara <strong>{reductionPrice}</strong> när du beställer 2 produkter!
-order.productSelection.productsSection.offerThreeProductsSameOrder.text=Spara <strong>{reductionPrice}</strong> när du beställer alla 3 produkterna!
-order.productSelection.productsSection.allOffersActivated.text=Du sparar <strong>{reductionPrice}</strong>!
 order.productSelection.productsSection.productName.CV_REVIEW=Granska min cv
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Granska mitt personliga brev
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Granska min LinkedIn-profil

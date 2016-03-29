@@ -172,9 +172,6 @@ order.productSelection.submitBtn.text=Proceed to next step
 order.productSelection.validation.emptyCart=You need to select at least 1 product to continue
 
 order.productSelection.productsSection.title=Products
-order.productSelection.productsSection.offerTwoProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select 2 items!
-order.productSelection.productsSection.offerThreeProductsSameOrder.text=Save <strong>{reductionPrice}</strong> off your order when you select all 3 items!
-order.productSelection.productsSection.allOffersActivated.text=You're saving <strong>{reductionPrice}</strong> on the full price.
 order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my LinkedIn Profile

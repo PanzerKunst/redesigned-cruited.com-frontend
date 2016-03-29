@@ -25,9 +25,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         <section id="products-section" className="two-columns">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
-                                {this._getParagraphOfferTwoProductsSameOrder()}
-                                {this._getParagraphOfferThreeProductsSameOrder()}
-                                {this._getParagraphAllOffersActivated()}
                                 <div className="alert alert-info guarantee-panel" role="alert">
                                     <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
                                 </div>
@@ -116,36 +113,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
         _initValidation: function() {
             this.validator = CR.Services.Validator();
-        },
-
-        _getParagraphOfferTwoProductsSameOrder: function() {
-            if (CR.order.getProducts().length < 2) {
-                const reductionTwoProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
-                if (reductionTwoProductsSameOrder) {
-                    return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerTwoProductsSameOrder.text"], "reductionPrice", reductionTwoProductsSameOrder.price.amount + " " + reductionTwoProductsSameOrder.price.currencyCode)}} />;
-                }
-            }
-            return null;
-        },
-
-        _getParagraphOfferThreeProductsSameOrder: function() {
-            if (CR.order.getProducts().length === 2) {
-                const reductionThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
-                if (reductionThreeProductsSameOrder) {
-                    return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.offerThreeProductsSameOrder.text"], "reductionPrice", reductionThreeProductsSameOrder.price.amount + " " + reductionThreeProductsSameOrder.price.currencyCode)}} />;
-                }
-            }
-            return null;
-        },
-
-        _getParagraphAllOffersActivated: function() {
-            if (CR.order.getProducts().length === this.state.products.length) {
-                const reductionThreeProductsSameOrder = CR.Models.Reduction.getOfCode(CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
-                if (reductionThreeProductsSameOrder) {
-                    return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["order.productSelection.productsSection.allOffersActivated.text"], "reductionPrice", reductionThreeProductsSameOrder.price.amount + " " + reductionThreeProductsSameOrder.price.currencyCode)}} />;
-                }
-            }
-            return null;
         },
 
         _getCartTable: function() {
