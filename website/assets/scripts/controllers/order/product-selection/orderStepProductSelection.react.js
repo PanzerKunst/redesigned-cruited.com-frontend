@@ -28,6 +28,9 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                 {this._getParagraphOfferTwoProductsSameOrder()}
                                 {this._getParagraphOfferThreeProductsSameOrder()}
                                 {this._getParagraphAllOffersActivated()}
+                                <div className="alert alert-info guarantee-panel" role="alert">
+                                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                                </div>
                             </header>
                             <ul className="styleless">
                             {this.state.products.map(function(product, index) {
@@ -56,7 +59,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                 <span className="highlighted-number">{CR.order.getProducts().length}</span>
                             </header>
                             <div>
-                                <div>
+                                <div className="column-labels">
                                     <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.products"]}</span>
                                     <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.defaultPrice"]}</span>
                                 </div>
@@ -71,7 +74,13 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                                 <CR.Controllers.CouponForm controller={this.state.controller} />
 
-                                {this._getCartTable()}
+                                <div className="bottom-section">
+                                    {this._getCartTable()}
+
+                                    <div className="alert alert-info guarantee-panel" role="alert">
+                                        <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                                    </div>
+                                </div>
                             </div>
                         </section>
                         <form onSubmit={this._handleSubmit} className="centered-contents">

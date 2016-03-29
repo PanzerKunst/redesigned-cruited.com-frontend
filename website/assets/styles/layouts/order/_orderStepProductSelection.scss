@@ -1,4 +1,10 @@
 #order-step-product-selection {
+  .guarantee-panel {
+    @include large-screen {
+      font-size: #{$font-size-base-px}px;
+    }
+  }
+
   #products-section,
   #editions-section {
     li {
@@ -36,6 +42,10 @@
   }
 
   #products-section {
+    .light-font > strong {
+      color: $brand-danger;
+    }
+
     li {
       border-style: dashed;
 
@@ -252,6 +262,10 @@
       }
     }
 
+    table {
+      margin-bottom: 1em;
+    }
+
     @include medium-screen {
       > div li > span:first-child {
         max-width: 100%;
@@ -260,6 +274,23 @@
       .cart-product-name {
         display: inline-block;
         width: 17em;
+      }
+
+      .guarantee-panel {
+        clear: both;
+      }
+    }
+
+    @include large-screen {
+      .bottom-section {
+        @include clearfix;
+      }
+
+      .guarantee-panel {
+        clear: none;
+        float: left;
+        max-width: 48%;
+        margin-top: 2.8em;
       }
     }
   }

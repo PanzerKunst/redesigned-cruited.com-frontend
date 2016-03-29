@@ -119,22 +119,6 @@
 
     padding: 2em 2.8em 1em 2.8em;
 
-    > div {
-      color: $well-border-color;
-      border-bottom: 1px solid $well-border-color;
-
-      text-transform: uppercase;
-
-      @include clearfix;
-
-      > span {
-        float: left;
-        &:last-child {
-          float: right;
-        }
-      }
-    }
-
     > ul {
       margin-bottom: 0;
       padding-bottom: $content-element-margin-bottom;
@@ -174,6 +158,22 @@
     @include large-screen {
       padding-left: 5em;
       padding-right: 5em;
+    }
+  }
+
+  .column-labels {
+    color: $well-border-color;
+    border-bottom: 1px solid $well-border-color;
+
+    text-transform: uppercase;
+
+    @include clearfix;
+
+    > span {
+      float: left;
+      &:last-child {
+        float: right;
+      }
     }
   }
 
@@ -266,10 +266,6 @@
     > p {
       margin-bottom: $content-element-margin-bottom;
     }
-
-    strong {
-      color: $brand-danger;
-    }
   }
 
   h2 {
@@ -320,6 +316,14 @@
       margin-left: auto;
       margin-right: auto;
     }
+  }
+}
+
+.guarantee-panel {
+  span {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5em;
   }
 }
 

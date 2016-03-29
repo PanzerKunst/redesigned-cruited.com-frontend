@@ -12,7 +12,7 @@ CR.Controllers.OrderSummary = React.createClass({
                     <span className="highlighted-number">{order.getProducts().length}</span>
                 </header>
                 <div>
-                    <div>
+                    <div className="column-labels">
                         <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.products"]}</span>
                         <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.defaultPrice"]}</span>
                     </div>
@@ -60,6 +60,9 @@ CR.Controllers.OrderSummary = React.createClass({
                         </tfoot>
                     </table>
                 </div>
+                <article className="alert alert-info guarantee-panel" role="alert">
+                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                </article>
             </section>
         );
     },

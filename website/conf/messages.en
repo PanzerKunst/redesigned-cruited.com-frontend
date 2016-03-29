@@ -60,6 +60,8 @@ reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 1
 reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Du kan vara mycket nöjd med din insats! Överväg gärna att följa våra råd till förbättringar nedan - du är inte många steg ifrån att ha gjort en utmärkt profil!
 reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} sista granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.<br /><br />Mycket bra jobbat! Din profil är riktigt riktigt bra! Det skadar förstås aldrig att ändå ta en titt på råden nedan för att se om det är något du kan förbättra ytterligare. Men var stolt över din insats!
 
+moneyBackGuarantee.text=<span>Nothing to lose</span>The advice in the review is useful and helps you move forward with your application - or we pay you back 100%.
+
 
 # Header menu
 
