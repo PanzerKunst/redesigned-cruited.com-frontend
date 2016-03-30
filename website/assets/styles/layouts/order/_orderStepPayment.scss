@@ -39,8 +39,16 @@ $expires-and-cvc-field-width: 30%;
         }
       }
 
-      > div li > span:first-child {
-        max-width: 77%;
+      > div {
+        @include clearfix;
+
+        li > span:first-child {
+          max-width: 77%;
+        }
+
+        > table {
+          float: right;
+        }
       }
     }
 

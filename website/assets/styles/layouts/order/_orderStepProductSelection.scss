@@ -272,21 +272,27 @@
         width: 17em;
       }
 
-      .guarantee-panel {
-        clear: both;
+      .bottom-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
       }
     }
 
     @include large-screen {
       .bottom-section {
-        @include clearfix;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      table {
+        order: 1;
+        flex-shrink: 0;
       }
 
       .guarantee-panel {
-        clear: none;
-        float: left;
-        max-width: 47%;
-        margin-top: 2.8em;
+        margin: 2.8em 2.8em 0 0;
       }
     }
   }

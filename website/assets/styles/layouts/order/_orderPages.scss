@@ -150,11 +150,6 @@
       font-weight: bold;
     }
 
-    @include medium-screen {
-      // Because of table floated right
-      @include clearfix;
-    }
-
     @include large-screen {
       padding-left: 5em;
       padding-right: 5em;
@@ -183,7 +178,7 @@
 
   // Coupon form
   form {
-    padding: 1.5em 0 2em 0;
+    padding: 1.5em 0;
 
     @include dashed-border-bottom;
 
@@ -233,8 +228,6 @@
 
     @include medium-screen {
       width: auto;
-
-      float: right;
 
       td:last-child {
         width: 5em;
