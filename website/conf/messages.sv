@@ -9,6 +9,7 @@ product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
 edition.name.EXEC=Chef
+edition.name.CONSULT=Konsult
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2 dokument
 reduction.name.3_PRODUCTS_SAME_ORDER=3 dokument
@@ -179,8 +180,9 @@ order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Grans
 order.productSelection.editionsSection.title=Välj version
 order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
 order.productSelection.editionsSection.editionDescription.text.PRO=Du har några års arbetslivserfarenhet
-order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 3 år, eller är student
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 2 år, eller är student
 order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (eller söker) en roll med personalansvar eller verksamhetsansvar
+order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult och söker uppdrag som egenföretagare
 
 order.productSelection.cartSection.title=Din beställning
 order.productSelection.cartSection.productsHeader.products=Produkter

@@ -9,6 +9,7 @@ product.name.LINKEDIN_PROFILE_REVIEW=LinkedIn Review
 edition.name.PRO=Professional
 edition.name.YOUNG_PRO=Young Professional
 edition.name.EXEC=Executive
+edition.name.CONSULT=Consultant
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2-item
 reduction.name.3_PRODUCTS_SAME_ORDER=3-item
@@ -179,8 +180,9 @@ order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Revie
 order.productSelection.editionsSection.title=Product Edition
 order.productSelection.editionsSection.subtitle=Please choose which edition best suits you.
 order.productSelection.editionsSection.editionDescription.text.PRO=You have worked for at least a year
-order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working a year or less, or you are a student
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working 2 years or less, or you are a student
 order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
+order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult och söker uppdrag som egenföretagare
 
 order.productSelection.cartSection.title=Your Order
 order.productSelection.cartSection.productsHeader.products=Products
