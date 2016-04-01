@@ -2,9 +2,9 @@
 
 defaultAssessmentTitle=Bedömning
 
-product.name.CV_REVIEW=Granskning av CV
-product.name.COVER_LETTER_REVIEW=Granskning av personligt brev
-product.name.LINKEDIN_PROFILE_REVIEW=Granskning av LinkedIn
+product.name.CV_REVIEW=Bedömning av CV
+product.name.COVER_LETTER_REVIEW=Bedömning av personligt brev
+product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn
 
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
@@ -61,7 +61,7 @@ reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 1
 reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 
-moneyBackGuarantee.text=<span>Inget att förlora</span>Råden i granskningen är användbara och hjälper dig framåt med din ansökan - eller vi betalar tillbaka 100%.
+moneyBackGuarantee.text=<span>Inget att förlora</span>Användbar råd som hjälper dig framåt med din ansökan - eller vi betalar tillbaka 100%.
 
 
 # Header menu
@@ -173,9 +173,9 @@ order.productSelection.submitBtn.text=Fortsätt till nästa steg
 order.productSelection.validation.emptyCart=Du behöver välja minst 1 produkt för att fortsätta
 
 order.productSelection.productsSection.title=Produkter
-order.productSelection.productsSection.productName.CV_REVIEW=Granska min cv
-order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Granska mitt personliga brev
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Granska min LinkedIn-profil
+order.productSelection.productsSection.productName.CV_REVIEW=Bedömning av cv
+order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Bedömning av personligt brev
+order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
 
 order.productSelection.editionsSection.title=Välj version
 order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
@@ -201,7 +201,7 @@ order.productSelection.cartSection.total=Att betala
 order.assessmentInfo.title=Detaljer för din granskning
 order.assessmentInfo.subtitle=Information vi behöver
 order.assessmentInfo.documentsSection.title=Dina dokument
-order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att granska.
+order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att bedöma.
 order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre kan vi hjälpa dig. Frivilliga uppgifter.
 order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
