@@ -1,138 +1,136 @@
 footer.content-info {
-  #bottom-hero {
-    background-image: url(../images/bottom-hero_960.jpg);
-    background-position: 80% 80%;
+    #bottom-hero {
+        background-image: url(../images/bottom-hero_960.jpg);
+        background-position: 80% 80%;
 
-    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
-      background-image: url(../images/bottom-hero_1920.jpg);
+        @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
+            background-image: url(../images/bottom-hero_1920.jpg);
+        }
+
+        > div {
+            padding: 8em $spacer-unit-size;
+
+            @include medium-screen {
+                width: $medium-content-width;
+
+                padding: 5em 0;
+
+                margin: 0 auto;
+            }
+
+            @include large-screen {
+                width: $large-content-width;
+
+                text-align: left;
+            }
+
+            > h2 {
+                margin: 0 0 $spacer-unit-size*1.75 0;
+
+                @include large-screen {
+                    max-width: 13em;
+                }
+            }
+        }
     }
 
-    > div {
-      padding: 8em $spacer-unit-size;
+    #footer-proper {
+        background-position: center bottom;
+        background-repeat: no-repeat;
+        background-image: url(../images/section-circles-flipped_263.png);
+        @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
+            background-image: url(../images/section-circles-flipped_526.png);
+            background-size: 263px 80px;
+        }
 
-      @include medium-screen {
-        width: $medium-content-width;
+        $footer-padding-top: $spacer-unit-size * 1.75;
+        padding-top: $footer-padding-top;
+        padding-bottom: 2em;
 
-        padding: 5em 0;
+        > #brand-and-social-icons {
+            > h2 {
+                margin: 0;
+                font-size: 34px;
 
-        margin: 0 auto;
-      }
+                text-align: center;
+            }
 
-      @include large-screen {
-        width: $large-content-width;
+            > div {
+                text-align: center;
+            }
+        }
 
-        text-align: left;
-      }
+        .social-icon {
+            display: inline-block;
+            margin: 5px 0 0 10px;
 
-      > h2 {
-        margin: 0 0 $spacer-unit-size*1.75 0;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+
+        > #widgets {
+            font-size: #{$font-size-base-px}px;
+        }
+
+        .widget {
+            width: $small-content-width - 2 * $spacer-unit-size;
+            margin: 0 auto;
+
+            ul {
+                text-align: left;
+            }
+        }
+
+        @include medium-screen {
+            background-image: url(../images/section-circles-large-flipped.png);
+
+            width: $medium-content-width;
+
+            margin: 0 auto;
+
+            padding-top: $footer-padding-top * $medium-screen-ratio-l;
+            padding-bottom: 2em;
+
+            #brand-and-social-icons {
+                display: flex;
+                justify-content: space-between;
+
+                > h2 {
+                    text-align: left;
+                }
+            }
+
+            > #widgets {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+
+            .widget {
+                width: auto;
+
+                margin: 0 1em 0 0;
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
 
         @include large-screen {
-          max-width: 13em;
+            width: $large-content-width;
+
+            padding-top: $footer-padding-top * $large-screen-ratio-l;
+            padding-bottom: 2em;
         }
-      }
-    }
-  }
-
-  #footer-proper {
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    background-image: url(../images/section-circles-flipped_263.png);
-    @media screen and (min-resolution: 2dppx) and (max-width: $medium-content-width) {
-      background-image: url(../images/section-circles-flipped_526.png);
-      background-size: 263px 80px;
     }
 
-    $footer-padding-top: $spacer-unit-size * 1.75;
-    padding-top: $footer-padding-top;
-    padding-bottom: 2em;
+    // Contact widget
+    .widget:first-child > .textwidget > div:first-child {
+        margin-bottom: $content-element-margin-bottom;
 
-    > #brand-and-social-icons {
-      > h2 {
-        margin: 0;
-        font-size: 34px;
-
-        text-align: center;
-      }
-
-      > div {
-        text-align: center;
-      }
-    }
-
-    .social-icon {
-      display: inline-block;
-      margin: 5px 0 0 10px;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-
-    > #widgets {
-      font-size: #{$font-size-base-px}px;
-    }
-
-    .widget {
-      width: $small-content-width - 2 * $spacer-unit-size;
-      margin: 0 auto;
-
-      ul {
-        text-align: left;
-      }
-    }
-
-    @include medium-screen {
-      background-image: url(../images/section-circles-large-flipped.png);
-
-      width: $medium-content-width;
-
-      margin: 0 auto;
-
-      padding-top: $footer-padding-top * $medium-screen-ratio-l;
-      padding-bottom: 2em;
-
-      #brand-and-social-icons {
-        display: flex;
-        justify-content: space-between;
-
-        > h2 {
-          text-align: left;
+        > p {
+            margin-bottom: 0;
         }
-      }
-
-      > #widgets {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-
-      .widget {
-        width: auto;
-
-        margin: 0 1em 0 0;
-        &:last-child {
-          margin-right: 0;
-        }
-      }
     }
-
-    @include large-screen {
-      width: $large-content-width;
-
-      padding-top: $footer-padding-top * $large-screen-ratio-l;
-      padding-bottom: 2em;
-    }
-  }
-
-  // Contact widget
-  .widget.text-4 > .textwidget {
-    > div:first-child {
-      margin-bottom: $content-element-margin-bottom;
-
-      > p {
-        margin-bottom: 0;
-      }
-    }
-  }
 }

@@ -6,7 +6,7 @@
 
         <a href="https://app.cruited.com/order" class="btn btn-primary">Get Started Now</a>
 
-        <a href="/#faq">Personal Advice That Actually Help You,<br/>within 24 hrs, or 100% Refund.</a>
+        <a href="/#faq">Personal Advice That Actually Helps You,<br/>within 24 hrs, or 100% Refund.</a>
       </div>
     </section>
 

@@ -1,705 +1,718 @@
 body.home {
-  blockquote {
-    background-color: transparent;
-  }
-
-  .main > .page-header {
-    background-image: url(../images/hero_960.jpg);
-
-    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
-      background-image: url(../images/hero_1920.jpg);
-    }
-
-    > div {
-      padding-top: 1px;
-      padding-bottom: 1px;
-    }
-
-    #subtitle {
-      font-weight: lighter;
-
-      $subtitle-margin-bottom: 3em;
-      margin-bottom: $subtitle-margin-bottom;
-      @include medium-screen {
-        margin-bottom: $subtitle-margin-bottom * $medium-screen-ratio-l;
-      }
-      @include large-screen {
-        margin-bottom: $subtitle-margin-bottom * $large-screen-ratio-l;
-      }
-    }
-
-    a {
-      color: $background-body-color;
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
-      }
-
-      &.btn {
-        text-shadow: none;
-      }
-
-      &[href="#how-it-works"] {
-        $how-we-do-it-margin: 2em;
-        margin-top: $how-we-do-it-margin;
-        @include medium-screen {
-          margin-top: $how-we-do-it-margin * $medium-screen-ratio-l;
-        }
-        @include large-screen {
-          margin-top: $how-we-do-it-margin * $large-screen-ratio-l;
-        }
-
-        > p {
-          margin-bottom: 0;
-
-          font-size: #{$font-size-base-px}px;
-
-          &#how-it-works-text-medium-screen {
-            display: none;
-          }
-          @include medium-screen {
-            &#how-it-works-text-small-screen {
-              display: none;
-            }
-            &#how-it-works-text-medium-screen {
-              display: block;
-            }
-          }
-        }
-
-        > .fa-chevron-down {
-          margin-bottom: 1em;
-        }
-      }
-    }
-  }
-
-  $section-padding-top: $spacer-unit-size * 1.75;
-
-  .main > section > div {
-    $section-padding-bottom: $spacer-unit-size * 2.5;
-
-    padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
-
-    @include medium-screen {
-      padding-top: $section-padding-top * $medium-screen-ratio-l;
-      padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
-
-      width: $medium-content-width;
-
-      padding-left: 0;
-      padding-right: 0;
-      margin: 0 auto;
-    }
-
-    @include large-screen {
-      width: $large-content-width;
-
-      padding-top: $section-padding-top * $large-screen-ratio-l;
-    }
-
-    > p,
-    > blockquote {
-      margin-left: $spacer-unit-size;
-      margin-right: $spacer-unit-size;
-      @include medium-screen {
-        margin-left: auto;
-        margin-right: auto;
-
-        max-width: $medium-content-width;
-      }
-      @include large-screen {
-        max-width: $large-content-width;
-      }
-    }
-
-    h2 {
-      margin-top: 0;
-      margin-bottom: $section-padding-top;
-      @include medium-screen {
-        margin-bottom: $section-padding-top * $medium-screen-ratio-l;
-      }
-      @include large-screen {
-        margin-bottom: $section-padding-top * $large-screen-ratio-l;
-      }
-    }
-  }
-
-  #steps {
-    text-align: center;
-
-    $steps-margin-top: $spacer-unit-size * 1.5;
-    margin-top: $steps-margin-top;
-    @include medium-screen {
-      margin-top: $steps-margin-top*$medium-screen-ratio-l;
-    }
-    @include large-screen {
-      margin-top: $steps-margin-top*$large-screen-ratio-l;
-    }
-
-    > ul {
-      display: inline-block;
-
-      margin-bottom: 0;
-    }
-
-    li {
-      display: inline-block;
-      vertical-align: top;
-
-      $step-panel-width: $small-content-width - 2*$spacer-unit-size;
-      width: $step-panel-width;
-
-      $step-margin-bottom: $spacer-unit-size * 3;
-      margin-bottom: $step-margin-bottom;
-      @include medium-screen {
-        // Same for large screen
-        margin-bottom: $step-margin-bottom * $medium-screen-ratio-l;
-      }
-
-      .step-image {
-        $step-1-image-location-x: -600px;
-        $step-1-image-location-y: -500px;
-
-        @include hdpi-sprite();
-        background-position: $step-1-image-location-x $step-1-image-location-y;
-        @include hidpi {
-          background-position: half-pos($step-1-image-location-x, $step-1-image-location-y);
-        }
-
-        // Unnecessary width: $step-panel-width;
-        height: 150px;
-
-        margin-bottom: 5px;
-      }
-
-      h3 {
-        color: $darker-grey-text-color;
-
-        padding-top: 1.3em;
-
-        margin: 0;
-
-        $step-1-image-location-x: 125px;
-        $step-1-image-location-y: -300px;
-
-        @include hdpi-sprite();
-        background-position: $step-1-image-location-x $step-1-image-location-y;
-        @include hidpi {
-          background-position: $step-1-image-location-x $step-1-image-location-y/2;
-        }
-
-        height: 84px;
-      }
-
-      &:nth-child(2) {
-        .step-image {
-          $step-2-image-location-x: -600px;
-          $step-2-image-location-y: 0;
-
-          background-position: $step-2-image-location-x $step-2-image-location-y;
-          @include hidpi {
-            background-position: half-pos($step-2-image-location-x, $step-2-image-location-y);
-          }
-        }
-
-        h3 {
-          $step-2-image-location-x: 125px;
-          $step-2-image-location-y: -500px;
-
-          background-position: $step-2-image-location-x $step-2-image-location-y;
-          @include hidpi {
-            background-position: $step-2-image-location-x $step-2-image-location-y/2;
-          }
-        }
-      }
-
-      &:last-child {
-        .step-image {
-          $step-3-image-location-x: -1200px;
-          $step-3-image-location-y: 0;
-
-          background-position: $step-3-image-location-x $step-3-image-location-y;
-          @include hidpi {
-            background-position: half-pos($step-3-image-location-x, $step-3-image-location-y);
-          }
-        }
-
-        h3 {
-          $step-3-image-location-x: 125px;
-          $step-3-image-location-y: -700px;
-
-          background-position: $step-3-image-location-x $step-3-image-location-y;
-          @include hidpi {
-            background-position: $step-3-image-location-x $step-3-image-location-y/2;
-          }
-        }
-      }
-
-      @include medium-screen {
-        &:first-child {
-          margin-right: $spacer-unit-size;
-        }
-        &:last-child {
-          margin-left: $spacer-unit-size;
-        }
-      }
-    }
-
-    h3 {
-      font-size: 22px;
-    }
-
-    p {
-      font-size: #{$font-size-base-px}px;
-    }
-  }
-
-  #report-preview {
-    background-image: url(../images/dark-bg_960.jpg);
-
-    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
-      background-image: url(../images/dark-bg_1920.jpg);
-    }
-
-    > .with-circles > blockquote {
-      margin-bottom: 4em;
-
-      @include medium-screen {
-        font-size: 1em;
-      }
-    }
-
-    @include large-screen {
-      > .with-circles {
-        width: 100%;
-      }
-
-      #preview-img {
-        display: none;
-      }
-
-      #report-preview-body-wrapper {
-        display: flex;
-
-        > section {
-          margin-left: 10%;
-        }
-
-        > #preview-img-large-screen {
-          flex-grow: 1;
-
-          margin-left: $spacer-unit-size * 2;
-
-          background-image: url(../images/report-preview-devices.png);
-          background-repeat: no-repeat;
-
-          $preview-img-large-screen-height: 743px;
-          height: $preview-img-large-screen-height;
-        }
-      }
-    }
-
-    li {
-      margin-bottom: 4em;
-      @include large-screen {
-        font-size: #{$font-size-base-px}px;
-        text-align: left;
-
-        display: flex;
-
-        max-width: 448px;
-      }
-
-      &:first-child {
-        $cool-thing-margin-top: 3em;
-        margin-top: $cool-thing-margin-top;
-        @include large-screen {
-          margin-top: 0;
-        }
-      }
-
-      h3 {
-        color: $background-body-color;
-        margin: 0 0 0.5em 0;
-      }
-
-      p {
-        opacity: 0.7;
-      }
-
-      > div {
-        $cool-thing-1-image-location-x: -600px;
-        $cool-thing-1-image-location-y: -300px;
-
-        @include hdpi-sprite();
-        background-position: $cool-thing-1-image-location-x $cool-thing-1-image-location-y;
-        @include hidpi {
-          background-position: half-pos($cool-thing-1-image-location-x, $cool-thing-1-image-location-y);
-        }
-
-        $cool-thing-image-width: 58px;
-
-        width: $cool-thing-image-width;
-        height: 53px;
-
-        margin: 0 auto $spacer-unit-size auto;
-
-        @include large-screen {
-          margin: 0;
-
-          width: $cool-thing-image-width + $spacer-unit-size;
-        }
-      }
-
-      &:nth-child(2) {
-        > div {
-          $cool-thing-2-image-location-x: -400px;
-          $cool-thing-2-image-location-y: -300px;
-
-          background-position: $cool-thing-2-image-location-x $cool-thing-2-image-location-y;
-          @include hidpi {
-            background-position: half-pos($cool-thing-2-image-location-x, $cool-thing-2-image-location-y);
-          }
-        }
-      }
-
-      &:nth-child(3) {
-        > div {
-          $cool-thing-3-image-location-x: -800px;
-          $cool-thing-3-image-location-y: -300px;
-
-          background-position: $cool-thing-3-image-location-x $cool-thing-3-image-location-y;
-          @include hidpi {
-            background-position: half-pos($cool-thing-3-image-location-x, $cool-thing-3-image-location-y);
-          }
-        }
-      }
-
-      &:last-child {
-        > div {
-          $cool-thing-4-image-location-x: -1000px;
-          $cool-thing-4-image-location-y: -300px;
-
-          background-position: $cool-thing-4-image-location-x $cool-thing-4-image-location-y;
-          @include hidpi {
-            background-position: half-pos($cool-thing-4-image-location-x, $cool-thing-4-image-location-y);
-          }
-        }
-      }
-
-      @include large-screen {
-        > article {
-          width: 330px;
-        }
-      }
-    }
-
-    #preview-img-large-screen {
-      display: none;
-      @include large-screen {
-        display: block;
-      }
-    }
-  }
-
-  #testimonials {
-    > .with-circles {
-      width: 100%;
-
-      padding-left: 0;
-      padding-right: 0;
-
-      > p {
-        margin-bottom: 0;
-      }
-    }
-
-    $testimonials-bg-img-width: 1445px;
-    $testimonials-bg-img-height: 820px;
-
-    $testimonials-bg-img-scale-small-medium-screen: 0.55;
-
-    #main-testimonial {
-      background-image: url(../images/primary-testimonial-bg_719.jpg);
-      @include hidpi {
-        background-image: url(../images/primary-testimonial-bg_1445.jpg);
-      }
-
-      background-repeat: no-repeat;
-      background-position: 15% 0;
-      background-size: $testimonials-bg-img-width*$testimonials-bg-img-scale-small-medium-screen $testimonials-bg-img-height*$testimonials-bg-img-scale-small-medium-screen;
-
-      min-height: $testimonials-bg-img-height * $testimonials-bg-img-scale-small-medium-screen;
-
-      @include large-screen {
-        background-image: url(../images/primary-testimonial-bg_1445.jpg);
-        background-size: auto;
-
-        min-height: $testimonials-bg-img-height;
-      }
-
-      > blockquote {
-        padding: 360px $spacer-unit-size 0 $spacer-unit-size;
-
-        @include medium-screen {
-          @include text-shadow($background-body-color); // Because over image
-
-          font-size: #{$font-size-base-px}px;
-
-          padding-top: 8em;
-          padding-left: 26em;
-        }
-
-        @include large-screen {
-          font-size: 1em;
-
-          padding-left: 50%;
-          padding-right: 3%;
-        }
-      }
-    }
-  }
-
-  #secondary-testimonials {
-    text-align: center;
-
-    margin-top: 40px;
-    @include large-screen {
-      margin-top: -40px;
-    }
-
-    > ul {
-      display: inline-block;
-    }
-
-    li {
-      display: inline-block;
-      vertical-align: bottom;
-
-      $quote-image-width: 300px;
-
-      width: $quote-image-width;
-
-      $testimonial-margin-bottom: $spacer-unit-size * 3;
-      margin-bottom: $testimonial-margin-bottom;
-      @include medium-screen {
-        // Same for large screen
-        margin-bottom: $testimonial-margin-bottom * $medium-screen-ratio-l;
-
-        &:first-child {
-          margin-right: $spacer-unit-size;
-        }
-        &:last-child {
-          margin-left: $spacer-unit-size;
-        }
-      }
-
-      > footer {
-        display: flex;
-
-        text-align: left;
-
-        padding-left: 6px;
-      }
-
-      $secondary-testimonial-img-location-x: -1200px;
-      $secondary-testimonial-img-location-y: -300px;
-      div {
-
-        @include hdpi-sprite();
-        background-position: $secondary-testimonial-img-location-x $secondary-testimonial-img-location-y;
-        @include hidpi {
-          background-position: half-pos($secondary-testimonial-img-location-x, $secondary-testimonial-img-location-y);
-        }
-
-        width: 85px;
-        height: 70px;
-      }
-
-      &:nth-child(2) {
-        div {
-          $secondary-testimonial-2-img-location-x: -1400px;
-
-          background-position: $secondary-testimonial-2-img-location-x $secondary-testimonial-img-location-y;
-          @include hidpi {
-            background-position: half-pos($secondary-testimonial-2-img-location-x, $secondary-testimonial-img-location-y);
-          }
-        }
-      }
-
-      &:last-child {
-        div {
-          $secondary-testimonial-3-img-location-x: -1600px;
-
-          background-position: $secondary-testimonial-3-img-location-x $secondary-testimonial-img-location-y;
-          @include hidpi {
-            background-position: half-pos($secondary-testimonial-3-img-location-x, $secondary-testimonial-img-location-y);
-          }
-        }
-      }
-    }
-
     blockquote {
-      font-size: #{$font-size-base-px}px;
+        background-color: transparent;
     }
 
-    article {
-      padding-top: 16px;
+    .main > .page-header {
+        background-image: url(../images/hero_960.jpg);
 
-      > span {
-        display: block;
-
-        font-weight: bold;
-        line-height: 1.3em;
-
-        &:first-child {
-          font-size: 16px;
-          color: $action-color;
-        }
-        &:last-child {
-          font-size: 12px;
-        }
-      }
-    }
-  }
-
-  #our-methodology {
-    background-image: url(../images/dark-bg_960.jpg);
-
-    @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
-      background-image: url(../images/dark-bg_1920.jpg);
-    }
-
-    h2 {
-      font-size: 2.2em;
-      font-weight: bold;
-      color: $primary-btn-color;
-    }
-
-    a[href="/var-metod"] {
-      margin-top: 1.25em;
-    }
-
-    .btn {
-      color: $background-body-color;
-      background-color: $secondary-action-color;
-      border-color: $secondary-action-color;
-      opacity: 0.9;
-
-      &:active,
-      &:focus,
-      &:hover,
-      &:active:focus {
-        background-color: darken($secondary-action-color, 15%);
-        border-color: darken($secondary-action-color, 25%);
-        opacity: 1;
-      }
-    }
-  }
-
-  #faq {
-    > div > p {
-      margin-bottom: 2em;
-    }
-
-    ul {
-      text-align: left;
-
-      @include medium-screen {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-    }
-
-    li {
-      font-size: 13px;
-      color: $grey-text-color;
-
-      margin-bottom: $spacer-unit-size;
-
-      @include medium-screen {
-        width: 48%;
-      }
-
-      > div {
-        display: flex;
-        align-items: center;  // TODO: poor support on Android
-        height: 4em;
-
-        background-color: $lighter-grey;
-        @include transition(background-color 500ms ease);
-
-        cursor: pointer;
-      }
-
-      > p {
-        display: none;
-
-        $faq-text-border-size: 2px;
-
-        border: $faq-text-border-size solid $secondary-action-color;
-        border-top: none;
-
-        padding: $spacer-unit-size - $faq-text-border-size;
-      }
-
-      span {
-        flex-grow: 1;
-
-        padding-left: $spacer-unit-size;
-        padding-right: $spacer-unit-size / 2;
-
-        font-weight: bold;
-      }
-
-      button {
-        $faq-expand-img-location-x: -500px;
-        $faq-expand-img-location-y: -500px;
-
-        @include hdpi-sprite();
-        background-position: $faq-expand-img-location-x $faq-expand-img-location-y;
-        @include hidpi {
-          background-position: half-pos($faq-expand-img-location-x, $faq-expand-img-location-y);
+        @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
+            background-image: url(../images/hero_1920.jpg);
         }
 
-        flex: 0 0 45px;
-        height: 32px;
-      }
-
-      &.expanded {
         > div {
-          background-color: $secondary-action-color;
-          color: $background-body-color;
+            padding-top: 1px;
+            padding-bottom: 1px;
         }
 
-        button {
-          $faq-collapse-img-location-x: -500px;
-          $faq-collapse-img-location-y: -800px;
+        #subtitle {
+            font-weight: lighter;
 
-          background-position: $faq-collapse-img-location-x $faq-collapse-img-location-y !important;
-          @include hidpi {
-            background-position: half-pos($faq-collapse-img-location-x, $faq-collapse-img-location-y) !important;
-          }
+            $subtitle-margin-bottom: 3em;
+            margin-bottom: $subtitle-margin-bottom;
+            @include medium-screen {
+                margin-bottom: $subtitle-margin-bottom * $medium-screen-ratio-l;
+            }
+            @include large-screen {
+                margin-bottom: $subtitle-margin-bottom * $large-screen-ratio-l;
+            }
         }
-      }
 
-      > div:hover {
-        background-color: $secondary-action-color;
-        color: $background-body-color;
+        a {
+            color: $background-body-color;
 
-        > button {
-          $faq-collapse-img-location-x: -500px;
-          $faq-collapse-img-location-y: -700px;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
 
-          background-position: $faq-collapse-img-location-x $faq-collapse-img-location-y;
-          @include hidpi {
-            background-position: half-pos($faq-collapse-img-location-x, $faq-collapse-img-location-y);
-          }
+            &.btn {
+                text-shadow: none;
+            }
+
+            &[href="#how-it-works"] {
+                $how-we-do-it-margin: 2em;
+                margin-top: $how-we-do-it-margin;
+                @include medium-screen {
+                    margin-top: $how-we-do-it-margin * $medium-screen-ratio-l;
+                }
+                @include large-screen {
+                    margin-top: $how-we-do-it-margin * $large-screen-ratio-l;
+                }
+
+                > p {
+                    margin-bottom: 0;
+
+                    font-size: #{$font-size-base-px}px;
+
+                    &#how-it-works-text-medium-screen {
+                        display: none;
+                    }
+                    @include medium-screen {
+                        &#how-it-works-text-small-screen {
+                            display: none;
+                        }
+                        &#how-it-works-text-medium-screen {
+                            display: block;
+                        }
+                    }
+                }
+
+                > .fa-chevron-down {
+                    margin-bottom: 1em;
+                }
+            }
         }
-      }
     }
-  }
+
+    $section-padding-top: $spacer-unit-size * 1.75;
+
+    .main > section > div {
+        $section-padding-bottom: $spacer-unit-size * 2.5;
+
+        padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+
+        @include medium-screen {
+            padding-top: $section-padding-top * $medium-screen-ratio-l;
+            padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+
+            width: $medium-content-width;
+
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0 auto;
+        }
+
+        @include large-screen {
+            width: $large-content-width;
+
+            padding-top: $section-padding-top * $large-screen-ratio-l;
+        }
+
+        > p,
+        > blockquote {
+            margin-left: $spacer-unit-size;
+            margin-right: $spacer-unit-size;
+            @include medium-screen {
+                margin-left: auto;
+                margin-right: auto;
+
+                max-width: $medium-content-width;
+            }
+            @include large-screen {
+                max-width: $large-content-width;
+            }
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: $section-padding-top;
+            @include medium-screen {
+                margin-bottom: $section-padding-top * $medium-screen-ratio-l;
+            }
+            @include large-screen {
+                margin-bottom: $section-padding-top * $large-screen-ratio-l;
+            }
+        }
+    }
+
+    #steps {
+        text-align: center;
+
+        $steps-margin-top: $spacer-unit-size * 1.5;
+        margin-top: $steps-margin-top;
+        @include medium-screen {
+            margin-top: $steps-margin-top*$medium-screen-ratio-l;
+        }
+        @include large-screen {
+            margin-top: $steps-margin-top*$large-screen-ratio-l;
+        }
+
+        > ul {
+            display: inline-block;
+
+            margin-bottom: 0;
+        }
+
+        li {
+            display: inline-block;
+            vertical-align: top;
+
+            $step-panel-width: $small-content-width - 2*$spacer-unit-size;
+            width: $step-panel-width;
+
+            $step-margin-bottom: $spacer-unit-size * 3;
+            margin-bottom: $step-margin-bottom;
+            @include medium-screen {
+                // Same for large screen
+                margin-bottom: $step-margin-bottom * $medium-screen-ratio-l;
+            }
+
+            > .step-image {
+                $step-1-image-location-x: -600px;
+                $step-1-image-location-y: -500px;
+
+                @include hdpi-sprite();
+                background-position: $step-1-image-location-x $step-1-image-location-y;
+                @include hidpi {
+                    background-position: half-pos($step-1-image-location-x, $step-1-image-location-y);
+                }
+
+                // Unnecessary width: $step-panel-width;
+                height: 150px;
+
+                margin-bottom: 5px;
+            }
+
+            > h3 {
+                color: $darker-grey-text-color;
+
+                margin: 0;
+
+                $step-1-image-location-x: 125px;
+                $step-1-image-location-y: -300px;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                @include hdpi-sprite();
+                background-position: $step-1-image-location-x $step-1-image-location-y;
+                @include hidpi {
+                    background-position: $step-1-image-location-x $step-1-image-location-y/2;
+                }
+
+                height: 84px;
+            }
+
+            &:nth-child(2) {
+                > .step-image {
+                    $step-2-image-location-x: -600px;
+                    $step-2-image-location-y: 0;
+
+                    background-position: $step-2-image-location-x $step-2-image-location-y;
+                    @include hidpi {
+                        background-position: half-pos($step-2-image-location-x, $step-2-image-location-y);
+                    }
+                }
+
+                > h3 {
+                    $step-2-image-location-x: 125px;
+                    $step-2-image-location-y: -500px;
+
+                    background-position: $step-2-image-location-x $step-2-image-location-y;
+                    @include hidpi {
+                        background-position: $step-2-image-location-x $step-2-image-location-y/2;
+                    }
+                }
+            }
+
+            &:last-child {
+                > .step-image {
+                    $step-3-image-location-x: -1200px;
+                    $step-3-image-location-y: 0;
+
+                    background-position: $step-3-image-location-x $step-3-image-location-y;
+                    @include hidpi {
+                        background-position: half-pos($step-3-image-location-x, $step-3-image-location-y);
+                    }
+                }
+
+                > h3 {
+                    $step-3-image-location-x: 125px;
+                    $step-3-image-location-y: -700px;
+
+                    background-position: $step-3-image-location-x $step-3-image-location-y;
+                    @include hidpi {
+                        background-position: $step-3-image-location-x $step-3-image-location-y/2;
+                    }
+                }
+            }
+
+            @include medium-screen {
+                &:first-child {
+                    margin-right: $spacer-unit-size;
+                }
+                &:last-child {
+                    margin-left: $spacer-unit-size;
+                }
+            }
+        }
+
+        h3 {
+            font-size: 22px;
+        }
+
+        p {
+            font-size: #{$font-size-base-px}px;
+        }
+    }
+
+    #report-preview {
+        background-image: url(../images/dark-bg_960.jpg);
+
+        @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
+            background-image: url(../images/dark-bg_1920.jpg);
+        }
+
+        > .with-circles > blockquote {
+            margin-bottom: 4em;
+
+            @include medium-screen {
+                font-size: 1em;
+            }
+        }
+
+        @include large-screen {
+            > .with-circles {
+                width: 100%;
+            }
+
+            #preview-img {
+                display: none;
+            }
+
+            #report-preview-body-wrapper {
+                display: flex;
+
+                > section {
+                    margin-left: 10%;
+                }
+
+                > #preview-img-large-screen {
+                    flex-grow: 1;
+
+                    margin-left: $spacer-unit-size * 2;
+
+                    background-image: url(../images/report-preview-devices.png);
+                    background-repeat: no-repeat;
+
+                    $preview-img-large-screen-height: 743px;
+                    height: $preview-img-large-screen-height;
+                }
+            }
+        }
+
+        li {
+            margin-bottom: 4em;
+            @include large-screen {
+                font-size: #{$font-size-base-px}px;
+                text-align: left;
+
+                display: flex;
+
+                max-width: 448px;
+            }
+
+            &:first-child {
+                $cool-thing-margin-top: 3em;
+                margin-top: $cool-thing-margin-top;
+                @include large-screen {
+                    margin-top: 0;
+                }
+            }
+
+            h3 {
+                color: $background-body-color;
+                margin: 0 0 0.5em 0;
+            }
+
+            p {
+                opacity: 0.7;
+            }
+
+            > div {
+                $cool-thing-1-image-location-x: -600px;
+                $cool-thing-1-image-location-y: -300px;
+
+                @include hdpi-sprite();
+                background-position: $cool-thing-1-image-location-x $cool-thing-1-image-location-y;
+                @include hidpi {
+                    background-position: half-pos($cool-thing-1-image-location-x, $cool-thing-1-image-location-y);
+                }
+
+                $cool-thing-image-width: 58px;
+
+                width: $cool-thing-image-width;
+                height: 53px;
+
+                margin: 0 auto $spacer-unit-size auto;
+
+                @include large-screen {
+                    margin: 0;
+
+                    width: $cool-thing-image-width + $spacer-unit-size;
+                }
+            }
+
+            &:nth-child(2) {
+                > div {
+                    $cool-thing-2-image-location-x: -400px;
+                    $cool-thing-2-image-location-y: -300px;
+
+                    background-position: $cool-thing-2-image-location-x $cool-thing-2-image-location-y;
+                    @include hidpi {
+                        background-position: half-pos($cool-thing-2-image-location-x, $cool-thing-2-image-location-y);
+                    }
+                }
+            }
+
+            &:nth-child(3) {
+                > div {
+                    $cool-thing-3-image-location-x: -800px;
+                    $cool-thing-3-image-location-y: -300px;
+
+                    background-position: $cool-thing-3-image-location-x $cool-thing-3-image-location-y;
+                    @include hidpi {
+                        background-position: half-pos($cool-thing-3-image-location-x, $cool-thing-3-image-location-y);
+                    }
+                }
+            }
+
+            &:last-child {
+                > div {
+                    $cool-thing-4-image-location-x: -1000px;
+                    $cool-thing-4-image-location-y: -300px;
+
+                    background-position: $cool-thing-4-image-location-x $cool-thing-4-image-location-y;
+                    @include hidpi {
+                        background-position: half-pos($cool-thing-4-image-location-x, $cool-thing-4-image-location-y);
+                    }
+                }
+            }
+
+            @include large-screen {
+                > article {
+                    width: 330px;
+                }
+            }
+        }
+
+        #preview-img-large-screen {
+            display: none;
+            @include large-screen {
+                display: block;
+            }
+        }
+    }
+
+    #testimonials {
+        > .with-circles {
+            width: 100%;
+
+            padding-left: 0;
+            padding-right: 0;
+
+            > p {
+                margin-bottom: 0;
+            }
+        }
+
+        $testimonials-bg-img-width: 1445px;
+        $testimonials-bg-img-height: 820px;
+
+        $testimonials-bg-img-scale-small-medium-screen: 0.55;
+
+        #main-testimonial {
+            background-image: url(../images/primary-testimonial-bg_719.jpg);
+            @include hidpi {
+                background-image: url(../images/primary-testimonial-bg_1445.jpg);
+            }
+
+            background-repeat: no-repeat;
+            background-position: 15% 0;
+            background-size: $testimonials-bg-img-width*$testimonials-bg-img-scale-small-medium-screen $testimonials-bg-img-height*$testimonials-bg-img-scale-small-medium-screen;
+
+            min-height: $testimonials-bg-img-height * $testimonials-bg-img-scale-small-medium-screen;
+
+            @include large-screen {
+                background-image: url(../images/primary-testimonial-bg_1445.jpg);
+                background-size: auto;
+
+                min-height: $testimonials-bg-img-height;
+            }
+
+            > blockquote {
+                padding: 360px $spacer-unit-size 0 $spacer-unit-size;
+
+                @include medium-screen {
+                    @include text-shadow($background-body-color); // Because over image
+
+                    font-size: #{$font-size-base-px}px;
+
+                    padding-top: 8em;
+                    padding-left: 26em;
+                }
+
+                @include large-screen {
+                    font-size: 1em;
+
+                    padding-left: 50%;
+                    padding-right: 3%;
+                }
+            }
+        }
+    }
+
+    #secondary-testimonials {
+        text-align: center;
+
+        margin-top: 40px;
+        @include large-screen {
+            margin-top: -40px;
+        }
+
+        > ul {
+            display: inline-block;
+        }
+
+        li {
+            display: inline-block;
+            vertical-align: bottom;
+
+            $quote-image-width: 300px;
+
+            width: $quote-image-width;
+
+            $testimonial-margin-bottom: $spacer-unit-size * 3;
+            margin-bottom: $testimonial-margin-bottom;
+            @include medium-screen {
+                // Same for large screen
+                margin-bottom: $testimonial-margin-bottom * $medium-screen-ratio-l;
+
+                &:first-child {
+                    margin-right: $spacer-unit-size;
+                }
+                &:last-child {
+                    margin-left: $spacer-unit-size;
+                }
+            }
+
+            > footer {
+                display: flex;
+
+                text-align: left;
+
+                padding-left: 6px;
+            }
+
+            $secondary-testimonial-img-location-x: -1200px;
+            $secondary-testimonial-img-location-y: -300px;
+            div {
+
+                @include hdpi-sprite();
+                background-position: $secondary-testimonial-img-location-x $secondary-testimonial-img-location-y;
+                @include hidpi {
+                    background-position: half-pos($secondary-testimonial-img-location-x, $secondary-testimonial-img-location-y);
+                }
+
+                min-width: 85px;
+                height: 70px;
+            }
+
+            &:nth-child(2) {
+                div {
+                    $secondary-testimonial-2-img-location-x: -1400px;
+
+                    background-position: $secondary-testimonial-2-img-location-x $secondary-testimonial-img-location-y;
+                    @include hidpi {
+                        background-position: half-pos($secondary-testimonial-2-img-location-x, $secondary-testimonial-img-location-y);
+                    }
+                }
+            }
+
+            &:last-child {
+                div {
+                    $secondary-testimonial-3-img-location-x: -1600px;
+
+                    background-position: $secondary-testimonial-3-img-location-x $secondary-testimonial-img-location-y;
+                    @include hidpi {
+                        background-position: half-pos($secondary-testimonial-3-img-location-x, $secondary-testimonial-img-location-y);
+                    }
+                }
+            }
+        }
+
+        blockquote {
+            font-size: #{$font-size-base-px}px;
+        }
+
+        article {
+            padding-top: 16px;
+
+            > span {
+                display: block;
+
+                font-weight: bold;
+                line-height: 1.3em;
+
+                &:first-child {
+                    font-size: 16px;
+                    color: $action-color;
+                }
+                &:last-child {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    #our-methodology {
+        background-image: url(../images/dark-bg_960.jpg);
+
+        @media screen and (min-width: 961px), screen and (min-resolution: 2dppx) {
+            background-image: url(../images/dark-bg_1920.jpg);
+        }
+
+        h2 {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: $primary-btn-color;
+        }
+
+        a[href="/var-metod"] {
+            margin-top: 1.25em;
+        }
+
+        .btn {
+            color: $background-body-color;
+            background-color: $secondary-action-color;
+            border-color: $secondary-action-color;
+            opacity: 0.9;
+
+            &:active,
+            &:focus,
+            &:hover,
+            &:active:focus {
+                background-color: darken($secondary-action-color, 15%);
+                border-color: darken($secondary-action-color, 25%);
+                opacity: 1;
+            }
+        }
+    }
+
+    #faq {
+        > div > p {
+            margin-bottom: 2em;
+        }
+
+        ul {
+            text-align: left;
+
+            @include medium-screen {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+        }
+
+        li {
+            font-size: 13px;
+            color: $grey-text-color;
+
+            margin-bottom: $spacer-unit-size;
+
+            @include medium-screen {
+                width: 48%;
+            }
+
+            > div {
+                display: flex;
+                align-items: center; // TODO: poor support on Android
+                height: 4em;
+
+                background-color: $lighter-grey;
+                @include transition(background-color 500ms ease);
+
+                cursor: pointer;
+            }
+
+            > p {
+                display: none;
+
+                $faq-text-border-size: 2px;
+
+                border: $faq-text-border-size solid $secondary-action-color;
+                border-top: none;
+
+                padding: $spacer-unit-size - $faq-text-border-size;
+            }
+
+            span {
+                flex-grow: 1;
+
+                padding-left: $spacer-unit-size;
+                padding-right: $spacer-unit-size / 2;
+
+                font-weight: bold;
+            }
+
+            button {
+                $faq-expand-img-location-x: -500px;
+                $faq-expand-img-location-y: -500px;
+
+                @include hdpi-sprite();
+                background-position: $faq-expand-img-location-x $faq-expand-img-location-y;
+                @include hidpi {
+                    background-position: half-pos($faq-expand-img-location-x, $faq-expand-img-location-y);
+                }
+
+                flex: 0 0 45px;
+                height: 32px;
+            }
+
+            &.expanded {
+                > div {
+                    background-color: $secondary-action-color;
+                    color: $background-body-color;
+                }
+
+                button {
+                    $faq-collapse-img-location-x: -500px;
+                    $faq-collapse-img-location-y: -800px;
+
+                    background-position: $faq-collapse-img-location-x $faq-collapse-img-location-y !important;
+                    @include hidpi {
+                        background-position: half-pos($faq-collapse-img-location-x, $faq-collapse-img-location-y) !important;
+                    }
+                }
+            }
+
+            > div:hover {
+                background-color: $secondary-action-color;
+                color: $background-body-color;
+
+                > button {
+                    $faq-collapse-img-location-x: -500px;
+                    $faq-collapse-img-location-y: -700px;
+
+                    background-position: $faq-collapse-img-location-x $faq-collapse-img-location-y;
+                    @include hidpi {
+                        background-position: half-pos($faq-collapse-img-location-x, $faq-collapse-img-location-y);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// US
+html[lang="en-US"] > body.home #steps li:first-child > .step-image {
+    $step-1-image-location-x: 0;
+    $step-1-image-location-y: 0;
+
+    background-position: $step-1-image-location-x $step-1-image-location-y;
+    @include hidpi {
+        background-position: half-pos($step-1-image-location-x, $step-1-image-location-y);
+    }
 }
