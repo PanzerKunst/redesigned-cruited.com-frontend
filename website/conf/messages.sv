@@ -16,9 +16,9 @@ reduction.name.3_PRODUCTS_SAME_ORDER=3 dokument
 
 order.status.label=Status
 order.status.notPaid.text=Betalning saknas
-order.status.paid.text=Avvaktar granskning
-order.status.inProgress.text=Granskning pågår
-order.status.completed.text=Granskning genomförd
+order.status.paid.text=Avvaktar bedömning
+order.status.inProgress.text=Bedömning pågår
+order.status.completed.text=Bedömning genomförd
 
 order.creationDate.label=Skapad
 
@@ -37,7 +37,7 @@ category.COVER_LETTER_REVIEW.10.shortDesc=Visa på ett trovärdigt sätt att du 
 category.COVER_LETTER_REVIEW.11.title=Aktivt, kort och korrekt
 category.COVER_LETTER_REVIEW.11.shortDesc=En dåligt skriven ansökan placerar dig som sökande ofta direkt längst ner i högen.
 category.LINKEDIN_PROFILE_REVIEW.16.title=Rikta och var relevant
-category.LINKEDIN_PROFILE_REVIEW.16.shortDesc=Nyckeln till framgång bland miljontals profiler på LinkedIn är att vara relevant. Du behöver visa en röd linje, få fram en bild av vart du är på väg och vad du söker. I vår granskning tittar vi på flera faktorer som rör relevans och riktning.
+category.LINKEDIN_PROFILE_REVIEW.16.shortDesc=Nyckeln till framgång bland miljontals profiler på LinkedIn är att vara relevant. Du behöver visa en röd linje, få fram en bild av vart du är på väg och vad du söker. I vår bedömning tittar vi på flera faktorer som rör relevans och riktning.
 category.LINKEDIN_PROFILE_REVIEW.17.title=Skapa effekt och bygg räckvidd
 category.LINKEDIN_PROFILE_REVIEW.17.shortDesc=Att finnas på LinkedIn är grundläggande när man söker jobb. Men för att nå framgång med LinkedIn behöver man synas och underlätta kontaktskapande. Den här kategorin handlar om hur du lyckas skapa effekt och nå ut med din profil.
 category.LINKEDIN_PROFILE_REVIEW.18.title=Översiktligt och korrekt
@@ -45,21 +45,21 @@ category.LINKEDIN_PROFILE_REVIEW.18.shortDesc=Din LinkedIn-profil ska vara korre
 category.LINKEDIN_PROFILE_REVIEW.20.title=Redovisa resultat och skapa trovärdighet
 category.LINKEDIN_PROFILE_REVIEW.20.shortDesc=LinkedIn är världens största cv-bank och att berätta om sina erfarenheter och utbildningar är grundläggande. För att få kontakter och skapa möjligheter till jobb behöver du ge trovärdig bild av din bakgrund.
 
-reportSummary.CV_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV granskningarna är <strong>{averageScore}</strong>.
-reportSummary.CV_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV granskningarna är <strong>{averageScore}</strong>.
-reportSummary.CV_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV granskningarna är <strong>{averageScore}</strong>.
-reportSummary.CV_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV granskningarna är <strong>{averageScore}</strong>.
-reportSummary.CV_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV granskningarna är <strong>{averageScore}</strong>.
-reportSummary.COVER_LETTER_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av personligt brev är <strong>{averageScore}</strong>.
-reportSummary.COVER_LETTER_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av personligt brev är <strong>{averageScore}</strong>.
-reportSummary.COVER_LETTER_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av personligt brev är <strong>{averageScore}</strong>.
-reportSummary.COVER_LETTER_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av personligt brev är <strong>{averageScore}</strong>.
-reportSummary.COVER_LETTER_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av personligt brev är <strong>{averageScore}</strong>.
-reportSummary.LINKEDIN_PROFILE_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
-reportSummary.LINKEDIN_PROFILE_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
-reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
-reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
-reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår granskning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste granskningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
+reportSummary.CV_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV bedömningarna är <strong>{averageScore}</strong>.
+reportSummary.CV_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV bedömningarna är <strong>{averageScore}</strong>.
+reportSummary.CV_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV bedömningarna är <strong>{averageScore}</strong>.
+reportSummary.CV_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV bedömningarna är <strong>{averageScore}</strong>.
+reportSummary.CV_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din CV. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste CV bedömningarna är <strong>{averageScore}</strong>.
+reportSummary.COVER_LETTER_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av personligt brev är <strong>{averageScore}</strong>.
+reportSummary.COVER_LETTER_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av personligt brev är <strong>{averageScore}</strong>.
+reportSummary.COVER_LETTER_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av personligt brev är <strong>{averageScore}</strong>.
+reportSummary.COVER_LETTER_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av personligt brev är <strong>{averageScore}</strong>.
+reportSummary.COVER_LETTER_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av ditt personliga brev. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av personligt brev är <strong>{averageScore}</strong>.
+reportSummary.LINKEDIN_PROFILE_REVIEW.0=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
+reportSummary.LINKEDIN_PROFILE_REVIEW.25=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
+reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
+reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
+reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 
 moneyBackGuarantee.text=<span>Inget att förlora</span>Användbar råd som hjälper dig framåt med din ansökan - eller vi betalar tillbaka 100%.
 
@@ -126,27 +126,27 @@ resetPassword.new.form.submitBtn.text=Spara
 
 # Dashboard page
 
-dashboard.title=Mina granskningar
+dashboard.title=Mina bedömningar
 dashboard.subtitle=Välkommen, {firstName}!
-dashboard.orderCompleted.alert.text=Din beställning har tagits emot, tack!<br />Vi kommer att meddela dig via e-post när din granskning påbörjas.
-dashboard.assessmentWaiting.alert.text=Vi kommer snart att börja med din granskning.<br />Du får ett meddelande när granskningen inleds.
-dashboard.assessmentInProgress.alert.text=Vi har påbörjat din granskning!<br />Du får ett meddelande när granskningen är genomförd.
+dashboard.orderCompleted.alert.text=Din beställning har tagits emot, tack!<br />Vi kommer att meddela dig via e-post när din bedömning påbörjas.
+dashboard.assessmentWaiting.alert.text=Vi kommer snart att börja med din bedömning.<br />Du får ett meddelande när bedömningen inleds.
+dashboard.assessmentInProgress.alert.text=Vi har påbörjat din bedömning!<br />Du får ett meddelande när bedömningen är genomförd.
 dashboard.completePaymentLink.text=Betala
-dashboard.newAssessmentBtn.text=Ny granskning
+dashboard.newAssessmentBtn.text=Ny bedömning
 dashboard.viewReportBtn.text=Visa rapport
-dashboard.editOrder.text=Den här granskningen har inte påbörjats och du kan fortfarande <a href="{url}">redigera din information</a> om du vill.
+dashboard.editOrder.text=Den här bedömningen har inte påbörjats och du kan fortfarande <a href="{url}">redigera din information</a> om du vill.
 
 
 # Report page
 
-report.title=Din granskningsrapport
+report.title=Din bedömningsrapport
 report.unorderedAssessment.text=Du har inte beställt den är produkten. Du behöver göra en ny beställning för att komma åt den här produkten.
-report.unorderedAssessment.orderBtn.text=Beställ en ny granskning
+report.unorderedAssessment.orderBtn.text=Beställ en ny bedömning
 report.tabNameSmallScreen.CV_REVIEW=CV
 report.tabNameSmallScreen.COVER_LETTER_REVIEW=Personligt brev
 report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW=LinkedIn
 
-report.summary.title=Resultat av din granskning
+report.summary.title=Resultat av din bedömning
 report.summary.documentLink.text=Original
 report.summary.score.label=Din C-Score
 report.summary.score.bar.label.weak=Svag
@@ -198,15 +198,15 @@ order.productSelection.cartSection.total=Att betala
 
 # Order Step Assessment Info page
 
-order.assessmentInfo.title=Detaljer för din granskning
+order.assessmentInfo.title=Detaljer för din bedömning
 order.assessmentInfo.subtitle=Information vi behöver
 order.assessmentInfo.documentsSection.title=Dina dokument
 order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att bedöma.
 order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre kan vi hjälpa dig. Frivilliga uppgifter.
 order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
-order.assessmentInfo.validation.linkedin.notSignedIn=För att vi ska kunna granska din LinkedIn-profil behöver du logga in
-order.assessmentInfo.validation.linkedin.publicProfileUrlMissing=Du har inte gjort din profil offentlig ännu och vi kan därför inte granska den
+order.assessmentInfo.validation.linkedin.notSignedIn=För att vi ska kunna bedöma din LinkedIn-profil behöver du logga in
+order.assessmentInfo.validation.linkedin.publicProfileUrlMissing=Du har inte gjort din profil offentlig ännu och vi kan därför inte bedöma den
 order.assessmentInfo.validation.linkedin.incompleteProfile.label=Din LinkedIn-profil saknar viktig information:
 order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Sammanfattning (summary) av din profil
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
@@ -221,9 +221,9 @@ order.assessmentInfo.form.linkedinProfile.label=Din LinkedIn-profil
 order.assessmentInfo.form.linkedinProfile.signInBtn.text=Logga in med LinkedIn
 order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
-order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
+order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för bedömning
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Läs in igen
-order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min granskning kommer att bli begränsad eftersom min profil saknar viktiga delar. Fortsätt ändå.
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad eftersom min profil saknar viktiga delar. Fortsätt ändå.
 order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev
@@ -231,15 +231,15 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
 order.assessmentInfo.form.positionSought.label=Tjänst du söker
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
-order.assessmentInfo.form.customerComment.label=Har du några specifika frågor kring din granskning?
-order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
+order.assessmentInfo.form.customerComment.label=Har du några specifika frågor kring din bedömning?
+order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.tos.text=Jag accepterar <a href="https://cruited.com/villkor/" target="_blank">användningsvillkoren</a>
 
 
 # Order Step Account Creation page
 
 order.accountCreation.title=Skapa ditt konto
-order.accountCreation.subtitle=På vilket konto vill du spara din granskning?
+order.accountCreation.subtitle=På vilket konto vill du spara din bedömning?
 order.accountCreation.submitBtn.text=Registrera och gå vidare
 order.accountCreation.submitBtn.withEmailPrefix=Registrera med
 order.accountCreation.validation.emailAlreadyRegistered=Det finns redan ett konto med den här adressen. <a href="/login">Logga in</a>.
@@ -289,7 +289,7 @@ order.edit.saveBtn.text=Spara
 
 email.resetPassword.subject=Nytt lösenord till Cruited
 email.unpaidOrderReminder.subject=Färdigställ din beställning
-email.twoDaysAfterAssessmentDelivered.subject=Ett personligt råd om din granskning
-email.orderComplete.free.subject=Granskning skapad
+email.twoDaysAfterAssessmentDelivered.subject=Ett personligt råd om din bedömning
+email.orderComplete.free.subject=Bedömning skapad
 email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
 email.orderComplete.paid.orderedProductsSeparator=och
