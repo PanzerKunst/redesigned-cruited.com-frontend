@@ -61,7 +61,7 @@ reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 1
 reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 
-moneyBackGuarantee.text=<span>Inget att förlora</span>Användbar råd som hjälper dig framåt med din ansökan - eller vi betalar tillbaka 100%.
+moneyBackGuarantee.text=<span>Inget att förlora</span>Användbara råd som hjälper dig framåt med din ansökan - eller vi betalar tillbaka 100%.
 
 
 # Header menu
