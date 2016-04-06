@@ -17,6 +17,7 @@ case class Order(id: Option[Long],
                  customerComment: Option[String],
                  accountId: Option[Long],
                  status: Int,
+                 languageCode: String,
                  creationTimestamp: Long,
                  paymentTimestamp: Option[Long]) {
 
@@ -37,6 +38,7 @@ case class Order(id: Option[Long],
     customerComment = frontendOrder.customerComment,
     accountId = frontendOrder.accountId,
     status = frontendOrder.status,
+    languageCode = frontendOrder.languageCode,
     creationTimestamp = frontendOrder.creationTimestamp,
     paymentTimestamp = frontendOrder.paymentTimestamp
   )

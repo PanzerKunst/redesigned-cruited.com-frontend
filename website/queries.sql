@@ -1,11 +1,11 @@
-select * from useri
+select * from cruited_users.useri
 where id < 0;
 
-delete from useri
+delete from cruited_users.useri
 where id < 0;
 
 
-select * from useri
+select * from cruited_users.useri
 order by registered_at desc;
 
 
@@ -28,7 +28,7 @@ select * from codes
 where shw = 1
 order by valid_date desc;
 
-delete from useri
+delete from cruited_users.useri
 where email = 'cbramdit@gmail.com';
 
 delete from documents

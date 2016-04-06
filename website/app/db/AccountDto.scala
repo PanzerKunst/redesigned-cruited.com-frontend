@@ -5,7 +5,7 @@ import java.util.{Calendar, GregorianCalendar}
 import anorm.SqlParser._
 import anorm._
 import com.fasterxml.jackson.core.JsonParseException
-import models.{Account, Order}
+import models.{Account, Order, SupportedLanguage}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
@@ -29,7 +29,7 @@ object AccountDto {
     }
   }
 
-  def create(emailAddress: String, firstName: String, password: Option[String], linkedinProfile: JsValue): Option[Long] = {
+  def create(emailAddress: String, firstName: String, password: Option[String], linkedinProfile: JsValue, currentLanguage: SupportedLanguage): Option[Long] = {
     DB.withConnection("users") { implicit c =>
       val passwordClause = password match {
         case None => "NULL"
@@ -44,13 +44,14 @@ object AccountDto {
       }
 
       val query = """
-      insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, /* useful fields */
+      insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, lang, /* useful fields */
         tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
         DbUtil.safetize(emailAddress.toLowerCase) + """', """ +
         passwordClause + """,
         now(), '""" +
-        linkedinProfileClause + """', """ +
+        linkedinProfileClause + """', '""" +
+        currentLanguage.ietfCode + """', """ +
         Account.typeCustomer + """, '', '', '', 0, '', '', '', now(), now(), 0, 0);"""
 
       // This log is commented since it displays the password
@@ -115,14 +116,14 @@ object AccountDto {
   def getOfId(id: Long): Option[Account] = {
     DB.withConnection("users") { implicit c =>
       val query = """
-        select prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
+        select prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
         where id = """ + id + """;"""
 
       Logger.info("AccountDto.getOfId():" + query)
 
-      val rowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
-        case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType =>
+      val rowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString => Json.parse(otherString)
@@ -136,6 +137,7 @@ object AccountDto {
             password = None,
             linkedinProfile = linkedinBasicProfileOpt,
             `type` = accountType,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime
           )
       }
@@ -147,7 +149,7 @@ object AccountDto {
   def getOfEmailAddress(emailAddress: String): Option[Account] = {
     DB.withConnection("users") { implicit c =>
       val query = """
-        select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, pass
+        select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, lang, pass
         from useri
         where id > 0
           and email = '""" + DbUtil.safetize(emailAddress.toLowerCase) + """'
@@ -156,8 +158,8 @@ object AccountDto {
       // This log is commented since it displays the password
       //Logger.info("AccountDto.getOfEmailAddress():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ (str("pass") ?) map {
-        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType ~ passwordOpt =>
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") ~ (str("pass") ?) map {
+        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode ~ passwordOpt =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString => Json.parse(otherString)
@@ -171,6 +173,7 @@ object AccountDto {
             password = passwordOpt,
             linkedinProfile = linkedinBasicProfileOpt,
             `type` = accountType,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime
           )
       }
@@ -182,7 +185,7 @@ object AccountDto {
   def getOfLinkedinAccountId(linkedInAccountId: String): Option[Account] = {
     DB.withConnection("users") { implicit c =>
       val query = """
-        select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
+        select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
         where id > 0
           and linkedin_basic_profile_fields like '%"id":"""" + DbUtil.safetize(linkedInAccountId) + """"%'
@@ -190,8 +193,8 @@ object AccountDto {
 
       Logger.info("AccountDto.getOfLinkedinAccountId():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
-        case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType =>
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString => Json.parse(otherString)
@@ -205,6 +208,7 @@ object AccountDto {
             password = None,
             linkedinProfile = linkedinBasicProfileOpt,
             `type` = accountType,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime
           )
       }
@@ -216,7 +220,7 @@ object AccountDto {
   def getOfEmailAndPassword(emailAddress: String, password: String): Option[Account] = {
     DB.withConnection("users") { implicit c =>
       val query = """
-        select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp
+        select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
         where id > 0
           and email = '""" + DbUtil.safetize(emailAddress.toLowerCase) + """'
@@ -226,8 +230,8 @@ object AccountDto {
       // This log is commented since it displays the password
       // Logger.info("AccountDto.getOfEmailAndPassword():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
-        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType =>
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString => Json.parse(otherString)
@@ -241,6 +245,7 @@ object AccountDto {
             password = None,
             linkedinProfile = linkedinBasicProfileOpt,
             `type` = accountType,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime
           )
       }
@@ -356,7 +361,9 @@ object AccountDto {
 
       val allAccountIds = SQL(query).as(rowParser.*)
 
-      allAccountIds filterNot {_ == nonProbematicId}
+      allAccountIds filterNot {
+        _ == nonProbematicId
+      }
     }
   }
 
@@ -376,15 +383,15 @@ object AccountDto {
   private def getNonTemporary: List[Account] = {
     DB.withConnection("users") { implicit c =>
       val query = """
-        select distinct id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp
+        select distinct id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
         where id > 0;"""
 
       // This log is commented since it spams too much
       // Logger.info("AccountDto.getNonTemporary():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") map {
-        case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType =>
+      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case id ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
           val linkedinBasicProfileOpt = linkedinBasicProfile match {
             case "" => JsNull
             case otherString => Json.parse(otherString)
@@ -398,6 +405,7 @@ object AccountDto {
             password = None,
             linkedinProfile = linkedinBasicProfileOpt,
             `type` = accountType,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime
           )
       }

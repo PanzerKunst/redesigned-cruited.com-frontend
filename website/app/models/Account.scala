@@ -10,6 +10,7 @@ case class Account(id: Long,
                    password: Option[String],
                    linkedinProfile: JsValue,
                    `type`: Int,
+                   languageCode: String,
                    creationTimestamp: Long) {
 
   def isAllowedToViewAllReportsAndEditOrders: Boolean = {
@@ -26,6 +27,7 @@ object Account {
       (JsPath \ "password").writeNullable[String] and
       (JsPath \ "linkedinProfile").write[JsValue] and
       (JsPath \ "type").write[Int] and
+      (JsPath \ "languageCode").write[String] and
       (JsPath \ "creationTimestamp").write[Long]
     )(unlift(Account.unapply))
 

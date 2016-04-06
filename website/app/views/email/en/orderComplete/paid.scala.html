@@ -1,0 +1,35 @@
+@(firstName: String, emailAddress: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, currencyCode: String, vatAmount: Double, orderDateTime: String)
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Hi @firstName,</p>
+
+    <p>Thank you for your order at cruited.com!</p>
+
+    <p>Your assessment report will be available on your dashboard within 24 hours.<br />
+        We will notify you via e-mail when your report is ready.</p>
+
+    <p>Your order information (receipt):<br />
+        <strong>Order</strong>: Assessment of @orderedProducts<br />
+        <strong>Receipt number</strong>: 10@orderId<br />
+        <strong>Paid</strong>: @costAfterReductions @currencyCode<br />
+        <strong>VAT</strong>: @vatAmount @currencyCode<br />
+        <strong>VAT rate</strong>: 25%<br />
+        <strong>Payment method</strong>: Card<br />
+        <strong>Date and time of order</strong>: @orderDateTime<br />
+        <strong>Recipient</strong>: @emailAddress<br />
+        <strong>Delivery</strong>: Online</p>
+
+    <p>Cruited.com is part of Next Big Thing AB (5569111833)<br />
+        Address: CO Mofe AB, Tranebergsvägen 78, 167 44 BROMMA, Sweden<br />
+        VAT number: SE556911183301</p>
+
+    <p>Do you have questions on your order? Feel welcome to contact our customer support: kontakt@@cruited.com</p>
+
+    <p>Thanks for using Cruited.com!</p>
+
+    <footer>
+        The Cruited team
+    </footer>
+</body>
+</html>

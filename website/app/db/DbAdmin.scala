@@ -11,11 +11,13 @@ object DbAdmin {
   def reCreateTables() {
     removeAlterationOnTableDocuments()
     removeAlterationOnTableEdition()
+    dropTable("supported_language")
     dropTable("reduction")
     dropTable("product")
 
     createTableProduct()
     createTableReduction()
+    createTableSupportedLanguage()
     alterTableEdition()
     alterTableDocuments()
   }
@@ -51,6 +53,23 @@ object DbAdmin {
           ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
 
       Logger.info("DbAdmin.createTableReduction():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def createTableSupportedLanguage() {
+    DB.withConnection { implicit c =>
+      val query = """
+          create table supported_language (
+            id serial,
+            ietf_code varchar(7) not null,
+            name varchar(64) not null,
+            primary key(id),
+            constraint unique_code unique(ietf_code)
+          ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
+
+      Logger.info("DbAdmin.createTableSupportedLanguage():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -121,6 +140,7 @@ object DbAdmin {
   def initData() {
     initDataProduct()
     initDataReduction()
+    initDataSupportedLanguage()
     initDataEmailReminders()
     fixBothersomeCharactersInLinkedinProfile()
   }
@@ -142,6 +162,13 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
       SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
+    }
+  }
+
+  private def initDataSupportedLanguage() {
+    DB.withConnection { implicit c =>
+      SQL("insert into supported_language(ietf_code, name) values('sv', 'Svenska');").execute()
+      SQL("insert into supported_language(ietf_code, name) values('en', 'English');").execute()
     }
   }
 

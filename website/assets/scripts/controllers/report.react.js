@@ -246,7 +246,6 @@ CR.Controllers.Report = P(function(c) {
                             <ul className="styleless">
                             {this._getCategoriesAndTheirComments(docReport).map(function(categoryAndItsComments) {
                                 const categoryId = categoryAndItsComments.categoryId;
-                                const reactItemId = "category-" + categoryId;
                                 const categoryClasses = "category sheet-of-paper id-" + categoryId;
 
                                 let topCommentParagraph = null;
@@ -259,16 +258,14 @@ CR.Controllers.Report = P(function(c) {
                                     redCommentList = (
                                         <ul className="red-comments light-font">
                                             {categoryAndItsComments.redComments.map(function(comment) {
-                                                const reactSubItemId = "comment-" + comment.id;
-
-                                                return <li key={reactSubItemId} dangerouslySetInnerHTML={{__html: this._getCommentWithProcessedLinks(comment.text)}} />;
+                                                return <li key={comment.id} dangerouslySetInnerHTML={{__html: this._getCommentWithProcessedLinks(comment.text)}} />;
                                             }.bind(this))}
                                         </ul>
                                     );
                                 }
 
                                 return (
-                                    <li key={reactItemId} className={categoryClasses}>
+                                    <li key={categoryId} className={categoryClasses}>
                                         <header>
                                             <div>
                                                 <h3>{CR.i18nMessages["category." + productCode + "." + categoryId + ".title"]}</h3>

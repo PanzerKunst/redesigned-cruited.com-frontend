@@ -90,6 +90,16 @@ textarea.form-control {
   height: 8em;
 }
 
+.form-inline {
+  label {
+    margin-right: 0.5em;
+  }
+
+  .form-control {
+    vertical-align: baseline;
+  }
+}
+
 h1,
 .h1,
 h2,

@@ -15,6 +15,16 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     <header>
                         <div>
                             <h1>{CR.i18nMessages["order.productSelection.title"]}</h1>
+                            <form ref="form" className="form-inline">
+                                <div className="form-group">
+                                    <label htmlFor="selected-language">Lang</label>
+                                    <CR.Controllers.LanguageDropdown id="selected-language" isShortVersion="true" />
+                                </div>
+                                <div className="form-group medium-screen">
+                                    <label htmlFor="selected-language-medium-screen">Language</label>
+                                    <CR.Controllers.LanguageDropdown id="selected-language-medium-screen" />
+                                </div>
+                            </form>
                         </div>
                     </header>
                     <div className="with-circles">
@@ -31,9 +41,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             </header>
                             <ul className="styleless">
                             {this.state.products.map(function(product, index) {
-                                const reactItemId = "product-" + index;
-
-                                return <CR.Controllers.ProductListItem key={reactItemId} product={product} controller={this.state.controller} />;
+                                return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
                             }.bind(this))}
                             </ul>
                         </section>
@@ -44,12 +52,20 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             </header>
                             <ul className="styleless">
                             {CR.editions.map(function(edition, index) {
-                                const reactItemId = "edition-" + index;
-
-                                return <CR.Controllers.EditionListItem key={reactItemId} edition={edition} controller={this.state.controller} />;
+                                return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
                             }.bind(this))}
                             </ul>
                         </section>
+                        {/* TODO <section id="language-section" className="two-columns">
+                            <header>
+                                <p className="light-font">{CR.i18nMessages["order.productSelection.languageSection.subtitle"]}</p>
+                            </header>
+                            <form ref="form">
+                                <div className="form-group">
+                                    <CR.Controllers.LanguageDropdown />
+                                </div>
+                            </form>
+                        </section> */}
                         <section id="cart-section">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.cartSection.title"]}</h2>
@@ -63,9 +79,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
                                 <ul className="styleless">
                                     {CR.order.getProducts().map(function(product, index) {
-                                        const reactItemId = "cart-product-" + index;
-
-                                        return <CR.Controllers.CartProductListItem key={reactItemId} product={product} controller={this.state.controller} />;
+                                        return <CR.Controllers.CartProductListItem key={index} product={product} controller={this.state.controller} />;
                                     }.bind(this))}
                                 </ul>
 
@@ -128,10 +142,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             <td>{CR.order.getBasePrice()} {this.state.products[0].price.currencyCode}</td>
                         </tr>
                         {CR.order.getReductions().map(function(reduction, index) {
-                            const reactItemId = "cart-reduction-" + index;
-
                             return (
-                                <tr key={reactItemId} className="reduction-row">
+                                <tr key={index} className="reduction-row">
                                     <td>{CR.i18nMessages["reduction.name." + reduction.code]}:</td>
                                     <td>- {reduction.price.amount} {reduction.price.currencyCode}</td>
                                 </tr>
@@ -223,12 +235,13 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, products, reductions, editions, loggedInAccount) {
+    c.init = function(i18nMessages, products, reductions, editions, loggedInAccount, supportedLanguages) {
         CR.i18nMessages = i18nMessages;
         CR.products = products;
         CR.editions = editions;
         CR.reductions = reductions;
         CR.loggedInAccount = loggedInAccount;
+        CR.supportedLanguages = supportedLanguages;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);

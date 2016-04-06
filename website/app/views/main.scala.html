@@ -1,8 +1,8 @@
-@(title: String, pageId: String, i18nMessages: Map[String, String])(header: Html)(javascript: Html)
+@(title: String, pageId: String, i18nMessages: Map[String, String], lang: SupportedLanguage)(header: Html)(javascript: Html)
 
 <!DOCTYPE html>
 
-<html>
+<html lang="@lang.ietfCode">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">

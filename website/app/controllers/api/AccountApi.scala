@@ -1,15 +1,15 @@
 package controllers.api
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
 import models.frontend.AccountReceivedFromFrontend
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller, Request}
-import services.{AccountService, HttpService, SessionService}
+import services.{AccountService, HttpService, I18nService, SessionService}
 
 @Singleton
-class AccountApi extends Controller {
+class AccountApi @Inject()(val i18nService: I18nService) extends Controller {
   def create() = Action(parse.json) { request =>
     request.body.validate[AccountReceivedFromFrontend] match {
       case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
@@ -64,7 +64,7 @@ class AccountApi extends Controller {
   }
 
   private def createAccountAndUpdateOrder(frontendAccount: AccountReceivedFromFrontend, request: Request[JsValue]): Long = {
-    AccountDto.create(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password, frontendAccount.linkedinProfile) match {
+    AccountDto.create(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password, frontendAccount.linkedinProfile, i18nService.currentLanguage) match {
       case None => throw new Exception("AccountDto.create() didn't return an ID")
       case Some(accountId) =>
         // In case there is an order ID in session, we update the order.added_by

@@ -18,12 +18,11 @@ CR.Controllers.OrderSummary = React.createClass({
                     </div>
                     <ul className="styleless">
                         {order.getProducts().map(function(product, index) {
-                            const reactItemId = "cart-product-" + index;
                             const editionCode = order.getEdition().code;
                             const editionSpanClasses = "edition " + editionCode;
 
                             return (
-                                <li key={reactItemId}>
+                                <li key={index}>
                                     <span>
                                         <p className="cart-product-name">{CR.i18nMessages["product.name." + product.code]}</p>
                                         <span className={editionSpanClasses}>{CR.i18nMessages["edition.name." + editionCode]}</span>
@@ -40,10 +39,8 @@ CR.Controllers.OrderSummary = React.createClass({
                                 <td>{order.getBasePrice()} {currencyCode}</td>
                             </tr>
                             {order.getReductions().map(function(reduction, index) {
-                                const reactItemId = "cart-reduction-" + index;
-
                                 return (
-                                    <tr key={reactItemId} className="reduction-row">
+                                    <tr key={index} className="reduction-row">
                                         <td>{CR.i18nMessages["reduction.name." + reduction.code]}:</td>
                                         <td>- {reduction.price.amount} {reduction.price.currencyCode}</td>
                                     </tr>

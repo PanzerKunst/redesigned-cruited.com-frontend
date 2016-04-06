@@ -4,15 +4,15 @@ import java.util.Date
 
 import anorm.SqlParser._
 import anorm._
+import models._
 import models.frontend.{FrontendOrder, OrderReceivedFromFrontend}
-import models.{Coupon, Edition, Order, Price}
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
 import services.{GlobalConfig, StringService}
 
 object OrderDto {
-  def createTemporary(order: OrderReceivedFromFrontend): Option[Long] = {
+  def createTemporary(order: OrderReceivedFromFrontend, language: SupportedLanguage): Option[Long] = {
     DB.withConnection { implicit c =>
       val cvFileNameClause = order.cvFileName match {
         case None => ""
@@ -50,8 +50,8 @@ object OrderDto {
       }
 
       val query = """
-      insert into documents(id, edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, /* useful fields */
-        li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test, lang) /* unused but required fields */
+      insert into documents(id, edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, lang, /* useful fields */
+        li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test) /* unused but required fields */
       values(""" + order.tempId + """, """ +
         order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
@@ -65,8 +65,9 @@ object OrderDto {
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +
-        customerCommentClause + """,
-        '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0, 'sw');"""
+        customerCommentClause + """, '""" +
+        language.ietfCode + """',
+        '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0);"""
 
       Logger.info("OrderDto.createTemporary():" + query)
 
@@ -119,8 +120,8 @@ object OrderDto {
       }
 
       val query = """
-      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, paid_on, /* useful fields */
-        li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test, lang) /* unused but required fields */
+      insert into documents(edition_id, file, file_cv, file_li, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, lang, paid_on, /* useful fields */
+        li_url, hireability, open_application, score1, score2, score_avg, score1_cv, score2_cv, score_avg_cv, score1_li, score2_li, score_avg_li, transaction_id, response_code, payment_id, payment_client, payment_card_type, payment_card_holder, payment_last4, payment_error, custom_comment, custom_comment_cv, custom_comment_li, how_doing_text, in_progress_at, doc_review, free_test) /* unused but required fields */
       values(""" + order.editionId + """, '""" +
         coverLetterFileNameClause + """', '""" +
         cvFileNameClause + """',
@@ -133,9 +134,10 @@ object OrderDto {
         positionSoughtClause + """', '""" +
         employerSoughtClause + """', """ +
         jobAdUrlClause + """, """ +
-        customerCommentClause + """, """ +
+        customerCommentClause + """, '""" +
+        order.languageCode + """', """ +
         paymentDateClause + """,
-        '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0, 'sw');"""
+        '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, '', '', '', '', 0, '', '', '', '', '', 0, 0, 0);"""
 
       Logger.info("OrderDto.createFinalised():" + query)
 
@@ -230,7 +232,7 @@ object OrderDto {
   def getOfIdForFrontend(id: Long): Option[(FrontendOrder, Option[String])] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment, paid_on,
+        select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, lang,
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
         from documents d
@@ -241,10 +243,10 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfIdForFrontend():" + query)
 
-      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~ str("lang") ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) map {
-        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~ languageCode ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt =>
 
@@ -319,6 +321,7 @@ object OrderDto {
             customerComment = customerCommentOpt,
             accountId = accountIdOpt,
             status = status,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime,
             paymentTimestamp = paymentTimestampOpt
           )
@@ -342,7 +345,7 @@ object OrderDto {
   def getOfAccountIdForFrontend(accountId: Long): List[(FrontendOrder, Option[String])] = {
     DB.withConnection { implicit c =>
       val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on,
+        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, lang,
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
         from documents d
@@ -354,10 +357,10 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfAccountIdForFrontend():" + query)
 
-      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~
+      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~ str("lang") ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) map {
-        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~
+        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~ languageCode ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt =>
 
@@ -427,6 +430,7 @@ object OrderDto {
             customerComment = customerCommentOpt,
             accountId = Some(accountId),
             status = status,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime,
             paymentTimestamp = paymentTimestampOpt
           )
@@ -446,7 +450,7 @@ object OrderDto {
   def getMostRecentUnpaidOfAccountId(accountId: Long): Option[Order] = {
     DB.withConnection { implicit c =>
       val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, edition_id,
+        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, edition_id, lang,
           c.id as coupon_id, c.name
         from documents d
          left join codes c on c.name = d.code
@@ -459,9 +463,9 @@ object OrderDto {
 
       Logger.info("OrderDto.getMostRecentUnpaidOfAccountId():" + query)
 
-      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ long("edition_id") ~
+      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ long("edition_id") ~ str("lang") ~
         (long("coupon_id") ?) ~ (str("name") ?) map {
-        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ editionId ~
+        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ editionId ~ languageCode ~
           couponIdOpt ~ couponCodeOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
@@ -503,6 +507,7 @@ object OrderDto {
             customerComment = customerCommentOpt,
             accountId = Some(accountId),
             status = status,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime,
             paymentTimestamp = None
           )

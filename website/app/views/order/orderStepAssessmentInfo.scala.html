@@ -1,6 +1,6 @@
-@(i18nMessages: Map[String, String], account: Option[Account], linkedinAuthCodeRequestUrl: String, linkedinProfile: play.api.libs.json.JsValue, linkedinErrorMessage: Option[String])
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], linkedinAuthCodeRequestUrl: String, linkedinProfile: play.api.libs.json.JsValue, linkedinErrorMessage: Option[String])
 
-@main("Cruited - " + i18nMessages("order.assessmentInfo.title"), "order-step-assessment-info", i18nMessages) {
+@main("Cruited - " + i18nMessages("order.assessmentInfo.title"), "order-step-assessment-info", i18nMessages, lang) {
 <!--
     Header
 -->

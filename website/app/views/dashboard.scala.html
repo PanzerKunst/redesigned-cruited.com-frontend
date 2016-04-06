@@ -1,6 +1,6 @@
-@(i18nMessages: Map[String, String], account: Option[Account], orders: List[models.frontend.FrontendOrder])
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], orders: List[models.frontend.FrontendOrder])
 
-@main("Cruited - " + i18nMessages("dashboard.title"), "dashboard", i18nMessages) {
+@main("Cruited - " + i18nMessages("dashboard.title"), "dashboard", i18nMessages, lang) {
 <!--
     Header
 -->

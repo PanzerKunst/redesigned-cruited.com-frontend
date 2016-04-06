@@ -184,6 +184,8 @@ order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har 
 order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (eller söker) en roll med personalansvar eller verksamhetsansvar
 order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult och söker uppdrag som egenföretagare
 
+order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vill ha din bedömning på:
+
 order.productSelection.cartSection.title=Din beställning
 order.productSelection.cartSection.productsHeader.products=Produkter
 order.productSelection.cartSection.productsHeader.defaultPrice=Pris

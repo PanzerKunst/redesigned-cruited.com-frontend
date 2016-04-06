@@ -1,6 +1,6 @@
-@(i18nMessages: Map[String, String], account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int, nbLastAssessmentsToTakeIntoAccount: Int, selectedProductCode: String, dwsRootUrl: String)
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int, nbLastAssessmentsToTakeIntoAccount: Int, selectedProductCode: String, dwsRootUrl: String)
 
-@main("Cruited - " + i18nMessages("report.title"), "report", i18nMessages) {
+@main("Cruited - " + i18nMessages("report.title"), "report", i18nMessages, lang) {
 <!--
     Header
 -->

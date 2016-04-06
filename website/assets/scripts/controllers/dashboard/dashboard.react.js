@@ -63,12 +63,11 @@ CR.Controllers.Dashboard = P(function(c) {
                                     editOrderMarkup = <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
                                 }
 
-                                const reactItemId = "order-" + index;
                                 const editionClasses = "edition " + order.getEdition().code;
                                 const statusClasses = "status " + order.getStatusForHtml();
 
                                 return (
-                                    <li key={reactItemId} className="sheet-of-paper">
+                                    <li key={index} className="sheet-of-paper">
                                         <h2 dangerouslySetInnerHTML={{__html: this._getOrderTitle(order)}} />
                                         <p>
                                             <span className="assessment-label light-font">{CR.i18nMessages["order.creationDate.label"]}:</span>{moment(order.getCreationTimestamp()).format("lll")}

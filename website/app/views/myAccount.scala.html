@@ -1,6 +1,6 @@
-@(i18nMessages: Map[String, String], account: Account, isSaveSuccessful: Boolean)
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Account, isSaveSuccessful: Boolean)
 
-@main("Cruited - " + i18nMessages("myAccount.title"), "my-account", i18nMessages) {
+@main("Cruited - " + i18nMessages("myAccount.title"), "my-account", i18nMessages, lang) {
 <!--
     Header
 -->

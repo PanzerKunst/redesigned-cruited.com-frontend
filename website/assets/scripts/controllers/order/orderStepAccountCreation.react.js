@@ -207,7 +207,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
         _setSubmitBtnText: function(emailAddress) {
             if (emailAddress) {
-                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.withEmailPrefix"] + " " + emailAddress);
+                this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.withEmailPrefix"] + "<br/>" + emailAddress);
             } else {
                 this.$submitBtn.html(CR.i18nMessages["order.accountCreation.submitBtn.text"]);
             }

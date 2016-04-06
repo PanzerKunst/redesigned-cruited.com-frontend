@@ -184,6 +184,8 @@ order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You hav
 order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
 order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult och söker uppdrag som egenföretagare
 
+order.productSelection.languageSection.subtitle=You're searching for a job in Sweden. You want to have your assessment in:
+
 order.productSelection.cartSection.title=Your Order
 order.productSelection.cartSection.productsHeader.products=Products
 order.productSelection.cartSection.productsHeader.defaultPrice=Price

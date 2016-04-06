@@ -17,7 +17,7 @@ object ReportDto {
   def getOfOrderId(orderId: Long): Option[AssessmentReport] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on, custom_comment, custom_comment_cv, custom_comment_li,
+        select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on, custom_comment, custom_comment_cv, custom_comment_li, lang,
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message,
           rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
@@ -38,14 +38,14 @@ object ReportDto {
       Logger.info("ReportDto.getOfOrderId():" + query)
 
       // Use of `getAliased` because of bug when using the regular `get`
-      val rowParser = str("file") ~ str("file_cv") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~ str("custom_comment") ~ str("custom_comment_cv") ~ str("custom_comment_li") ~
+      val rowParser = str("file") ~ str("file_cv") ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~ str("custom_comment") ~ str("custom_comment_cv") ~ str("custom_comment_li") ~ str("lang") ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) ~
         (long("red_comment_id") ?) ~ (str("red_comment_text") ?) ~ (int("points") ?) ~
         getAliased[Option[Long]]("red_comment_cat_id") ~ getAliased[Option[String]]("red_comment_doc_type") ~
         (long("top_comment_id") ?) ~ (str("top_comment_text") ?) ~
         (long("top_comment_cat_id") ?) ~ (str("top_comment_doc_type") ?) map {
-        case coverLetterFileName ~ cvFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ paymentDate ~ coverLetterOverallComment ~ cvOverallComment ~ linkedinProfileOverallComment ~
+        case coverLetterFileName ~ cvFileName ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ paymentDate ~ coverLetterOverallComment ~ cvOverallComment ~ linkedinProfileOverallComment ~ languageCode ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt ~
           redCommentId ~ redCommentText ~ weight ~
@@ -127,6 +127,7 @@ object ReportDto {
             customerComment = customerComment,
             accountId = Some(accountId),
             status = Order.statusIdComplete,
+            languageCode = languageCode,
             creationTimestamp = creationDate.getTime,
             paymentTimestamp = paymentTimestampOpt
           )

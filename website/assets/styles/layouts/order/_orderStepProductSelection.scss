@@ -1,7 +1,69 @@
 #order-step-product-selection {
+  .form-inline .form-control {
+    // We want this event on small res
+    display: inline-block;
+    width: auto;
+    vertical-align: baseline;
+  }
+
+  #content > header {
+    > div {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    form {
+      margin-top: 43px;
+
+      > .medium-screen {
+        display: none;
+      }
+
+      @include medium-screen {
+        margin-top: 48px;
+        font-size: #{$font-size-base-px}px;
+
+        > .form-group {
+          display: none;
+
+          &.medium-screen {
+            display: block;
+          }
+        }
+      }
+
+      @include large-screen {
+        margin-top: 73px;
+      }
+    }
+  }
+
   .guarantee-panel {
     @include large-screen {
       font-size: #{$font-size-base-px}px;
+    }
+  }
+
+  .two-columns {
+    @include large-screen {
+      display: flex;
+      justify-content: space-between;
+
+      > header > p,
+      > ul,
+      > form {
+        font-size: #{$font-size-base-px}px;
+      }
+
+      > header {
+        width: 40%;
+      }
+
+      > ul,
+      > form {
+        width: 55%;
+        margin-top: 34px;
+      }
     }
   }
 
@@ -18,25 +80,6 @@
       margin-bottom: 0.5em;
       &:last-child {
         margin-bottom: 0;
-      }
-    }
-
-    @include large-screen {
-      display: flex;
-      justify-content: space-between;
-
-      > header > p,
-      > ul {
-        font-size: #{$font-size-base-px}px;
-      }
-
-      > header {
-        width: 40%;
-      }
-
-      > ul {
-        width: 55%;
-        margin-top: 34px;
       }
     }
   }
@@ -134,6 +177,8 @@
 
   #editions-section {
     margin-top: 3em;
+    /* TODO: uncomment when language section is enabled
+    border-bottom: none; */
 
     li {
       border-style: solid;
@@ -238,6 +283,19 @@
           padding-left: 5px;
         }
       }
+    }
+  }
+
+  #language-section {
+    align-items: center;
+
+    > form {
+      margin-top: 0;
+    }
+
+    p,
+    .form-group {
+      margin-bottom: 0;
     }
   }
 
