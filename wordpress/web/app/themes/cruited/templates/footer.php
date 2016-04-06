@@ -4,7 +4,7 @@
       <div>
         <h2>Förbättra din jobbansökan idag!</h2>
 
-        <a href="https://app.cruited.com/order" class="btn btn-primary">Starta din granskning</a>
+        <a href="https://app.cruited.com/order" class="btn btn-primary">Starta din bedömning</a>
 
         <a href="/#faq">Personliga råd som hjälper, inom 24 timmar<br/>eller pengarna tillbaka</a>
       </div>
