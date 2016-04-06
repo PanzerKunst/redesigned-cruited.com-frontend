@@ -37,7 +37,7 @@
     $.fn.enableLoading = function(text) {
         if (this.prop("tagName") === "BUTTON") {
             const btn = this[0];
-            const defaultText = btn.innerText;
+            const defaultText = btn.innerHTML;
             const loadingText = text || defaultText;
 
             this.data("defaultText", defaultText);
