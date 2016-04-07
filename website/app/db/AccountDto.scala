@@ -87,7 +87,8 @@ object AccountDto {
 
       val query = """
         update useri set
-        email = '""" + DbUtil.safetize(account.emailAddress.get.toLowerCase) + """'""" +
+        email = '""" + DbUtil.safetize(account.emailAddress.get.toLowerCase) + """',
+        lang = '""" + DbUtil.safetize(account.languageCode) + """'""" +
         firstNameClause +
         lastNameClause +
         passwordClause +

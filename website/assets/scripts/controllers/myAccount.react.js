@@ -5,7 +5,8 @@ CR.Controllers.MyAccount = P(function(c) {
         getInitialState: function() {
             return {
                 account: null,
-                isSaveSuccessful: false
+                isSaveSuccessful: false,
+                supportedLanguages: []
             };
         },
 
@@ -46,6 +47,14 @@ CR.Controllers.MyAccount = P(function(c) {
                                 <p className="field-error" data-check="empty" />
                             </div>
                             <div className="form-group">
+                                <label htmlFor="selected-language">{CR.i18nMessages["myAccount.form.language.label"]}</label>
+                                <select className="form-control" id="selected-language" defaultValue={this.state.account.languageCode}>
+                                    {this.state.supportedLanguages.map(function(supportedLanguage) {
+                                        return <option key={supportedLanguage.id} value={supportedLanguage.ietfCode}>{supportedLanguage.name}</option>;
+                                    })}
+                                </select>
+                            </div>
+                            <div className="form-group">
                                 <label htmlFor="password">{CR.i18nMessages["myAccount.form.password.label"]}</label>
                                 <input type="password" className="form-control" id="password" placeholder={CR.i18nMessages["myAccount.form.password.placeholder"]} data-min-length="5" />
                                 <p className="field-error" data-check="min-length">{CR.i18nMessages["myAccount.validation.passwordTooShort"]}</p>
@@ -71,6 +80,7 @@ CR.Controllers.MyAccount = P(function(c) {
             this.$emailAddressField = this.$form.find("#email-address");
             this.$firstNameField = this.$form.find("#first-name");
             this.$passwordField = this.$form.find("#password");
+            this.$languageDropdown = this.$form.find("#selected-language");
 
             this.$submitBtn = this.$form.find("[type=submit]");
             this.$successAlert = this.$content.children().children(".alert");
@@ -111,16 +121,18 @@ CR.Controllers.MyAccount = P(function(c) {
                     emailAddress: this.$emailAddressField.val(),
                     firstName: this.$firstNameField.val(),
                     password: this.$passwordField.val() || null,
+                    languageCode: this.$languageDropdown.val(),
                     linkedinProfile: null
                 }));
             }
         }
     });
 
-    c.init = function(i18nMessages, account, isSaveSuccessful) {
+    c.init = function(i18nMessages, account, isSaveSuccessful, supportedLanguages) {
         CR.i18nMessages = i18nMessages;
         this.account = account;
         this.isSaveSuccessful = isSaveSuccessful;
+        this.supportedLanguages = supportedLanguages;
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
@@ -133,7 +145,8 @@ CR.Controllers.MyAccount = P(function(c) {
     c.reRender = function() {
         this.reactInstance.replaceState({
             account: this.account,
-            isSaveSuccessful: this.isSaveSuccessful
+            isSaveSuccessful: this.isSaveSuccessful,
+            supportedLanguages: this.supportedLanguages
         });
     };
 });

@@ -4,7 +4,7 @@ import java.util.{Date, Timer}
 import javax.inject.Inject
 
 import db._
-import models.{CruitedProduct, Order}
+import models.{Account, CruitedProduct, Order}
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.JsNull
@@ -34,13 +34,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         } else {
           AccountDto.getOfId(accountId) match {
             case None =>
-            case Some(account) =>
-              SupportedLanguageDto.getOfCode(account.languageCode) match {
-                case None =>
-                case Some(supportedLanguage) =>
-                  i18nService.currentLanguage = supportedLanguage
-                  i18nService.messages = i18nService.getMessages(messagesApi)
-              }
+            case Some(account) => updateLanguageIfNecessary(account)
           }
 
           val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1}
@@ -69,7 +63,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val account = AccountDto.getOfId(accountId).get
           val isSaveSuccessful = SessionService.isAccountSaveSuccessful(request.session)
 
-          Ok(views.html.myAccount(i18nService.messages, i18nService.currentLanguage, account, isSaveSuccessful))
+          updateLanguageIfNecessary(account)
+
+          Ok(views.html.myAccount(i18nService.messages, i18nService.currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.all))
             .withSession(request.session - SessionService.sessionKeyAccountSaveSuccessful)
         }
     }
@@ -106,13 +102,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           AccountDto.getOfId(accountId) match {
             case None => None
             case Some(account) =>
-              SupportedLanguageDto.getOfCode(account.languageCode) match {
-                case None =>
-                case Some(supportedLanguage) =>
-                  i18nService.currentLanguage = supportedLanguage
-                  i18nService.messages = i18nService.getMessages(messagesApi)
-              }
-
+              updateLanguageIfNecessary(account)
               Some(account)
           }
         }
@@ -411,6 +401,15 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           Redirect(appRedirectUri)
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
+    }
+  }
+
+  private def updateLanguageIfNecessary(account: Account) {
+    SupportedLanguageDto.getOfCode(account.languageCode) match {
+      case None =>
+      case Some(supportedLanguage) =>
+        i18nService.currentLanguage = supportedLanguage
+        i18nService.messages = i18nService.getMessages(messagesApi)
     }
   }
 }

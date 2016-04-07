@@ -103,6 +103,7 @@ myAccount.form.emailAddress.label=Email address
 myAccount.form.firstName.label=First name
 myAccount.form.password.label=New password (only if you want to change it)
 myAccount.form.password.placeholder=5 chars minimum
+myAccount.form.language.label=Language
 myAccount.form.submitBtn.text=Save
 
 

@@ -5,6 +5,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         getInitialState: function() {
             return {
                 products: [],
+                supportedLanguages: [],
+                currentLanguageCode: null,
                 controller: null
             };
         },
@@ -18,11 +20,24 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             <form ref="form" className="form-inline">
                                 <div className="form-group">
                                     <label htmlFor="selected-language">Lang</label>
-                                    <CR.Controllers.LanguageDropdown id="selected-language" isShortVersion="true" />
+                                    <select className="form-control" id="selected-language" value={this.state.currentLanguageCode} onChange={this._handleLanguageChange}>
+                                        {this.state.supportedLanguages.map(function(supportedLanguage) {
+                                            const ietfCode = supportedLanguage.ietfCode;
+                                            const shortName = ietfCode.replace(/^./, function($1) {
+                                                return $1.toUpperCase();
+                                            });
+
+                                            return <option key={supportedLanguage.id} value={ietfCode}>{shortName}</option>;
+                                        })}
+                                    </select>
                                 </div>
                                 <div className="form-group medium-screen">
                                     <label htmlFor="selected-language-medium-screen">Language</label>
-                                    <CR.Controllers.LanguageDropdown id="selected-language-medium-screen" />
+                                    <select className="form-control" id="selected-language-medium-screen" value={this.state.currentLanguageCode} onChange={this._handleLanguageChange}>
+                                        {this.state.supportedLanguages.map(function(supportedLanguage) {
+                                            return <option key={supportedLanguage.id} value={supportedLanguage.ietfCode}>{supportedLanguage.name}</option>;
+                                        })}
+                                    </select>
                                 </div>
                             </form>
                         </div>
@@ -40,9 +55,9 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                 </div>
                             </header>
                             <ul className="styleless">
-                            {this.state.products.map(function(product, index) {
-                                return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
-                            }.bind(this))}
+                                {this.state.products.map(function(product, index) {
+                                    return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
+                                }.bind(this))}
                             </ul>
                         </section>
                         <section id="editions-section" className="two-columns">
@@ -62,7 +77,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             </header>
                             <form ref="form">
                                 <div className="form-group">
-                                    <CR.Controllers.LanguageDropdown />
+                                     <select className="form-control" value={this.state.currentLanguageCode} onChange={this._handleLanguageChange}>
+                                         {this.state.supportedLanguages.map(function(supportedLanguage) {
+                                             return <option key={supportedLanguage.id} value={supportedLanguage.ietfCode}>{supportedLanguage.name}</option>;
+                                         })}
+                                     </select>
                                 </div>
                             </form>
                         </section> */}
@@ -232,6 +251,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     location.href = "/order/assessment-info";
                 }
             }
+        },
+
+        _handleLanguageChange: function(e) {
+            const $dropdown = $(e.currentTarget);
+            location.replace("/order?lang=" + $dropdown.val());
         }
     });
 
@@ -241,7 +265,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         CR.editions = editions;
         CR.reductions = reductions;
         CR.loggedInAccount = loggedInAccount;
-        CR.supportedLanguages = supportedLanguages;
+        this.supportedLanguages = supportedLanguages;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
@@ -257,6 +281,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
     c.reRender = function() {
         this.reactInstance.replaceState({
             products: this._getProducts(),
+            supportedLanguages: this.supportedLanguages,
+            currentLanguageCode: $("html").attr("lang"),
             controller: this
         });
     };
