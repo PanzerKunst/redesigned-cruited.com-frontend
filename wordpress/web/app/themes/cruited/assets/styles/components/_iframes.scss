@@ -1,0 +1,13 @@
+.testa-intervjutraning .main iframe {
+    border: none;
+
+    width: 100%;
+
+    height: 130em;
+    @include medium-screen {
+        height: 78em;
+    }
+    @include large-screen {
+        height: 83em;
+    }
+}
