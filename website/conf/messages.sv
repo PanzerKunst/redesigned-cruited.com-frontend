@@ -234,7 +234,7 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
 order.assessmentInfo.form.positionSought.label=Tjänst du söker
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
-order.assessmentInfo.form.customerComment.label=Bör vi tänka på något särskilt i din granskning?
+order.assessmentInfo.form.customerComment.label=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.tos.text=Jag accepterar <a href="https://cruited.com/villkor/" target="_blank">användningsvillkoren</a>
 
