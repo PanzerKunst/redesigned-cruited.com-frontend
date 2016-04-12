@@ -15,7 +15,7 @@ Clone `https://github.com/letsencrypt/letsencrypt` and copy the `letsencrypt` di
 
 Free port 80 temporarily: `$ sudo service nginx stop`
 
-    $ ./letsencrypt-auto certonly -t
+    $ ./letsencrypt-auto certonly -t --standalone
 
 Enter email `services@cruited.com` and domains `api.cruited.com app.cruited.com`
 
@@ -54,7 +54,7 @@ Save, then restart Nginx: `$ sudo service nginx reload`
 
 Certificates which will expire in 30 days or less can be renewed.
 
-1. Free port 80 temporarily: `$ sudo service nginx stop`
-2. Execute the renew command in test mode: `$ ./letsencrypt-auto renew --dry-run`
-3. If the test command is successful, execute it in real mode: `$ ./letsencrypt-auto renew`
+1. Navigate to the LetsEncrypt root: `$ cd ~/letsencrypt` 
+2. Free port 80 temporarily: `$ sudo service nginx stop`
+3. Execute the renew command: `$ ./letsencrypt-auto renew`
 4. Restart Nginx: `$ sudo service nginx start`
