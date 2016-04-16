@@ -183,7 +183,7 @@ order.productSelection.editionsSection.subtitle=Välj vilken version som passar 
 order.productSelection.editionsSection.editionDescription.text.PRO=Du har några års arbetslivserfarenhet
 order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 2 år, eller är student
 order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (eller söker) en roll med personalansvar eller verksamhetsansvar
-order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult och söker uppdrag som egenföretagare
+order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult eller söker uppdrag som egenföretagare eller frilans
 
 order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vill ha din bedömning på:
 
