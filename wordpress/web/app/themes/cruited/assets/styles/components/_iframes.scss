@@ -1,13 +1,25 @@
-.testa-intervjutraning .main iframe {
+.main iframe {
     border: none;
-
     width: 100%;
+    margin-top: 2em;
+}
 
-    height: 130em;
+.boka-intervjutraning .main iframe {
+    height: 139em;
     @include medium-screen {
-        height: 78em;
+        height: 79em;
     }
     @include large-screen {
-        height: 83em;
+        height: 78em;
+    }
+}
+
+.boka-samtal .main iframe {
+    height: 126em;
+    @include medium-screen {
+        height: 73em;
+    }
+    @include large-screen {
+        height: 71em;
     }
 }
