@@ -154,10 +154,10 @@ report.summary.score.bar.label.weak=Weak
 report.summary.score.bar.label.good=Good
 report.summary.score.bar.label.excellent=Excellent
 report.summary.understandYourScore.title=Understand your score
-report.summary.understandYourScore.cScoreExplanation.text=C-Score mäter hur effektiv din ansökan är på en skala från 0 till 100. <a href="https://www.cruited.com/var-metod" target="_blank">Läs mer</a>
-report.summary.understandYourScore.weak.text=Mycket låg chans att komma på jobbintervju
-report.summary.understandYourScore.good.text=Medelstora chanser att komma på jobbintervju
-report.summary.understandYourScore.excellent.text=Mycket stor chans att komma på jobbintervju
+report.summary.understandYourScore.cScoreExplanation.text=C-Score is a measurement of how good your application is on a scale from 0 to 100. <a href="https://www.cruited.com/var-metod" target="_blank">Learn More</a>
+report.summary.understandYourScore.weak.text=Very low chances of getting a job interview
+report.summary.understandYourScore.good.text=Average changes of getting a job interview
+report.summary.understandYourScore.excellent.text=High chances of getting a job interview
 
 report.analysis.title=Expert Advice
 report.analysis.explanation.text=Our experts have looked at your {docLabel} to give you the best and most relevant feedback. <strong>Please follow our recommendations below, so your application can be exemplary great!</strong>
@@ -183,7 +183,7 @@ order.productSelection.editionsSection.subtitle=Please choose which edition best
 order.productSelection.editionsSection.editionDescription.text.PRO=You have worked for at least a year
 order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working 2 years or less, or you are a student
 order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
-order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult och söker uppdrag som egenföretagare
+order.productSelection.editionsSection.editionDescription.text.CONSULT=You work as a consultant or look for commissions as self-employed
 
 order.productSelection.languageSection.subtitle=You're searching for a job in Sweden. You want to have your assessment in:
 
@@ -210,10 +210,10 @@ order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we 
 order.assessmentInfo.submitBtn.text=Proceed to next step
 order.assessmentInfo.validation.linkedin.notSignedIn=We cannot assess your LinkedIn profile unless you sign in
 order.assessmentInfo.validation.linkedin.publicProfileUrlMissing=Your profile is private. We cannot review it the way it is.
-order.assessmentInfo.validation.linkedin.incompleteProfile.label=Din LinkedIn-profil saknar viktig information:
-order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Sammanfattning (summary) av din profil
-order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
-order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
+order.assessmentInfo.validation.linkedin.incompleteProfile.label=Your LinkedIn profile is missing important information:
+order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Summary Section is empty
+order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=You need at least one previous work experiences, including a description
+order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=Add a description to your latest work experience
 order.assessmentInfo.validation.jobAdUrlIncorrect=That URL looks sad :(
 order.assessmentInfo.validation.customerCommentTooLong=Limited to 512 characters
 order.assessmentInfo.validation.requestEntityTooLarge=Uploaded files mustn't exceed a total of 10MB
@@ -222,11 +222,11 @@ order.assessmentInfo.validation.signInWithLinkedinFirst=Please start by signing 
 order.assessmentInfo.form.browseBtn.text=Browse...
 order.assessmentInfo.form.linkedinProfile.label=Your LinkedIn profile
 order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with LinkedIn
-order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
-order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
-order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för granskning
+order.assessmentInfo.form.linkedinProfile.check.step1.text=Open now <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
+order.assessmentInfo.form.linkedinProfile.check.step2.text=Have a look at <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
+order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Done! My profile is ready to be assessed
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Re-read
-order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min granskning kommer att bli begränsad eftersom min profil saknar viktiga delar. Fortsätt ändå.
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=I understand that my assessment will be limited because my profile is missing important details. Proceed anyway.
 order.assessmentInfo.form.cvFile.label=Your CV
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Your cover letter
@@ -235,7 +235,7 @@ order.assessmentInfo.form.employerSought.label=Employer sought
 order.assessmentInfo.form.positionSought.label=Position sought
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
 order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?
-order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din granskning?
+order.assessmentInfo.form.customerComment.description=Is there anything special we should keep in mind or that you need help with?
 order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Terms of Service</a>
 
 
@@ -290,9 +290,9 @@ order.edit.saveBtn.text=Save
 
 # Emails
 
-email.resetPassword.subject=Nytt lösenord till Cruited
+email.resetPassword.subject=New Password for Cruited
 email.unpaidOrderReminder.subject=Complete your order
-email.twoDaysAfterAssessmentDelivered.subject=Ett personligt råd om din granskning
-email.orderComplete.free.subject=Granskning skapad
-email.orderComplete.paid.subject=Orderbekräftelse/kvitto för beställning hos Cruited.com
-email.orderComplete.paid.orderedProductsSeparator=och
+email.twoDaysAfterAssessmentDelivered.subject=A personal advice about your assessment
+email.orderComplete.free.subject=Assessment Created
+email.orderComplete.paid.subject=Confirmation/receipt for your order at Cruited.com
+email.orderComplete.paid.orderedProductsSeparator=and
