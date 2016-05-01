@@ -71,7 +71,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                             }.bind(this))}
                             </ul>
                         </section>
-                        {/* TODO <section id="language-section" className="two-columns">
+                        <section id="language-section" className="two-columns">
                             <header>
                                 <p className="light-font">{CR.i18nMessages["order.productSelection.languageSection.subtitle"]}</p>
                             </header>
@@ -84,7 +84,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                      </select>
                                 </div>
                             </form>
-                        </section> */}
+                        </section>
                         <section id="cart-section">
                             <header>
                                 <h2>{CR.i18nMessages["order.productSelection.cartSection.title"]}</h2>
