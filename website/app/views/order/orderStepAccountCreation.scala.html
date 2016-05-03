@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function() {
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         "@Html(linkedinAuthCodeRequestUrl)",
         linkedinProfile,
-        linkedinErrorMessage
+        linkedinErrorMessage,
+        @Html(play.api.libs.json.Json.toJson(lang).toString())
     );
 });
 }

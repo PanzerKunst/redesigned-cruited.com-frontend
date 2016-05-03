@@ -7,6 +7,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinProfile: null,
                 linkedinErrorMessage: null,
+                language: null,
                 isRegisterWithLinkedinDefault: false
             };
         },
@@ -269,6 +270,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                 emailAddress: this._isRegisterWithLinkedinSectionVisible() ? this.$linkedinEmailField.val() : this.$emailAddressField.val(),
                 firstName: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile.firstName : this.$firstNameField.val(),
                 password: this._isRegisterWithLinkedinSectionVisible() ? null : this.$passwordField.val(),
+                languageCode: this.state.language.ietfCode,
                 linkedinProfile: this._isRegisterWithLinkedinSectionVisible() ? this.state.linkedinProfile : null
             }));
         },
@@ -287,11 +289,12 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage) {
+    c.init = function(i18nMessages, linkedinAuthCodeRequestUrl, linkedinProfile, linkedinErrorMessage, language) {
         CR.i18nMessages = i18nMessages;
         this.linkedinAuthCodeRequestUrl = linkedinAuthCodeRequestUrl;
         this.linkedinProfile = linkedinProfile;
         this.linkedinErrorMessage = linkedinErrorMessage;
+        this.language = language;
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
@@ -306,6 +309,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             linkedinAuthCodeRequestUrl: this.linkedinAuthCodeRequestUrl,
             linkedinProfile: this.linkedinProfile,
             linkedinErrorMessage: this.linkedinErrorMessage,
+            language: this.language,
             isRegisterWithLinkedinDefault: this.linkedinProfile !== null
         });
     };
