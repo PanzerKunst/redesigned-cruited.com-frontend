@@ -100,7 +100,10 @@ class AccountApi @Inject()(val i18nService: I18nService) extends Controller {
               val updatedAccount = account.copy(
                 firstName = Some(frontendAccount.firstName),
                 password = updatedPassword,
-                languageCode = frontendAccount.languageCode
+                languageCode = frontendAccount.languageCode match {
+                  case Some(code) => code
+                  case None => i18nService.currentLanguage.ietfCode
+                }
               )
 
               AccountDto.update(updatedAccount)
