@@ -52,6 +52,13 @@ object Account {
       linkedinProfile = linkedinProfile + ("headline" -> validHeadline)
     }
 
+    // Specialties
+    val validSpecialties = safetizeJsonStringValue(linkedinProfile \ "specialties")
+    linkedinProfile = linkedinProfile - "specialties"
+    if (validSpecialties != JsNull) {
+      linkedinProfile = linkedinProfile + ("specialties" -> validSpecialties)
+    }
+
     val positions = (linkedinProfile \ "positions").as[JsObject]
 
     val positionValuesOpt = (positions \ "values").asOpt[JsArray]
