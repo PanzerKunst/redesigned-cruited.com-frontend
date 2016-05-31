@@ -18,7 +18,7 @@
                 <div class="other-nav-ux">
                     <a href="https://app.cruited.com/login">Logga in</a>
 
-                    <a href="https://app.cruited.com/order" class="btn secondary">Börja nu</a>
+                    <a href="https://app.cruited.com/order?lang=sv" class="btn secondary">Börja nu</a>
 
                     <!-- select class="form-control">
                         <option value="sv">Sv</option>
@@ -43,7 +43,7 @@
                 <div class="other-nav-ux">
                     <a href="https://app.cruited.com/login">Logga in</a>
 
-                    <a href="https://app.cruited.com/order" class="btn secondary">Börja nu</a>
+                    <a href="https://app.cruited.com/order?lang=sv" class="btn secondary">Börja nu</a>
 
                     <!-- select class="form-control">
                         <option value="sv">Sv</option>
