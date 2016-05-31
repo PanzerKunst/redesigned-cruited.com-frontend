@@ -10,6 +10,7 @@ edition.name.PRO=Professional
 edition.name.YOUNG_PRO=Young Professional
 edition.name.EXEC=Executive
 edition.name.CONSULT=Consultant
+edition.name.ACADEMIA=Researcher
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2-item
 reduction.name.3_PRODUCTS_SAME_ORDER=3-item
@@ -180,10 +181,11 @@ order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Revie
 
 order.productSelection.editionsSection.title=Product Edition
 order.productSelection.editionsSection.subtitle=Please choose which edition best suits you.
-order.productSelection.editionsSection.editionDescription.text.PRO=You have worked for at least a year
-order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You have been working 2 years or less, or you are a student
+order.productSelection.editionsSection.editionDescription.text.PRO=You have at least 2 years of working experience
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=You are a student, or you have less than 2 years of working experience
 order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or you search for) an executive position
 order.productSelection.editionsSection.editionDescription.text.CONSULT=You work as a consultant or look for commissions as self-employed
+order.productSelection.editionsSection.editionDescription.text.ACADEMIA=You are applying for a job as researcher in academia (not applicable for private R&D positions)
 
 order.productSelection.languageSection.subtitle=You're searching for a job in Sweden. You want to have your assessment in:
 

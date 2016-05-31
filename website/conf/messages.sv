@@ -10,6 +10,7 @@ edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
 edition.name.EXEC=Chef
 edition.name.CONSULT=Konsult
+edition.name.ACADEMIA=Forskare
 
 reduction.name.2_PRODUCTS_SAME_ORDER=2 dokument
 reduction.name.3_PRODUCTS_SAME_ORDER=3 dokument
@@ -181,9 +182,10 @@ order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedö
 order.productSelection.editionsSection.title=Välj version
 order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
 order.productSelection.editionsSection.editionDescription.text.PRO=Du har några års arbetslivserfarenhet
-order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du har jobbat mindre än 2 år, eller är student
+order.productSelection.editionsSection.editionDescription.text.YOUNG_PRO=Du är student, eller har jobbat mindre än 2 år
 order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (eller söker) en roll med personalansvar eller verksamhetsansvar
 order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult eller söker uppdrag som egenföretagare eller frilans
+order.productSelection.editionsSection.editionDescription.text.ACADEMIA=Du söker jobb som forskare inom akademin (gäller ej forskningstjänster i privata organisationer)
 
 order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vill ha din bedömning på:
 

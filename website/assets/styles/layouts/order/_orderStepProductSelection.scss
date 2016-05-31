@@ -235,6 +235,15 @@
         }
       }
 
+      &.ACADEMIA > .edition-icon {
+        $edition-icon-location-y: -2800px;
+
+        background-position: $edition-icon-location-x $edition-icon-location-y;
+        @include hidpi {
+          background-position: half-pos($edition-icon-location-x, $edition-icon-location-y);
+        }
+      }
+
       > .radio {
         margin-left: -33px;
         margin-right: $spacer-unit-size;

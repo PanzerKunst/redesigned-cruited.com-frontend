@@ -81,17 +81,22 @@ $expires-and-cvc-field-width: 30%;
       }
 
       .edition {
-        // Original is -1889px -794px;
-        background-position: -1893px -797px;
+        background-position: -1893px -796px;
 
         &.YOUNG_PRO {
-          // Original-y is -894px;
-          background-position: -1893px -897px;
+          background-position: -1893px -896px;
         }
 
         &.EXEC {
-          // Original-y is -994px;
-          background-position: -1893px -997px;
+          background-position: -1893px -996px;
+        }
+
+        &.CONSULT {
+          background-position: -1893px -2696px;
+        }
+
+        &.ACADEMIA {
+          background-position: -1893px -3096px;
         }
       }
     }

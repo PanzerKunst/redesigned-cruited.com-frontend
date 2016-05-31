@@ -93,6 +93,16 @@ a > i.fa {
     }
   }
 
+  &.ACADEMIA {
+    $edition-icon-location-y: -2996px;
+
+    @include hdpi-sprite($academia-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -1496px;
+    }
+  }
+
   @include medium-screen {
     $edition-icon-location-x: -1893px;
     $edition-icon-location-y: -796px;
@@ -110,6 +120,11 @@ a > i.fa {
 
     &.CONSULT {
       $edition-icon-location-y: -2696px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.ACADEMIA {
+      $edition-icon-location-y: -3096px;
       background-position: $edition-icon-location-x $edition-icon-location-y;
     }
   }
@@ -131,6 +146,11 @@ a > i.fa {
 
     &.CONSULT {
       $edition-icon-location-y: -2693px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.ACADEMIA {
+      $edition-icon-location-y: -3093px;
       background-position: $edition-icon-location-x $edition-icon-location-y;
     }
   }
