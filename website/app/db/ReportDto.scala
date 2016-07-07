@@ -32,7 +32,7 @@ object ReportDto {
           left join single_document_top_comment tc on tc.doc_id = d.id
           left join default_categories cat2 on cat2.id = tc.cate_id
         where d.id = """ + orderId + """
-          and d.status = """ + Order.statusIdComplete + """
+          and d.status > """ + Order.statusIdPaid + """
         order by red_comment_doc_type, red_comment_cat_id, ordd, top_comment_doc_type, top_comment_cat_id, top_comment_id;"""
 
       Logger.info("ReportDto.getOfOrderId():" + query)
