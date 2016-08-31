@@ -95,7 +95,7 @@ CR.Controllers.PaymentForm = React.createClass({
     _populateYearDropdown: function() {
         const currentYear = parseInt(moment().format("YYYY"), 10);
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             const year = currentYear + i;
             this.$expiresYearField.append("<option value=\"" + year + "\">" + year + "</option>");
         }
