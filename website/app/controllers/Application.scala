@@ -4,7 +4,7 @@ import java.util.{Date, Timer}
 import javax.inject.Inject
 
 import db._
-import models.{Account, CruitedProduct, Order}
+import models.{CruitedProduct, Order}
 import play.api.Play.current
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.JsNull
@@ -15,7 +15,7 @@ import services._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService, val emailsToSendTasker: EmailsToSendTasker, val emailService: EmailService, val scoreAverageTasker: ScoreAverageTasker, val i18nService: I18nService) extends Controller with I18nSupport {
+class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService, val emailsToSendTasker: EmailsToSendTasker, val emailService: EmailService, val scoreAverageTasker: ScoreAverageTasker) extends Controller {
   val dwsRootUrl = Play.configuration.getString("dws.rootUrl").get
   val doNotCachePage = Array(CACHE_CONTROL -> "no-cache, no-store")
 
@@ -32,13 +32,16 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         if (AccountService.isTemporary(accountId)) {
           Redirect("/order")
         } else {
-          AccountDto.getOfId(accountId) match {
-            case None =>
-            case Some(account) => updateLanguageIfNecessary(account)
+          val (accountOpt, currentLanguage) = AccountDto.getOfId(accountId) match {
+            case None => (None, SessionService.getCurrentLanguage(request.session))
+            case Some(account) => (Some(account), SupportedLanguageDto.getOfCode(account.languageCode).get)
           }
 
+          val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
           val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1}
-          Ok(views.html.dashboard(i18nService.messages, i18nService.currentLanguage, AccountDto.getOfId(accountId), frontendOrders))
+
+          Ok(views.html.dashboard(i18nMessages, currentLanguage, accountOpt, frontendOrders))
+            .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
         }
     }
   }
@@ -49,8 +52,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def signIn() = Action { request =>
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
     val isLinkedinAccountUnregistered = false
-    Ok(views.html.signIn(i18nService.messages, i18nService.currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+
+    Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
   }
 
   def myAccount() = Action { request =>
@@ -61,18 +67,23 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           Unauthorized(views.html.unauthorised())
         } else {
           val account = AccountDto.getOfId(accountId).get
+          val currentLanguage = SupportedLanguageDto.getOfCode(account.languageCode).get
+          val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
           val isSaveSuccessful = SessionService.isAccountSaveSuccessful(request.session)
 
-          updateLanguageIfNecessary(account)
-
-          Ok(views.html.myAccount(i18nService.messages, i18nService.currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.all))
-            .withSession(request.session - SessionService.sessionKeyAccountSaveSuccessful)
+          Ok(views.html.myAccount(i18nMessages, currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.all))
+            .withSession(request.session
+            - SessionService.sessionKeyAccountSaveSuccessful
+            + (SessionService.sessionKeyLanguageCode -> account.languageCode))
         }
     }
   }
 
   def resetPassword() = Action { request =>
-    Ok(views.html.resetPassword(i18nService.messages, i18nService.currentLanguage))
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.resetPassword(i18nMessages, currentLanguage))
   }
 
   def confirmResetPassword() = Action { request =>
@@ -82,9 +93,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       AccountService.resetPasswordTokens.get(token) match {
         case None => BadRequest("This token has already been used, or is incorrect")
         case Some(accountId) =>
+          val currentLanguage = SessionService.getCurrentLanguage(request.session)
+          val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
           val account = AccountDto.getOfId(accountId).get
 
-          Ok(views.html.newPassword(i18nService.messages, i18nService.currentLanguage, account))
+          Ok(views.html.newPassword(i18nMessages, currentLanguage, account))
             .withSession(request.session + (SessionService.sessionKeyResetPasswordToken -> token))
       }
     } else {
@@ -93,6 +106,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
   }
 
   def orderStepProductSelection() = Action { request =>
+    var currentLanguage = SessionService.getCurrentLanguage(request.session)
+
     val accountOpt = SessionService.getAccountId(request.session) match {
       case None => None
       case Some(accountId) =>
@@ -102,22 +117,20 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           AccountDto.getOfId(accountId) match {
             case None => None
             case Some(account) =>
-              updateLanguageIfNecessary(account)
+              currentLanguage = SupportedLanguageDto.getOfCode(account.languageCode).get
               Some(account)
           }
         }
     }
 
     if (request.queryString.contains("lang")) {
-      SupportedLanguageDto.getOfCode(request.queryString.get("lang").get.head) match {
-        case None =>
-        case Some(supportedLanguage) =>
-          i18nService.currentLanguage = supportedLanguage
-          i18nService.messages = i18nService.getMessages(messagesApi)
-      }
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString.get("lang").get.head).get
     }
 
-    Ok(views.html.order.orderStepProductSelection(i18nService.messages, i18nService.currentLanguage, accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+      .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
   def orderStepAssessmentInfo() = Action { request =>
@@ -134,14 +147,20 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         (acc, account.linkedinProfile)
     }
 
-    Ok(views.html.order.orderStepAssessmentInfo(i18nService.messages, i18nService.currentLanguage, accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
       .withHeaders(doNotCachePage: _*)
   }
 
   def orderStepAccountCreation() = Action { request =>
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
     SessionService.getAccountId(request.session) match {
       case None =>
-        Ok(views.html.order.orderStepAccountCreation(i18nService.messages, i18nService.currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
+        Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
           .withHeaders(doNotCachePage: _*)
 
       case Some(accountId) =>
@@ -156,7 +175,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             case Some(existingAccount) => (Some(existingAccount), existingAccount.linkedinProfile)
           }
 
-          Ok(views.html.order.orderStepAccountCreation(i18nService.messages, i18nService.currentLanguage, accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
+          Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
             .withHeaders(doNotCachePage: _*)
         }
     }
@@ -205,13 +224,16 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     case e => Logger.error(e.getMessage, e)
                   }
 
+                  val currentLanguage = SessionService.getCurrentLanguage(request.session)
+                  val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
                   // If the cost is 0, we redirect to the dashboard
                   if (costAfterReductions == 0) {
-                    emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, i18nService.messages("email.orderComplete.free.subject"))
+                    emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
                     Redirect("/?action=orderCompleted")
                   } else {
                     // We display the payment page
-                    Ok(views.html.order.orderStepPayment(i18nService.messages, i18nService.currentLanguage, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, finalisedOrderId))
+                    Ok(views.html.order.orderStepPayment(i18nMessages, currentLanguage, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, finalisedOrderId))
                   }
               }
             }
@@ -237,7 +259,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   val order = tuple._1
 
                   if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
-                    Ok(views.html.order.editOrder(i18nService.messages, i18nService.currentLanguage, Some(account), order))
+                    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+                    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+                    Ok(views.html.order.editOrder(i18nMessages, currentLanguage, Some(account), order))
                   } else {
                     Forbidden("You are not allowed to edit orders which are not yours")
                   }
@@ -261,7 +286,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
               OrderDto.getOfIdForFrontend(orderId) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
-                case Some(tuple) => Ok(views.html.order.completePayment(i18nService.messages, i18nService.currentLanguage, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, tuple._1))
+
+                case Some(tuple) =>
+                  val currentLanguage = SessionService.getCurrentLanguage(request.session)
+                  val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+                  Ok(views.html.order.completePayment(i18nMessages, currentLanguage, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, tuple._1))
               }
             }
         }
@@ -287,9 +317,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
               ReportDto.getOfOrderId(orderId) match {
                 case None => BadRequest("No report available for order ID " + orderId)
                 case Some(assessmentReport) =>
+                  val currentLanguage = SessionService.getCurrentLanguage(request.session)
+                  val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
                   val accountId = SessionService.getAccountId(request.session).get
 
-                  Ok(views.html.report(i18nService.messages, i18nService.currentLanguage, AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
+                  Ok(views.html.report(i18nMessages, currentLanguage, AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
               }
             } else {
               Forbidden("You are not allowed to view reports which are not yours")
@@ -300,8 +332,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def linkedinCallbackSignIn() = Action { request =>
     if (request.queryString.contains("error")) {
+      val currentLanguage = SessionService.getCurrentLanguage(request.session)
+      val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
       val isLinkedinAccountUnregistered = false
-      Ok(views.html.signIn(i18nService.messages, i18nService.currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
+
+      Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
@@ -330,10 +365,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       }
 
       if (!accountId.isDefined || AccountService.isTemporary(accountId.get)) {
+        val currentLanguage = SessionService.getCurrentLanguage(request.session)
+        val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
         val isLinkedinAccountUnregistered = true
 
         // We display the error that this user isn't registered
-        Ok(views.html.signIn(i18nService.messages, i18nService.currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+        Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
       } else {
         // We update the LI fields in DB, except maybe the email and first name if they are already set
         AccountDto.getOfId(accountId.get) match {
@@ -365,10 +402,13 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   private def linkedinCallbackOrder(request: Request[AnyContent], linkedinRedirectUri: String, appRedirectUri: String) = {
     if (request.queryString.contains("error")) {
+      val currentLanguage = SessionService.getCurrentLanguage(request.session)
+      val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
       if (linkedinRedirectUri == linkedinService.linkedinRedirectUriOrderStepAssessmentInfo) {
-        Ok(views.html.order.orderStepAssessmentInfo(i18nService.messages, i18nService.currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+        Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
       } else {
-        Ok(views.html.order.orderStepAccountCreation(i18nService.messages, i18nService.currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+        Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
       }
     } else if (!request.queryString.contains("state") ||
       request.queryString.get("state").get.head != linkedinService.linkedinState) {
@@ -401,15 +441,6 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           Redirect(appRedirectUri)
             .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
       }
-    }
-  }
-
-  private def updateLanguageIfNecessary(account: Account) {
-    SupportedLanguageDto.getOfCode(account.languageCode) match {
-      case None =>
-      case Some(supportedLanguage) =>
-        i18nService.currentLanguage = supportedLanguage
-        i18nService.messages = i18nService.getMessages(messagesApi)
     }
   }
 }

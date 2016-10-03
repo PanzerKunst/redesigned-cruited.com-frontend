@@ -11,7 +11,7 @@ import play.api.mvc.{Action, Controller}
 import services._
 
 @Singleton
-class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService, val i18nService: I18nService) extends Controller with I18nSupport {
+class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller {
   def signIn() = Action(parse.json) { request =>
     request.body.validate[SignInData] match {
       case e: JsError => BadRequest("Validation of SignInData failed")
@@ -51,7 +51,9 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
 
             AccountService.resetPasswordTokens += (token -> account.id)
 
-            emailService.sendResetPasswordEmail(emailAddress, account.firstName.get, resetPasswordUrl, i18nService.messages("email.resetPassword.subject"))
+            val i18nMessages = I18nService.getMessages(messagesApi, account.languageCode)
+
+            emailService.sendResetPasswordEmail(emailAddress, account.firstName.get, account.languageCode, resetPasswordUrl, i18nMessages("email.resetPassword.subject"))
 
             Ok
         }

@@ -8,15 +8,15 @@ import javax.inject.{Inject, Singleton}
 import db.{AccountDto, OrderDto}
 import models.frontend.OrderReceivedFromFrontend
 import models.{Account, Order}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Session, Action, Controller}
 import services._
 
 import scala.util.Random
 
 @Singleton
-class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: MessagesApi, val emailService: EmailService, val i18nService: I18nService) extends Controller with I18nSupport {
+class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: MessagesApi, val emailService: EmailService) extends Controller {
   def create() = Action(parse.multipartFormData) { request =>
     // We only want to generate negative IDs, because positive ones are for non-temp orders
     val rand = Random.nextLong()
@@ -96,7 +96,9 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
       accountId = SessionService.getAccountId(request.session)
     )
 
-    OrderDto.createTemporary(tempOrder, i18nService.currentLanguage) match {
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+
+    OrderDto.createTemporary(tempOrder, currentLanguage) match {
       case None => throw new Exception("OrderDto.createTemporary didn't return an ID!")
       case Some(createdOrderId) =>
         Created(Json.toJson(OrderDto.getOfIdForFrontend(createdOrderId).get._1))
@@ -206,7 +208,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
                     )
                     OrderDto.update(paidOrder)
 
-                    callSendPaidOrderCompleteEmail(AccountDto.getOfId(accountId).get, paidOrder, costAfterReductions)
+                    callSendPaidOrderCompleteEmail(AccountDto.getOfId(accountId).get, paidOrder, costAfterReductions, request.session)
 
                     Ok
                   }
@@ -219,13 +221,16 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     }
   }
 
-  private def callSendPaidOrderCompleteEmail(account: Account, order: Order, costAfterReductions: Int): Unit = {
-    var orderedProducts = i18nService.messages("product.name." + order.containedProductCodes.head)
+  private def callSendPaidOrderCompleteEmail(account: Account, order: Order, costAfterReductions: Int, session: Session) {
+    val language = SessionService.getCurrentLanguage(session)
+    val i18nMessages = I18nService.getMessages(messagesApi, language.ietfCode)
+
+    var orderedProducts = i18nMessages("product.name." + order.containedProductCodes.head)
     if (order.containedProductCodes.length > 1) {
-      orderedProducts = orderedProducts + " " + i18nService.messages("email.orderComplete.paid.orderedProductsSeparator") + " " + i18nService.messages("product.name." + order.containedProductCodes.apply(1))
+      orderedProducts = orderedProducts + " " + i18nMessages("email.orderComplete.paid.orderedProductsSeparator") + " " + i18nMessages("product.name." + order.containedProductCodes.apply(1))
     }
     if (order.containedProductCodes.length > 2) {
-      orderedProducts = orderedProducts + " " + i18nService.messages("email.orderComplete.paid.orderedProductsSeparator") + " " + i18nService.messages("product.name." + order.containedProductCodes.apply(2))
+      orderedProducts = orderedProducts + " " + i18nMessages("email.orderComplete.paid.orderedProductsSeparator") + " " + i18nMessages("product.name." + order.containedProductCodes.apply(2))
     }
 
     val vatAmount = NumberService.roundAt(2, costAfterReductions * 0.2)
@@ -233,6 +238,6 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     val datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm")
     val orderDateTime = datetimeFormat.format(new Date(order.paymentTimestamp.get))
 
-    emailService.sendPaidOrderCompleteEmail(account.emailAddress.get, account.firstName.get, orderedProducts, order.id.get, costAfterReductions, vatAmount, orderDateTime, i18nService.messages("email.orderComplete.paid.subject"))
+    emailService.sendPaidOrderCompleteEmail(account.emailAddress.get, account.firstName.get, language.ietfCode, orderedProducts, order.id.get, costAfterReductions, vatAmount, orderDateTime, i18nMessages("email.orderComplete.paid.subject"))
   }
 }

@@ -256,9 +256,9 @@ object AccountDto {
   }
 
   /**
-   * @return List[(emailAddress, firstName, orderId)]
+   * @return List[(emailAddress, firstName, languageCode, orderId)]
    */
-  def getWhoNeedUnpaidOrderReminderEmail: List[(String, String, Long)] = {
+  def getWhoNeedUnpaidOrderReminderEmail: List[(String, String, String, Long)] = {
     val nonTempAccounts = getNonTemporary
 
     val listOfAccountIdAndLatestOrderId = DB.withConnection("users") { implicit c =>
@@ -291,14 +291,14 @@ object AccountDto {
 
     listOfAccountIdAndLatestOrderId map { tuple =>
       val account = nonTempAccounts.find(_.id == tuple._1).get
-      (account.emailAddress.get, account.firstName.get, tuple._2)
+      (account.emailAddress.get, account.firstName.get, account.languageCode, tuple._2)
     }
   }
 
   /**
-   * @return List[(emailAddress, firstName, orderId)]
+   * @return List[(emailAddress, firstName, languageCode, orderId)]
    */
-  def getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail: List[(String, String, Long)] = {
+  def getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail: List[(String, String, String, Long)] = {
     val nonTempAccounts = getNonTemporary
 
     val listOfAccountIdAndLatestOrderId = DB.withConnection("users") { implicit c =>
@@ -331,7 +331,7 @@ object AccountDto {
 
     listOfAccountIdAndLatestOrderId map { tuple =>
       val account = nonTempAccounts.find(_.id == tuple._1).get
-      (account.emailAddress.get, account.firstName.get, tuple._2)
+      (account.emailAddress.get, account.firstName.get, account.languageCode, tuple._2)
     }
   }
 
