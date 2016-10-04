@@ -2,7 +2,6 @@ package services
 
 import db.SupportedLanguageDto
 import models.SupportedLanguage
-import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.mvc.{AnyContent, Request, Session}
 
@@ -14,8 +13,8 @@ object SessionService {
   val sessionKeyLanguageCode = "languageCode"
 
   private val defaultLanguage = SupportedLanguageDto.all.head
-  private var languageCodeOnLastCheck = defaultLanguage.ietfCode
-  private var i18nMessagesOnLastCheck = Map[String, String]()
+  private var i18nMessagesSv = Map[String, String]()
+  private var i18nMessagesEn = Map[String, String]()
 
   def getOrderId(session: Session): Option[Long] = {
     session.get(sessionKeyOrderId) match {
@@ -56,11 +55,17 @@ object SessionService {
   }
 
   private def getI18nMessagesFromCode(languageCode: String, messagesApi: MessagesApi): Map[String, String] = {
-    if (i18nMessagesOnLastCheck.size == 0 || languageCode != languageCodeOnLastCheck) {
-      languageCodeOnLastCheck = languageCode
-      i18nMessagesOnLastCheck = I18nService.getMessages(messagesApi, languageCode)
+    if (i18nMessagesSv.size == 0) {
+      i18nMessagesSv = I18nService.getMessages(messagesApi, I18nService.languageCodeSv)
+    }
+    if (i18nMessagesEn.size == 0) {
+      i18nMessagesEn = I18nService.getMessages(messagesApi, I18nService.languageCodeEn)
     }
 
-    i18nMessagesOnLastCheck
+    if (languageCode == I18nService.languageCodeEn) {
+      i18nMessagesEn
+    } else {
+      i18nMessagesSv
+    }
   }
 }
