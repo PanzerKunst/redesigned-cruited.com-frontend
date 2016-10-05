@@ -423,7 +423,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
       val accountId = SessionService.getAccountId(request.session) match {
         case Some(id) => id
-        case None => AccountService.generateTempAccountIdAndStoreAccount(request.session)
+        case None => AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
+            case None => AccountService.generateTempAccountIdAndStoreAccount(request.session)
+            case Some(account) => account.id
+          }
       }
 
       AccountDto.getOfId(accountId) match {

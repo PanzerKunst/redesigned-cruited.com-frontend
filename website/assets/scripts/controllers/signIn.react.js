@@ -19,9 +19,7 @@ CR.Controllers.SignIn = P(function(c) {
                         </div>
                     </header>
                     <div className="with-circles">
-                        <form className="single-column-panel">
-                            {this._getSignInWithLinkedinForm()}
-                        </form>
+                        {this._getSignInWithLinkedinForm()}
                         <div className="section-separator single-column-panel centered-contents">
                             <span>{CR.i18nMessages["signIn.methodSeparatorText"]}</span>
                         </div>
@@ -49,12 +47,14 @@ CR.Controllers.SignIn = P(function(c) {
             }
 
             return (
-                <div className="centered-contents">
-                    <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
-                        <span>{CR.i18nMessages["signIn.form.linkedIn.btn.text"]}</span>
-                    </a>
-                    {signInFailedParagraph}
-                </div>
+                <form className="single-column-panel">
+                    <div className="centered-contents">
+                        <a className="btn sign-in-with-linkedin" href={this.state.linkedinAuthCodeRequestUrl}>
+                            <span>{CR.i18nMessages["signIn.form.linkedIn.btn.text"]}</span>
+                        </a>
+                        {signInFailedParagraph}
+                    </div>
+                </form>
             );
         },
 
