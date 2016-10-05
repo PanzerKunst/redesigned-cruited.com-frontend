@@ -212,7 +212,7 @@ order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre k
 order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
 order.assessmentInfo.validation.linkedin.notSignedIn=För att vi ska kunna bedöma din LinkedIn-profil behöver du logga in
 order.assessmentInfo.validation.linkedin.publicProfileUrlMissing=Du har inte gjort din profil offentlig ännu och vi kan därför inte bedöma den
-order.assessmentInfo.validation.linkedin.incompleteProfile.label=Din LinkedIn-profil saknar viktig information:
+order.assessmentInfo.validation.linkedin.incompleteProfile.label=Se till så att din LinkedIn-profil inte saknar viktig information och innehåller följande:
 order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Sammanfattning (summary) av din profil
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
@@ -228,7 +228,7 @@ order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="ht
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för bedömning
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Läs in igen
-order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad eftersom min profil saknar viktiga delar. Fortsätt ändå.
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad om min profil saknar viktiga delar. 
 order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev
