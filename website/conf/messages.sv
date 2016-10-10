@@ -266,7 +266,7 @@ order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't h
 order.accountCreation.signIn.registerInstead.link.text=Registrera
 
 order.accountCreation.signedIn.text=You are signed in!
-order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order
+order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order.
 order.accountcreation.signedIn.btn.text=Continue
 
 

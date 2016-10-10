@@ -260,13 +260,13 @@ order.accountCreation.registerWithEmail.submitBtn.text=Register and continue
 order.accountCreation.registerWithEmail.submitBtn.withEmailPrefix=Register with
 order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
-order.accountCreation.registerWithEmail.validation.alreadyRegistered=This email address is already registered. Please
+order.accountCreation.registerWithEmail.validation.alreadyRegistered=This email address is already registered.
 
 order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't have an account yet.
 order.accountCreation.signIn.registerInstead.link.text=Register
 
 order.accountCreation.signedIn.text=You are signed in!
-order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order
+order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order.
 order.accountcreation.signedIn.btn.text=Continue
 
 
