@@ -245,28 +245,29 @@ order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://c
 
 order.accountCreation.title=Create your account
 order.accountCreation.subtitle=Under which account do you want your assessment to be saved?
-order.accountCreation.submitBtn.text=Register and continue
-order.accountCreation.submitBtn.withEmailPrefix=Register with
-order.accountCreation.validation.emailAlreadyRegistered=This email address is already registered. Please <a href="/login">Sign in</a>.
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=This LinkedIn account is already registered. <a href="/login">Sign in</a>.
 
-order.accountCreation.registerWithLinkedin.switch.question=Prefer to register
-order.accountCreation.registerWithLinkedin.switch.link.text=with email
 order.accountCreation.registerWithLinkedin.btn.text=Register with LinkedIn
-order.accountCreation.registerWithLinkedin.profile.label=LinkedIn profile
-order.accountCreation.registerWithLinkedin.email.label=Preferred email
-order.accountCreation.registerWithLinkedin.validation.incorrectEmail=This email address looks incorrect
 
-order.accountCreation.registerWithEmail.switch.question=Prefer to register
-order.accountCreation.registerWithEmail.switch.link.text=using your LinkedIn account
 order.accountCreation.registerWithEmail.firstName.label=First name
 order.accountCreation.registerWithEmail.firstName.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=Email address
 order.accountCreation.registerWithEmail.emailAddress.placeholder=your@mail.com
 order.accountCreation.registerWithEmail.password.label=Password
 order.accountCreation.registerWithEmail.password.placeholder=5 chars minimum
+order.accountCreation.registerWithEmail.signInInstead.text=Or do you already have an account?
+order.accountCreation.registerWithEmail.signInInstead.link.text=Sign in
+order.accountCreation.registerWithEmail.submitBtn.text=Register and continue
+order.accountCreation.registerWithEmail.submitBtn.withEmailPrefix=Register with
 order.accountCreation.registerWithEmail.validation.incorrectEmail=This email address looks incorrect
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
+order.accountCreation.registerWithEmail.validation.alreadyRegistered=This email address is already registered. Please
+
+order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't have an account yet.
+order.accountCreation.signIn.registerInstead.link.text=Register
+
+order.accountCreation.signedIn.text=You are signed in!
+order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order
+order.accountcreation.signedIn.btn.text=Continue
 
 
 # Order Step Payment page

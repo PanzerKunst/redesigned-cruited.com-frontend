@@ -18,11 +18,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var linkedinProfile = @Html(linkedinProfile.toString()) || null;
 
+    var account = null;
+    @if(account.isDefined) {
+        account = "@account.get";
+    }
+
     CR.Controllers.OrderStepAccountCreation(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         "@Html(linkedinAuthCodeRequestUrl)",
         linkedinProfile,
-        linkedinErrorMessage
+        linkedinErrorMessage,
+        @Html(play.api.libs.json.Json.toJson(account).toString())
     );
 });
 }

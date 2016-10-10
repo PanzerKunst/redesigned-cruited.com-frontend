@@ -1,15 +1,15 @@
 package controllers.api
 
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 
-import db.{AccountDto, OrderDto, SupportedLanguageDto}
+import db.{AccountDto, OrderDto}
 import models.frontend.AccountReceivedFromFrontend
 import play.api.libs.json._
-import play.api.mvc.{Action, Controller, Request}
-import services.{AccountService, HttpService, SessionService}
+import play.api.mvc.{Action, Controller}
+import services._
 
 @Singleton
-class AccountApi extends Controller {
+class AccountApi @Inject()(val orderService: OrderService) extends Controller {
   def create() = Action(parse.json) { request =>
     request.body.validate[AccountReceivedFromFrontend] match {
       case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
@@ -21,64 +21,16 @@ class AccountApi extends Controller {
         if (accountWithSameEmailAddressOpt.isDefined) {
           Status(HttpService.httpStatusEmailAlreadyRegistered)
         } else {
-          val accountWithSameLinkedinIdOpt = frontendAccount.linkedinProfile match {
-            case JsNull => None
-            case jsObject => AccountDto.getOfLinkedinAccountId((jsObject \ "id").as[String])
-          }
+          val finalisedAccountId = AccountService.finaliseAccount(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password, JsNull, request.session)
 
-          if (accountWithSameLinkedinIdOpt.isDefined) {
-            Status(HttpService.httpStatusLinkedinAccountIdAlreadyRegistered)
-          } else {
-            val newAccountId = createAccountAndUpdateOrder(frontendAccount, request)
-            val accountIdInSession = SessionService.getAccountId(request.session)
+          // then finalize the order. The accountId is already the finalised account ID
+          val orderId = SessionService.getOrderId(request.session).get
+          val finalisedOrderId = orderService.finaliseOrder(OrderDto.getOfId(orderId).get)
 
-            if (accountIdInSession.isDefined) {
-              val accountId = accountIdInSession.get
-
-              AccountDto.getOfId(accountId) match {
-                case None =>
-
-                // If exists in DB
-                case Some(account) =>
-                  // 1. If the old one has linkedIn info that the new one doesn't, we set it
-                  if (account.linkedinProfile != JsNull) {
-                    val newAccount = AccountDto.getOfId(newAccountId).get
-
-                    if (newAccount.linkedinProfile == JsNull) {
-                      val updatedAccount = newAccount.copy(
-                        linkedinProfile = account.linkedinProfile
-                      )
-                      AccountDto.update(updatedAccount)
-                    }
-                  }
-
-                  // 2. We delete the old account
-                  AccountDto.deleteOfId(accountId)
-              }
-            }
-
-            Created.withSession(request.session + (SessionService.sessionKeyAccountId -> newAccountId.toString))
-          }
+          // then log the user in. The JS controller should then redirect to "/payment"
+          Created.withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
+            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
         }
-    }
-  }
-
-  private def createAccountAndUpdateOrder(frontendAccount: AccountReceivedFromFrontend, request: Request[JsValue]): Long = {
-    val currentLanguageCode = SessionService.getCurrentLanguage(request.session).ietfCode
-    val currentLanguage = SupportedLanguageDto.getOfCode(currentLanguageCode).get
-
-    AccountDto.create(frontendAccount.emailAddress, frontendAccount.firstName, frontendAccount.password, frontendAccount.linkedinProfile, currentLanguage) match {
-      case None => throw new Exception("AccountDto.create() didn't return an ID")
-      case Some(accountId) =>
-        // In case there is an order ID in session, we update the order.added_by
-        SessionService.getOrderId(request.session) match {
-          case None =>
-          case Some(tempOrderId) =>
-            val orderWithUpdatedAccountId = OrderDto.getOfId(tempOrderId).get.copy(accountId = Some(accountId))
-            OrderDto.update(orderWithUpdatedAccountId)
-        }
-
-        accountId
     }
   }
 

@@ -6,8 +6,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             return {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinProfile: null,
-                linkedinErrorMessage: null,
-                account: null
+                linkedinErrorMessage: null
             };
         },
 
@@ -269,7 +268,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         },
 
         _getTosFormGroup: function() {
-            if (this.state.account) {
+            if (CR.loggedInAccount) {
                 return null;
             }
 
@@ -492,8 +491,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         this.reactInstance.replaceState({
             linkedinAuthCodeRequestUrl: this.linkedinAuthCodeRequestUrl,
             linkedinProfile: this.linkedinProfile,
-            linkedinErrorMessage: this.linkedinErrorMessage,
-            account: this.account
+            linkedinErrorMessage: this.linkedinErrorMessage
         });
     };
 });

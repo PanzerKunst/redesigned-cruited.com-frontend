@@ -221,6 +221,23 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     }
   }
 
+  def removeCoupon = Action { request =>
+    SessionService.getOrderId(request.session) match {
+      case None => BadRequest("Couldn't remove the coupon because no order was found in session");
+      case Some(id) =>
+        OrderDto.getOfId(id) match {
+          case None => BadRequest("No order found for ID " + id)
+          case Some(existingOrder) =>
+            val orderWithoutCoupon = existingOrder.copy(
+              couponId = None
+            )
+            OrderDto.update(orderWithoutCoupon)
+
+            Ok
+        }
+    }
+  }
+
   private def callSendPaidOrderCompleteEmail(account: Account, order: Order, costAfterReductions: Int, session: Session) {
     val language = SessionService.getCurrentLanguage(session)
     val i18nMessages = I18nService.getMessages(messagesApi, language.ietfCode)

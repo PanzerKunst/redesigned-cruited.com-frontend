@@ -3,16 +3,16 @@ package controllers.api
 import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
-import db.AccountDto
+import db.{AccountDto, OrderDto}
 import models.frontend.SignInData
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 import services._
 
 @Singleton
-class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends Controller {
-  def signIn() = Action(parse.json) { request =>
+class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService, val orderService: OrderService) extends Controller {
+  def signInWithEmail() = Action(parse.json) { request =>
     request.body.validate[SignInData] match {
       case e: JsError => BadRequest("Validation of SignInData failed")
 
@@ -26,12 +26,30 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
               Status(HttpService.httpStatusSignInNoPassword)
             } else {
               AccountDto.getOfEmailAndPassword(signInData.emailAddress, signInData.password) match {
-                case Some(acc) => Ok.withSession(request.session + (SessionService.sessionKeyAccountId -> acc.id.toString))
                 case None =>
                   if (account.linkedinProfile == JsNull) {
                     Status(HttpService.httpStatusSignInPasswordMismatchLinkedinNotRegistered)
                   } else {
                     Status(HttpService.httpStatusSignInPasswordMismatchLinkedinRegistered)
+                  }
+                case Some(acc) =>
+                  val accountId = acc.id
+
+                  if (request.queryString.contains("isFromAccountCreation")) {
+                    // We finalise the order
+                    val orderId = SessionService.getOrderId(request.session).get
+                    val orderToFinalise = OrderDto.getOfId(orderId).get.copy(
+                      accountId = Some(accountId)
+                    )
+                    val finalisedOrderId = orderService.finaliseOrder(orderToFinalise)
+
+                    // sign in the user, then back on the client-side we show the "you are now logged-in" view.
+                    Ok(Json.toJson(acc))
+                      .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
+                      + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+                  } else {
+                    Ok(Json.toJson(acc))
+                      .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
                   }
               }
             }

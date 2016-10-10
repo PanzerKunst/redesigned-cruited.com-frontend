@@ -32,10 +32,11 @@ GET         /api/coupons/:code                                    controllers.ap
 POST        /api/orders                                           controllers.api.OrderApi.create
 PUT         /api/orders                                           controllers.api.OrderApi.update
 PUT         /api/orders/pay                                       controllers.api.OrderApi.pay
+DELETE      /api/orders/coupon                                    controllers.api.OrderApi.removeCoupon
 POST        /api/accounts                                         controllers.api.AccountApi.create
 PUT         /api/accounts                                         controllers.api.AccountApi.update
 PUT         /api/accounts/password                                controllers.api.AccountApi.updatePassword
-POST        /api/auth                                             controllers.api.AuthApi.signIn
+POST        /api/auth                                             controllers.api.AuthApi.signInWithEmail
 POST        /api/auth/reset-password                              controllers.api.AuthApi.sendResetPasswordEmail
 
 # 3rd party auth

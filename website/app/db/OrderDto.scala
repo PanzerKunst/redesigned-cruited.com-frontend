@@ -167,6 +167,13 @@ object OrderDto {
         case Some(fileName) => ", file_li = '" + order.id.get + Order.fileNamePrefixSeparator + DbUtil.safetize(fileName) + "'"
       }
 
+      val couponCodeClause = order.couponId match {
+        case None => ", code = NULL"
+        case Some(couponId) =>
+          val coupon = CouponDto.getOfId(couponId).get
+          ", code = '" + DbUtil.safetize(coupon.code) + "'"
+      }
+
       val positionSoughtClause = order.positionSought match {
         case None => ""
         case Some(positionSought) => ", position = '" + DbUtil.safetize(positionSought) + "'"
@@ -196,6 +203,7 @@ object OrderDto {
         update documents set
         edition_id = """ + order.editionId + """,
         status = """ + order.status +
+        couponCodeClause +
         accountIdClause +
         cvFileNameClause +
         coverLetterFileNameClause +

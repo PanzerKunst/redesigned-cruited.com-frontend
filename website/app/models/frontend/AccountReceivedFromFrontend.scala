@@ -6,15 +6,13 @@ import play.api.libs.json.{JsPath, JsValue, Reads}
 case class AccountReceivedFromFrontend(emailAddress: String,
                                        firstName: String,
                                        password: Option[String],
-                                       languageCode: Option[String],
-                                       linkedinProfile: JsValue)
+                                       languageCode: Option[String])
 
 object AccountReceivedFromFrontend {
   implicit val reads: Reads[AccountReceivedFromFrontend] = (
     (JsPath \ "emailAddress").read[String] and
       (JsPath \ "firstName").read[String] and
       (JsPath \ "password").readNullable[String] and
-      (JsPath \ "languageCode").readNullable[String] and
-      (JsPath \ "linkedinProfile").read[JsValue]
+      (JsPath \ "languageCode").readNullable[String]
     )(AccountReceivedFromFrontend.apply _)
 }

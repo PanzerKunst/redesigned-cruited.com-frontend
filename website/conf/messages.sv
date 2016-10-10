@@ -245,28 +245,29 @@ order.assessmentInfo.form.tos.text=Jag accepterar <a href="https://cruited.com/v
 
 order.accountCreation.title=Skapa ditt konto
 order.accountCreation.subtitle=På vilket konto vill du spara din bedömning?
-order.accountCreation.submitBtn.text=Registrera och gå vidare
-order.accountCreation.submitBtn.withEmailPrefix=Registrera med
-order.accountCreation.validation.emailAlreadyRegistered=Det finns redan ett konto med den här adressen. <a href="/login">Logga in</a>.
-order.accountCreation.validation.linkedinAccountIdAlreadyRegistered=Du är redan registrerad med LinkedIn. <a href="/login">Logga in</a>.
 
-order.accountCreation.registerWithLinkedin.switch.question=Vill du hellre registrera
-order.accountCreation.registerWithLinkedin.switch.link.text=med e-post
 order.accountCreation.registerWithLinkedin.btn.text=Registrera med LinkedIn
-order.accountCreation.registerWithLinkedin.profile.label=LinkedIn-profil
-order.accountCreation.registerWithLinkedin.email.label=Använd den här e-postadressen
-order.accountCreation.registerWithLinkedin.validation.incorrectEmail=Den här adressen ser inte korrekt ut
 
-order.accountCreation.registerWithEmail.switch.question=Vill du hellre registrera
-order.accountCreation.registerWithEmail.switch.link.text=med ditt LinkedIn-konto
 order.accountCreation.registerWithEmail.firstName.label=Förnamn
 order.accountCreation.registerWithEmail.firstName.placeholder=
 order.accountCreation.registerWithEmail.emailAddress.label=E-postadress
 order.accountCreation.registerWithEmail.emailAddress.placeholder=din@e-post.com
 order.accountCreation.registerWithEmail.password.label=Lösenord
 order.accountCreation.registerWithEmail.password.placeholder=Minst 5 tecken
+order.accountCreation.registerWithEmail.signInInstead.text=Eller har du redan ett konto?
+order.accountCreation.registerWithEmail.signInInstead.link.text=Logga in
+order.accountCreation.registerWithEmail.submitBtn.text=Registrera och gå vidare
+order.accountCreation.registerWithEmail.submitBtn.withEmailPrefix=Registrera med
 order.accountCreation.registerWithEmail.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
+order.accountCreation.registerWithEmail.validation.alreadyRegistered=Det finns redan ett konto med den här adressen.
+
+order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't have an account yet.
+order.accountCreation.signIn.registerInstead.link.text=Registrera
+
+order.accountCreation.signedIn.text=You are signed in!
+order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order
+order.accountcreation.signedIn.btn.text=Continue
 
 
 # Order Step Payment page

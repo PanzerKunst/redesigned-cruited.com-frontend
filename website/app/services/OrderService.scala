@@ -1,5 +1,6 @@
 package services
 
+import java.util.Date
 import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
@@ -7,9 +8,51 @@ import models.{CruitedProduct, Order}
 import play.api.Logger
 import play.api.libs.json.JsNull
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
-  def finaliseFileNames(order: Order, oldOrderId: Long) {
+  def isTemporary(orderId: Long): Boolean = {
+    orderId < 0
+  }
+
+  def finaliseOrder(order: Order): Long = {
+    val orderId = order.id.get
+
+    if (!isTemporary(orderId)) {
+      throw new Exception("Cannot finalise a non-temp order")
+    }
+
+    // If the cost is 0, we set the status to paid
+    val orderToBeFinalised = if (order.getCostAfterReductions == 0) {
+      order.copy(
+        status = Order.statusIdPaid,
+        paymentTimestamp = Some(new Date().getTime)
+      )
+    } else {
+      order.copy()
+    }
+
+    // Create finalised order, with data from the old one
+    val finalisedOrderId = OrderDto.createFinalised(orderToBeFinalised).get
+    val finalisedOrder = OrderDto.getOfId(finalisedOrderId).get
+
+    // Delete old order
+    OrderDto.deleteOfId(orderId)
+
+    Future {
+      finaliseFileNames(finalisedOrder, orderId)
+      val finalisedOrderWithPdfFileNames = convertDocsToPdf(finalisedOrder)
+      generateDocThumbnails(finalisedOrderWithPdfFileNames)
+    } onFailure {
+      case e => Logger.error(e.getMessage, e)
+    }
+
+    finalisedOrderId
+  }
+
+  private def finaliseFileNames(order: Order, oldOrderId: Long) {
     if (order.cvFileName.isDefined) {
       documentService.renameFile(order.cvFileName.get, oldOrderId, order.id.get)
     }
@@ -18,7 +61,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
     }
   }
 
-  def convertDocsToPdf(order: Order): Order = {
+  private def convertDocsToPdf(order: Order): Order = {
     documentService.convertDocsToPdf(order.id.get)
     convertLinkedinPublicProfilePageToPdf(order)
     updateFileNamesInDb(order)
@@ -91,7 +134,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
     }
   }
 
-  def generateDocThumbnails(order: Order) {
+  private def generateDocThumbnails(order: Order) {
     Logger.info("OrderService.generateDocThumbnails() > order ID: " + order.id.get)
 
     generateThumbnailForFile(order.id.get, order.cvFileName)

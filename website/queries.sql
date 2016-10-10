@@ -1,17 +1,17 @@
-select * from cruited_users.useri
+select * from useri
 where id < 0;
 
-delete from cruited_users.useri
+delete from useri
 where id < 0;
 
 
-select * from cruited_users.useri
+select * from useri
 order by registered_at desc;
 
 
 select * from documents
 where id < 0
-order by added_at;
+order by added_at desc;
 
 delete from documents
 where id < 0;
@@ -28,13 +28,13 @@ select * from codes
 where shw = 1
 order by valid_date desc;
 
-delete from cruited_users.useri
-where email = 'cbramdit@gmail.com';
+delete from useri
+where email = 'christophe@8b.nu';
 
 delete from documents
 where added_by in (
 	select id from useri
-	where email = 'cbramdit@gmail.com'
+	where email = 'christophe@8b.nu'
 );
 
 select *
@@ -44,3 +44,5 @@ and added_at > '2016-02-07'
 and added_at < '2016-02-15'
 and status != -1
 order by id desc;
+
+select * from supported_language;

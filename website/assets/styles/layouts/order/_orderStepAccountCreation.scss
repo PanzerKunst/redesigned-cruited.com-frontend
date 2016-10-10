@@ -1,15 +1,6 @@
 #order-step-account-creation {
-  #register-with-linkedin-section,
-  #register-with-email-section {
+  .with-circles > section {
     display: none;
-  }
-
-  .switch-registration-method {
-    margin-bottom: $content-element-margin-bottom;
-
-    > a {
-      margin-left: 0.3em;
-    }
   }
 
   .sign-in-with-linkedin {
@@ -21,7 +12,12 @@
     }
   }
 
-  #linkedin-preview {
+  #sign-in-panel {
     margin-bottom: $content-element-margin-bottom;
+  }
+
+  #reset-password-panel,
+  #coupon-removed-alert {
+    display: none;
   }
 }
