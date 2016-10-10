@@ -92,9 +92,6 @@ CR.Controllers.SignInForm = React.createClass({
     _handleSubmit: function(e) {
         e.preventDefault();
 
-        // TODO: remove
-        console.log("sign in subbmit");
-
         this.validator.hideErrorMessage(this.$otherFormErrors);
 
         if (this.validator.isValid()) {
