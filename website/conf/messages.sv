@@ -262,12 +262,12 @@ order.accountCreation.registerWithEmail.validation.incorrectEmail=Den här e-pos
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
 order.accountCreation.registerWithEmail.validation.alreadyRegistered=Det finns redan ett konto med den här adressen.
 
-order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't have an account yet.
-order.accountCreation.signIn.registerInstead.link.text=Registrera
+order.accountCreation.signIn.registerInstead.text=Glöm det - Jag har inget konto än.
+order.accountCreation.signIn.registerInstead.link.text=Skapa konto
 
-order.accountCreation.signedIn.text=You are signed in!
-order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order.
-order.accountcreation.signedIn.btn.text=Continue
+order.accountCreation.signedIn.text=Du är inloggad!
+order.accountcreation.signedIn.couponRemoved.text=Vi tog bort kupongen från din order eftersom du använt den tidigare.
+order.accountcreation.signedIn.btn.text=Fortsätt
 
 
 # Order Step Payment page
