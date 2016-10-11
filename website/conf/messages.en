@@ -265,7 +265,7 @@ order.accountCreation.registerWithEmail.validation.alreadyRegistered=This email 
 order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't have an account yet.
 order.accountCreation.signIn.registerInstead.link.text=Register
 
-order.accountCreation.signedIn.text=You are signed in!
+order.accountCreation.signedIn.text=You are now signed in!
 order.accountcreation.signedIn.couponRemoved.text=We removed the coupon from the order because you used that same coupon in a previous order.
 order.accountcreation.signedIn.btn.text=Continue
 

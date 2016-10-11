@@ -172,34 +172,38 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
 
       case Some(accountId) =>
-        // If account ID > 0
-        if (!AccountService.isTemporary(accountId)) {
-          // we finalize the order
-          val orderId = SessionService.getOrderId(request.session).get
-          val order = OrderDto.getOfId(orderId).get.copy(
-            accountId = Some(accountId)
-          )
-          val finalisedOrderId = orderService.finaliseOrder(order)
+        val account = AccountDto.getOfId(accountId).get
+        val orderId = SessionService.getOrderId(request.session).get
 
-          // log the user in (if necessary) and then redirect to "/payment"
-          Redirect("/order/payment")
-            .withHeaders(doNotCachePage: _*)
-            .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
-            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
-        } else {
-          // If it doesn't contain a LI profile, we have a problem
-          val account = AccountDto.getOfId(accountId).get
-          if (account.linkedinProfile == JsNull) {
-            // This means that the user was already on the page and hit "refresh". We load the default page
-            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, AccountDto.getOfId(accountId), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
+        if (!AccountService.isTemporary(accountId)) {
+          if(!orderService.isTemporary(orderId)) {
+            // The order is already finalised. The user is probably navigating back to this page. We load the default page
+            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
               .withHeaders(doNotCachePage: _*)
           } else {
-            // We arrive from a LI sign-in
-            // we finalize the account
+            // we finalize the order
+            val order = OrderDto.getOfId(orderId).get.copy(
+              accountId = Some(accountId)
+            )
+            val finalisedOrderId = orderService.finaliseOrder(order)
+
+            // log the user in (if necessary) and then redirect to "/payment"
+            Redirect("/order/payment")
+              .withHeaders(doNotCachePage: _*)
+              .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
+              + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+          }
+        } else {
+          // Temporary account
+          if (account.linkedinProfile == JsNull) {
+            // This means that the user was already on the page and hit "refresh". We load the default page
+            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
+              .withHeaders(doNotCachePage: _*)
+          } else {
+            // We arrive from a LI sign-in. We finalize the account
             val finalisedAccountId = AccountService.finaliseAccount(account.emailAddress.get, account.firstName.get, account.password, account.linkedinProfile, request.session)
 
             // finalise the order. The accountId is already the finalised account ID
-            val orderId = SessionService.getOrderId(request.session).get
             val finalisedOrderId = orderService.finaliseOrder(OrderDto.getOfId(orderId).get)
 
             // log the user in, then display the view. The JS controller should detect that the user is logged-in (= account final), and show the "You are now logged-in" view.
@@ -220,7 +224,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           case None => throw new Exception("No account found in database for ID '" + accountId + "'")
           case Some(account) =>
             if (AccountService.isTemporary(account.id)) {
-              BadRequest("The payment page should involve have a finalised account")
+              BadRequest("The payment page should involve a finalised account")
             } else {
               val orderId = SessionService.getOrderId(request.session).get
 

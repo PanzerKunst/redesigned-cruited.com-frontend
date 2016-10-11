@@ -98,7 +98,11 @@ CR.Controllers.SignInForm = React.createClass({
             this.$submitBtn.enableLoading();
 
             const type = "POST";
-            const url = "/api/auth" + this.props.webServiceUrlParams;
+
+            let url = "/api/auth";
+            if (this.props.webServiceUrlParams) {
+                url += this.props.webServiceUrlParams;
+            }
 
             const httpRequest = new XMLHttpRequest();
             httpRequest.onreadystatechange = function() {

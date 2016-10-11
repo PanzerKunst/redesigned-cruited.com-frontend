@@ -35,7 +35,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
                                 {this._getRegisterWithEmailFormContent()}
                                 <div className="centered-contents">
                                     <p>{CR.i18nMessages["order.accountCreation.registerWithEmail.signInInstead.text"]} <a onClick={this._handleSwitchLink}>{CR.i18nMessages["order.accountCreation.registerWithEmail.signInInstead.link.text"]}</a></p>
-                                    <p className="other-form-error" id="email-already-registered">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.alreadyRegistered"]}.</p>
+                                    <p className="other-form-error" id="email-already-registered">{CR.i18nMessages["order.accountCreation.registerWithEmail.validation.alreadyRegistered"]}</p>
                                     <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.accountCreation.registerWithEmail.submitBtn.text"]}</button>
                                 </div>
                             </form>
