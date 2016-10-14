@@ -1,0 +1,38 @@
+@(title: String, pageId: String)(header: Html)(javascript: Html)
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+        <title>@title</title>
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("main.css")">
+
+        <!-- TODO Favicon
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")"> -->
+    </head>
+    <body id="@pageId">
+    <div id="container">
+        <header>@header</header>
+        <div role="main"></div>
+        <footer>
+        </footer>
+    </div>
+
+    <!-- Javascripts -->
+    <script type="text/javascript" src="@routes.Assets.versioned("main.js")"></script>
+
+    <script type="text/javascript">
+        CR.Controllers.Common.init();
+
+        @javascript
+    </script>
+    </body>
+</html>

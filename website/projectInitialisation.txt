@@ -1,5 +1,4 @@
-Upgrade SBT
-Edit PATH and remove the path to SBT added at the end (it's now duplicated)
+Upgrade SBT. In the installation options, uncheck "System variables".
 
 Upgrade Play Framework
 Edit PATH and Update path to Activator in PATH

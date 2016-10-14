@@ -1,0 +1,18 @@
+@(account: Option[Account])
+
+@main("Cruited - Home", "index") {
+<!--
+    Header
+-->
+@header(account)
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function() {
+    CR.Controllers.AssessmentList.init(
+        @Html(play.api.libs.json.Json.toJson(account).toString())
+    );
+});
+}

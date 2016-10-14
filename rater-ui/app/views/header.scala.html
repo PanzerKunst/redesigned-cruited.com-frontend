@@ -1,0 +1,22 @@
+@(accountOpt: Option[Account])
+
+<nav id="header-nav">
+    <a href="/" class="fa fa-home"></a>
+    <a href="https://www.cruited.com" class="brand">Cruited</a>
+    @if(accountOpt.isDefined && accountOpt.get.id > 0) {
+        @defining(accountOpt.get) { account =>
+            <article>
+                <span>@account.firstName @account.lastName</span>
+                @if(account.linkedinProfile != play.api.libs.json.JsNull) {
+                    @defining((account.linkedinProfile \ "pictureUrl").asOpt[String]) { pictureUrlOpt =>
+                        <div class="profile-picture" style="background-image: url(@pictureUrlOpt)"></div>
+                    }
+                } else {
+                    <button class="styleless fa fa-bars"></button>
+                }
+            </article>
+        }
+    } else {
+        <a href="/login"><i class="fa fa-sign-in"></i>Sign in</a>
+    }
+</nav>
