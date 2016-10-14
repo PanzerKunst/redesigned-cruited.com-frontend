@@ -1,7 +1,11 @@
-CR.Controllers.Common = Object.create(Object.prototype, {
+import $ from "jquery";
+import _ from "lodash";
+import Browser from "../services/browser";
+
+const CommonController = Object.create(Object.prototype, {
     init() {
-        CR.Services.Browser.addUserAgentAttributeToHtmlTag();
-        CR.Services.Browser.fixFlexboxIndicatorClass();
+        Browser.addUserAgentAttributeToHtmlTag();
+        Browser.fixFlexboxIndicatorClass();
 
         this._initElements();
         this._initEvents();
@@ -23,3 +27,5 @@ CR.Controllers.Common = Object.create(Object.prototype, {
         this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
     }
 });
+
+export {CommonController as default};

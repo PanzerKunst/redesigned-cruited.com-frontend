@@ -1,4 +1,7 @@
-CR.Services.Browser = {
+import $ from "jquery";
+import _ from "lodash";
+
+const BrowserService = {
     regexOfUserAgentsNotSupportingFlexbox: [
         "OS 8_",
         "OS 7_",
@@ -8,11 +11,11 @@ CR.Services.Browser = {
     ],
 
     cssRules() {
-        if (CR.Services.Browser.allCssRules) {
-            return CR.Services.Browser.allCssRules;
+        if (this.allCssRules) {
+            return this.allCssRules;
         }
 
-        CR.Services.Browser.allCssRules = {};
+        this.allCssRules = {};
 
         const styleSheets = document.styleSheets;
 
@@ -24,16 +27,16 @@ CR.Services.Browser = {
                 for (let j = 0; j < styleSheetRules.length; j++) {
                     const rule = styleSheetRules[j];
 
-                    CR.Services.Browser.allCssRules[rule.selectorText] = rule.style;
+                    this.allCssRules[rule.selectorText] = rule.style;
                 }
             }
         }
 
-        return CR.Services.Browser.allCssRules;
+        return this.allCssRules;
     },
 
     getCssRule(selector, property) {
-        return CR.Services.Browser.cssRules()[selector].getPropertyValue(property);
+        return this.cssRules()[selector].getPropertyValue(property);
     },
 
     getUrlQueryStrings() {
@@ -122,3 +125,5 @@ CR.Services.Browser = {
         }
     }
 };
+
+export {BrowserService as default};

@@ -12,6 +12,7 @@ parser:
 
 parserOptions:
     ecmaVersion: 6
+    sourceType: module
 
 rules:
     array-callback-return: "error"
@@ -140,17 +141,7 @@ rules:
     handle-callback-err: ["error", "err"]
 
 globals:
-    _: true
-    TweenLite: true
     Modernizr: true
-    CR: true
-    $: true
-    jQuery: true
-    React: true
-    ReactDOM: true
-    classNames: true
-    observable: true
-    observer: true
 
 ecmaFeatures:
     jsx: true

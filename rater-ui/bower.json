@@ -25,33 +25,10 @@
   "moduleType": [],
   "private": true,
   "overrides": {
-    "gsap": {
-      "main": [
-        "./src/minified/TweenLite.min.js",
-        "./src/minified/easing/EasePack.min.js",
-        "./src/minified/plugins/CSSPlugin.min.js"
-      ]
-    },
-    "lodash": {
-      "main": [
-        "./dist/lodash.min.js"
-      ]
-    },
-    "jquery": {
-      "main": [
-        "./dist/jquery.slim.min.js"
-      ]
-    },
     "bootstrap-sass": {
       "main": [
         "./assets/stylesheets/_bootstrap.scss",
         "./assets/javascripts/bootstrap.min.js"
-      ]
-    },
-    "react": {
-      "main": [
-        "./react.min.js",
-        "./react-dom.min.js"
       ]
     }
   }

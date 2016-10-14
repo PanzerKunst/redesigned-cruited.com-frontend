@@ -1,4 +1,7 @@
-CR.Services.Validator = Object.create(Object.prototype, {
+import $ from "jquery";
+import {TweenLite} from "gsap";
+
+const ValidatorService = Object.create(Object.prototype, {
     checkEmpty: "empty",
     checkEmail: "email",
     checkUsername: "username",
@@ -357,3 +360,5 @@ CR.Services.Validator = Object.create(Object.prototype, {
         }.bind(this));
     }
 });
+
+export {ValidatorService as default};

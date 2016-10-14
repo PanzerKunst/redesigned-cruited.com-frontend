@@ -1,8 +1,11 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import {observer} from "mobx-react";
+import AssessmentModel from "../models/assessment";
 
-CR.Controllers.AssessmentList = Object.create(Object.prototype, {
+const AssessmentListController = Object.create(Object.prototype, {
     init(account) {
-        const assessment = CR.Models.Assessment.init();
+        const assessment = AssessmentModel.init();
 
         console.log("account", account);
         console.log("assessment", assessment);
@@ -39,3 +42,5 @@ CR.Controllers.AssessmentList = Object.create(Object.prototype, {
         }
     })
 });
+
+export {AssessmentListController as default};

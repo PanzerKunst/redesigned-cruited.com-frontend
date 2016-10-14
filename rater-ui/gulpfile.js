@@ -1,21 +1,22 @@
 // ## Imports
 var del = require("del");
 var gulp = require("gulp");
-var babel = require("gulp-babel");
+var cleanCss = require("gulp-clean-css");
 var concat = require("gulp-concat");
 var eslint = require("gulp-eslint");
 var imagemin = require("gulp-imagemin");
-var cleanCss = require("gulp-clean-css");
 var postcss = require('gulp-postcss');
 var sass = require("gulp-sass");
 var sourcemaps = require("gulp-sourcemaps");
-var mainBowerFiles = require("main-bower-files");
 var reporter = require('postcss-reporter');
 var syntaxScss = require('postcss-scss');
-var rollup = require('rollup');
+var babel = require('rollup-plugin-babel');
+var bowerResolve = require('rollup-plugin-bower-resolve');
+var commonjs = require('rollup-plugin-commonjs');
+var rollup = require('rollup-stream');
 var runSequence = require("run-sequence");
-var streamSeries = require("stream-series");
 var stylelint = require('stylelint');
+var source = require("vinyl-source-stream");
 var wiredep = require("wiredep");
 
 // ## Settings
@@ -31,16 +32,18 @@ var imageSrcFiles = imageSrcDir + "**/*";
 var fontSrcFiles = fontSrcDir + "**/*";
 var styleMainSrcFiles = styleSrcDir + "main.scss";
 
-var vendorDir = "vendor/";
-var scriptVendorFiles = vendorDir + "**/*";
+// TODO var vendorDir = "vendor/";
+// TODO var scriptVendorFiles = vendorDir + "**/*";
 
 var distDir = "public/";
+var scriptDistDir = distDir + "scripts/";
 var imageDistDir = distDir + "images/";
 var fontDistDir = distDir + "fonts/";
 
-var scriptsSrcConcatFileName = "src.js";
-var scriptsBundleFileName = "bundle.js";
-var scriptsDistFileName = "main.js";
+/* TODO: remove
+ var scriptsSrcConcatFileName = "src.js";
+ var scriptsBundleFileName = "bundle.js";
+ var scriptsDistFileName = "main.js"; */
 
 
 // ## Gulp tasks
@@ -162,26 +165,14 @@ gulp.task("scss-lint", function() {
 // `gulp scripts` - Merges all lib files with app.js, into distDir
 // and project JS.
 gulp.task("scripts", function() {
-    runSequence("js-src-concat",
-        "js-lint",
-        "babel",
-        "js-bundle",
-        "js-dist-concat",
-        "clean-js-concat-file");
-});
-
-// ### JS Src Concat
-// `gulp js-src-concat`
-gulp.task("js-src-concat", function() {
-    return gulp.src(scriptSrcFiles)
-        .pipe(concat(scriptsSrcConcatFileName))
-        .pipe(gulp.dest(distDir));
+    runSequence("js-lint",
+        "js-bundle");
 });
 
 // ### ESLint
 // `gulp js-lint` - Lints project JS.
 gulp.task("js-lint", function() {
-    return gulp.src(distDir + scriptsSrcConcatFileName)
+    return gulp.src(scriptSrcFiles)
         // eslint() attaches the lint output to the eslint property
         // of the file object so it can be used by other modules.
         .pipe(eslint())
@@ -193,44 +184,84 @@ gulp.task("js-lint", function() {
         .pipe(eslint.failOnError());
 });
 
-// ### Babel
-// `gulp babel`
-gulp.task("babel", function() {
-    return gulp.src(distDir + scriptsSrcConcatFileName)
-        .pipe(babel({
-            presets: ["es2015", "react"],
-            plugins: ["syntax-decorators"]
-        }))
-        .pipe(gulp.dest(distDir));
-});
-
+// ### Bundling via Rollup & Babel
+// `gulp bundle`
 gulp.task("js-bundle", function() {
-    return streamSeries(
-        gulp.src("node_modules/mobx/lib/mobx.js"),
-        gulp.src("node_modules/mobx-react/index.js"),
-        gulp.src(distDir + scriptsSrcConcatFileName))
-        .pipe(rollup({
-            // any option supported by Rollup can be set here.
-            entry: scriptSrcDir + "controllers/assessmentList.react.js"
-        }))
-        .pipe(concat(scriptsBundleFileName))
-        .pipe(gulp.dest(distDir));
+    runSequence("js-bundle-common"/*,
+     "js-bundle-assessment-list"*/);
 });
 
-// ### JS Dist Concat
-// `gulp js-dist-concat`
-gulp.task("js-dist-concat", function() {
-    return streamSeries(
-        gulp.src(mainBowerFiles({filter: /.*\.js$/i})),
-        gulp.src(scriptVendorFiles),
-        gulp.src(distDir + scriptsBundleFileName))
-        .pipe(concat(scriptsDistFileName))
-        .pipe(gulp.dest(distDir));
+gulp.task("js-bundle-common", function() {
+    return rollup({
+        entry: scriptSrcDir + "controllers/common.js",
+        format: "iife",
+        moduleName: "Common",
+        plugins: [
+            babel({
+                exclude: 'node_modules/**',
+                plugins: ["syntax-decorators"]
+            }),
+            bowerResolve({
+                override: {
+                    "gsap": [
+                        "./src/minified/TweenLite.min.js",
+                        "./src/minified/easing/EasePack.min.js",
+                        "./src/minified/plugins/CSSPlugin.min.js"
+                    ],
+                    "lodash": "./dist/lodash.min.js",
+                    "jquery": "./dist/jquery.slim.min.js",
+                    "bootstrap-sass": "./assets/javascripts/bootstrap.min.js",
+                    "react": [
+                        "./react.min.js",
+                        "./react-dom.min.js"
+                    ]
+                }
+            }),
+            commonjs()
+        ]
+    })
+        // give the file the name you want to output with
+        .pipe(source("common.js"))
+
+        .pipe(gulp.dest(scriptDistDir));
 });
 
-gulp.task("clean-js-concat-file", function() {
-    return del(distDir + scriptsSrcConcatFileName);
+gulp.task("js-bundle-assessment-list", function() {
+    return rollup({
+        entry: scriptSrcDir + "controllers/assessmentList.react.js"
+    })
+        .pipe(source("assessmentList.react.js"))
+        .pipe(gulp.dest(scriptDistDir));
 });
+
+/* TODO: remove
+ gulp.task("js-bundle", function() {
+ return streamSeries(
+ gulp.src("node_modules/mobx/lib/mobx.js"),
+ gulp.src("node_modules/mobx-react/index.js"),
+ gulp.src(distDir + scriptsSrcConcatFileName))
+ .pipe(rollup({
+ // any option supported by Rollup can be set here.
+ entry: scriptSrcDir + "controllers/assessmentList.react.js"
+ }))
+ .pipe(concat(scriptsBundleFileName))
+ .pipe(gulp.dest(distDir));
+ });
+
+ // ### JS Dist Concat
+ // `gulp js-dist-concat`
+ gulp.task("js-dist-concat", function() {
+ return streamSeries(
+ gulp.src(mainBowerFiles({filter: /.*\.js$/i})),
+ gulp.src(scriptVendorFiles),
+ gulp.src(distDir + scriptsBundleFileName))
+ .pipe(concat(scriptsDistFileName))
+ .pipe(gulp.dest(distDir));
+ });
+
+ gulp.task("clean-js-concat-file", function() {
+ return del(distDir + scriptsSrcConcatFileName);
+ }); */
 
 // ### Images
 // `gulp images` - Run lossless compression on all the images.
