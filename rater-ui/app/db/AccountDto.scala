@@ -1,6 +1,6 @@
 package db
 
-import javax.inject.{Singleton, Inject}
+import javax.inject.{Inject, Singleton}
 
 import anorm.SqlParser._
 import anorm._
@@ -10,7 +10,7 @@ import play.api.db.Database
 import play.api.libs.json.{JsNull, Json}
 
 @Singleton
-class AccountDto @Inject() (db: Database) {
+class AccountDto @Inject()(db: Database) {
   val unknownUserId = 1053
 
   private val commonClause = """ tp in (""" + Account.typeRater + """, """ + Account.typeAdmin + """)
@@ -26,20 +26,19 @@ class AccountDto @Inject() (db: Database) {
 
       Logger.info("AccountDto.getOfId():" + query)
 
-      val rowParser = (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
-        case firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
-          val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => JsNull
-            case otherString => Json.parse(otherString)
-          }
+      val rowParser = str("prenume") ~ (str("nume") ?) ~ str("email") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case firstName ~ lastNameOpt ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
 
           Account(
             id = id,
             firstName = firstName,
-            lastName = lastName,
+            lastName = lastNameOpt,
             emailAddress = emailAddress,
             password = None,
-            linkedinProfile = linkedinBasicProfileOpt,
+            linkedinProfile = linkedinBasicProfile match {
+              case "" => JsNull
+              case otherString => Json.parse(otherString)
+            },
             `type` = accountType,
             languageCode = languageCode,
             creationTimestamp = creationDate.getTime
@@ -63,20 +62,19 @@ class AccountDto @Inject() (db: Database) {
       // This log is commented since it displays the password
       // Logger.info("AccountDto.getOfEmailAndPassword():" + query)
 
-      val rowParser = long("id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
-        case id ~ firstName ~ lastName ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
-          val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => JsNull
-            case otherString => Json.parse(otherString)
-          }
+      val rowParser = long("id") ~ str("prenume") ~ (str("nume") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case id ~ firstName ~ lastNameOpt ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
 
           Account(
             id = id,
             firstName = firstName,
-            lastName = lastName,
-            emailAddress = Some(emailAddress),
+            lastName = lastNameOpt,
+            emailAddress = emailAddress,
             password = None,
-            linkedinProfile = linkedinBasicProfileOpt,
+            linkedinProfile = linkedinBasicProfile match {
+              case "" => JsNull
+              case otherString => Json.parse(otherString)
+            },
             `type` = accountType,
             languageCode = languageCode,
             creationTimestamp = creationDate.getTime

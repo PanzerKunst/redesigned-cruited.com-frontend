@@ -12,7 +12,7 @@ import play.api.libs.json.{JsNull, Json}
 import services.{GlobalConfig, StringService}
 
 @Singleton
-class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: AccountDto) {
+class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: AccountDto) {
   def update(order: Order) {
     db.withConnection { implicit c =>
       val cvFileNameClause = order.cvFileName match {
@@ -82,19 +82,22 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
     getOfIdForFrontend(id).map { tuple => new Order(tuple._1, tuple._2)}
   }
 
+  // TODO: remove if unused
   def getOfIdForFrontend(id: Long): Option[(FrontendOrder, Option[String])] = {
     db.withConnection { implicit c =>
       val query = """
-        select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
+        select file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
           edition,
-          u.id as customer_id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, u.lang as costumer_lang,
+          u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as costumer_lang,
+          r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
         from documents d
           inner join product_edition e on e.id = d.edition_id
           inner join useri u on u.id = d.added_by
+          left join useri r on r.id = d.assign_to
           left join codes c on c.name = d.code
         where d.shw = 1
-          and added_by != """ + accountDto.unknownUserId + """
+          and u.id != """ + accountDto.unknownUserId + """
           and paid_on is not null
           and d.id = """ + id + """;"""
 
@@ -102,11 +105,13 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
 
       val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~ str("order_lang") ~
         str("edition") ~
-        long("customer_id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("customer_lang") ~
+        long("customer_id") ~ str("customer_first_name") ~ (str("customer_last_name") ?) ~ str("customer_email") ~ str("customer_li_fields") ~ date("customer_creation_date") ~ int("customer_account_type") ~ str("customer_lang") ~
+        (long("rater_id") ?) ~ (str("rater_first_name") ?) ~ (str("rater_last_name") ?) ~ (str("rater_email") ?) ~ (str("rater_li_fields") ?) ~ (date("rater_creation_date") ?) ~ (int("rater_account_type") ?) ~ (str("rater_lang") ?) ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) map {
         case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ orderCreationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDate ~ orderLanguageCode ~
           editionCode ~
-          customerId ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ customerCreationDate ~ accountType ~ customerLanguageCode ~
+          customerId ~ customerFirstName ~ customerLastNameOpt ~ customerEmail ~ customerLiFields ~ customerCreationDate ~ customerAccountType ~ customerLanguageCode ~
+          raterIdOpt ~ raterFirstNameOpt ~ raterLastNameOpt ~ raterEmailOpt ~ raterLiFieldsOpt ~ raterCreationDateOpt ~ raterAccountTypeOpt ~ raterLanguageCodeOpt ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
@@ -129,22 +134,41 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
             case otherString => Some(otherString)
           }
 
-          val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => JsNull
-            case otherString => Json.parse(otherString)
-          }
-
           val customer = Account(
             id = customerId,
-            firstName = firstName,
-            lastName = lastName,
-            emailAddress = emailAddress,
+            firstName = customerFirstName,
+            lastName = customerLastNameOpt,
+            emailAddress = customerEmail,
             password = None,
-            linkedinProfile = linkedinBasicProfileOpt,
-            `type` = accountType,
+            linkedinProfile = customerLiFields match {
+              case "" => JsNull
+              case otherString => Json.parse(otherString)
+            },
+            `type` = customerAccountType,
             languageCode = customerLanguageCode,
             creationTimestamp = customerCreationDate.getTime
           )
+
+          val raterOpt = raterIdOpt match {
+            case None => None
+            case Some(raterId) => Some(Account(
+              id = raterId,
+              firstName = raterFirstNameOpt.get,
+              lastName = raterLastNameOpt,
+              emailAddress = raterEmailOpt.get,
+              password = None,
+              linkedinProfile = raterLiFieldsOpt match {
+                case None => JsNull
+                case Some(raterLiFields) => raterLiFields match {
+                  case "" => JsNull
+                  case otherString => Json.parse(otherString)
+                }
+              },
+              `type` = raterAccountTypeOpt.get,
+              languageCode = raterLanguageCodeOpt.get,
+              creationTimestamp = raterCreationDateOpt.get.getTime
+            ))
+          }
 
           val couponOpt = couponIdOpt match {
             case None => None
@@ -183,6 +207,7 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
             jobAdUrl = jobAdUrlOpt,
             customerComment = customerCommentOpt,
             customer = customer,
+            rater = raterOpt,
             status = status,
             languageCode = orderLanguageCode,
             creationTimestamp = orderCreationDate.getTime,
@@ -201,35 +226,40 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
     }
   }
 
-  def getOfAccountId(accountId: Long): List[Order] = {
-    getOfAccountIdForFrontend(accountId).map { tuple => new Order(tuple._1, tuple._2)}
+  def getOfRaterId(accountId: Long): List[Order] = {
+    getOfRaterIdForFrontend(accountId).map { tuple => new Order(tuple._1, tuple._2)}
   }
 
-  def getOfAccountIdForFrontend(accountId: Long): List[(FrontendOrder, Option[String])] = {
+  def getOfRaterIdForFrontend(accountId: Long): List[(FrontendOrder, Option[String])] = {
     db.withConnection { implicit c =>
       val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
+        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
           edition,
-          u.id as customer_id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, u.lang as costumer_lang,
+          u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as costumer_lang,
+          r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
         from documents d
           inner join product_edition e on e.id = d.edition_id
           inner join useri u on u.id = d.added_by
+          inner join useri r on r.id = d.assign_to
           left join codes c on c.name = d.code
         where d.shw = 1
+          and u.id != """ + accountDto.unknownUserId + """
           and paid_on is not null
-          and added_by = """ + accountId + """
+          and r.id = """ + accountId + """
         order by d.id desc;"""
 
-      Logger.info("OrderDto.getOfAccountIdForFrontend():" + query)
+      Logger.info("OrderDto.getOfRaterIdForFrontend():" + query)
 
       val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~ str("order_lang") ~
         str("edition") ~
-        long("customer_id") ~ (str("prenume") ?) ~ (str("nume") ?) ~ (str("email") ?) ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("customer_lang") ~
+        long("customer_id") ~ str("customer_first_name") ~ (str("customer_last_name") ?) ~ str("customer_email") ~ str("customer_li_fields") ~ date("customer_creation_date") ~ int("customer_account_type") ~ str("customer_lang") ~
+        str("rater_first_name") ~ (str("rater_last_name") ?) ~ str("rater_email") ~ str("rater_li_fields") ~ date("rater_creation_date") ~ int("rater_account_type") ~ str("rater_lang") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) map {
         case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ orderCreationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDate ~ orderLanguageCode ~
           editionCode ~
-          customerId ~ firstName ~ lastName ~ emailAddress ~ linkedinBasicProfile ~ customerCreationDate ~ accountType ~ customerLanguageCode ~
+          customerId ~ customerFirstName ~ customerLastNameOpt ~ customerEmail ~ customerLiFields ~ customerCreationDate ~ customerAccountType ~ customerLanguageCode ~
+          raterFirstName ~ raterLastNameOpt ~ raterEmail ~ raterLiFields ~ raterCreationDate ~ raterAccountType ~ raterLanguageCode ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
@@ -252,21 +282,34 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
             case otherString => Some(otherString)
           }
 
-          val linkedinBasicProfileOpt = linkedinBasicProfile match {
-            case "" => JsNull
-            case otherString => Json.parse(otherString)
-          }
-
           val customer = Account(
             id = customerId,
-            firstName = firstName,
-            lastName = lastName,
-            emailAddress = emailAddress,
+            firstName = customerFirstName,
+            lastName = customerLastNameOpt,
+            emailAddress = customerEmail,
             password = None,
-            linkedinProfile = linkedinBasicProfileOpt,
-            `type` = accountType,
+            linkedinProfile = customerLiFields match {
+              case "" => JsNull
+              case otherString => Json.parse(otherString)
+            },
+            `type` = customerAccountType,
             languageCode = customerLanguageCode,
             creationTimestamp = customerCreationDate.getTime
+          )
+
+          val rater = Account(
+            id = accountId,
+            firstName = raterFirstName,
+            lastName = raterLastNameOpt,
+            emailAddress = raterEmail,
+            password = None,
+            linkedinProfile = raterLiFields match {
+              case "" => JsNull
+              case otherString => Json.parse(otherString)
+            },
+            `type` = raterAccountType,
+            languageCode = raterLanguageCode,
+            creationTimestamp = raterCreationDate.getTime
           )
 
           val couponOpt = couponIdOpt match {
@@ -306,6 +349,7 @@ class OrderDto @Inject() (db: Database, couponDto: CouponDto, accountDto: Accoun
             jobAdUrl = jobAdUrlOpt,
             customerComment = customerCommentOpt,
             customer = customer,
+            rater = Some(rater),
             status = status,
             languageCode = orderLanguageCode,
             creationTimestamp = orderCreationDate.getTime,

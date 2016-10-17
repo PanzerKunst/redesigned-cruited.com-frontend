@@ -10,7 +10,7 @@ import play.api.db.Database
 import services.GlobalConfig
 
 @Singleton
-class CruitedProductDto @Inject() (db: Database, couponDto: CouponDto, accountDto: AccountDto) {
+class CruitedProductDto @Inject()(db: Database, couponDto: CouponDto, accountDto: AccountDto) {
   def getAll: List[CruitedProduct] = {
     db.withConnection { implicit c =>
       val query = """

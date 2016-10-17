@@ -16,6 +16,7 @@ case class FrontendOrder(id: Long,
                          jobAdUrl: Option[String],
                          customerComment: Option[String],
                          customer: Account,
+                         rater: Option[Account],
                          status: Int,
                          languageCode: String,
                          creationTimestamp: Long,
@@ -35,6 +36,7 @@ object FrontendOrder {
       (JsPath \ "jobAdUrl").writeNullable[String] and
       (JsPath \ "customerComment").writeNullable[String] and
       (JsPath \ "customer").write[Account] and
+      (JsPath \ "rater").writeNullable[Account] and
       (JsPath \ "status").write[Int] and
       (JsPath \ "languageCode").write[String] and
       (JsPath \ "creationTimestamp").write[Long] and

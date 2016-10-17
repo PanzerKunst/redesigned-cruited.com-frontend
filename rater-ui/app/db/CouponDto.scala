@@ -10,7 +10,7 @@ import play.api.db.Database
 import services.GlobalConfig
 
 @Singleton
-class CouponDto @Inject() (db: Database) {
+class CouponDto @Inject()(db: Database) {
   def getOfId(id: Long): Option[Coupon] = {
     db.withConnection { implicit c =>
       val query = """

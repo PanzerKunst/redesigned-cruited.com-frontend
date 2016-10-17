@@ -65,14 +65,14 @@
 
 	        setInterval(function () {
 	            _this.assessment.secondsPassed++;
-	            _this.reRender();
+	            _this._reRender();
 	        }, 1000);
 
 	        this.reactInstance = ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
 
-	        this.reRender();
+	        this._reRender();
 	    },
-	    reRender: function reRender() {
+	    _reRender: function _reRender() {
 	        this.reactInstance.replaceState({
 	            assessment: this.assessment
 	        });

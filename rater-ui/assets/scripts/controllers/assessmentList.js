@@ -9,7 +9,7 @@ const AssessmentListController = {
 
         setInterval(() => {
             this.assessment.secondsPassed++;
-            this.reRender();
+            this._reRender();
         }, 1000);
 
         this.reactInstance = ReactDOM.render(
@@ -17,10 +17,10 @@ const AssessmentListController = {
             document.querySelector("[role=main]")
         );
 
-        this.reRender();
+        this._reRender();
     },
 
-    reRender() {
+    _reRender() {
         this.reactInstance.replaceState({
             assessment: this.assessment
         });
