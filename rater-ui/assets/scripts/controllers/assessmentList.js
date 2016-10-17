@@ -1,37 +1,55 @@
-import {observer} from "mobx-react";
 import AssessmentModel from "../models/assessment";
 
 const AssessmentListController = {
     init({account}) {
-        const assessment = Object.create(AssessmentModel);
+        this.assessment = Object.create(AssessmentModel);
 
         console.log("account", account);
-        console.log("assessment", assessment);
+        console.log("assessment", this.assessment);
 
         setInterval(() => {
-            assessment.secondsPassed++;
+            this.assessment.secondsPassed++;
+            this.reRender();
         }, 1000);
 
-        ReactDOM.render(
-            React.createElement(this.reactComponent, {assessment}),
+        this.reactInstance = ReactDOM.render(
+            React.createElement(this.reactComponent),
             document.querySelector("[role=main]")
         );
+
+        this.reRender();
     },
 
-    reactComponent: observer(React.createClass({
+    reRender() {
+        this.reactInstance.replaceState({
+            assessment: this.assessment
+        });
+    },
+
+    reactComponent: React.createClass({
+        getInitialState() {
+            return {
+                assessment: null
+            };
+        },
+
         render() {
+            if (this.state.assessment === null) {
+                return null;
+            }
+
             return (
                 <div id="content">
                     <header>
                     </header>
                     <div className="with-circles">
                         <p>Assessment List</p>
-                        {this.props.assessment.secondsPassed}
+                        {this.state.assessment.secondsPassed}
                     </div>
                 </div>
             );
         }
-    }))
+    })
 };
 
 Object.create(AssessmentListController).init(CR.ControllerData);

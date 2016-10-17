@@ -11,6 +11,8 @@ import play.api.libs.json.{JsNull, Json}
 
 @Singleton
 class AccountDto @Inject() (db: Database) {
+  val unknownUserId = 1053
+
   private val commonClause = """ tp in (""" + Account.typeRater + """, """ + Account.typeAdmin + """)
                                 and id > 0 """
 

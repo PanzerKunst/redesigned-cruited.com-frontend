@@ -1,7 +1,5 @@
-import {observable} from "mobx";
-
-const AssessmentModel = observable({
+const AssessmentModel = {
     secondsPassed: 0
-});
+};
 
 export {AssessmentModel as default};

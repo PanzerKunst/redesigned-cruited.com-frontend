@@ -54,6 +54,7 @@ rules:
     no-confusing-arrow: "error"
     no-console: "off"
     no-delete-var: "error"
+    no-eq-null: "error"
     no-eval: "error"
     no-extend-native: "error"
     no-extra-bind: "error"
