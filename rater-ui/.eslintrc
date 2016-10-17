@@ -141,7 +141,12 @@ rules:
     handle-callback-err: ["error", "err"]
 
 globals:
+    $: true
+    _: true
+    React: true
+    ReactDOM: true
     Modernizr: true
+    CR: true
 
 ecmaFeatures:
     jsx: true

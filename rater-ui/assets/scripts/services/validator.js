@@ -1,7 +1,6 @@
-import $ from "jquery";
 import {TweenLite} from "gsap";
 
-const ValidatorService = Object.create(Object.prototype, {
+const ValidatorService = {
     checkEmpty: "empty",
     checkEmail: "email",
     checkUsername: "username",
@@ -359,6 +358,6 @@ const ValidatorService = Object.create(Object.prototype, {
             this._validateField($field);
         }.bind(this));
     }
-});
+};
 
 export {ValidatorService as default};

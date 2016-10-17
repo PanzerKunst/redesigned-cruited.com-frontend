@@ -1,6 +1,3 @@
-import $ from "jquery";
-import _ from "lodash";
-
 const BrowserService = {
     regexOfUserAgentsNotSupportingFlexbox: [
         "OS 8_",

@@ -1,8 +1,6 @@
-import $ from "jquery";
-import _ from "lodash";
 import Browser from "../services/browser";
 
-const CommonController = Object.create(Object.prototype, {
+const CommonController = {
     init() {
         Browser.addUserAgentAttributeToHtmlTag();
         Browser.fixFlexboxIndicatorClass();
@@ -26,6 +24,6 @@ const CommonController = Object.create(Object.prototype, {
 
         this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
     }
-});
+};
 
-export {CommonController as default};
+Object.create(CommonController).init();

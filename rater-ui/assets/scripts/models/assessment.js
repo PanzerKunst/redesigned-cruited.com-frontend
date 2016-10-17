@@ -1,8 +1,7 @@
-import {observable} from "mobx-react";
+import {observable} from "mobx";
 
-const AssessmentModel = Object.create(Object.prototype, {
-    @observable
-    title: ""
+const AssessmentModel = observable({
+    secondsPassed: 0
 });
 
 export {AssessmentModel as default};

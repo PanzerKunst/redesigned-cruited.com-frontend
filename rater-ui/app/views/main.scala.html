@@ -27,12 +27,14 @@
     </div>
 
     <!-- Javascripts -->
-    <script type="text/javascript" src="@routes.Assets.versioned("main.js")"></script>
 
+    <script type="text/javascript" src="@routes.Assets.versioned("scripts/libs.js")"></script>
     <script type="text/javascript">
-        CR.Controllers.Common.init();
-
-        @javascript
+        CR = {};
     </script>
+    <script type="text/javascript" src="@routes.Assets.versioned("scripts/common.js")"></script>
+
+    @javascript
+
     </body>
 </html>

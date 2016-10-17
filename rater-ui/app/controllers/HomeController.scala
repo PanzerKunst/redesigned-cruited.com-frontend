@@ -16,8 +16,7 @@ class HomeController @Inject()(accountDto: AccountDto) extends Controller {
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/login")
-      case Some(accountId) =>
-        Ok(views.html.assessmentList(accountDto.getOfId(accountId)))
+      case Some(accountId) => Ok(views.html.assessmentList(accountDto.getOfId(accountId)))
     }
   }
 

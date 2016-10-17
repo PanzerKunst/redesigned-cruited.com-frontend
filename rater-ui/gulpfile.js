@@ -10,14 +10,11 @@ var sass = require("gulp-sass");
 var sourcemaps = require("gulp-sourcemaps");
 var reporter = require('postcss-reporter');
 var syntaxScss = require('postcss-scss');
-var babel = require('rollup-plugin-babel');
-var bowerResolve = require('rollup-plugin-bower-resolve');
-var commonjs = require('rollup-plugin-commonjs');
-var rollup = require('rollup-stream');
 var runSequence = require("run-sequence");
+var streamSeries = require("stream-series");
 var stylelint = require('stylelint');
-var source = require("vinyl-source-stream");
-var wiredep = require("wiredep");
+var webpack = require("webpack");
+var webpackStream = require("webpack-stream");
 
 // ## Settings
 var srcDir = "assets/";
@@ -32,18 +29,13 @@ var imageSrcFiles = imageSrcDir + "**/*";
 var fontSrcFiles = fontSrcDir + "**/*";
 var styleMainSrcFiles = styleSrcDir + "main.scss";
 
-// TODO var vendorDir = "vendor/";
-// TODO var scriptVendorFiles = vendorDir + "**/*";
+var vendorDir = "vendor/";
+var scriptVendorFiles = vendorDir + "**/*";
 
 var distDir = "public/";
 var scriptDistDir = distDir + "scripts/";
 var imageDistDir = distDir + "images/";
 var fontDistDir = distDir + "fonts/";
-
-/* TODO: remove
- var scriptsSrcConcatFileName = "src.js";
- var scriptsBundleFileName = "bundle.js";
- var scriptsDistFileName = "main.js"; */
 
 
 // ## Gulp tasks
@@ -51,7 +43,7 @@ var fontDistDir = distDir + "fonts/";
 
 // ### Styles
 // `gulp styles` - Compiles, combines, and optimizes Bower CSS and project CSS.
-gulp.task("styles", ["wiredep"], function() {
+gulp.task("styles", function() {
     return gulp.src(styleMainSrcFiles)
         .pipe(sourcemaps.init())
         .pipe(sass({"style": "compressed"})
@@ -62,15 +54,6 @@ gulp.task("styles", ["wiredep"], function() {
         .pipe(cleanCss())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(distDir));
-});
-
-// ### Wiredep
-// `gulp wiredep` - Automatically inject Less and Sass Bower dependencies. See
-// https://github.com/taptapship/wiredep
-gulp.task("wiredep", ["scss-lint"], function() {
-    return gulp.src(styleMainSrcFiles)
-        .pipe(wiredep.stream())
-        .pipe(gulp.dest(styleSrcDir));
 });
 
 // ### SCSS Lint
@@ -166,7 +149,8 @@ gulp.task("scss-lint", function() {
 // and project JS.
 gulp.task("scripts", function() {
     runSequence("js-lint",
-        "js-bundle");
+        "js-bundle",
+        "js-libs");
 });
 
 // ### ESLint
@@ -184,84 +168,43 @@ gulp.task("js-lint", function() {
         .pipe(eslint.failOnError());
 });
 
-// ### Bundling via Rollup & Babel
-// `gulp bundle`
+// ### Bundling sources and small libs via Webpack & Babel
+// `gulp js-bundle`
 gulp.task("js-bundle", function() {
-    runSequence("js-bundle-common"/*,
-     "js-bundle-assessment-list"*/);
+    runWebpack("common.js");
+    return runWebpack("assessmentList.js");
 });
 
-gulp.task("js-bundle-common", function() {
-    return rollup({
-        entry: scriptSrcDir + "controllers/common.js",
-        format: "iife",
-        moduleName: "Common",
-        plugins: [
-            babel({
-                exclude: 'node_modules/**',
-                plugins: ["syntax-decorators"]
-            }),
-            bowerResolve({
-                override: {
-                    "gsap": [
-                        "./src/minified/TweenLite.min.js",
-                        "./src/minified/easing/EasePack.min.js",
-                        "./src/minified/plugins/CSSPlugin.min.js"
-                    ],
-                    "lodash": "./dist/lodash.min.js",
-                    "jquery": "./dist/jquery.slim.min.js",
-                    "bootstrap-sass": "./assets/javascripts/bootstrap.min.js",
-                    "react": [
-                        "./react.min.js",
-                        "./react-dom.min.js"
-                    ]
-                }
-            }),
-            commonjs()
-        ]
-    })
-        // give the file the name you want to output with
-        .pipe(source("common.js"))
+function runWebpack(entryFileName) {
+    return gulp.src(scriptSrcDir + "controllers/" + entryFileName)
+        .pipe(webpackStream({
+            module: {
+                loaders: [
+                    {
+                        test: /assets[\/\\]scripts[\/\\][\w\/\\]+.js$/,
+                        loader: 'babel-loader'
+                    }
+                ]
+            },
+            output: {
+                filename: entryFileName
+            }
+        }))
+        .pipe(gulp.dest(scriptDistDir));
+};
 
+// ### Concatenating large libraries used in most pages. Those listed in `.eslintrc > globals`
+// `gulp js-libs`
+gulp.task("js-libs", function() {
+    return streamSeries(
+        gulp.src("node_modules/jquery/dist/jquery.slim.min.js"),
+        gulp.src("node_modules/lodash/lodash.min.js"),
+        gulp.src("node_modules/react/dist/react.min.js"),
+        gulp.src("node_modules/react-dom/dist/react-dom.min.js"),
+        gulp.src(scriptVendorFiles))
+        .pipe(concat("libs.js"))
         .pipe(gulp.dest(scriptDistDir));
 });
-
-gulp.task("js-bundle-assessment-list", function() {
-    return rollup({
-        entry: scriptSrcDir + "controllers/assessmentList.react.js"
-    })
-        .pipe(source("assessmentList.react.js"))
-        .pipe(gulp.dest(scriptDistDir));
-});
-
-/* TODO: remove
- gulp.task("js-bundle", function() {
- return streamSeries(
- gulp.src("node_modules/mobx/lib/mobx.js"),
- gulp.src("node_modules/mobx-react/index.js"),
- gulp.src(distDir + scriptsSrcConcatFileName))
- .pipe(rollup({
- // any option supported by Rollup can be set here.
- entry: scriptSrcDir + "controllers/assessmentList.react.js"
- }))
- .pipe(concat(scriptsBundleFileName))
- .pipe(gulp.dest(distDir));
- });
-
- // ### JS Dist Concat
- // `gulp js-dist-concat`
- gulp.task("js-dist-concat", function() {
- return streamSeries(
- gulp.src(mainBowerFiles({filter: /.*\.js$/i})),
- gulp.src(scriptVendorFiles),
- gulp.src(distDir + scriptsBundleFileName))
- .pipe(concat(scriptsDistFileName))
- .pipe(gulp.dest(distDir));
- });
-
- gulp.task("clean-js-concat-file", function() {
- return del(distDir + scriptsSrcConcatFileName);
- }); */
 
 // ### Images
 // `gulp images` - Run lossless compression on all the images.
@@ -298,21 +241,17 @@ gulp.task("watch", function() {
     gulp.watch([scriptSrcFiles], ["scripts"]);
     gulp.watch([imageSrcFiles], ["images"]);
     gulp.watch([fontSrcFiles], ["fonts"]);
-    gulp.watch(["bower.json"], ["build"]);
 });
 
 // ### Build
 // `gulp build` - Run all the build tasks but don't clean up beforehand.
 // Generally you should be running `gulp` instead of `gulp build`.
 gulp.task("build", function() {
-    runSequence("styles",
-        "scripts",
-        "images",
-        "fonts")
+    runSequence(["styles", "scripts", "images", "fonts"])
 });
 
 // ### Gulp
 // `gulp` - Run a complete build. To compile for production run `gulp --production`.
-gulp.task("default", ["clean"], function() {
-    gulp.start("build");
+gulp.task("default", function() {
+    runSequence("clean", "build");
 });
