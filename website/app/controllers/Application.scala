@@ -38,7 +38,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1}
 
           Ok(views.html.dashboard(i18nMessages, currentLanguage, accountOpt, frontendOrders))
-            .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
+            .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode)
+              - SessionService.sessionKeyOrderId)
         }
     }
   }

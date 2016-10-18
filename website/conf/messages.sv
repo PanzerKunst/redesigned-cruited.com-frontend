@@ -266,7 +266,7 @@ order.accountCreation.signIn.registerInstead.text=Glöm det - Jag har inget kont
 order.accountCreation.signIn.registerInstead.link.text=Skapa konto
 
 order.accountCreation.signedIn.text=Du är nu inloggad!
-order.accountcreation.signedIn.couponRemoved.text=Vi tog bort kupongen från din order eftersom du använt den tidigare.
+order.accountcreation.signedIn.couponRemoved.text=Den här koden har redan använts max antal gånger och kan därför inte användas igen. Vänligen fyll i en annan kod eller fortsätt till betalning utan kod.
 order.accountcreation.signedIn.btn.text=Fortsätt
 
 

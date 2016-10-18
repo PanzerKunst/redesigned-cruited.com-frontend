@@ -85,7 +85,7 @@ object CouponDto {
     }
   }
 
-  def useCount(code: String, accountIdOpt: Option[Long]): Int = {
+  def useCount(code: String, accountIdOpt: Option[Long], orderIdOpt: Option[Long] = None): Int = {
     DB.withConnection { implicit c =>
       val addedByClause = accountIdOpt match {
         case None => ""
@@ -94,11 +94,18 @@ object CouponDto {
           and id > 0"""
       }
 
+      val exceptOrderIdClause = orderIdOpt match {
+        case None => ""
+        case Some(orderId) => """
+          and id != """ + orderId
+      }
+
       val query = """
       select count(id) as count
       from documents
       where code = '""" + code + """'""" +
-        addedByClause + """;"""
+        addedByClause +
+        exceptOrderIdClause + """;"""
 
       Logger.info("CouponDto.useCount():" + query)
 

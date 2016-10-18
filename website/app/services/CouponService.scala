@@ -10,7 +10,7 @@ object CouponService {
     coupon.expirationTimestamp < new Date().getTime
   }
 
-  def hasReachedMaxUses(coupon: Coupon, accountIdOpt: Option[Long]): Boolean = {
+  def hasReachedMaxUses(coupon: Coupon, accountIdOpt: Option[Long], orderIdOpt: Option[Long]): Boolean = {
     coupon.`type` match {
       case Coupon.typeNoRestriction => false
       case Coupon.typeSingleUse => CouponDto.useCount(coupon.code, None) >= 1
@@ -21,7 +21,7 @@ object CouponService {
       }
       case _ => accountIdOpt match {
         case None => false
-        case Some(accountId) => CouponDto.useCount(coupon.code, Some(accountId)) >= coupon.maxUseCount
+        case Some(accountId) => CouponDto.useCount(coupon.code, Some(accountId), orderIdOpt) >= coupon.maxUseCount
       }
     }
   }

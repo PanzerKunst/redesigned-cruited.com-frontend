@@ -14,7 +14,10 @@ class CouponApi extends Controller {
     CouponDto.getOfCode(code) match {
       case None => NoContent
       case Some(coupon) =>
-        if (CouponService.hasExpired(coupon) || CouponService.hasReachedMaxUses(coupon, SessionService.getAccountId(request.session))) {
+        val accountIdOpt = SessionService.getAccountId(request.session)
+        val orderIdOpt = SessionService.getOrderId(request.session)
+
+        if (CouponService.hasExpired(coupon) || CouponService.hasReachedMaxUses(coupon, accountIdOpt, orderIdOpt)) {
           Logger.info("Someone tried to use the following expired (or used) coupon: '" + code + "'")
           Status(HttpService.httpStatusCouponExpired).apply(Json.toJson(coupon))
         } else {
