@@ -1,0 +1,237 @@
+button.styleless {
+  @include styleless-btn;
+  padding: 0;
+
+  &:focus {
+    @include styleless-btn;
+    outline: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.btn {
+  @include transition(color $default-animation-duration ease, background-color $default-animation-duration ease, border-color $default-animation-duration ease);
+  border-radius: 0.25em;
+
+  padding: 0.4em 1em;
+
+  > .fa-spinner {
+    margin: 0 0.5em 0 -0.6em;
+  }
+}
+
+.btn-lg {
+  padding: 0.8em 2em;
+
+  > .fa-spinner {
+    margin-left: -1.25em;
+  }
+}
+
+.btn-xs {
+  padding: 0.2em 0.5em;
+
+  font-size: $font-size-sm;
+}
+
+.btn-default,
+a.btn-default,
+.btn-primary,
+a.btn-primary,
+.btn-success,
+a.btn-success,
+.btn-info,
+a.btn-info,
+.btn-warning,
+a.btn-warning,
+.btn-danger,
+a.btn-danger,
+.btn.sign-in-with-linkedin {
+  color: white;
+}
+
+.btn-default,
+a.btn-default {
+  background-color: $grey;
+  border-color: $grey;
+
+  &:active,
+  &:focus,
+  &:hover,
+  &:active:focus {
+    background-color: darken($grey, 15%);
+    border-color: darken($grey, 25%);
+
+    color: white;
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover,
+  &.disabled,
+  &.disabled:active,
+  &.disabled:focus,
+  &.disabled:hover {
+    background-color: lighten($grey, 35%);
+    border-color: lighten($grey, 35%);
+  }
+}
+
+.btn-primary,
+a.btn-primary {
+  background-color: $primary-btn-color;
+  border-color: $primary-btn-color;
+
+  &:active,
+  &:focus,
+  &:hover,
+  &:active:focus {
+    background-color: darken($primary-btn-color, 15%);
+    border-color: darken($primary-btn-color, 25%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover,
+  &.disabled,
+  &.disabled:active,
+  &.disabled:focus,
+  &.disabled:hover {
+    background-color: $primary-btn-color;
+    border-color: $primary-btn-color;
+  }
+}
+
+.btn.secondary {
+  @include styleless-btn;
+
+  color: $secondary-action-color;
+  border: 2px solid $secondary-action-color;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $background-body-color;
+    border-color: darken($secondary-action-color, 25%);
+    background-color: darken($secondary-action-color, 15%);
+  }
+
+  &[disabled],
+  &[disabled]:active,
+  &[disabled]:focus,
+  &[disabled]:hover,
+  &.disabled,
+  &.disabled:active,
+  &.disabled:focus,
+  &.disabled:hover {
+    color: $secondary-action-color;
+    border-color: $secondary-action-color;
+    background-color: $background-body-color;
+  }
+}
+
+.btn-file-upload {
+  padding: 0.18em 0.95em;
+}
+
+.btn.sign-in-with-linkedin {
+  $li-btn-default-font-size: 11px;
+  $li-btn-default-btn-height: 21px;
+  $sign-in-with-linked-in-button-image-location-x: 0;
+  $sign-in-with-linked-in-button-image-location-y: 0;
+
+  @include hdpi-sprite;
+  background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+  @include hidpi {
+    background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+  }
+
+  width: 156px;
+  height: $li-btn-default-btn-height;
+
+  padding: 0;
+
+  @include medium-screen {
+    $sign-in-with-linked-in-button-image-location-x: -400px;
+
+    background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+    @include hidpi {
+      background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+    }
+
+    width: 230px;
+    height: 41px;
+
+    padding-top: 0.4em;
+  }
+
+  @include large-screen {
+    padding-top: 0.1em;
+  }
+
+  > span {
+    font-size: $li-btn-default-font-size;
+    @include medium-screen {
+      font-size: 15px;
+    }
+  }
+
+  // xs
+  &.btn-xs {
+    $sign-in-with-linked-in-button-image-location-x: -900px;
+
+    width: 108px;
+    height: $li-btn-default-btn-height;
+
+    @include medium-screen {
+      background-position: $sign-in-with-linked-in-button-image-location-x $sign-in-with-linked-in-button-image-location-y;
+      @include hidpi {
+        background-position: half-pos($sign-in-with-linked-in-button-image-location-x, $sign-in-with-linked-in-button-image-location-y);
+      }
+    }
+
+    > span {
+      @include medium-screen {
+        font-size: $li-btn-default-font-size;
+      }
+    }
+  }
+}
+
+.social-icon {
+  $fb-icon-location-x: -100px;
+  $social-icon-location-y: -100px;
+
+  @include hdpi-sprite();
+  background-position: $fb-icon-location-x $social-icon-location-y;
+  @include hidpi {
+    background-position: half-pos($fb-icon-location-x, $social-icon-location-y);
+  }
+
+  height: 30px;
+  width: 30px;
+
+  &.linkedin {
+    $li-icon-location-x: -200px;
+
+    background-position: $li-icon-location-x $social-icon-location-y;
+    @include hidpi {
+      background-position: half-pos($li-icon-location-x, $social-icon-location-y);
+    }
+  }
+
+  &.twitter {
+    $tw-icon-location-x: -300px;
+
+    background-position: $tw-icon-location-x $social-icon-location-y;
+    @include hidpi {
+      background-position: half-pos($tw-icon-location-x, $social-icon-location-y);
+    }
+  }
+}
+

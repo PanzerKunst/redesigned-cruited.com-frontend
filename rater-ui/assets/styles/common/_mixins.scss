@@ -1,0 +1,73 @@
+@mixin medium-screen {
+  @media screen and (min-width: $medium-content-width) {
+    @content;
+  }
+}
+
+@mixin large-screen {
+  @media screen and (min-width: $large-content-width) {
+    @content;
+  }
+}
+
+@mixin ellipsis($white-space: nowrap) {
+  white-space: $white-space;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+// Retina sprite mixin and function inspired by Paul Stamatiou (http://paulstamatiou.com/responsive-retina-blog-development-part-2)
+
+@mixin hdpi-sprite($background-color: transparent) {
+  @include retina-image($sprite-url, 1000px 2000px);  // Sprite dimensions, halved
+  background-color: $background-color;
+  background-repeat: no-repeat;
+}
+// silly function to divide the width and height to save me 2 seconds
+// whenever I need to calculate the halved retina background position
+@function half-pos($w, $h) {
+  @return $w/2 $h/2;
+}
+
+@function px-to-em($px) {
+  @return #{$px / $font-size-base-px}em;
+}
+
+@mixin icon-font($content) {
+  font-family: FontAwesome;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-stretch: normal;
+
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  content: $content;
+}
+
+@mixin link-color($color) {
+  a,
+  a:visited,
+  a:hover,
+  a:focus {
+    color: $color;
+  }
+}
+
+@mixin styleless-btn {
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+@mixin text-shadow($color: $gray-darker) {
+  text-shadow: 0 0 0.2em $color;
+}
+
+@mixin no-transition {
+  @include transition(none !important);
+}

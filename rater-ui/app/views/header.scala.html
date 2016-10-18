@@ -2,7 +2,7 @@
 
 <nav id="header-nav">
     <a href="/" class="fa fa-home"></a>
-    <a href="https://www.cruited.com" class="brand">Cruited</a>
+    <span class="brand">Cruited Rater</span>
     @if(accountOpt.isDefined && accountOpt.get.id > 0) {
         @defining(accountOpt.get) { account =>
             <article>
@@ -20,3 +20,9 @@
         <a href="/login"><i class="fa fa-sign-in"></i>Sign in</a>
     }
 </nav>
+<div id="menu">
+    <nav>
+        <a href="/logout"><i class="fa fa-sign-out"></i>Sign out</a>
+    </nav>
+</div>
+<div id="content-overlay-when-menu-open"></div>

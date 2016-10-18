@@ -1,0 +1,44 @@
+.with-circles {
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-image: url("./images/section-circles_255.png");
+  @media screen and (min-resolution: 1.3dppx) and (max-width: $medium-content-width),
+    screen and (-webkit-min-device-pixel-ratio: 1.3) and (max-width: $medium-content-width),
+    screen and (min--moz-device-pixel-ratio: 1.3) and (max-width: $medium-content-width) {
+    background-image: url("./images/section-circles_510.png");
+    background-size: 255px 55px;
+  }
+
+  @include medium-screen {
+    background-image: url("./images/section-circles-large.png");
+  }
+
+  $section-padding-top: $spacer-unit-size * 2;
+  $section-padding-bottom: $spacer-unit-size * 2.5;
+
+  padding: $section-padding-top $spacer-unit-size $section-padding-bottom $spacer-unit-size;
+
+  @include medium-screen {
+    padding-top: $section-padding-top * $medium-screen-ratio-l;
+    padding-bottom: $section-padding-bottom * $medium-screen-ratio-l;
+
+    width: $medium-content-width;
+
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
+  }
+
+  @include large-screen {
+    width: $large-content-width;
+  }
+
+  > span {
+    display: block;
+    text-align: center;
+    padding-bottom: 1.5em;
+
+    font-weight: lighter;
+    font-size: 1.3em;
+  }
+}

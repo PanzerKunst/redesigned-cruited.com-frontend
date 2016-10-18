@@ -50,6 +50,8 @@
 
 	var _browser2 = _interopRequireDefault(_browser);
 
+	var _global = __webpack_require__(2);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var CommonController = {
@@ -64,14 +66,48 @@
 	        this.$window = $(window);
 
 	        this.$siteHeader = $("#container").children("header");
+	        this.$menuBtn = this.$siteHeader.find("article");
+	        this.$menu = this.$siteHeader.find("#menu");
+	        this.$contentOverlayWhenMenuOpen = this.$siteHeader.find("#content-overlay-when-menu-open");
 	    },
 	    _initEvents: function _initEvents() {
 	        this.$window.scroll(_.debounce(this._onScroll.bind(this), 15));
+	        this._initMenuEvents();
+	    },
+	    _initMenuEvents: function _initMenuEvents() {
+	        this.$menuBtn.click(this._toggleMenu.bind(this));
+	        this.$contentOverlayWhenMenuOpen.click(this._toggleMenu.bind(this));
 	    },
 	    _onScroll: function _onScroll() {
 	        var isScrolledDownEnough = this.$window.scrollTop() > 0;
 
 	        this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
+	    },
+	    _toggleMenu: function _toggleMenu() {
+	        if (this.$siteHeader.hasClass("menu-open")) {
+	            TweenLite.to(this.$menu, _global.animationDurations.short, {
+	                opacity: 0,
+	                onComplete: function () {
+	                    this.$menu.css({ display: "none" });
+	                }.bind(this)
+	            });
+
+	            this.$siteHeader.removeClass("menu-open");
+	        } else {
+	            this.$menu.css({ display: this._getMenuDisplayClass(), opacity: 0 });
+	            TweenLite.to(this.$menu, _global.animationDurations.short, { opacity: 1 });
+
+	            this.$siteHeader.addClass("menu-open");
+	        }
+	    },
+	    _getMenuDisplayClass: function _getMenuDisplayClass() {
+	        var $html = $("html");
+
+	        if ($html.hasClass("no-flexbox") || _.includes($html.data("useragent"), "OS 7_")) {
+	            return "block";
+	        }
+
+	        return "flex";
 	    }
 	};
 
@@ -86,7 +122,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var BrowserService = {
+	var Browser = {
 	    regexOfUserAgentsNotSupportingFlexbox: ["OS 8_", "OS 7_", "OS 6_", "OS 5_", "OS 4_"],
 
 	    cssRules: function cssRules() {
@@ -189,7 +225,28 @@
 	    }
 	};
 
-	exports.default = BrowserService;
+	exports.default = Browser;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
 
 /***/ }
 /******/ ]);

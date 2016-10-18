@@ -1,16 +1,10 @@
-import AssessmentModel from "../models/assessment";
-
 const AssessmentListController = {
-    init({account}) {
-        this.assessment = Object.create(AssessmentModel);
+    account: null,
 
-        console.log("account", account);
-        console.log("assessment", this.assessment);
+    init() {
 
-        setInterval(() => {
-            this.assessment.secondsPassed++;
-            this._reRender();
-        }, 1000);
+        // TODO: remove
+        console.log("account", this.account);
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactComponent),
@@ -22,29 +16,31 @@ const AssessmentListController = {
 
     _reRender() {
         this.reactInstance.replaceState({
-            assessment: this.assessment
+            account: this.account
         });
     },
 
     reactComponent: React.createClass({
         getInitialState() {
             return {
-                assessment: null
+                account: null
             };
         },
 
         render() {
-            if (this.state.assessment === null) {
+            if (this.state.account === null) {
                 return null;
             }
 
             return (
                 <div id="content">
                     <header>
+                        <div>
+                            <h1>Assessment List</h1>
+                        </div>
                     </header>
                     <div className="with-circles">
-                        <p>Assessment List</p>
-                        {this.state.assessment.secondsPassed}
+                        Hello!
                     </div>
                 </div>
             );
@@ -52,4 +48,5 @@ const AssessmentListController = {
     })
 };
 
-Object.create(AssessmentListController).init(CR.ControllerData);
+Object.assign(Object.create(AssessmentListController), CR.ControllerData)
+    .init();

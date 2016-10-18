@@ -42,31 +42,17 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 
-	var _assessment = __webpack_require__(1);
-
-	var _assessment2 = _interopRequireDefault(_assessment);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 	var AssessmentListController = {
-	    init: function init(_ref) {
-	        var _this = this;
+	    account: null,
 
-	        var account = _ref.account;
+	    init: function init() {
 
-	        this.assessment = Object.create(_assessment2.default);
-
-	        console.log("account", account);
-	        console.log("assessment", this.assessment);
-
-	        setInterval(function () {
-	            _this.assessment.secondsPassed++;
-	            _this._reRender();
-	        }, 1000);
+	        // TODO: remove
+	        console.log("account", this.account);
 
 	        this.reactInstance = ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
 
@@ -74,7 +60,7 @@
 	    },
 	    _reRender: function _reRender() {
 	        this.reactInstance.replaceState({
-	            assessment: this.assessment
+	            account: this.account
 	        });
 	    },
 
@@ -83,49 +69,41 @@
 	        displayName: "reactComponent",
 	        getInitialState: function getInitialState() {
 	            return {
-	                assessment: null
+	                account: null
 	            };
 	        },
 	        render: function render() {
-	            if (this.state.assessment === null) {
+	            if (this.state.account === null) {
 	                return null;
 	            }
 
 	            return React.createElement(
 	                "div",
 	                { id: "content" },
-	                React.createElement("header", null),
+	                React.createElement(
+	                    "header",
+	                    null,
+	                    React.createElement(
+	                        "div",
+	                        null,
+	                        React.createElement(
+	                            "h1",
+	                            null,
+	                            "Assessment List"
+	                        )
+	                    )
+	                ),
 	                React.createElement(
 	                    "div",
 	                    { className: "with-circles" },
-	                    React.createElement(
-	                        "p",
-	                        null,
-	                        "Assessment List"
-	                    ),
-	                    this.state.assessment.secondsPassed
+	                    "Hello!"
 	                )
 	            );
 	        }
 	    })
 	};
 
-	Object.create(AssessmentListController).init(CR.ControllerData);
-
-/***/ },
-/* 1 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var AssessmentModel = {
-	    secondsPassed: 0
-	};
-
-	exports.default = AssessmentModel;
+	Object.assign(Object.create(AssessmentListController), CR.ControllerData).init();
 
 /***/ }
 /******/ ]);

@@ -1,14 +1,12 @@
-@main("Cruited - Sign in", "sign-in") {
+@main("Rater - Sign in", "sign-in") {
 <!--
     Header
 -->
 @header(None)
 
 } {
-/*
+<!--
     Javascript
-*/
-document.addEventListener("DOMContentLoaded", function () {
-    CR.Controllers.SignIn();
-});
+-->
+<script type="text/javascript" src="@routes.Assets.versioned("scripts/signIn.js")"></script>
 }

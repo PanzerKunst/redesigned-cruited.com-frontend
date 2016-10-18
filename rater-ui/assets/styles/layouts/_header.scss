@@ -1,0 +1,240 @@
+$drop-shadow-color: transparentize(black, 0.8);
+$header-bottom-border-height: 1px;
+
+@mixin header-box-shadow {
+  //          offset-x  offset-y  blur-radius spread-radius color
+  box-shadow: 0 0.25em 0.5em 0 $drop-shadow-color;
+}
+
+@mixin header-bg-color-transition {
+  @include transition(background-color $default-animation-duration ease);
+}
+
+#container > header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-index-header;
+
+  @include linear-gradient(white 50%, $gradient-light-grey);
+  border-bottom: $header-bottom-border-height solid $drop-shadow-color;
+
+  height: $header-height;
+  @include large-screen {
+    height: $header-height-large-screen;
+  }
+
+  &.scrolled-down {
+    @include header-box-shadow;
+  }
+  &.menu-open {
+    #content-overlay-when-menu-open {
+      display: block;
+    }
+  }
+}
+
+#header-nav,
+#menu {
+  padding: 0 $spacer-unit-size;
+
+  @include medium-screen {
+    width: $medium-content-width;
+
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 auto;
+  }
+
+  @include large-screen {
+    width: $large-content-width;
+  }
+
+  a {
+    color: $dark-grey;
+  }
+}
+
+#header-nav {
+  @include clearfix;
+  position: relative;
+
+  > .fa-home,
+  .fa-bars,
+  > a[href="/login"] {
+    color: $sky-blue;
+  }
+
+  > .fa-home,
+  .fa-bars {
+    font-size: 22px;
+    padding: 9px $spacer-unit-size;
+
+    @include large-screen {
+      font-size: 34px;
+      padding: 0;
+    }
+  }
+
+  > .fa-home {
+    float: left;
+
+    text-decoration: none;
+
+    margin-left: -$spacer-unit-size;
+    @include medium-screen {
+      margin-left: 0;
+    }
+
+    @include large-screen {
+      margin-top: 12px;
+    }
+  }
+
+  > .brand {
+    text-align: center;
+
+    $brand-width: 7em;
+
+    position: absolute;
+    left: 50%;
+    width: $brand-width;
+    margin-left: - $brand-width / 2;
+
+    @include large-screen {
+      margin-top: 4px;
+    }
+  }
+
+  > a[href="/login"],
+  > article {
+    float: right;
+  }
+
+  > a[href="/login"] {
+    margin-top: 7px;
+    @include medium-screen {
+      margin-top: 4px;
+    }
+    @include large-screen {
+      margin-top: 9px;
+    }
+  }
+
+  > article {
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    height: $header-height;
+    @include large-screen {
+      height: $header-height-large-screen;
+    }
+
+    > span {
+      font-size: $font-size-sm;
+      @include ellipsis;
+      max-width: 4em;
+      @include medium-screen {
+        max-width: 100%;
+      }
+    }
+  }
+
+  .fa-bars {
+    margin-right: -$spacer-unit-size;
+    @include medium-screen {
+      margin-right: 0;
+    }
+
+    @include large-screen {
+      margin-left: 0.5em;
+    }
+  }
+
+  .profile-picture {
+    width: 35px;
+    height: 35px;
+    @include large-screen {
+      width: 40px;
+      height: 40px;
+    }
+
+    margin-left: 0.5em;
+  }
+}
+
+#menu {
+  display: none;
+  justify-content: flex-end;
+
+  > nav {
+    background-color: white;
+
+    @include header-box-shadow;
+
+    margin-top: - $header-bottom-border-height;
+    padding: 0.7em 1em;
+
+    position: relative;
+    z-index: $z-index-header + 1; // To make sure that the overlay is behind
+
+    &::before {
+      @include icon-font($fa-var-caret-up);
+      color: white;
+
+      position: absolute;
+      top: -0.65em;
+
+      right: 14px;
+      @include medium-screen {
+        right: 12px;
+      }
+      @include large-screen {
+        right: 13px;
+      }
+    }
+
+    > a {
+      display: block;
+    }
+  }
+}
+
+#content-overlay-when-menu-open {
+  display: none;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: $z-index-header;
+
+  top: $header-height;
+  @include large-screen {
+    top: $header-height-large-screen;
+  }
+}
+
+.no-flexbox {
+  #header-nav > article {
+    display: block;
+    margin-top: 0.2em;
+
+    > span,
+    > .profile-picture {
+      display: inline-block;
+    }
+
+    > span {
+      vertical-align: top;
+      margin-top: 0.85em;
+    }
+  }
+
+  #menu {
+    float: right;
+  }
+}

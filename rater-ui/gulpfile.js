@@ -7,7 +7,6 @@ var eslint = require("gulp-eslint");
 var imagemin = require("gulp-imagemin");
 var postcss = require('gulp-postcss');
 var sass = require("gulp-sass");
-var sourcemaps = require("gulp-sourcemaps");
 var reporter = require('postcss-reporter');
 var syntaxScss = require('postcss-scss');
 var runSequence = require("run-sequence");
@@ -45,14 +44,12 @@ var fontDistDir = distDir + "fonts/";
 // `gulp styles` - Compiles, combines, and optimizes Bower CSS and project CSS.
 gulp.task("styles", function() {
     return gulp.src(styleMainSrcFiles)
-        .pipe(sourcemaps.init())
         .pipe(sass({"style": "compressed"})
             .on("error", function(err) {
                 console.error(err.message);
-                this.emit("end");
+                process.exit(1);
             }))
         .pipe(cleanCss())
-        .pipe(sourcemaps.write())
         .pipe(gulp.dest(distDir));
 });
 
@@ -172,6 +169,7 @@ gulp.task("js-lint", function() {
 // `gulp js-bundle`
 gulp.task("js-bundle", function() {
     runWebpack("common.js");
+    runWebpack("signIn.js");
     return runWebpack("assessmentList.js");
 });
 
@@ -201,6 +199,10 @@ gulp.task("js-libs", function() {
         gulp.src("node_modules/lodash/lodash.min.js"),
         gulp.src("node_modules/react/dist/react.min.js"),
         gulp.src("node_modules/react-dom/dist/react-dom.min.js"),
+        gulp.src("node_modules/gsap/src/minified/TweenLite.min.js"),
+        gulp.src("node_modules/gsap/src/minified/easing/EasePack.min.js"),
+        gulp.src("node_modules/gsap/src/minified/plugins/CSSPlugin.min.js"),
+        gulp.src("node_modules/gsap/src/minified/plugins/ScrollToPlugin.min.js"),
         gulp.src(scriptVendorFiles))
         .pipe(concat("libs.js"))
         .pipe(gulp.dest(scriptDistDir));
@@ -224,7 +226,9 @@ gulp.task("images", function() {
 // ### Fonts
 // `gulp fonts`
 gulp.task("fonts", function() {
-    return gulp.src(fontSrcFiles)
+    return streamSeries(
+        gulp.src("node_modules/font-awesome/fonts/*"),
+        gulp.src(fontSrcFiles))
         .pipe(gulp.dest(fontDistDir));
 });
 
@@ -247,7 +251,8 @@ gulp.task("watch", function() {
 // `gulp build` - Run all the build tasks but don't clean up beforehand.
 // Generally you should be running `gulp` instead of `gulp build`.
 gulp.task("build", function() {
-    runSequence(["styles", "scripts", "images", "fonts"])
+    runSequence("styles",
+        ["scripts", "images", "fonts"]);
 });
 
 // ### Gulp

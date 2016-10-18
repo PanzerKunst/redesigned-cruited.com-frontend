@@ -1,4 +1,4 @@
-const BrowserService = {
+const Browser = {
     regexOfUserAgentsNotSupportingFlexbox: [
         "OS 8_",
         "OS 7_",
@@ -123,4 +123,4 @@ const BrowserService = {
     }
 };
 
-export {BrowserService as default};
+export {Browser as default};

@@ -1,0 +1,47 @@
+html {
+  // Always display the vertical scrollbar
+  overflow-y: scroll;
+}
+
+body {
+  font-family: "Source Sans Pro", "Arial", sans-serif;
+  color: $dark-grey;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @include medium-screen {
+    font-size: $font-size-base-em * $medium-screen-ratio-m;
+
+    @include defineBreakpoint("GLOBAL_MEDIUM_SCREEN_BREAKPOINT");
+  }
+  @include large-screen {
+    font-size: $font-size-base-em * $large-screen-ratio-m;
+
+    @include defineBreakpoint("GLOBAL_LARGE_SCREEN_BREAKPOINT");
+  }
+}
+
+// To avoid these elements to bleed through the parent
+img,
+iframe,
+embed {
+  max-width: 100%;
+}
+
+p,
+span,
+li,
+a,
+label,
+blockquote {
+  line-height: $line-height-project;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.centered-contents {
+  text-align: center;
+}

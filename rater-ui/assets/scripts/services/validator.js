@@ -1,6 +1,7 @@
-import {TweenLite} from "gsap";
+import {animationDurations} from "../global";
 
-const ValidatorService = {
+const validator = {
+    fieldIds: [],
     checkEmpty: "empty",
     checkEmail: "email",
     checkUsername: "username",
@@ -11,11 +12,7 @@ const ValidatorService = {
     checkDecimal: "decimal",
     checkUrl: "url",
 
-    errorMessageAnimationDuration: 0.5,
-
-    init(fieldIds) {
-        this.fieldIds = fieldIds || [];
-
+    init() {
         for (let i = 0; i < this.fieldIds.length; i++) {
             const $field = $("#" + this.fieldIds[i]);
 
@@ -61,7 +58,7 @@ const ValidatorService = {
     showErrorMessage($errorMsg) {
         if ($errorMsg.html()) {
             $errorMsg.css("display", "block");
-            TweenLite.to($errorMsg, this.errorMessageAnimationDuration, {opacity: 1});
+            TweenLite.to($errorMsg, animationDurations.medium, {opacity: 1});
         }
     },
 
@@ -360,4 +357,14 @@ const ValidatorService = {
     }
 };
 
-export {ValidatorService as default};
+function Validator(fieldIds) {
+    const instance = Object.assign(Object.create(validator), {
+        fieldIds
+    });
+
+    instance.init();
+
+    return instance;
+}
+
+export {Validator as default};

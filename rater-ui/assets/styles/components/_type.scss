@@ -1,0 +1,16 @@
+p:last-child {
+  margin-bottom: 0;
+}
+
+.brand {
+  font-family: Signika, sans-serif;
+  font-weight: bold;
+  color: $dark-grey;
+
+  display: inline-block;
+
+  font-size: 22px;
+  @include large-screen {
+    font-size: 30px;
+  }
+}

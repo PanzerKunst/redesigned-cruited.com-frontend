@@ -6,5 +6,6 @@ export const animationDurations = {
 export const httpStatusCodes = {
     ok: 200,
     created: 201,
-    noContent: 204
+    noContent: 204,
+    signInIncorrectCredentials: 230
 };

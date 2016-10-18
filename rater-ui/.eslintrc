@@ -45,10 +45,10 @@ rules:
         beforeLineComment: true,
         afterLineComment: false
     }]
-    new-cap: "error"
+    new-cap: "off"
     newline-after-var: "error"
     new-parens: "error"
-    no-alert: "error"
+    no-alert: "off"
     no-array-constructor: "error"
     no-caller: "error"
     no-confusing-arrow: "error"
@@ -146,6 +146,7 @@ globals:
     _: true
     React: true
     ReactDOM: true
+    TweenLite: true
     Modernizr: true
     CR: true
 
