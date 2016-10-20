@@ -123,7 +123,7 @@
 	                                React.createElement(
 	                                    "p",
 	                                    { className: "other-form-error", id: "incorrect-credentials" },
-	                                    "You are dead. Play again?"
+	                                    "You are dead :'( \xA0\xA0Play again?"
 	                                ),
 	                                React.createElement(
 	                                    "button",

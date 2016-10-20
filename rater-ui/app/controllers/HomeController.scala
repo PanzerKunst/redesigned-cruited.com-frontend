@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 
-import db.AccountDto
+import db.{OrderDto, AccountDto}
 import play.api.mvc._
 import services.SessionService
 
@@ -11,12 +11,14 @@ import services.SessionService
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(accountDto: AccountDto) extends Controller {
+class HomeController @Inject()(accountDto: AccountDto, orderDto: OrderDto) extends Controller {
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/login")
-      case Some(accountId) => Ok(views.html.assessmentList(accountDto.getOfId(accountId)))
+      case Some(accountId) =>
+        val ordersAssignedToMe = orderDto.getOfRaterIdForFrontend(accountId) map { tuple => tuple._1}
+        Ok(views.html.orderList(accountDto.getOfId(accountId), ordersAssignedToMe))
     }
   }
 

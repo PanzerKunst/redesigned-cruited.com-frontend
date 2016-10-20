@@ -34,7 +34,7 @@ const SignInController = {
                                     <p className="field-error" data-check="empty" />
                                 </div>
                                 <div className="centered-contents">
-                                    <p className="other-form-error" id="incorrect-credentials">You are dead. Play again&#63;</p>
+                                    <p className="other-form-error" id="incorrect-credentials">You are dead :'( &nbsp;&nbsp;Play again&#63;</p>
                                     <button type="submit" className="btn btn-lg btn-primary">Sign in</button>
                                 </div>
                             </form>

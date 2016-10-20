@@ -1,0 +1,58 @@
+@mixin list-item-border($color: $brand-danger) {
+  border-left: 2px solid $color;
+  @include bottom-shadow($color, 30%);
+}
+
+#order-list {
+  .with-circles {
+    @include medium-screen {
+      font-size: 14px;
+    }
+    @include large-screen {
+      font-size: 14px;
+    }
+
+    > ul > li {
+      background-color: white;
+
+      padding: 1.5em $spacer-unit-size;
+      margin-bottom: 2em;
+
+      @include list-item-border;
+
+      &.in-progress {
+        @include list-item-border($brand-warning);
+      }
+    }
+  }
+
+  .rater-profile {
+    display: flex;
+    align-items: center;
+
+    > .profile-picture {
+      width: 40px;
+      height: 40px;
+
+      margin-right: 0.5em;
+    }
+  }
+}
+
+.no-flexbox {
+  #order-list {
+    .rater-profile {
+      display: block;
+
+      > .profile-picture,
+      > span {
+        display: inline-block;
+      }
+
+      > span {
+        vertical-align: top;
+        margin-top: 0.6em;
+      }
+    }
+  }
+}

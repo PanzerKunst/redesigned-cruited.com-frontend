@@ -5,8 +5,8 @@ $two-column-form-group-width: 48%;
   border-radius: $default-border-radius;
 }
 
-@mixin bottom-shadow {
-  box-shadow: 0 0.2em 0 -0.1em lighten(black, 90%);
+@mixin bottom-shadow($color: black, $lighten: 90%) {
+  box-shadow: 0 0.2em 0 -0.1em lighten($color, $lighten);
 }
 
 button.styleless.fa {
@@ -62,48 +62,5 @@ nav > a,
   &:focus,
   &:hover {
     text-decoration: none;
-  }
-}
-
-.single-column-panel {
-  @include medium-screen {
-    margin-left: auto;
-    margin-right: auto;
-
-    max-width: ($small-content-width + $medium-content-width) / 2;
-  }
-  @include large-screen {
-    max-width: $medium-content-width;
-  }
-}
-
-.section-separator {
-  position: relative;
-  color: $well-border-color;
-
-  margin-top: 2em;
-  margin-bottom: 2em;
-
-  > span {
-    background-color: $background-body-color;
-    padding: 0 0.5em;
-
-    &::after {
-      content: "";
-      border-top: 1px solid $well-border-color;
-
-      position: absolute;
-      z-index: -1;
-      left: 0;
-      width: 100%;
-
-      top: 13px;
-      @include medium-screen {
-        top: 17px;
-      }
-      @include large-screen {
-        top: 22px;
-      }
-    }
   }
 }

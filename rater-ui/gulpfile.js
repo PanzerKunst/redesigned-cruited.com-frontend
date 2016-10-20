@@ -5,13 +5,13 @@ var cleanCss = require("gulp-clean-css");
 var concat = require("gulp-concat");
 var eslint = require("gulp-eslint");
 var imagemin = require("gulp-imagemin");
-var postcss = require('gulp-postcss');
+var postcss = require("gulp-postcss");
 var sass = require("gulp-sass");
-var reporter = require('postcss-reporter');
-var syntaxScss = require('postcss-scss');
+var reporter = require("postcss-reporter");
+var syntaxScss = require("postcss-scss");
 var runSequence = require("run-sequence");
 var streamSeries = require("stream-series");
-var stylelint = require('stylelint');
+var stylelint = require("stylelint");
 var webpack = require("webpack");
 var webpackStream = require("webpack-stream");
 
@@ -47,7 +47,7 @@ gulp.task("styles", function() {
         .pipe(sass({"style": "compressed"})
             .on("error", function(err) {
                 console.error(err.message);
-                process.exit(1);
+                this.emit("end");
             }))
         .pipe(cleanCss())
         .pipe(gulp.dest(distDir));
@@ -170,7 +170,7 @@ gulp.task("js-lint", function() {
 gulp.task("js-bundle", function() {
     runWebpack("common.js");
     runWebpack("signIn.js");
-    return runWebpack("assessmentList.js");
+    return runWebpack("orderList.js");
 });
 
 function runWebpack(entryFileName) {
@@ -180,7 +180,7 @@ function runWebpack(entryFileName) {
                 loaders: [
                     {
                         test: /assets[\/\\]scripts[\/\\][\w\/\\]+.js$/,
-                        loader: 'babel-loader'
+                        loader: "babel-loader"
                     }
                 ]
             },

@@ -83,11 +83,9 @@ $header-bottom-border-height: 1px;
     text-decoration: none;
 
     margin-left: -$spacer-unit-size;
-    @include medium-screen {
-      margin-left: 0;
-    }
 
     @include large-screen {
+      margin-left: 0;
       margin-top: 12px;
     }
   }

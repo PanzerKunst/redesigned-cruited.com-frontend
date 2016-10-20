@@ -1,0 +1,25 @@
+@(account: Option[Account], ordersAssignedToMe: List[frontend.FrontendOrder])
+
+@main("Rater - Home", "order-list") {
+<!--
+    Header
+-->
+@header(account)
+
+} {
+<!--
+    Javascript
+-->
+<script type="text/javascript">
+    var account = undefined;
+    @if(account.isDefined) {
+        account = "@account.get";
+    }
+
+    CR.ControllerData = {
+        ordersAssignedToMe: @Html(play.api.libs.json.Json.toJson(ordersAssignedToMe).toString())
+    };
+</script>
+
+<script type="text/javascript" src="@routes.Assets.versioned("scripts/orderList.js")"></script>
+}
