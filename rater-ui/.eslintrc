@@ -147,6 +147,7 @@ globals:
     React: true
     ReactDOM: true
     TweenLite: true
+    moment: true
     Modernizr: true
     CR: true
 

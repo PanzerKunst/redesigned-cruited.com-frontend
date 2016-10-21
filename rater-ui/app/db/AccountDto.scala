@@ -34,7 +34,6 @@ class AccountDto @Inject()(db: Database) {
             firstName = firstName,
             lastName = lastNameOpt,
             emailAddress = emailAddress,
-            password = None,
             linkedinProfile = linkedinBasicProfile match {
               case "" => JsNull
               case otherString => Json.parse(otherString)
@@ -70,7 +69,6 @@ class AccountDto @Inject()(db: Database) {
             firstName = firstName,
             lastName = lastNameOpt,
             emailAddress = emailAddress,
-            password = None,
             linkedinProfile = linkedinBasicProfile match {
               case "" => JsNull
               case otherString => Json.parse(otherString)

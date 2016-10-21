@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 
-import db.{OrderDto, AccountDto}
+import db.{AccountDto, OrderDto}
 import play.api.mvc._
 import services.SessionService
 
@@ -17,8 +17,8 @@ class HomeController @Inject()(accountDto: AccountDto, orderDto: OrderDto) exten
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/login")
       case Some(accountId) =>
-        val ordersAssignedToMe = orderDto.getOfRaterIdForFrontend(accountId) map { tuple => tuple._1}
-        Ok(views.html.orderList(accountDto.getOfId(accountId), ordersAssignedToMe))
+        val ordersToDisplayAtTheTop = orderDto.getActionableOrdersOfRaterId(accountId)
+        Ok(views.html.orderList(accountDto.getOfId(accountId), ordersToDisplayAtTheTop))
     }
   }
 

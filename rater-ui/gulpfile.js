@@ -7,8 +7,10 @@ var eslint = require("gulp-eslint");
 var imagemin = require("gulp-imagemin");
 var postcss = require("gulp-postcss");
 var sass = require("gulp-sass");
+var uglify = require("gulp-uglify");
 var reporter = require("postcss-reporter");
 var syntaxScss = require("postcss-scss");
+var pump = require("pump");
 var runSequence = require("run-sequence");
 var streamSeries = require("stream-series");
 var stylelint = require("stylelint");
@@ -36,6 +38,7 @@ var scriptDistDir = distDir + "scripts/";
 var imageDistDir = distDir + "images/";
 var fontDistDir = distDir + "fonts/";
 
+var scriptDistFileNameConcat = "libs.js";
 
 // ## Gulp tasks
 // Run `gulp -T` for a task summary
@@ -170,16 +173,18 @@ gulp.task("js-lint", function() {
 gulp.task("js-bundle", function() {
     runWebpack("common.js");
     runWebpack("signIn.js");
-    return runWebpack("orderList.js");
+    return runWebpack("orderList.js", "controllers/order-list/");
 });
 
-function runWebpack(entryFileName) {
-    return gulp.src(scriptSrcDir + "controllers/" + entryFileName)
+function runWebpack(entryFileName, srcSubDir) {
+    srcSubDir = srcSubDir || "controllers/";
+
+    return gulp.src(scriptSrcDir + srcSubDir + entryFileName)
         .pipe(webpackStream({
             module: {
                 loaders: [
                     {
-                        test: /assets[\/\\]scripts[\/\\][\w\/\\]+.js$/,
+                        test: /assets[\/\\]scripts[\/\\][\w\-\/\\]+.js$/,
                         loader: "babel-loader"
                     }
                 ]
@@ -194,18 +199,33 @@ function runWebpack(entryFileName) {
 // ### Concatenating large libraries used in most pages. Those listed in `.eslintrc > globals`
 // `gulp js-libs`
 gulp.task("js-libs", function() {
+    runSequence("js-libs-concat",
+        "js-libs-uglify");
+});
+
+gulp.task("js-libs-concat", function() {
     return streamSeries(
-        gulp.src("node_modules/jquery/dist/jquery.slim.min.js"),
-        gulp.src("node_modules/lodash/lodash.min.js"),
-        gulp.src("node_modules/react/dist/react.min.js"),
-        gulp.src("node_modules/react-dom/dist/react-dom.min.js"),
-        gulp.src("node_modules/gsap/src/minified/TweenLite.min.js"),
-        gulp.src("node_modules/gsap/src/minified/easing/EasePack.min.js"),
-        gulp.src("node_modules/gsap/src/minified/plugins/CSSPlugin.min.js"),
-        gulp.src("node_modules/gsap/src/minified/plugins/ScrollToPlugin.min.js"),
+        gulp.src("node_modules/jquery/dist/jquery.slim.js"),
+        gulp.src("node_modules/lodash/lodash.js"),
+        gulp.src("node_modules/react/dist/react.js"),
+        gulp.src("node_modules/react-dom/dist/react-dom.js"),
+        gulp.src("node_modules/gsap/src/minified/TweenLite.js"),
+        gulp.src("node_modules/gsap/src/minified/easing/EasePack.js"),
+        gulp.src("node_modules/gsap/src/minified/plugins/CSSPlugin.js"),
+        gulp.src("node_modules/gsap/src/minified/plugins/ScrollToPlugin.js"),
+        gulp.src("node_modules/moment/moment.js"),
+        gulp.src("node_modules/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"),
         gulp.src(scriptVendorFiles))
-        .pipe(concat("libs.js"))
+        .pipe(concat(scriptDistFileNameConcat))
         .pipe(gulp.dest(scriptDistDir));
+});
+
+gulp.task("js-libs-uglify", function() {
+    return pump([
+        gulp.src(scriptDistDir + scriptDistFileNameConcat),
+        uglify(),
+        gulp.dest(scriptDistDir)
+    ]);
 });
 
 // ### Images

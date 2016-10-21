@@ -37,6 +37,17 @@
       margin-right: 0.5em;
     }
   }
+
+  #load-more-panel {
+    .fa-spinner {
+      display: none;
+      font-size: 2em;
+    }
+  }
+
+  #load-more-link-panel {
+    text-align: right;
+  }
 }
 
 .no-flexbox {

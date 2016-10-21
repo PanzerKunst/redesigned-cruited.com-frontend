@@ -7,7 +7,6 @@ case class Account(id: Long,
                    firstName: String,
                    lastName: Option[String],
                    emailAddress: String,
-                   password: Option[String],
                    linkedinProfile: JsValue,
                    `type`: Int,
                    languageCode: String,
@@ -19,7 +18,6 @@ object Account {
       (JsPath \ "firstName").write[String] and
       (JsPath \ "lastName").writeNullable[String] and
       (JsPath \ "emailAddress").write[String] and
-      (JsPath \ "password").writeNullable[String] and
       (JsPath \ "linkedinProfile").write[JsValue] and
       (JsPath \ "type").write[Int] and
       (JsPath \ "languageCode").write[String] and
