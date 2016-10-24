@@ -2,6 +2,9 @@ import {httpStatusCodes} from "../../global";
 import Order from "../../models/order";
 import Product from "../../models/product";
 
+// eslint-disable-next-line no-unused-vars
+import RaterProfile from "../raterProfile";
+
 const ListItem = React.createClass({
     render() {
         const order = this.props.order;
@@ -9,7 +12,7 @@ const ListItem = React.createClass({
         return (
             <li ref="li" className={this._cssClassForStatus(order.status)}>
                 <section>
-                    {this._raterProfile(order.rater)}
+                    <RaterProfile account={order.rater} />
                     <p>#{order.id}</p>
                     {this._timeLeft(order)}
                     <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
@@ -50,7 +53,6 @@ const ListItem = React.createClass({
         const $listItem = $(ReactDOM.findDOMNode(this.refs.li));
 
         this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
-        this.$assignModal = $("#assign-modal");
 
         this.$bootstrapTooltips.tooltip();
     },
@@ -69,26 +71,6 @@ const ListItem = React.createClass({
                 return "completed";
             default:
                 return "not-paid";
-        }
-    },
-
-    _raterProfile(rater) {
-        if (!rater) {
-            return null;
-        } else {
-            let myProfilePictureStyleAttr = null;
-            const myLinkedinProfile = rater.linkedinProfile;
-
-            if (myLinkedinProfile) {
-                myProfilePictureStyleAttr = {backgroundImage: "url(" + myLinkedinProfile.pictureUrl + ")"};
-            }
-
-            return (
-                <article className="rater-profile">
-                    <div className="profile-picture" style={myProfilePictureStyleAttr}></div>
-                    <span>{rater.firstName} {rater.lastName}</span>
-                </article>
-            );
         }
     },
 
@@ -168,7 +150,7 @@ const ListItem = React.createClass({
     },
 
     _handleAssignClicked() {
-        this.$assignModal.modal();
+        this.props.parentController.showAssignModal(this.props.order.id);
     },
 
     _handleDeleteClicked() {

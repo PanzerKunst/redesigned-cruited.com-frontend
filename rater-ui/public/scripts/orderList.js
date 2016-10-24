@@ -56,7 +56,7 @@
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
-	var _assignModal = __webpack_require__(6);
+	var _assignModal = __webpack_require__(7);
 
 	var _assignModal2 = _interopRequireDefault(_assignModal);
 
@@ -162,21 +162,59 @@
 	                this.isDefaultSearchDone = true;
 	            }
 	        },
-	        hideOrderOfId: function hideOrderOfId(orderId) {
-	            var filterFnc = function filterFnc(order) {
-	                return order.id !== orderId;
-	            };
 
-	            this.setState({
-	                topOrders: _.filter(this.state.topOrders, filterFnc),
-	                moreOrders: _.filter(this.state.moreOrders, filterFnc)
-	            });
+
+	        /* TODO: move to `deleteModal`
+	         hideOrderOfId(orderId) {
+	         const filterFnc = order => order.id !== orderId;
+	           this.setState({
+	         topOrders: _.filter(this.state.topOrders, filterFnc),
+	         moreOrders: _.filter(this.state.moreOrders, filterFnc)
+	         });
+	         }, */
+
+	        showAssignModal: function showAssignModal(orderId) {
+	            this.$assignModal.modal();
+	            this.currentOrderId = orderId;
+	        },
+	        assignOrderTo: function assignOrderTo(account) {
+	            var _this2 = this;
+
+	            if (!this.currentOrderId) {
+	                alert("Error: `this.currentOrderId` must exist, this is a bug!");
+	            } else {
+	                (function () {
+	                    var order = _.find(_this2.state.topOrders, ["id", _this2.currentOrderId]) || _.find(_this2.state.moreOrders, ["id", _this2.currentOrderId]);
+
+	                    order.rater = account;
+
+	                    var type = "PUT";
+	                    var url = "/api/orders";
+
+	                    var httpRequest = new XMLHttpRequest();
+
+	                    httpRequest.onreadystatechange = function () {
+	                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                            if (httpRequest.status !== _global.httpStatusCodes.ok) {
+	                                alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                            }
+	                        }
+	                    };
+	                    httpRequest.open(type, url);
+	                    httpRequest.setRequestHeader("Content-Type", "application/json");
+	                    httpRequest.send(JSON.stringify(order));
+
+	                    // We update the lists
+	                    _this2.forceUpdate();
+	                })();
+	            }
 	        },
 	        _initElements: function _initElements() {
 	            this.$loadMorePanel = $("#load-more-panel");
+	            this.$assignModal = $("#assign-modal");
 	        },
 	        _topOrders: function _topOrders() {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            if (this.state.topOrders.length === 0) {
 	                return React.createElement(
@@ -189,7 +227,7 @@
 	                "ul",
 	                { className: "styleless" },
 	                this.state.topOrders.map(function (order) {
-	                    return React.createElement(_listItem2.default, { key: order.id, order: order, account: _this2.state.account, config: _this2.state.config, parentController: _this2 });
+	                    return React.createElement(_listItem2.default, { key: order.id, order: order, account: _this3.state.account, config: _this3.state.config, parentController: _this3 });
 	                })
 	            );
 	        },
@@ -319,6 +357,10 @@
 
 	var _product2 = _interopRequireDefault(_product);
 
+	var _raterProfile = __webpack_require__(6);
+
+	var _raterProfile2 = _interopRequireDefault(_raterProfile);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var ListItem = React.createClass({
@@ -334,7 +376,7 @@
 	            React.createElement(
 	                "section",
 	                null,
-	                this._raterProfile(order.rater),
+	                React.createElement(_raterProfile2.default, { account: order.rater }),
 	                React.createElement(
 	                    "p",
 	                    null,
@@ -417,7 +459,6 @@
 	        var $listItem = $(ReactDOM.findDOMNode(this.refs.li));
 
 	        this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
-	        this.$assignModal = $("#assign-modal");
 
 	        this.$bootstrapTooltips.tooltip();
 	    },
@@ -435,31 +476,6 @@
 	                return "completed";
 	            default:
 	                return "not-paid";
-	        }
-	    },
-	    _raterProfile: function _raterProfile(rater) {
-	        if (!rater) {
-	            return null;
-	        } else {
-	            var myProfilePictureStyleAttr = null;
-	            var myLinkedinProfile = rater.linkedinProfile;
-
-	            if (myLinkedinProfile) {
-	                myProfilePictureStyleAttr = { backgroundImage: "url(" + myLinkedinProfile.pictureUrl + ")" };
-	            }
-
-	            return React.createElement(
-	                "article",
-	                { className: "rater-profile" },
-	                React.createElement("div", { className: "profile-picture", style: myProfilePictureStyleAttr }),
-	                React.createElement(
-	                    "span",
-	                    null,
-	                    rater.firstName,
-	                    " ",
-	                    rater.lastName
-	                )
-	            );
 	        }
 	    },
 	    _timeLeft: function _timeLeft(order) {
@@ -552,7 +568,7 @@
 	        );
 	    },
 	    _handleAssignClicked: function _handleAssignClicked() {
-	        this.$assignModal.modal();
+	        this.props.parentController.showAssignModal(this.props.order.id);
 	    },
 	    _handleDeleteClicked: function _handleDeleteClicked() {
 	        var order = this.props.order;
@@ -580,6 +596,7 @@
 	    }
 	});
 
+	// eslint-disable-next-line no-unused-vars
 	exports.default = ListItem;
 
 /***/ },
@@ -641,6 +658,48 @@
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var RaterProfile = React.createClass({
+	    displayName: "RaterProfile",
+	    render: function render() {
+	        var account = this.props.account;
+
+	        if (!this.props.account) {
+	            return null;
+	        }
+
+	        var myProfilePictureStyleAttr = null;
+	        var myLinkedinProfile = account.linkedinProfile;
+
+	        if (myLinkedinProfile) {
+	            myProfilePictureStyleAttr = { backgroundImage: "url(" + myLinkedinProfile.pictureUrl + ")" };
+	        }
+
+	        return React.createElement(
+	            "article",
+	            { className: "rater-profile" },
+	            React.createElement("div", { className: "profile-picture", style: myProfilePictureStyleAttr }),
+	            React.createElement(
+	                "span",
+	                null,
+	                account.firstName,
+	                " ",
+	                account.lastName
+	            )
+	        );
+	    }
+	});
+
+	exports.default = RaterProfile;
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -652,6 +711,12 @@
 
 	var _global = __webpack_require__(1);
 
+	var _raterProfile = __webpack_require__(6);
+
+	var _raterProfile2 = _interopRequireDefault(_raterProfile);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var AssignModal = React.createClass({
 	    displayName: "AssignModal",
 	    getInitialState: function getInitialState() {
@@ -660,9 +725,11 @@
 	        };
 	    },
 	    render: function render() {
+	        var _this = this;
+
 	        return React.createElement(
 	            "div",
-	            { ref: "modal", id: "assign-modal", className: "modal fade", tabIndex: "-1", role: "dialog" },
+	            { id: "assign-modal", className: "modal fade", tabIndex: "-1", role: "dialog" },
 	            React.createElement(
 	                "div",
 	                { className: "modal-dialog modal-sm", role: "document" },
@@ -696,10 +763,8 @@
 	                            this.state.allRaters.map(function (account) {
 	                                return React.createElement(
 	                                    "li",
-	                                    { key: account.id },
-	                                    account.firstName,
-	                                    " ",
-	                                    account.lastName
+	                                    { key: account.id, onClick: _this._handleItemClicked, "data-account-id": account.id },
+	                                    React.createElement(_raterProfile2.default, { account: account })
 	                                );
 	                            })
 	                        )
@@ -713,8 +778,7 @@
 	        this._fetchAllRaters();
 	    },
 	    _initElements: function _initElements() {
-
-	        // const $modal = $(ReactDOM.findDOMNode(this.refs.modal));
+	        this.$modal = $("#assign-modal");
 
 	        /* TODO
 	         $modal.on("show.bs.modal", function(e) {
@@ -740,9 +804,16 @@
 	        }.bind(this);
 	        httpRequest.open(type, url);
 	        httpRequest.send();
+	    },
+	    _handleItemClicked: function _handleItemClicked(e) {
+	        var accountId = $(e.currentTarget).data("account-id");
+
+	        this.props.parentController.assignOrderTo(_.find(this.state.allRaters, ["id", accountId]));
+	        this.$modal.modal("hide");
 	    }
 	});
 
+	// eslint-disable-next-line no-unused-vars
 	exports.default = AssignModal;
 
 /***/ }

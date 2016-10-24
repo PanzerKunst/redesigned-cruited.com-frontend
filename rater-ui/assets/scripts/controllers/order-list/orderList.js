@@ -87,17 +87,54 @@ const AssessmentListController = {
             }
         },
 
-        hideOrderOfId(orderId) {
-            const filterFnc = order => order.id !== orderId;
+        /* TODO: move to `deleteModal`
+         hideOrderOfId(orderId) {
+         const filterFnc = order => order.id !== orderId;
 
-            this.setState({
-                topOrders: _.filter(this.state.topOrders, filterFnc),
-                moreOrders: _.filter(this.state.moreOrders, filterFnc)
-            });
+         this.setState({
+         topOrders: _.filter(this.state.topOrders, filterFnc),
+         moreOrders: _.filter(this.state.moreOrders, filterFnc)
+         });
+         }, */
+
+        showAssignModal(orderId) {
+            this.$assignModal.modal();
+            this.currentOrderId = orderId;
+        },
+
+        assignOrderTo(account) {
+            if (!this.currentOrderId) {
+                alert("Error: `this.currentOrderId` must exist, this is a bug!");
+            } else {
+                const order = _.find(this.state.topOrders, ["id", this.currentOrderId]) ||
+                    _.find(this.state.moreOrders, ["id", this.currentOrderId]);
+
+                order.rater = account;
+
+                const type = "PUT";
+                const url = "/api/orders";
+
+                const httpRequest = new XMLHttpRequest();
+
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        if (httpRequest.status !== httpStatusCodes.ok) {
+                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        }
+                    }
+                };
+                httpRequest.open(type, url);
+                httpRequest.setRequestHeader("Content-Type", "application/json");
+                httpRequest.send(JSON.stringify(order));
+
+                // We update the lists
+                this.forceUpdate();
+            }
         },
 
         _initElements() {
             this.$loadMorePanel = $("#load-more-panel");
+            this.$assignModal = $("#assign-modal");
         },
 
         _topOrders() {

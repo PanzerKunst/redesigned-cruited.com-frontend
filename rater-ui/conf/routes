@@ -16,6 +16,7 @@ GET           /signin                     controllers.HomeController.signIn
 
 # API
 POST          /api/auth                   controllers.api.AuthApi.signIn
+PUT           /api/orders                 controllers.api.OrderApi.update
 DELETE        /api/orders                 controllers.api.OrderApi.delete
 GET           /api/orders/top             controllers.api.OrderApi.top
 POST          /api/orders/search          controllers.api.OrderApi.search

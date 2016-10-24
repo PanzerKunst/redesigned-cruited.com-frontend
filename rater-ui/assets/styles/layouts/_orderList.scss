@@ -94,6 +94,19 @@
 
   .modal-body > ul {
     margin-bottom: 0;
+
+    > li {
+      @include transition(background $default-animation-duration);
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &:hover,
+      &.selected {
+        background-color: $well-border-color;
+      }
+    }
   }
 }
 

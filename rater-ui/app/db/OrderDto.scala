@@ -17,9 +17,16 @@ import scala.collection.mutable.ListBuffer
 class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: AccountDto, config: GlobalConfig) {
   def update(order: Order) {
     db.withConnection { implicit c =>
+      val assignClause = order.rater match {
+        case None => ""
+        case Some(rater) => """,
+          assign_to = """ + rater.id
+      }
+
       val query = """
         update documents set
-          status = """ + order.status + """
+          status = """ + order.status +
+          assignClause + """
         where id = """ + order.id + """;"""
 
       Logger.info("OrderDto.update():" + query)

@@ -1,5 +1,8 @@
 import {httpStatusCodes} from "../../global";
 
+// eslint-disable-next-line no-unused-vars
+import RaterProfile from "../raterProfile";
+
 const AssignModal = React.createClass({
     getInitialState() {
         return {
@@ -9,7 +12,7 @@ const AssignModal = React.createClass({
 
     render() {
         return (
-            <div ref="modal" id="assign-modal" className="modal fade" tabIndex="-1" role="dialog">
+            <div id="assign-modal" className="modal fade" tabIndex="-1" role="dialog">
                 <div className="modal-dialog modal-sm" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -20,7 +23,11 @@ const AssignModal = React.createClass({
                         </div>
                         <div className="modal-body">
                             <ul className="styleless">
-                                {this.state.allRaters.map(account => <li key={account.id}>{account.firstName} {account.lastName}</li>)}
+                                {this.state.allRaters.map(account => (
+                                        <li key={account.id} onClick={this._handleItemClicked} data-account-id={account.id}>
+                                            <RaterProfile account={account} />
+                                        </li>)
+                                )}
                             </ul>
                         </div>
                     </div>
@@ -35,8 +42,7 @@ const AssignModal = React.createClass({
     },
 
     _initElements() {
-
-        // const $modal = $(ReactDOM.findDOMNode(this.refs.modal));
+        this.$modal = $("#assign-modal");
 
         /* TODO
          $modal.on("show.bs.modal", function(e) {
@@ -63,6 +69,13 @@ const AssignModal = React.createClass({
         }.bind(this);
         httpRequest.open(type, url);
         httpRequest.send();
+    },
+
+    _handleItemClicked(e) {
+        const accountId = $(e.currentTarget).data("account-id");
+
+        this.props.parentController.assignOrderTo(_.find(this.state.allRaters, ["id", accountId]));
+        this.$modal.modal("hide");
     }
 });
 
