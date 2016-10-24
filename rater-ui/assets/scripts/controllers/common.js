@@ -1,5 +1,5 @@
-import Browser from "../services/browser";
 import {animationDurations} from "../global";
+import Browser from "../services/browser";
 
 const CommonController = {
     init() {

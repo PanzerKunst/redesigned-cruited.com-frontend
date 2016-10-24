@@ -46,13 +46,13 @@
 
 	"use strict";
 
-	var _validator = __webpack_require__(1);
+	var _global = __webpack_require__(1);
+
+	var _jqueryAnimator = __webpack_require__(2);
+
+	var _validator = __webpack_require__(3);
 
 	var _validator2 = _interopRequireDefault(_validator);
-
-	var _jqueryAnimator = __webpack_require__(3);
-
-	var _global = __webpack_require__(2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -202,6 +202,93 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.fadeIn = fadeIn;
+	exports.fadeOut = fadeOut;
+	exports.enableLoading = enableLoading;
+	exports.disableLoading = disableLoading;
+	function fadeIn($el, params) {
+	    if (!$el.is(":visible")) {
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
+	        var alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
+
+	        TweenLite.set($el, { display: "block", alpha: 0 });
+	        TweenLite.to($el, animationDuration, {
+	            alpha: alpha,
+	            onComplete: function onComplete() {
+	                if (params && _.isFunction(params.onComplete)) {
+	                    params.onComplete();
+	                }
+	            }
+	        });
+	    }
+	}
+
+	function fadeOut($el, params) {
+	    if ($el.is(":visible")) {
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
+
+	        TweenLite.to($el, animationDuration, {
+	            alpha: 0,
+	            onComplete: function onComplete() {
+	                $el.hide().css("opacity", 1);
+	                if (params && _.isFunction(params.onComplete)) {
+	                    params.onComplete();
+	                }
+	            }
+	        });
+	    }
+	}
+
+	function enableLoading($el, text) {
+	    if ($el.prop("tagName") === "BUTTON") {
+	        var btn = $el[0];
+	        var defaultText = btn.innerHTML;
+	        var loadingText = text || defaultText;
+
+	        $el.data("defaultText", defaultText);
+	        $el.prop("disabled", true);
+
+	        btn.innerHTML = "<i class=\"fa fa-spinner fa-pulse\"></i>" + loadingText;
+	    }
+	}
+
+	function disableLoading($el) {
+	    if ($el.prop("tagName") === "BUTTON") {
+	        $el.html($el.data("defaultText"));
+	        $el.prop("disabled", false);
+	    }
+	}
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -211,7 +298,7 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(2);
+	var _global = __webpack_require__(1);
 
 	var validator = {
 	    fieldIds: [],
@@ -540,93 +627,6 @@
 	}
 
 	exports.default = Validator;
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var animationDurations = exports.animationDurations = {
-	    short: 0.2,
-	    medium: 0.5
-	};
-
-	var httpStatusCodes = exports.httpStatusCodes = {
-	    ok: 200,
-	    created: 201,
-	    noContent: 204,
-	    signInIncorrectCredentials: 230
-	};
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.fadeIn = fadeIn;
-	exports.fadeOut = fadeOut;
-	exports.enableLoading = enableLoading;
-	exports.disableLoading = disableLoading;
-	function fadeIn($el, params) {
-	    if (!$el.is(":visible")) {
-	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
-	        var alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
-
-	        TweenLite.set($el, { display: "block", alpha: 0 });
-	        TweenLite.to($el, animationDuration, {
-	            alpha: alpha,
-	            onComplete: function onComplete() {
-	                if (params && _.isFunction(params.onComplete)) {
-	                    params.onComplete();
-	                }
-	            }
-	        });
-	    }
-	}
-
-	function fadeOut($el, params) {
-	    if ($el.is(":visible")) {
-	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
-
-	        TweenLite.to($el, animationDuration, {
-	            alpha: 0,
-	            onComplete: function onComplete() {
-	                $el.hide().css("opacity", 1);
-	                if (params && _.isFunction(params.onComplete)) {
-	                    params.onComplete();
-	                }
-	            }
-	        });
-	    }
-	}
-
-	function enableLoading($el, text) {
-	    if ($el.prop("tagName") === "BUTTON") {
-	        var btn = $el[0];
-	        var defaultText = btn.innerHTML;
-	        var loadingText = text || defaultText;
-
-	        $el.data("defaultText", defaultText);
-	        $el.prop("disabled", true);
-
-	        btn.innerHTML = "<i class=\"fa fa-spinner fa-pulse\"></i>" + loadingText;
-	    }
-	}
-
-	function disableLoading($el) {
-	    if ($el.prop("tagName") === "BUTTON") {
-	        $el.html($el.data("defaultText"));
-	        $el.prop("disabled", false);
-	    }
-	}
 
 /***/ }
 /******/ ]);

@@ -1,3 +1,4 @@
+import {httpStatusCodes} from "../../global";
 import Order from "../../models/order";
 import Product from "../../models/product";
 
@@ -10,7 +11,7 @@ const ListItem = React.createClass({
                 <section>
                     {this._raterProfile(order.rater)}
                     <p>#{order.id}</p>
-                    {this._timeLeft(order.paymentTimestamp, order.status)}
+                    {this._timeLeft(order)}
                     <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
                 </section>
                 <section>
@@ -34,7 +35,8 @@ const ListItem = React.createClass({
                         {order.containedProductCodes.map(productCode => this._productCode(productCode, order.id))}
                         <span className="order-list-item-tag lang">{order.languageCode}</span>
                     </div>
-                    {this._actionBtn(order.id, order.idInBase64)}
+                    {this._actionBtn(order)}
+                    {this._secondaryButtons(order)}
                 </section>
             </li>
         );
@@ -48,25 +50,22 @@ const ListItem = React.createClass({
         const $listItem = $(ReactDOM.findDOMNode(this.refs.li));
 
         this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
+        this.$assignModal = $("#assign-modal");
 
-        this._initTooltips();
-    },
-
-    _initTooltips() {
         this.$bootstrapTooltips.tooltip();
     },
 
     _cssClassForStatus(status) {
         switch (status) {
-            case Order.statusIds.paid:
+            case Order.statuses.paid:
                 return "paid";
-            case Order.statusIds.inProgress:
+            case Order.statuses.inProgress:
                 return "in-progress";
-            case Order.statusIds.awaitingFeedback:
+            case Order.statuses.awaitingFeedback:
                 return "awaiting-feedback";
-            case Order.statusIds.scheduled:
+            case Order.statuses.scheduled:
                 return "scheduled";
-            case Order.statusIds.completed:
+            case Order.statuses.completed:
                 return "completed";
             default:
                 return "not-paid";
@@ -93,12 +92,12 @@ const ListItem = React.createClass({
         }
     },
 
-    _timeLeft(paymentTimestamp, orderStatus) {
-        if (orderStatus === Order.statusIds.completed || orderStatus === Order.statusIds.scheduled) {
+    _timeLeft(order) {
+        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled) {
             return null;
         }
 
-        const dueDate = moment(paymentTimestamp).add(1, "d").subtract(90, "m");
+        const dueDate = moment(order.paymentTimestamp).add(1, "d").subtract(90, "m");
         const timeLeft = moment.duration(dueDate.valueOf() - moment().valueOf());
 
         return <p>{timeLeft.hours()}h{timeLeft.minutes()}m left</p>;
@@ -117,17 +116,85 @@ const ListItem = React.createClass({
         return <span key={reactKey} className="order-list-item-tag product-code">{Product.humanReadableCode(productCode)}</span>;
     },
 
-    _actionBtn(orderStatus, orderIdInBase64) {
-        const label = orderStatus === Order.statusIds.completed || orderStatus === Order.statusIds.scheduled ? "View" : "Assess";
+    _actionBtn(order) {
+        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled) {
+            return this._checkBtn();
+        }
+        return this._assessBtn(order.rater);
+    },
 
-        // TODO: remove
-        console.log("orderIdInBase64", orderIdInBase64);
+    _assessBtn(rater) {
+        const btn = rater ?
+            <button className="btn btn-default">Assess</button> :
+            <button className="btn btn-default" disabled>Assess</button>;
 
         return (
             <div>
-                <button className="btn">{label}</button>
+                {btn}
             </div>
         );
+    },
+
+    _checkBtn() {
+        return (
+            <div>
+                <button className="btn btn-default" href="">Check</button>
+            </div>
+        );
+    },
+
+    _secondaryButtons(order) {
+        const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled || !this.props.account.isAdmin() ?
+            null :
+            <button className="styleless fa fa-user" onClick={this._handleAssignClicked}>
+                <i className="fa fa-check" aria-hidden="true"></i>
+            </button>;
+
+        const viewBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled ?
+            <button className="styleless fa fa-eye"></button> :
+            null;
+
+        const deleteBtn = this.props.account.isAdmin() ?
+            <button className="styleless fa fa-trash" onClick={this._handleDeleteClicked}></button> :
+            null;
+
+        return (
+            <div className="secondary-buttons">
+                {assignBtn}
+                {viewBtn}
+                {deleteBtn}
+            </div>
+        );
+    },
+
+    _handleAssignClicked() {
+        this.$assignModal.modal();
+    },
+
+    _handleDeleteClicked() {
+        const order = this.props.order;
+
+        // TODO: remove
+        console.log("_handleDeleteClicked", order);
+
+        const type = "DELETE";
+        const url = "/api/orders";
+
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = function() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    this.props.parentController.hideOrderOfId(order.id);
+                } else {
+                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                }
+            }
+        }.bind(this);
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify(order));
+
     }
 });
 

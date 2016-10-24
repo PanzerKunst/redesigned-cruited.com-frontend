@@ -14,15 +14,28 @@ import services.{GlobalConfig, StringService}
 import scala.collection.mutable.ListBuffer
 
 @Singleton
-class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: AccountDto) {
+class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: AccountDto, config: GlobalConfig) {
   def update(order: Order) {
     db.withConnection { implicit c =>
       val query = """
         update documents set
           status = """ + order.status + """
-        where id = """ + order.id.get + """;"""
+        where id = """ + order.id + """;"""
 
       Logger.info("OrderDto.update():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  def updateAsDeleted(order: Order) {
+    db.withConnection { implicit c =>
+      val query = """
+        update documents set
+          shw = """ + Order.showIdDeleted + """
+        where id = """ + order.id + """;"""
+
+      Logger.info("OrderDto.updateAsDeleted():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -134,7 +147,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
                   case "by_percent" => (couponAmountOpt, None)
                   case "by_value" => (None, Some(Price(
                     amount = couponAmountOpt.get,
-                    currencyCode = GlobalConfig.paymentCurrencyCode
+                    currencyCode = config.paymentCurrencyCode
                   )))
                 }
 
@@ -257,7 +270,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         from documents d
           inner join product_edition e on e.id = d.edition_id
           inner join useri u on u.id = d.added_by
-          inner join useri r on r.id = d.assign_to
+          left join useri r on r.id = d.assign_to
           left join codes c on c.name = d.code
         where d.shw = 1
           and u.id != """ + accountDto.unknownUserId +
@@ -352,7 +365,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
                 case "by_percent" => (couponAmountOpt, None)
                 case "by_value" => (None, Some(Price(
                   amount = couponAmountOpt.get,
-                  currencyCode = GlobalConfig.paymentCurrencyCode
+                  currencyCode = config.paymentCurrencyCode
                 )))
               }
 

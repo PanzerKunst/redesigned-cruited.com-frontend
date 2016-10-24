@@ -4,21 +4,22 @@ import javax.inject._
 
 import db.{AccountDto, OrderDto}
 import play.api.mvc._
-import services.SessionService
+import services.{GlobalConfig, SessionService}
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(accountDto: AccountDto, orderDto: OrderDto) extends Controller {
+class HomeController @Inject()(accountDto: AccountDto, orderDto: OrderDto, config: GlobalConfig) extends Controller {
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/login")
-      case Some(accountId) =>
-        val ordersToDisplayAtTheTop = orderDto.getActionableOrdersOfRaterId(accountId)
-        Ok(views.html.orderList(accountDto.getOfId(accountId), ordersToDisplayAtTheTop))
+      case Some(accountId) => accountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) => Ok(views.html.orderList(account, config))
+      }
     }
   }
 

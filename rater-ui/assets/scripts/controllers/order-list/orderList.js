@@ -1,23 +1,26 @@
+import {httpStatusCodes} from "../../global";
+import Account from "../../models/Account";
+
 // eslint-disable-next-line no-unused-vars
 import ListItem from "./listItem";
 
-const AssessmentListController = {
-    ordersToDisplayAtTheTop: [],
+// eslint-disable-next-line no-unused-vars
+import AssignModal from "./assignModal";
 
+const AssessmentListController = {
     init() {
         ReactDOM.render(
             React.createElement(this.reactComponent),
             document.querySelector("[role=main]")
-        )
-            .setState({
-                ordersToDisplayAtTheTop: this.ordersToDisplayAtTheTop
-            });
+        );
     },
 
     reactComponent: React.createClass({
         getInitialState() {
             return {
-                ordersToDisplayAtTheTop: [],
+                account: Object.assign(Object.create(Account), CR.ControllerData.account),
+                config: CR.ControllerData.config,
+                topOrders: [],
                 moreOrders: []
             };
         },
@@ -31,9 +34,9 @@ const AssessmentListController = {
                         </div>
                     </header>
                     <div className="with-circles">
+                        {this._topOrders()}
                         <ul className="styleless">
-                        {this.state.ordersToDisplayAtTheTop.map(order => <ListItem key={order.id} order={order} />)}
-                        {this.state.moreOrders.map(order => <ListItem key={order.id} order={order} />)}
+                            {this.state.moreOrders.map(order => <ListItem key={order.id} order={order} account={this.state.account} config={this.state.config} parentController={this} />)}
                         </ul>
                         <div id="load-more-panel">
                             <div className="centered-contents">
@@ -44,8 +47,35 @@ const AssessmentListController = {
                             </div>
                         </div>
                     </div>
+
+                    <AssignModal parentController={this} />
                 </div>
             );
+        },
+
+        componentDidMount() {
+            this._fetchTopOrders();
+        },
+
+        _fetchTopOrders() {
+            const type = "GET";
+            const url = "/api/orders/top";
+
+            const httpRequest = new XMLHttpRequest();
+
+            httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === httpStatusCodes.ok) {
+                        this.setState({
+                            topOrders: JSON.parse(httpRequest.responseText)
+                        });
+                    } else {
+                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    }
+                }
+            }.bind(this);
+            httpRequest.open(type, url);
+            httpRequest.send();
         },
 
         componentDidUpdate() {
@@ -57,11 +87,30 @@ const AssessmentListController = {
             }
         },
 
-        _initElements() {
-            const $loadMorePanel = $("#load-more-panel");
+        hideOrderOfId(orderId) {
+            const filterFnc = order => order.id !== orderId;
 
-            this.$loadMoreSpinner = $loadMorePanel.find(".fa-spinner");
-            this.$loadMoreLink = $loadMorePanel.find("a");
+            this.setState({
+                topOrders: _.filter(this.state.topOrders, filterFnc),
+                moreOrders: _.filter(this.state.moreOrders, filterFnc)
+            });
+        },
+
+        _initElements() {
+            this.$loadMorePanel = $("#load-more-panel");
+        },
+
+        _topOrders() {
+            if (this.state.topOrders.length === 0) {
+                return (
+                    <div className="centered-contents">
+                        <i className="fa fa-spinner fa-pulse"/>
+                    </div>);
+            }
+            return (
+                <ul className="styleless">
+                    {this.state.topOrders.map(order => <ListItem key={order.id} order={order} account={this.state.account} config={this.state.config} parentController={this} />)}
+                </ul>);
         },
 
         _handleLoadMoreClicked() {
@@ -71,8 +120,7 @@ const AssessmentListController = {
         _searchMore() {
             this._updateSearchCriteria();
 
-            this.$loadMoreSpinner.show();
-            this.$loadMoreLink.hide();
+            this.$loadMorePanel.addClass("loading");
 
             const type = "POST";
             const url = "/api/orders/search";
@@ -81,12 +129,15 @@ const AssessmentListController = {
 
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                    this.$loadMoreSpinner.hide();
-                    this.$loadMoreLink.show();
+                    this.$loadMorePanel.removeClass("loading");
 
-                    this.setState({
-                        moreOrders: _.concat(this.state.moreOrders, JSON.parse(httpRequest.responseText))
-                    });
+                    if (httpRequest.status === httpStatusCodes.ok) {
+                        this.setState({
+                            moreOrders: _.concat(this.state.moreOrders, JSON.parse(httpRequest.responseText))
+                        });
+                    } else {
+                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    }
                 }
             }.bind(this);
             httpRequest.open(type, url);
@@ -104,7 +155,7 @@ const AssessmentListController = {
 
                 this.searchCriteria = {
                     toMoment: moment().subtract(this.searchNbDays, "d"),
-                    excludedOrderIds: this.state.ordersToDisplayAtTheTop.map(order => order.id)
+                    excludedOrderIds: this.state.topOrders.map(order => order.id)
                 };
             } else {
                 this.searchCriteria.fromMoment = moment(this.searchCriteria.toMoment);
@@ -116,4 +167,4 @@ const AssessmentListController = {
     })
 };
 
-Object.assign(Object.create(AssessmentListController), CR.ControllerData).init();
+AssessmentListController.init();

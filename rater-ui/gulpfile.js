@@ -209,11 +209,12 @@ gulp.task("js-libs-concat", function() {
         gulp.src("node_modules/lodash/lodash.js"),
         gulp.src("node_modules/react/dist/react.js"),
         gulp.src("node_modules/react-dom/dist/react-dom.js"),
-        gulp.src("node_modules/gsap/src/minified/TweenLite.js"),
-        gulp.src("node_modules/gsap/src/minified/easing/EasePack.js"),
-        gulp.src("node_modules/gsap/src/minified/plugins/CSSPlugin.js"),
-        gulp.src("node_modules/gsap/src/minified/plugins/ScrollToPlugin.js"),
+        gulp.src("node_modules/gsap/src/uncompressed/TweenLite.js"),
+        gulp.src("node_modules/gsap/src/uncompressed/easing/EasePack.js"),
+        gulp.src("node_modules/gsap/src/uncompressed/plugins/CSSPlugin.js"),
+        gulp.src("node_modules/gsap/src/uncompressed/plugins/ScrollToPlugin.js"),
         gulp.src("node_modules/moment/moment.js"),
+        gulp.src("node_modules/bootstrap-sass/assets/javascripts/bootstrap/modal.js"),
         gulp.src("node_modules/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"),
         gulp.src(scriptVendorFiles))
         .pipe(concat(scriptDistFileNameConcat))

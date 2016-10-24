@@ -82,4 +82,36 @@ class AccountDto @Inject()(db: Database) {
       SQL(query).as(rowParser.singleOpt)
     }
   }
+
+  def getAllRaters: List[Account] = {
+    db.withConnection { implicit c =>
+      val query = """
+        select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
+        from useri
+        where""" + commonClause + """
+        order by prenume;"""
+
+      Logger.info("OrderDto.getAllRaters():" + query)
+
+      val rowParser = long("id") ~ str("prenume") ~ (str("nume") ?) ~ str("email") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
+        case id ~ firstName ~ lastNameOpt ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>
+
+          Account(
+            id = id,
+            firstName = firstName,
+            lastName = lastNameOpt,
+            emailAddress = emailAddress,
+            linkedinProfile = linkedinBasicProfile match {
+              case "" => JsNull
+              case otherString => Json.parse(otherString)
+            },
+            `type` = accountType,
+            languageCode = languageCode,
+            creationTimestamp = creationDate.getTime
+          )
+      }
+
+      SQL(query).as(rowParser.*)
+    }
+  }
 }

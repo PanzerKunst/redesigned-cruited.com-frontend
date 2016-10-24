@@ -1,23 +1,19 @@
-@(account: Option[Account], ordersToDisplayAtTheTop: List[frontend.FrontendOrder])
+@(account: Account, config: services.GlobalConfig)
 
 @main("Rater - Home", "order-list") {
 <!--
     Header
 -->
-@header(account)
+@header(Some(account))
 
 } {
 <!--
     Javascript
 -->
 <script type="text/javascript">
-    var account = undefined;
-    @if(account.isDefined) {
-        account = "@account.get";
-    }
-
     CR.ControllerData = {
-        ordersToDisplayAtTheTop: @Html(play.api.libs.json.Json.toJson(ordersToDisplayAtTheTop).toString())
+        account: @Html(play.api.libs.json.Json.toJson(account).toString()),
+        config: @Html(play.api.libs.json.Json.toJson(config.serialized).toString())
     };
 </script>
 

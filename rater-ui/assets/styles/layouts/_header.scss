@@ -143,11 +143,9 @@ $header-bottom-border-height: 1px;
 
   .fa-bars {
     margin-right: -$spacer-unit-size;
-    @include medium-screen {
-      margin-right: 0;
-    }
 
     @include large-screen {
+      margin-right: 0;
       margin-left: 0.5em;
     }
   }

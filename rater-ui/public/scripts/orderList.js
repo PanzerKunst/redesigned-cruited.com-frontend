@@ -46,19 +46,26 @@
 
 	"use strict";
 
-	var _listItem = __webpack_require__(1);
+	var _global = __webpack_require__(1);
+
+	var _Account = __webpack_require__(2);
+
+	var _Account2 = _interopRequireDefault(_Account);
+
+	var _listItem = __webpack_require__(3);
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
+	var _assignModal = __webpack_require__(6);
+
+	var _assignModal2 = _interopRequireDefault(_assignModal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// eslint-disable-next-line no-unused-vars
 	var AssessmentListController = {
-	    ordersToDisplayAtTheTop: [],
-
 	    init: function init() {
-	        ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]")).setState({
-	            ordersToDisplayAtTheTop: this.ordersToDisplayAtTheTop
-	        });
+	        ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
 	    },
 
 
@@ -66,11 +73,15 @@
 	        displayName: "reactComponent",
 	        getInitialState: function getInitialState() {
 	            return {
-	                ordersToDisplayAtTheTop: [],
+	                account: Object.assign(Object.create(_Account2.default), CR.ControllerData.account),
+	                config: CR.ControllerData.config,
+	                topOrders: [],
 	                moreOrders: []
 	            };
 	        },
 	        render: function render() {
+	            var _this = this;
+
 	            return React.createElement(
 	                "div",
 	                { id: "content" },
@@ -90,14 +101,12 @@
 	                React.createElement(
 	                    "div",
 	                    { className: "with-circles" },
+	                    this._topOrders(),
 	                    React.createElement(
 	                        "ul",
 	                        { className: "styleless" },
-	                        this.state.ordersToDisplayAtTheTop.map(function (order) {
-	                            return React.createElement(_listItem2.default, { key: order.id, order: order });
-	                        }),
 	                        this.state.moreOrders.map(function (order) {
-	                            return React.createElement(_listItem2.default, { key: order.id, order: order });
+	                            return React.createElement(_listItem2.default, { key: order.id, order: order, account: _this.state.account, config: _this.state.config, parentController: _this });
 	                        })
 	                    ),
 	                    React.createElement(
@@ -118,8 +127,32 @@
 	                            )
 	                        )
 	                    )
-	                )
+	                ),
+	                React.createElement(_assignModal2.default, { parentController: this })
 	            );
+	        },
+	        componentDidMount: function componentDidMount() {
+	            this._fetchTopOrders();
+	        },
+	        _fetchTopOrders: function _fetchTopOrders() {
+	            var type = "GET";
+	            var url = "/api/orders/top";
+
+	            var httpRequest = new XMLHttpRequest();
+
+	            httpRequest.onreadystatechange = function () {
+	                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                    if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                        this.setState({
+	                            topOrders: JSON.parse(httpRequest.responseText)
+	                        });
+	                    } else {
+	                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                    }
+	                }
+	            }.bind(this);
+	            httpRequest.open(type, url);
+	            httpRequest.send();
 	        },
 	        componentDidUpdate: function componentDidUpdate() {
 	            this._initElements();
@@ -129,11 +162,36 @@
 	                this.isDefaultSearchDone = true;
 	            }
 	        },
-	        _initElements: function _initElements() {
-	            var $loadMorePanel = $("#load-more-panel");
+	        hideOrderOfId: function hideOrderOfId(orderId) {
+	            var filterFnc = function filterFnc(order) {
+	                return order.id !== orderId;
+	            };
 
-	            this.$loadMoreSpinner = $loadMorePanel.find(".fa-spinner");
-	            this.$loadMoreLink = $loadMorePanel.find("a");
+	            this.setState({
+	                topOrders: _.filter(this.state.topOrders, filterFnc),
+	                moreOrders: _.filter(this.state.moreOrders, filterFnc)
+	            });
+	        },
+	        _initElements: function _initElements() {
+	            this.$loadMorePanel = $("#load-more-panel");
+	        },
+	        _topOrders: function _topOrders() {
+	            var _this2 = this;
+
+	            if (this.state.topOrders.length === 0) {
+	                return React.createElement(
+	                    "div",
+	                    { className: "centered-contents" },
+	                    React.createElement("i", { className: "fa fa-spinner fa-pulse" })
+	                );
+	            }
+	            return React.createElement(
+	                "ul",
+	                { className: "styleless" },
+	                this.state.topOrders.map(function (order) {
+	                    return React.createElement(_listItem2.default, { key: order.id, order: order, account: _this2.state.account, config: _this2.state.config, parentController: _this2 });
+	                })
+	            );
 	        },
 	        _handleLoadMoreClicked: function _handleLoadMoreClicked() {
 	            this._searchMore();
@@ -141,8 +199,7 @@
 	        _searchMore: function _searchMore() {
 	            this._updateSearchCriteria();
 
-	            this.$loadMoreSpinner.show();
-	            this.$loadMoreLink.hide();
+	            this.$loadMorePanel.addClass("loading");
 
 	            var type = "POST";
 	            var url = "/api/orders/search";
@@ -151,12 +208,15 @@
 
 	            httpRequest.onreadystatechange = function () {
 	                if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                    this.$loadMoreSpinner.hide();
-	                    this.$loadMoreLink.show();
+	                    this.$loadMorePanel.removeClass("loading");
 
-	                    this.setState({
-	                        moreOrders: _.concat(this.state.moreOrders, JSON.parse(httpRequest.responseText))
-	                    });
+	                    if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                        this.setState({
+	                            moreOrders: _.concat(this.state.moreOrders, JSON.parse(httpRequest.responseText))
+	                        });
+	                    } else {
+	                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                    }
 	                }
 	            }.bind(this);
 	            httpRequest.open(type, url);
@@ -173,7 +233,7 @@
 
 	                this.searchCriteria = {
 	                    toMoment: moment().subtract(this.searchNbDays, "d"),
-	                    excludedOrderIds: this.state.ordersToDisplayAtTheTop.map(function (order) {
+	                    excludedOrderIds: this.state.topOrders.map(function (order) {
 	                        return order.id;
 	                    })
 	                };
@@ -185,13 +245,61 @@
 	            }
 	        }
 	    })
-	}; // eslint-disable-next-line no-unused-vars
+	};
+
+	// eslint-disable-next-line no-unused-vars
 
 
-	Object.assign(Object.create(AssessmentListController), CR.ControllerData).init();
+	AssessmentListController.init();
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Account = {
+
+	    // Static
+	    types: {
+	        customer: 2,
+	        rater: 3,
+	        admin: 1
+	    },
+
+	    isAdmin: function isAdmin() {
+	        return this.type === this.types.admin;
+	    }
+	};
+
+	exports.default = Account;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -201,11 +309,13 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(2);
+	var _global = __webpack_require__(1);
+
+	var _order = __webpack_require__(4);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _product = __webpack_require__(3);
+	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -231,7 +341,7 @@
 	                    "#",
 	                    order.id
 	                ),
-	                this._timeLeft(order.paymentTimestamp, order.status),
+	                this._timeLeft(order),
 	                React.createElement(
 	                    "p",
 	                    null,
@@ -295,7 +405,8 @@
 	                        order.languageCode
 	                    )
 	                ),
-	                this._actionBtn(order.id, order.idInBase64)
+	                this._actionBtn(order),
+	                this._secondaryButtons(order)
 	            )
 	        );
 	    },
@@ -306,23 +417,21 @@
 	        var $listItem = $(ReactDOM.findDOMNode(this.refs.li));
 
 	        this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
+	        this.$assignModal = $("#assign-modal");
 
-	        this._initTooltips();
-	    },
-	    _initTooltips: function _initTooltips() {
 	        this.$bootstrapTooltips.tooltip();
 	    },
 	    _cssClassForStatus: function _cssClassForStatus(status) {
 	        switch (status) {
-	            case _order2.default.statusIds.paid:
+	            case _order2.default.statuses.paid:
 	                return "paid";
-	            case _order2.default.statusIds.inProgress:
+	            case _order2.default.statuses.inProgress:
 	                return "in-progress";
-	            case _order2.default.statusIds.awaitingFeedback:
+	            case _order2.default.statuses.awaitingFeedback:
 	                return "awaiting-feedback";
-	            case _order2.default.statusIds.scheduled:
+	            case _order2.default.statuses.scheduled:
 	                return "scheduled";
-	            case _order2.default.statusIds.completed:
+	            case _order2.default.statuses.completed:
 	                return "completed";
 	            default:
 	                return "not-paid";
@@ -353,12 +462,12 @@
 	            );
 	        }
 	    },
-	    _timeLeft: function _timeLeft(paymentTimestamp, orderStatus) {
-	        if (orderStatus === _order2.default.statusIds.completed || orderStatus === _order2.default.statusIds.scheduled) {
+	    _timeLeft: function _timeLeft(order) {
+	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
 	            return null;
 	        }
 
-	        var dueDate = moment(paymentTimestamp).add(1, "d").subtract(90, "m");
+	        var dueDate = moment(order.paymentTimestamp).add(1, "d").subtract(90, "m");
 	        var timeLeft = moment.duration(dueDate.valueOf() - moment().valueOf());
 
 	        return React.createElement(
@@ -389,28 +498,92 @@
 	            _product2.default.humanReadableCode(productCode)
 	        );
 	    },
-	    _actionBtn: function _actionBtn(orderStatus, orderIdInBase64) {
-	        var label = orderStatus === _order2.default.statusIds.completed || orderStatus === _order2.default.statusIds.scheduled ? "View" : "Assess";
+	    _actionBtn: function _actionBtn(order) {
+	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
+	            return this._checkBtn();
+	        }
+	        return this._assessBtn(order.rater);
+	    },
+	    _assessBtn: function _assessBtn(rater) {
+	        var btn = rater ? React.createElement(
+	            "button",
+	            { className: "btn btn-default" },
+	            "Assess"
+	        ) : React.createElement(
+	            "button",
+	            { className: "btn btn-default", disabled: true },
+	            "Assess"
+	        );
 
-	        // TODO: remove
-	        console.log("orderIdInBase64", orderIdInBase64);
-
+	        return React.createElement(
+	            "div",
+	            null,
+	            btn
+	        );
+	    },
+	    _checkBtn: function _checkBtn() {
 	        return React.createElement(
 	            "div",
 	            null,
 	            React.createElement(
 	                "button",
-	                { className: "btn" },
-	                label
+	                { className: "btn btn-default", href: "" },
+	                "Check"
 	            )
 	        );
+	    },
+	    _secondaryButtons: function _secondaryButtons(order) {
+	        var assignBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || !this.props.account.isAdmin() ? null : React.createElement(
+	            "button",
+	            { className: "styleless fa fa-user", onClick: this._handleAssignClicked },
+	            React.createElement("i", { className: "fa fa-check", "aria-hidden": "true" })
+	        );
+
+	        var viewBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled ? React.createElement("button", { className: "styleless fa fa-eye" }) : null;
+
+	        var deleteBtn = this.props.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClicked }) : null;
+
+	        return React.createElement(
+	            "div",
+	            { className: "secondary-buttons" },
+	            assignBtn,
+	            viewBtn,
+	            deleteBtn
+	        );
+	    },
+	    _handleAssignClicked: function _handleAssignClicked() {
+	        this.$assignModal.modal();
+	    },
+	    _handleDeleteClicked: function _handleDeleteClicked() {
+	        var order = this.props.order;
+
+	        // TODO: remove
+	        console.log("_handleDeleteClicked", order);
+
+	        var type = "DELETE";
+	        var url = "/api/orders";
+
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    this.props.parentController.hideOrderOfId(order.id);
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        }.bind(this);
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(order));
 	    }
 	});
 
 	exports.default = ListItem;
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -421,7 +594,7 @@
 	var Order = {
 
 	    // Static
-	    statusIds: {
+	    statuses: {
 	        notPaid: -1,
 	        paid: 0,
 	        inProgress: 1,
@@ -435,7 +608,7 @@
 	exports.default = Order;
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -465,6 +638,112 @@
 	};
 
 	exports.default = Product;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _global = __webpack_require__(1);
+
+	var AssignModal = React.createClass({
+	    displayName: "AssignModal",
+	    getInitialState: function getInitialState() {
+	        return {
+	            allRaters: []
+	        };
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            "div",
+	            { ref: "modal", id: "assign-modal", className: "modal fade", tabIndex: "-1", role: "dialog" },
+	            React.createElement(
+	                "div",
+	                { className: "modal-dialog modal-sm", role: "document" },
+	                React.createElement(
+	                    "div",
+	                    { className: "modal-content" },
+	                    React.createElement(
+	                        "div",
+	                        { className: "modal-header" },
+	                        React.createElement(
+	                            "button",
+	                            { type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close" },
+	                            React.createElement(
+	                                "span",
+	                                { "aria-hidden": "true" },
+	                                "\xD7"
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "h3",
+	                            { className: "modal-title" },
+	                            "Assign to"
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "modal-body" },
+	                        React.createElement(
+	                            "ul",
+	                            { className: "styleless" },
+	                            this.state.allRaters.map(function (account) {
+	                                return React.createElement(
+	                                    "li",
+	                                    { key: account.id },
+	                                    account.firstName,
+	                                    " ",
+	                                    account.lastName
+	                                );
+	                            })
+	                        )
+	                    )
+	                )
+	            )
+	        );
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this._initElements();
+	        this._fetchAllRaters();
+	    },
+	    _initElements: function _initElements() {
+
+	        // const $modal = $(ReactDOM.findDOMNode(this.refs.modal));
+
+	        /* TODO
+	         $modal.on("show.bs.modal", function(e) {
+	         // Disable the rater currently assigned to the order
+	         }); */
+	    },
+	    _fetchAllRaters: function _fetchAllRaters() {
+	        var type = "GET";
+	        var url = "/api/accounts/raters";
+
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    this.setState({
+	                        allRaters: JSON.parse(httpRequest.responseText)
+	                    });
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        }.bind(this);
+	        httpRequest.open(type, url);
+	        httpRequest.send();
+	    }
+	});
+
+	exports.default = AssignModal;
 
 /***/ }
 /******/ ]);

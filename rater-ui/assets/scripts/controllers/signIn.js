@@ -1,6 +1,6 @@
-import Validator from "../services/validator";
-import {enableLoading, disableLoading} from "../services/jqueryAnimator";
 import {httpStatusCodes} from "../global";
+import {enableLoading, disableLoading} from "../services/jqueryAnimator";
+import Validator from "../services/validator";
 
 const SignInController = {
     init() {

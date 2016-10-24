@@ -1,7 +1,7 @@
 package models
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Writes}
+import play.api.libs.json.{Format, JsPath}
 
 case class Coupon(id: Long,
                   code: String,
@@ -14,17 +14,17 @@ case class Coupon(id: Long,
                   couponExpiredMsg: Option[String])
 
 object Coupon {
-  implicit val writes: Writes[Coupon] = (
-    (JsPath \ "id").write[Long] and
-      (JsPath \ "code").write[String] and
-      (JsPath \ "campaignName").write[String] and
-      (JsPath \ "expirationTimestamp").write[Long] and
-      (JsPath \ "discountPercentage").writeNullable[Int] and
-      (JsPath \ "discountPrice").writeNullable[Price] and
-      (JsPath \ "type").write[Int] and
-      (JsPath \ "maxUseCount").write[Int] and
-      (JsPath \ "couponExpiredMsg").writeNullable[String]
-    )(unlift(Coupon.unapply))
+  implicit val format: Format[Coupon] = (
+    (JsPath \ "id").format[Long] and
+      (JsPath \ "code").format[String] and
+      (JsPath \ "campaignName").format[String] and
+      (JsPath \ "expirationTimestamp").format[Long] and
+      (JsPath \ "discountPercentage").formatNullable[Int] and
+      (JsPath \ "discountPrice").formatNullable[Price] and
+      (JsPath \ "type").format[Int] and
+      (JsPath \ "maxUseCount").format[Int] and
+      (JsPath \ "couponExpiredMsg").formatNullable[String]
+    )(Coupon.apply, unlift(Coupon.unapply))
 
   val typeNoRestriction = 0
   val typeSingleUse = 1

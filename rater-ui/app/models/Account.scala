@@ -13,16 +13,16 @@ case class Account(id: Long,
                    creationTimestamp: Long)
 
 object Account {
-  implicit val writes: Writes[Account] = (
-    (JsPath \ "id").write[Long] and
-      (JsPath \ "firstName").write[String] and
-      (JsPath \ "lastName").writeNullable[String] and
-      (JsPath \ "emailAddress").write[String] and
-      (JsPath \ "linkedinProfile").write[JsValue] and
-      (JsPath \ "type").write[Int] and
-      (JsPath \ "languageCode").write[String] and
-      (JsPath \ "creationTimestamp").write[Long]
-    )(unlift(Account.unapply))
+  implicit val format: Format[Account] = (
+    (JsPath \ "id").format[Long] and
+      (JsPath \ "firstName").format[String] and
+      (JsPath \ "lastName").formatNullable[String] and
+      (JsPath \ "emailAddress").format[String] and
+      (JsPath \ "linkedinProfile").format[JsValue] and
+      (JsPath \ "type").format[Int] and
+      (JsPath \ "languageCode").format[String] and
+      (JsPath \ "creationTimestamp").format[Long]
+    )(Account.apply, unlift(Account.unapply))
 
   val typeCustomer = 2
   val typeRater = 3

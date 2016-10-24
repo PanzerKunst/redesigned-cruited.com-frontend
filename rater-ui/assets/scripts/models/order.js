@@ -1,7 +1,7 @@
 const Order = {
 
     // Static
-    statusIds: {
+    statuses: {
         notPaid: -1,
         paid: 0,
         inProgress: 1,

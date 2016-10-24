@@ -2,7 +2,7 @@ package models
 
 import models.frontend.FrontendOrder
 
-case class Order(id: Option[Long],
+case class Order(id: Long,
                  tags: List[String],
                  containedProductCodes: List[String],
                  couponId: Option[Long],
@@ -20,8 +20,8 @@ case class Order(id: Option[Long],
                  creationTimestamp: Long,
                  paymentTimestamp: Long) {
 
-  def this(frontendOrder: FrontendOrder, linkedinProfileFileName: Option[String]) = this(
-    id = Some(frontendOrder.id),
+  def this(frontendOrder: FrontendOrder) = this(
+    id = frontendOrder.id,
     tags = frontendOrder.tags,
     containedProductCodes = frontendOrder.containedProductCodes,
     couponId = frontendOrder.coupon match {
@@ -30,7 +30,7 @@ case class Order(id: Option[Long],
     },
     cvFileName = frontendOrder.cvFileName,
     coverLetterFileName = frontendOrder.coverLetterFileName,
-    linkedinProfileFileName = linkedinProfileFileName,
+    linkedinProfileFileName = frontendOrder.linkedinProfileFileName,
     positionSought = frontendOrder.positionSought,
     employerSought = frontendOrder.employerSought,
     jobAdUrl = frontendOrder.jobAdUrl,
@@ -54,6 +54,9 @@ object Order {
   val statusIdAwaitingFeedback = 4
   val statusIdScheduled = 3
   val statusIdComplete = 2
+
+  val showIdActive = 1
+  val showIdDeleted = 2
 
   def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
     val typeArray = docTypes.split(typeStringSeparator).map { docType => docType.trim}

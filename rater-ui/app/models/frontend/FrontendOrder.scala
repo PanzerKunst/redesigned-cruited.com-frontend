@@ -2,7 +2,7 @@ package models.frontend
 
 import models.{Account, Coupon}
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Writes}
+import play.api.libs.json.{Format, JsPath}
 
 case class FrontendOrder(id: Long,
                          idInBase64: String,
@@ -24,24 +24,24 @@ case class FrontendOrder(id: Long,
                          paymentTimestamp: Long)
 
 object FrontendOrder {
-  implicit val writes: Writes[FrontendOrder] = (
-    (JsPath \ "id").write[Long] and
-      (JsPath \ "idInBase64").write[String] and
-      (JsPath \ "tags").write[List[String]] and
-      (JsPath \ "containedProductCodes").write[List[String]] and
-      (JsPath \ "coupon").writeNullable[Coupon] and
-      (JsPath \ "cvFileName").writeNullable[String] and
-      (JsPath \ "coverLetterFileName").writeNullable[String] and
-      (JsPath \ "linkedinProfileFileName").writeNullable[String] and
-      (JsPath \ "positionSought").writeNullable[String] and
-      (JsPath \ "employerSought").writeNullable[String] and
-      (JsPath \ "jobAdUrl").writeNullable[String] and
-      (JsPath \ "customerComment").writeNullable[String] and
-      (JsPath \ "customer").write[Account] and
-      (JsPath \ "rater").writeNullable[Account] and
-      (JsPath \ "status").write[Int] and
-      (JsPath \ "languageCode").write[String] and
-      (JsPath \ "creationTimestamp").write[Long] and
-      (JsPath \ "paymentTimestamp").write[Long]
-    )(unlift(FrontendOrder.unapply))
+  implicit val format: Format[FrontendOrder] = (
+    (JsPath \ "id").format[Long] and
+      (JsPath \ "idInBase64").format[String] and
+      (JsPath \ "tags").format[List[String]] and
+      (JsPath \ "containedProductCodes").format[List[String]] and
+      (JsPath \ "coupon").formatNullable[Coupon] and
+      (JsPath \ "cvFileName").formatNullable[String] and
+      (JsPath \ "coverLetterFileName").formatNullable[String] and
+      (JsPath \ "linkedinProfileFileName").formatNullable[String] and
+      (JsPath \ "positionSought").formatNullable[String] and
+      (JsPath \ "employerSought").formatNullable[String] and
+      (JsPath \ "jobAdUrl").formatNullable[String] and
+      (JsPath \ "customerComment").formatNullable[String] and
+      (JsPath \ "customer").format[Account] and
+      (JsPath \ "rater").formatNullable[Account] and
+      (JsPath \ "status").format[Int] and
+      (JsPath \ "languageCode").format[String] and
+      (JsPath \ "creationTimestamp").format[Long] and
+      (JsPath \ "paymentTimestamp").format[Long]
+    )(FrontendOrder.apply, unlift(FrontendOrder.unapply))
 }

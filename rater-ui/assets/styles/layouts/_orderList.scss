@@ -20,9 +20,22 @@
 
       @include list-item-border;
 
-      &.in-progress {
+      &.in-progress,
+      &.awaiting-feedback {
         @include list-item-border($brand-warning);
       }
+      &.completed,
+      &.scheduled {
+        @include list-item-border($brand-success);
+      }
+    }
+
+    button.styleless.fa {
+      padding: .5em .6em;
+    }
+
+    .fa-spinner {
+      font-size: 2em;
     }
   }
 
@@ -38,15 +51,49 @@
     }
   }
 
+  .secondary-buttons {
+    > button {
+      font-size: 1.5em;
+      color: $grey;
+
+      &.fa-user {
+        position: relative;
+
+        > i {
+          position: absolute;
+
+          font-size: 0.5em;
+          color: $brand-info;
+
+          bottom: 0.9em;
+          right: 1em;
+        }
+      }
+    }
+  }
+
   #load-more-panel {
-    .fa-spinner {
+    > .centered-contents {
       display: none;
-      font-size: 2em;
+    }
+
+    &.loading {
+      > .centered-contents {
+        display: block;
+      }
+
+      > #load-more-link-panel {
+        display: none;
+      }
     }
   }
 
   #load-more-link-panel {
     text-align: right;
+  }
+
+  .modal-body > ul {
+    margin-bottom: 0;
   }
 }
 

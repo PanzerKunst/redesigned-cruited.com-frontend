@@ -10,7 +10,7 @@ import play.api.db.Database
 import services.GlobalConfig
 
 @Singleton
-class CouponDto @Inject()(db: Database) {
+class CouponDto @Inject()(db: Database, config: GlobalConfig) {
   def getOfId(id: Long): Option[Coupon] = {
     db.withConnection { implicit c =>
       val query = """
@@ -28,7 +28,7 @@ class CouponDto @Inject()(db: Database) {
             case "by_percent" => (Some(amount), None)
             case "by_value" => (None, Some(Price(
               amount = amount,
-              currencyCode = GlobalConfig.paymentCurrencyCode
+              currencyCode = config.paymentCurrencyCode
             )))
           }
 

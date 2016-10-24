@@ -1,7 +1,7 @@
 package models
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Writes}
+import play.api.libs.json.{Format, JsPath}
 
 case class CruitedProduct(id: Long,
                           code: String,
@@ -17,11 +17,11 @@ case class CruitedProduct(id: Long,
 }
 
 object CruitedProduct {
-  implicit val writes: Writes[CruitedProduct] = (
-    (JsPath \ "id").write[Long] and
-      (JsPath \ "code").write[String] and
-      (JsPath \ "price").write[Price]
-    )(unlift(CruitedProduct.unapply))
+  implicit val format: Format[CruitedProduct] = (
+    (JsPath \ "id").format[Long] and
+      (JsPath \ "code").format[String] and
+      (JsPath \ "price").format[Price]
+    )(CruitedProduct.apply, unlift(CruitedProduct.unapply))
 
   val codeCvReview = "CV_REVIEW"
   val codeCoverLetterReview = "COVER_LETTER_REVIEW"
