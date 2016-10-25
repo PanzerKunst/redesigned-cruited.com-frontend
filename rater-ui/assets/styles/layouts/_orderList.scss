@@ -34,10 +34,6 @@
       }
     }
 
-    button.styleless.fa {
-      padding: .5em .6em;
-    }
-
     .fa-spinner {
       font-size: 2em;
     }
@@ -56,22 +52,29 @@
   }
 
   .secondary-buttons {
-    > button {
+    > button,
+    > a {
+      padding: .5em .6em;
       font-size: 1.5em;
       color: $grey;
+    }
 
-      &.fa-user {
-        position: relative;
+    > a:hover,
+    > a:focus {
+      text-decoration: none;
+    }
 
-        > i {
-          position: absolute;
+    > .fa-user {
+      position: relative;
 
-          font-size: 0.5em;
-          color: $brand-info;
+      > i {
+        position: absolute;
 
-          bottom: 0.9em;
-          right: 1em;
-        }
+        font-size: 0.5em;
+        color: $brand-info;
+
+        bottom: 0.9em;
+        right: 1em;
       }
     }
   }

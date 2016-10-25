@@ -132,9 +132,13 @@ const ListItem = React.createClass({
                 <i className="fa fa-check" aria-hidden="true"></i>
             </button>;
 
-        const viewBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled ?
-            <button className="styleless fa fa-eye"></button> :
-            null;
+        let viewBtn = null;
+
+        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled) {
+            const href = store.config.customerAppRootUrl + "reports/" + order.id;
+
+            viewBtn = <a href={href} target="_blank" className="fa fa-eye" />;
+        }
 
         const deleteBtn = store.account.isAdmin() ?
             <button className="styleless fa fa-trash" onClick={this._handleDeleteClicked}></button> :

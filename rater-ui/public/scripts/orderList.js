@@ -732,7 +732,13 @@
 	            React.createElement("i", { className: "fa fa-check", "aria-hidden": "true" })
 	        );
 
-	        var viewBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled ? React.createElement("button", { className: "styleless fa fa-eye" }) : null;
+	        var viewBtn = null;
+
+	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
+	            var href = _store2.default.config.customerAppRootUrl + "reports/" + order.id;
+
+	            viewBtn = React.createElement("a", { href: href, target: "_blank", className: "fa fa-eye" });
+	        }
 
 	        var deleteBtn = _store2.default.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClicked }) : null;
 
