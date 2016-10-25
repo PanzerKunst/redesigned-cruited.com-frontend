@@ -1,6 +1,6 @@
-import {httpStatusCodes} from "../../global";
 import Order from "../../models/order";
 import Product from "../../models/product";
+import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
 import RaterProfile from "../raterProfile";
@@ -53,6 +53,7 @@ const ListItem = React.createClass({
         const $listItem = $(ReactDOM.findDOMNode(this.refs.li));
 
         this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
+        this.$assignModal = $("#assign-modal");
 
         this.$bootstrapTooltips.tooltip();
     },
@@ -126,7 +127,7 @@ const ListItem = React.createClass({
     },
 
     _secondaryButtons(order) {
-        const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled || !this.props.account.isAdmin() ?
+        const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled || !store.account.isAdmin() ?
             null :
             <button className="styleless fa fa-user" onClick={this._handleAssignClicked}>
                 <i className="fa fa-check" aria-hidden="true"></i>
@@ -136,7 +137,7 @@ const ListItem = React.createClass({
             <button className="styleless fa fa-eye"></button> :
             null;
 
-        const deleteBtn = this.props.account.isAdmin() ?
+        const deleteBtn = store.account.isAdmin() ?
             <button className="styleless fa fa-trash" onClick={this._handleDeleteClicked}></button> :
             null;
 
@@ -150,33 +151,12 @@ const ListItem = React.createClass({
     },
 
     _handleAssignClicked() {
-        this.props.parentController.showAssignModal(this.props.order.id);
+        this.$assignModal.modal();
+        store.currentOrderId = this.props.order.id;
     },
 
     _handleDeleteClicked() {
-        const order = this.props.order;
-
-        // TODO: remove
-        console.log("_handleDeleteClicked", order);
-
-        const type = "DELETE";
-        const url = "/api/orders";
-
-        const httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = function() {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    this.props.parentController.hideOrderOfId(order.id);
-                } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-                }
-            }
-        }.bind(this);
-        httpRequest.open(type, url);
-        httpRequest.setRequestHeader("Content-Type", "application/json");
-        httpRequest.send(JSON.stringify(order));
-
+        store.deleteOrder(this.props.order.id);
     }
 });
 

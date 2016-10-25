@@ -46,17 +46,15 @@
 
 	"use strict";
 
-	var _global = __webpack_require__(1);
+	var _store = __webpack_require__(1);
 
-	var _Account = __webpack_require__(2);
+	var _store2 = _interopRequireDefault(_store);
 
-	var _Account2 = _interopRequireDefault(_Account);
-
-	var _listItem = __webpack_require__(3);
+	var _listItem = __webpack_require__(4);
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
-	var _assignModal = __webpack_require__(7);
+	var _assignModal = __webpack_require__(8);
 
 	var _assignModal2 = _interopRequireDefault(_assignModal);
 
@@ -65,23 +63,18 @@
 	// eslint-disable-next-line no-unused-vars
 	var AssessmentListController = {
 	    init: function init() {
-	        ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
+	        _store2.default.reactComponent = ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
+
+	        _store2.default.init();
 	    },
 
 
 	    reactComponent: React.createClass({
 	        displayName: "reactComponent",
 	        getInitialState: function getInitialState() {
-	            return {
-	                account: Object.assign(Object.create(_Account2.default), CR.ControllerData.account),
-	                config: CR.ControllerData.config,
-	                topOrders: [],
-	                moreOrders: []
-	            };
+	            return _store2.default;
 	        },
 	        render: function render() {
-	            var _this = this;
-
 	            return React.createElement(
 	                "div",
 	                { id: "content" },
@@ -105,8 +98,8 @@
 	                    React.createElement(
 	                        "ul",
 	                        { className: "styleless" },
-	                        this.state.moreOrders.map(function (order) {
-	                            return React.createElement(_listItem2.default, { key: order.id, order: order, account: _this.state.account, config: _this.state.config, parentController: _this });
+	                        _store2.default.moreOrders.map(function (order) {
+	                            return React.createElement(_listItem2.default, { key: order.id, order: order });
 	                        })
 	                    ),
 	                    React.createElement(
@@ -128,39 +121,12 @@
 	                        )
 	                    )
 	                ),
-	                React.createElement(_assignModal2.default, { parentController: this })
+	                React.createElement(_assignModal2.default, null)
 	            );
 	        },
 	        componentDidMount: function componentDidMount() {
-	            this._fetchTopOrders();
-	        },
-	        _fetchTopOrders: function _fetchTopOrders() {
-	            var type = "GET";
-	            var url = "/api/orders/top";
-
-	            var httpRequest = new XMLHttpRequest();
-
-	            httpRequest.onreadystatechange = function () {
-	                if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                    if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                        this.setState({
-	                            topOrders: JSON.parse(httpRequest.responseText)
-	                        });
-	                    } else {
-	                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                    }
-	                }
-	            }.bind(this);
-	            httpRequest.open(type, url);
-	            httpRequest.send();
-	        },
-	        componentDidUpdate: function componentDidUpdate() {
 	            this._initElements();
-
-	            if (!this.isDefaultSearchDone) {
-	                this._searchMore();
-	                this.isDefaultSearchDone = true;
-	            }
+	            this._searchMore();
 	        },
 
 
@@ -173,114 +139,35 @@
 	         });
 	         }, */
 
-	        showAssignModal: function showAssignModal(orderId) {
-	            this.$assignModal.modal();
-	            this.currentOrderId = orderId;
-	        },
-	        assignOrderTo: function assignOrderTo(account) {
-	            var _this2 = this;
-
-	            if (!this.currentOrderId) {
-	                alert("Error: `this.currentOrderId` must exist, this is a bug!");
-	            } else {
-	                (function () {
-	                    var order = _.find(_this2.state.topOrders, ["id", _this2.currentOrderId]) || _.find(_this2.state.moreOrders, ["id", _this2.currentOrderId]);
-
-	                    order.rater = account;
-
-	                    var type = "PUT";
-	                    var url = "/api/orders";
-
-	                    var httpRequest = new XMLHttpRequest();
-
-	                    httpRequest.onreadystatechange = function () {
-	                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                            if (httpRequest.status !== _global.httpStatusCodes.ok) {
-	                                alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                            }
-	                        }
-	                    };
-	                    httpRequest.open(type, url);
-	                    httpRequest.setRequestHeader("Content-Type", "application/json");
-	                    httpRequest.send(JSON.stringify(order));
-
-	                    // We update the lists
-	                    _this2.forceUpdate();
-	                })();
-	            }
-	        },
 	        _initElements: function _initElements() {
 	            this.$loadMorePanel = $("#load-more-panel");
-	            this.$assignModal = $("#assign-modal");
 	        },
 	        _topOrders: function _topOrders() {
-	            var _this3 = this;
-
-	            if (this.state.topOrders.length === 0) {
+	            if (_store2.default.areTopOrdersFetched) {
 	                return React.createElement(
-	                    "div",
-	                    { className: "centered-contents" },
-	                    React.createElement("i", { className: "fa fa-spinner fa-pulse" })
+	                    "ul",
+	                    { className: "styleless" },
+	                    _store2.default.topOrders.map(function (order) {
+	                        return React.createElement(_listItem2.default, { key: order.id, order: order });
+	                    })
 	                );
 	            }
 	            return React.createElement(
-	                "ul",
-	                { className: "styleless" },
-	                this.state.topOrders.map(function (order) {
-	                    return React.createElement(_listItem2.default, { key: order.id, order: order, account: _this3.state.account, config: _this3.state.config, parentController: _this3 });
-	                })
+	                "div",
+	                { className: "centered-contents" },
+	                React.createElement("i", { className: "fa fa-spinner fa-pulse" })
 	            );
 	        },
 	        _handleLoadMoreClicked: function _handleLoadMoreClicked() {
 	            this._searchMore();
 	        },
 	        _searchMore: function _searchMore() {
-	            this._updateSearchCriteria();
+	            var _this = this;
 
 	            this.$loadMorePanel.addClass("loading");
-
-	            var type = "POST";
-	            var url = "/api/orders/search";
-
-	            var httpRequest = new XMLHttpRequest();
-
-	            httpRequest.onreadystatechange = function () {
-	                if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                    this.$loadMorePanel.removeClass("loading");
-
-	                    if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                        this.setState({
-	                            moreOrders: _.concat(this.state.moreOrders, JSON.parse(httpRequest.responseText))
-	                        });
-	                    } else {
-	                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                    }
-	                }
-	            }.bind(this);
-	            httpRequest.open(type, url);
-	            httpRequest.setRequestHeader("Content-Type", "application/json");
-	            httpRequest.send(JSON.stringify({
-	                fromTimestamp: this.searchCriteria.fromMoment ? this.searchCriteria.fromMoment.valueOf() : null,
-	                toTimestamp: this.searchCriteria.toMoment.valueOf(),
-	                excludedOrderIds: this.searchCriteria.excludedOrderIds
-	            }));
-	        },
-	        _updateSearchCriteria: function _updateSearchCriteria() {
-	            if (!this.searchCriteria) {
-	                this.searchNbDays = 7;
-
-	                this.searchCriteria = {
-	                    toMoment: moment().subtract(this.searchNbDays, "d"),
-	                    excludedOrderIds: this.state.topOrders.map(function (order) {
-	                        return order.id;
-	                    })
-	                };
-	            } else {
-	                this.searchCriteria.fromMoment = moment(this.searchCriteria.toMoment);
-
-	                this.searchNbDays *= 1.5;
-	                this.searchCriteria.toMoment.subtract(this.searchNbDays, "d");
-	            }
+	            _store2.default.searchMore(function () {
+	                return _this.$loadMorePanel.removeClass("loading");
+	            });
 	        }
 	    })
 	};
@@ -292,6 +179,183 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _global = __webpack_require__(2);
+
+	var _Account = __webpack_require__(3);
+
+	var _Account2 = _interopRequireDefault(_Account);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var store = {
+	    reactComponent: null,
+	    account: Object.assign(Object.create(_Account2.default), CR.ControllerData.account),
+	    config: CR.ControllerData.config,
+	    topOrders: [],
+	    moreOrders: [],
+	    allRaters: [],
+	    currentOrderId: null,
+	    areTopOrdersFetched: false,
+
+	    init: function init() {
+	        this._fetchTopOrders();
+	        this._fetchAllRaters();
+	    },
+	    _fetchTopOrders: function _fetchTopOrders() {
+	        var type = "GET";
+	        var url = "/api/orders/top";
+
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    this.topOrders = JSON.parse(httpRequest.responseText);
+	                    this.areTopOrdersFetched = true;
+	                    this.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        }.bind(this);
+	        httpRequest.open(type, url);
+	        httpRequest.send();
+	    },
+	    _fetchAllRaters: function _fetchAllRaters() {
+	        var type = "GET";
+	        var url = "/api/accounts/raters";
+
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    this.allRaters = JSON.parse(httpRequest.responseText);
+	                    this.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        }.bind(this);
+	        httpRequest.open(type, url);
+	        httpRequest.send();
+	    },
+	    assignOrderTo: function assignOrderTo(account) {
+	        var _this = this;
+
+	        if (!this.currentOrderId) {
+	            alert("Error: `this.currentOrderId` must exist, this is a bug!");
+	        } else {
+	            (function () {
+	                var order = _.find(_this.topOrders, ["id", _this.currentOrderId]) || _.find(_this.moreOrders, ["id", _this.currentOrderId]);
+
+	                order.rater = account;
+
+	                _this.reactComponent.forceUpdate();
+
+	                var type = "PUT";
+	                var url = "/api/orders";
+
+	                var httpRequest = new XMLHttpRequest();
+
+	                httpRequest.onreadystatechange = function () {
+	                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                        if (httpRequest.status !== _global.httpStatusCodes.ok) {
+	                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                        }
+	                    }
+	                };
+	                httpRequest.open(type, url);
+	                httpRequest.setRequestHeader("Content-Type", "application/json");
+	                httpRequest.send(JSON.stringify(order));
+	            })();
+	        }
+	    },
+	    deleteOrder: function deleteOrder(orderId) {
+	        var type = "DELETE";
+	        var url = "/api/orders/" + orderId;
+
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    var predicate = function predicate(o) {
+	                        return o.id === orderId;
+	                    };
+
+	                    _.remove(this.topOrders, predicate);
+	                    _.remove(this.moreOrders, predicate);
+
+	                    this.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        }.bind(this);
+	        httpRequest.open(type, url);
+	        httpRequest.send();
+	    },
+	    searchMore: function searchMore(onAjaxRequestDone) {
+	        this._updateSearchCriteria();
+
+	        var type = "POST";
+	        var url = "/api/orders/search";
+
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                onAjaxRequestDone();
+
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    this.moreOrders = _.concat(this.moreOrders, JSON.parse(httpRequest.responseText));
+	                    this.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        }.bind(this);
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify({
+	            fromTimestamp: this.searchCriteria.fromMoment ? this.searchCriteria.fromMoment.valueOf() : null,
+	            toTimestamp: this.searchCriteria.toMoment.valueOf(),
+	            excludedOrderIds: this.searchCriteria.excludedOrderIds
+	        }));
+	    },
+	    _updateSearchCriteria: function _updateSearchCriteria() {
+	        if (!this.searchCriteria) {
+	            this.searchNbDays = 7;
+
+	            this.searchCriteria = {
+	                toMoment: moment().subtract(this.searchNbDays, "d"),
+	                excludedOrderIds: this.topOrders.map(function (order) {
+	                    return order.id;
+	                })
+	            };
+	        } else {
+	            this.searchCriteria.fromMoment = moment(this.searchCriteria.toMoment);
+
+	            this.searchNbDays *= 1.5;
+	            this.searchCriteria.toMoment.subtract(this.searchNbDays, "d");
+	        }
+	    }
+	};
+
+	exports.default = store;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -312,7 +376,7 @@
 	};
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -337,7 +401,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -347,17 +411,19 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(1);
-
-	var _order = __webpack_require__(4);
+	var _order = __webpack_require__(5);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _product = __webpack_require__(5);
+	var _product = __webpack_require__(6);
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _raterProfile = __webpack_require__(6);
+	var _store = __webpack_require__(1);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _raterProfile = __webpack_require__(7);
 
 	var _raterProfile2 = _interopRequireDefault(_raterProfile);
 
@@ -459,6 +525,7 @@
 	        var $listItem = $(ReactDOM.findDOMNode(this.refs.li));
 
 	        this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
+	        this.$assignModal = $("#assign-modal");
 
 	        this.$bootstrapTooltips.tooltip();
 	    },
@@ -549,7 +616,7 @@
 	        );
 	    },
 	    _secondaryButtons: function _secondaryButtons(order) {
-	        var assignBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || !this.props.account.isAdmin() ? null : React.createElement(
+	        var assignBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || !_store2.default.account.isAdmin() ? null : React.createElement(
 	            "button",
 	            { className: "styleless fa fa-user", onClick: this._handleAssignClicked },
 	            React.createElement("i", { className: "fa fa-check", "aria-hidden": "true" })
@@ -557,7 +624,7 @@
 
 	        var viewBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled ? React.createElement("button", { className: "styleless fa fa-eye" }) : null;
 
-	        var deleteBtn = this.props.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClicked }) : null;
+	        var deleteBtn = _store2.default.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClicked }) : null;
 
 	        return React.createElement(
 	            "div",
@@ -568,31 +635,11 @@
 	        );
 	    },
 	    _handleAssignClicked: function _handleAssignClicked() {
-	        this.props.parentController.showAssignModal(this.props.order.id);
+	        this.$assignModal.modal();
+	        _store2.default.currentOrderId = this.props.order.id;
 	    },
 	    _handleDeleteClicked: function _handleDeleteClicked() {
-	        var order = this.props.order;
-
-	        // TODO: remove
-	        console.log("_handleDeleteClicked", order);
-
-	        var type = "DELETE";
-	        var url = "/api/orders";
-
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    this.props.parentController.hideOrderOfId(order.id);
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        }.bind(this);
-	        httpRequest.open(type, url);
-	        httpRequest.setRequestHeader("Content-Type", "application/json");
-	        httpRequest.send(JSON.stringify(order));
+	        _store2.default.deleteOrder(this.props.order.id);
 	    }
 	});
 
@@ -600,7 +647,7 @@
 	exports.default = ListItem;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -625,7 +672,7 @@
 	exports.default = Order;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -657,7 +704,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -699,7 +746,7 @@
 	exports.default = RaterProfile;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -709,9 +756,11 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(1);
+	var _store = __webpack_require__(1);
 
-	var _raterProfile = __webpack_require__(6);
+	var _store2 = _interopRequireDefault(_store);
+
+	var _raterProfile = __webpack_require__(7);
 
 	var _raterProfile2 = _interopRequireDefault(_raterProfile);
 
@@ -720,9 +769,7 @@
 	var AssignModal = React.createClass({
 	    displayName: "AssignModal",
 	    getInitialState: function getInitialState() {
-	        return {
-	            allRaters: []
-	        };
+	        return _store2.default;
 	    },
 	    render: function render() {
 	        var _this = this;
@@ -732,7 +779,7 @@
 	            { id: "assign-modal", className: "modal fade", tabIndex: "-1", role: "dialog" },
 	            React.createElement(
 	                "div",
-	                { className: "modal-dialog modal-sm", role: "document" },
+	                { className: "modal-dialog", role: "document" },
 	                React.createElement(
 	                    "div",
 	                    { className: "modal-content" },
@@ -760,7 +807,7 @@
 	                        React.createElement(
 	                            "ul",
 	                            { className: "styleless" },
-	                            this.state.allRaters.map(function (account) {
+	                            _store2.default.allRaters.map(function (account) {
 	                                return React.createElement(
 	                                    "li",
 	                                    { key: account.id, onClick: _this._handleItemClicked, "data-account-id": account.id },
@@ -775,7 +822,6 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
-	        this._fetchAllRaters();
 	    },
 	    _initElements: function _initElements() {
 	        this.$modal = $("#assign-modal");
@@ -785,30 +831,10 @@
 	         // Disable the rater currently assigned to the order
 	         }); */
 	    },
-	    _fetchAllRaters: function _fetchAllRaters() {
-	        var type = "GET";
-	        var url = "/api/accounts/raters";
-
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    this.setState({
-	                        allRaters: JSON.parse(httpRequest.responseText)
-	                    });
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        }.bind(this);
-	        httpRequest.open(type, url);
-	        httpRequest.send();
-	    },
 	    _handleItemClicked: function _handleItemClicked(e) {
 	        var accountId = $(e.currentTarget).data("account-id");
 
-	        this.props.parentController.assignOrderTo(_.find(this.state.allRaters, ["id", accountId]));
+	        _store2.default.assignOrderTo(_.find(_store2.default.allRaters, ["id", accountId]));
 	        this.$modal.modal("hide");
 	    }
 	});

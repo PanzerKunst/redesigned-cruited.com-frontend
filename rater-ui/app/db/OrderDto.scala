@@ -35,12 +35,12 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     }
   }
 
-  def updateAsDeleted(order: Order) {
+  def updateAsDeleted(id: Long) {
     db.withConnection { implicit c =>
       val query = """
         update documents set
           shw = """ + Order.showIdDeleted + """
-        where id = """ + order.id + """;"""
+        where id = """ + id + """;"""
 
       Logger.info("OrderDto.updateAsDeleted():" + query)
 

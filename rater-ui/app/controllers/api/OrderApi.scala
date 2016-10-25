@@ -41,19 +41,14 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
     }
   }
 
-  def delete() = Action(parse.json) { request =>
+  def delete(id: Long) = Action(parse.json) { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>
-          request.body.validate[FrontendOrder] match {
-            case e: JsError => BadRequest("Validation of FrontendOrder failed")
-
-            case s: JsSuccess[FrontendOrder] =>
-              orderDto.updateAsDeleted(new Order(s.get))
-              Ok
-          }
+          orderDto.updateAsDeleted(id)
+          Ok
       }
     }
   }
