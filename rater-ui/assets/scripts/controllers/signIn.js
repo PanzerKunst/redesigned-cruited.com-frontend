@@ -81,7 +81,7 @@ const SignInController = {
 
                 const httpRequest = new XMLHttpRequest();
 
-                httpRequest.onreadystatechange = function() {
+                httpRequest.onreadystatechange = () => {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === httpStatusCodes.ok) {
                             CR.loggedInAccount = JSON.parse(httpRequest.responseText);
@@ -96,7 +96,7 @@ const SignInController = {
                             }
                         }
                     }
-                }.bind(this);
+                };
                 httpRequest.open(type, url);
                 httpRequest.setRequestHeader("Content-Type", "application/json");
                 httpRequest.send(JSON.stringify({

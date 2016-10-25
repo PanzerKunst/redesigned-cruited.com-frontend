@@ -23,7 +23,7 @@ const store = {
 
         const httpRequest = new XMLHttpRequest();
 
-        httpRequest.onreadystatechange = function() {
+        httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const topOrdersJson = JSON.parse(httpRequest.responseText);
@@ -35,7 +35,7 @@ const store = {
                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                 }
             }
-        }.bind(this);
+        };
         httpRequest.open(type, url);
         httpRequest.send();
     },
@@ -46,7 +46,7 @@ const store = {
 
         const httpRequest = new XMLHttpRequest();
 
-        httpRequest.onreadystatechange = function() {
+        httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const allRatersJson = JSON.parse(httpRequest.responseText);
@@ -57,7 +57,7 @@ const store = {
                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                 }
             }
-        }.bind(this);
+        };
         httpRequest.open(type, url);
         httpRequest.send();
     },
@@ -78,7 +78,7 @@ const store = {
 
             const httpRequest = new XMLHttpRequest();
 
-            httpRequest.onreadystatechange = function() {
+            httpRequest.onreadystatechange = () => {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status !== httpStatusCodes.ok) {
                         alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -102,7 +102,7 @@ const store = {
 
             const httpRequest = new XMLHttpRequest();
 
-            httpRequest.onreadystatechange = function() {
+            httpRequest.onreadystatechange = () => {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === httpStatusCodes.ok) {
                         const predicate = o => o.id === orderId;
@@ -115,7 +115,7 @@ const store = {
                         alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                     }
                 }
-            }.bind(this);
+            };
             httpRequest.open(type, url);
             httpRequest.send();
         }
@@ -129,7 +129,7 @@ const store = {
 
         const httpRequest = new XMLHttpRequest();
 
-        httpRequest.onreadystatechange = function() {
+        httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 onAjaxRequestDone();
 
@@ -143,7 +143,7 @@ const store = {
                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                 }
             }
-        }.bind(this);
+        };
         httpRequest.open(type, url);
         httpRequest.setRequestHeader("Content-Type", "application/json");
         httpRequest.send(JSON.stringify({

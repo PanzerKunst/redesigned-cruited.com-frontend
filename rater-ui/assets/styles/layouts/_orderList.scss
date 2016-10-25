@@ -95,20 +95,28 @@
   #load-more-link-panel {
     text-align: right;
   }
+}
 
-  .modal-body > ul {
+#assign-modal {
+  ul {
     margin-bottom: 0;
 
     > li {
-      @include transition(background $default-animation-duration);
+      &:not(.disabled) {
+        @include transition(background $default-animation-duration);
 
-      &:hover {
-        cursor: pointer;
+        &:hover {
+          cursor: pointer;
+        }
+
+        &:hover,
+        &.selected {
+          background-color: $well-border-color;
+        }
       }
 
-      &:hover,
-      &.selected {
-        background-color: $well-border-color;
+      &.disabled {
+        color: $well-border-color;
       }
     }
   }

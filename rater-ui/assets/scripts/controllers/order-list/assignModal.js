@@ -34,24 +34,45 @@ const AssignModal = React.createClass({
         );
     },
 
-    componentDidMount() {
+    componentDidUpdate() {
         this._initElements();
+
+        if (!this.isOnModalShowEventInitialised) {
+            this._initOnModalShowEvent();
+            this.isOnModalShowEventInitialised = true;
+        }
     },
 
     _initElements() {
         this.$modal = $("#assign-modal");
+        this.$listItems = this.$modal.find("li");
+    },
 
-        /* TODO
-         $modal.on("show.bs.modal", function(e) {
-         // Disable the rater currently assigned to the order
-         }); */
+    _initOnModalShowEvent() {
+        this.$modal.on("show.bs.modal", () => {
+            this.$listItems.removeClass("disabled");
+
+            // Disable the rater currently assigned to the order
+            const liCurrentlyAssigned = _.find(this.$listItems, li => {
+                const accountId = $(li).data("account-id");
+                const raterOfCurrentOrder = store.currentOrder.rater;
+
+                return raterOfCurrentOrder && raterOfCurrentOrder.id === accountId;
+            });
+
+            $(liCurrentlyAssigned).addClass("disabled");
+        });
     },
 
     _handleItemClicked(e) {
-        const accountId = $(e.currentTarget).data("account-id");
+        const $li = $(e.currentTarget);
 
-        store.assignOrderTo(_.find(store.allRaters, ["id", accountId]));
-        this.$modal.modal("hide");
+        if (!$li.hasClass("disabled")) {
+            const accountId = $li.data("account-id");
+
+            store.assignOrderTo(_.find(store.allRaters, ["id", accountId]));
+            this.$modal.modal("hide");
+        }
     }
 });
 

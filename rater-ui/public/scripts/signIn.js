@@ -176,16 +176,16 @@
 	                                CR.loggedInAccount = JSON.parse(httpRequest.responseText);
 	                                location.href = "/";
 	                            } else {
-	                                (0, _jqueryAnimator.disableLoading)(this.$submitBtn);
+	                                (0, _jqueryAnimator.disableLoading)(_this.$submitBtn);
 
 	                                if (httpRequest.status === _global.httpStatusCodes.signInIncorrectCredentials) {
-	                                    this.validator.showErrorMessage(this.$incorrectCredentialsError);
+	                                    _this.validator.showErrorMessage(_this.$incorrectCredentialsError);
 	                                } else {
 	                                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                                }
 	                            }
 	                        }
-	                    }.bind(_this);
+	                    };
 	                    httpRequest.open(type, url);
 	                    httpRequest.setRequestHeader("Content-Type", "application/json");
 	                    httpRequest.send(JSON.stringify({

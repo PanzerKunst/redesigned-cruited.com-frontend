@@ -210,6 +210,8 @@
 	        this._fetchAllRaters();
 	    },
 	    _fetchTopOrders: function _fetchTopOrders() {
+	        var _this = this;
+
 	        var type = "GET";
 	        var url = "/api/orders/top";
 
@@ -220,20 +222,22 @@
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
 	                    var topOrdersJson = JSON.parse(httpRequest.responseText);
 
-	                    this.topOrders = topOrdersJson.map(function (o) {
+	                    _this.topOrders = topOrdersJson.map(function (o) {
 	                        return Object.assign(Object.create(_order2.default), o);
 	                    });
-	                    this.areTopOrdersFetched = true;
-	                    this.reactComponent.forceUpdate();
+	                    _this.areTopOrdersFetched = true;
+	                    _this.reactComponent.forceUpdate();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                }
 	            }
-	        }.bind(this);
+	        };
 	        httpRequest.open(type, url);
 	        httpRequest.send();
 	    },
 	    _fetchAllRaters: function _fetchAllRaters() {
+	        var _this2 = this;
+
 	        var type = "GET";
 	        var url = "/api/accounts/raters";
 
@@ -244,31 +248,31 @@
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
 	                    var allRatersJson = JSON.parse(httpRequest.responseText);
 
-	                    this.allRaters = allRatersJson.map(function (o) {
+	                    _this2.allRaters = allRatersJson.map(function (o) {
 	                        return Object.assign(Object.create(_account2.default), o);
 	                    });
-	                    this.reactComponent.forceUpdate();
+	                    _this2.reactComponent.forceUpdate();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                }
 	            }
-	        }.bind(this);
+	        };
 	        httpRequest.open(type, url);
 	        httpRequest.send();
 	    },
 	    assignOrderTo: function assignOrderTo(account) {
-	        var _this = this;
+	        var _this3 = this;
 
 	        if (!this.currentOrder) {
 	            alert("Error: `this.currentOrder` must exist, this is a bug!");
 	        } else {
 	            (function () {
-	                var predicate = ["id", _this.currentOrder.id];
-	                var order = _.find(_this.topOrders, predicate) || _.find(_this.moreOrders, predicate);
+	                var predicate = ["id", _this3.currentOrder.id];
+	                var order = _.find(_this3.topOrders, predicate) || _.find(_this3.moreOrders, predicate);
 
 	                order.rater = account;
 
-	                _this.reactComponent.forceUpdate();
+	                _this3.reactComponent.forceUpdate();
 
 	                var type = "PUT";
 	                var url = "/api/orders";
@@ -289,13 +293,13 @@
 	        }
 	    },
 	    deleteCurrentOrder: function deleteCurrentOrder() {
-	        var _this2 = this;
+	        var _this4 = this;
 
 	        if (!this.currentOrder) {
 	            alert("Error: `this.currentOrder` must exist, this is a bug!");
 	        } else {
 	            (function () {
-	                var orderId = _this2.currentOrder.id;
+	                var orderId = _this4.currentOrder.id;
 
 	                var type = "DELETE";
 	                var url = "/api/orders/" + orderId;
@@ -309,21 +313,23 @@
 	                                return o.id === orderId;
 	                            };
 
-	                            _.remove(this.topOrders, predicate);
-	                            _.remove(this.moreOrders, predicate);
+	                            _.remove(_this4.topOrders, predicate);
+	                            _.remove(_this4.moreOrders, predicate);
 
-	                            this.reactComponent.forceUpdate();
+	                            _this4.reactComponent.forceUpdate();
 	                        } else {
 	                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                        }
 	                    }
-	                }.bind(_this2);
+	                };
 	                httpRequest.open(type, url);
 	                httpRequest.send();
 	            })();
 	        }
 	    },
 	    searchMore: function searchMore(onAjaxRequestDone) {
+	        var _this5 = this;
+
 	        this._updateSearchCriteria();
 
 	        var type = "POST";
@@ -341,13 +347,13 @@
 	                        return Object.assign(Object.create(_order2.default), o);
 	                    });
 
-	                    this.moreOrders = _.concat(this.moreOrders, moreOrders);
-	                    this.reactComponent.forceUpdate();
+	                    _this5.moreOrders = _.concat(_this5.moreOrders, moreOrders);
+	                    _this5.reactComponent.forceUpdate();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                }
 	            }
-	        }.bind(this);
+	        };
 	        httpRequest.open(type, url);
 	        httpRequest.setRequestHeader("Content-Type", "application/json");
 	        httpRequest.send(JSON.stringify({
@@ -1062,22 +1068,44 @@
 	            )
 	        );
 	    },
-	    componentDidMount: function componentDidMount() {
+	    componentDidUpdate: function componentDidUpdate() {
 	        this._initElements();
+
+	        if (!this.isOnModalShowEventInitialised) {
+	            this._initOnModalShowEvent();
+	            this.isOnModalShowEventInitialised = true;
+	        }
 	    },
 	    _initElements: function _initElements() {
 	        this.$modal = $("#assign-modal");
+	        this.$listItems = this.$modal.find("li");
+	    },
+	    _initOnModalShowEvent: function _initOnModalShowEvent() {
+	        var _this2 = this;
 
-	        /* TODO
-	         $modal.on("show.bs.modal", function(e) {
-	         // Disable the rater currently assigned to the order
-	         }); */
+	        this.$modal.on("show.bs.modal", function () {
+	            _this2.$listItems.removeClass("disabled");
+
+	            // Disable the rater currently assigned to the order
+	            var liCurrentlyAssigned = _.find(_this2.$listItems, function (li) {
+	                var accountId = $(li).data("account-id");
+	                var raterOfCurrentOrder = _store2.default.currentOrder.rater;
+
+	                return raterOfCurrentOrder && raterOfCurrentOrder.id === accountId;
+	            });
+
+	            $(liCurrentlyAssigned).addClass("disabled");
+	        });
 	    },
 	    _handleItemClicked: function _handleItemClicked(e) {
-	        var accountId = $(e.currentTarget).data("account-id");
+	        var $li = $(e.currentTarget);
 
-	        _store2.default.assignOrderTo(_.find(_store2.default.allRaters, ["id", accountId]));
-	        this.$modal.modal("hide");
+	        if (!$li.hasClass("disabled")) {
+	            var accountId = $li.data("account-id");
+
+	            _store2.default.assignOrderTo(_.find(_store2.default.allRaters, ["id", accountId]));
+	            this.$modal.modal("hide");
+	        }
 	    }
 	});
 
