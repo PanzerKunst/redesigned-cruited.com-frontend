@@ -45,24 +45,21 @@ const AssessmentListController = {
                     </div>
 
                     <AssignModal />
+                    <div id="delete-modal" className="modal fade" tabIndex="-1" role="dialog"></div>
                 </div>
             );
         },
 
         componentDidMount() {
             this._initElements();
-            this._searchMore();
         },
 
-        /* TODO: move to `deleteModal`
-         hideOrderOfId(orderId) {
-         const filterFnc = order => order.id !== orderId;
-
-         this.setState({
-         topOrders: _.filter(this.state.topOrders, filterFnc),
-         moreOrders: _.filter(this.state.moreOrders, filterFnc)
-         });
-         }, */
+        componentDidUpdate() {
+            if (store.areTopOrdersFetched && !this.isDefaultSearchDone) {
+                this._searchMore();
+                this.isDefaultSearchDone = true;
+            }
+        },
 
         _initElements() {
             this.$loadMorePanel = $("#load-more-panel");

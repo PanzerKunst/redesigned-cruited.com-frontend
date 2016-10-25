@@ -50,11 +50,11 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _listItem = __webpack_require__(4);
+	var _listItem = __webpack_require__(6);
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
-	var _assignModal = __webpack_require__(8);
+	var _assignModal = __webpack_require__(10);
 
 	var _assignModal2 = _interopRequireDefault(_assignModal);
 
@@ -121,24 +121,19 @@
 	                        )
 	                    )
 	                ),
-	                React.createElement(_assignModal2.default, null)
+	                React.createElement(_assignModal2.default, null),
+	                React.createElement("div", { id: "delete-modal", className: "modal fade", tabIndex: "-1", role: "dialog" })
 	            );
 	        },
 	        componentDidMount: function componentDidMount() {
 	            this._initElements();
-	            this._searchMore();
 	        },
-
-
-	        /* TODO: move to `deleteModal`
-	         hideOrderOfId(orderId) {
-	         const filterFnc = order => order.id !== orderId;
-	           this.setState({
-	         topOrders: _.filter(this.state.topOrders, filterFnc),
-	         moreOrders: _.filter(this.state.moreOrders, filterFnc)
-	         });
-	         }, */
-
+	        componentDidUpdate: function componentDidUpdate() {
+	            if (_store2.default.areTopOrdersFetched && !this.isDefaultSearchDone) {
+	                this._searchMore();
+	                this.isDefaultSearchDone = true;
+	            }
+	        },
 	        _initElements: function _initElements() {
 	            this.$loadMorePanel = $("#load-more-panel");
 	        },
@@ -190,20 +185,24 @@
 
 	var _global = __webpack_require__(2);
 
-	var _Account = __webpack_require__(3);
+	var _account = __webpack_require__(3);
 
-	var _Account2 = _interopRequireDefault(_Account);
+	var _account2 = _interopRequireDefault(_account);
+
+	var _order = __webpack_require__(4);
+
+	var _order2 = _interopRequireDefault(_order);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var store = {
 	    reactComponent: null,
-	    account: Object.assign(Object.create(_Account2.default), CR.ControllerData.account),
+	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
 	    config: CR.ControllerData.config,
 	    topOrders: [],
 	    moreOrders: [],
 	    allRaters: [],
-	    currentOrderId: null,
+	    currentOrder: null,
 	    areTopOrdersFetched: false,
 
 	    init: function init() {
@@ -219,7 +218,11 @@
 	        httpRequest.onreadystatechange = function () {
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    this.topOrders = JSON.parse(httpRequest.responseText);
+	                    var topOrdersJson = JSON.parse(httpRequest.responseText);
+
+	                    this.topOrders = topOrdersJson.map(function (o) {
+	                        return Object.assign(Object.create(_order2.default), o);
+	                    });
 	                    this.areTopOrdersFetched = true;
 	                    this.reactComponent.forceUpdate();
 	                } else {
@@ -239,7 +242,11 @@
 	        httpRequest.onreadystatechange = function () {
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    this.allRaters = JSON.parse(httpRequest.responseText);
+	                    var allRatersJson = JSON.parse(httpRequest.responseText);
+
+	                    this.allRaters = allRatersJson.map(function (o) {
+	                        return Object.assign(Object.create(_account2.default), o);
+	                    });
 	                    this.reactComponent.forceUpdate();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -252,11 +259,12 @@
 	    assignOrderTo: function assignOrderTo(account) {
 	        var _this = this;
 
-	        if (!this.currentOrderId) {
-	            alert("Error: `this.currentOrderId` must exist, this is a bug!");
+	        if (!this.currentOrder) {
+	            alert("Error: `this.currentOrder` must exist, this is a bug!");
 	        } else {
 	            (function () {
-	                var order = _.find(_this.topOrders, ["id", _this.currentOrderId]) || _.find(_this.moreOrders, ["id", _this.currentOrderId]);
+	                var predicate = ["id", _this.currentOrder.id];
+	                var order = _.find(_this.topOrders, predicate) || _.find(_this.moreOrders, predicate);
 
 	                order.rater = account;
 
@@ -280,30 +288,40 @@
 	            })();
 	        }
 	    },
-	    deleteOrder: function deleteOrder(orderId) {
-	        var type = "DELETE";
-	        var url = "/api/orders/" + orderId;
+	    deleteCurrentOrder: function deleteCurrentOrder() {
+	        var _this2 = this;
 
-	        var httpRequest = new XMLHttpRequest();
+	        if (!this.currentOrder) {
+	            alert("Error: `this.currentOrder` must exist, this is a bug!");
+	        } else {
+	            (function () {
+	                var orderId = _this2.currentOrder.id;
 
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    var predicate = function predicate(o) {
-	                        return o.id === orderId;
-	                    };
+	                var type = "DELETE";
+	                var url = "/api/orders/" + orderId;
 
-	                    _.remove(this.topOrders, predicate);
-	                    _.remove(this.moreOrders, predicate);
+	                var httpRequest = new XMLHttpRequest();
 
-	                    this.reactComponent.forceUpdate();
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        }.bind(this);
-	        httpRequest.open(type, url);
-	        httpRequest.send();
+	                httpRequest.onreadystatechange = function () {
+	                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                        if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                            var predicate = function predicate(o) {
+	                                return o.id === orderId;
+	                            };
+
+	                            _.remove(this.topOrders, predicate);
+	                            _.remove(this.moreOrders, predicate);
+
+	                            this.reactComponent.forceUpdate();
+	                        } else {
+	                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                        }
+	                    }
+	                }.bind(_this2);
+	                httpRequest.open(type, url);
+	                httpRequest.send();
+	            })();
+	        }
 	    },
 	    searchMore: function searchMore(onAjaxRequestDone) {
 	        this._updateSearchCriteria();
@@ -318,7 +336,12 @@
 	                onAjaxRequestDone();
 
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    this.moreOrders = _.concat(this.moreOrders, JSON.parse(httpRequest.responseText));
+	                    var moreOrdersJson = JSON.parse(httpRequest.responseText);
+	                    var moreOrders = moreOrdersJson.map(function (o) {
+	                        return Object.assign(Object.create(_order2.default), o);
+	                    });
+
+	                    this.moreOrders = _.concat(this.moreOrders, moreOrders);
 	                    this.reactComponent.forceUpdate();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -411,11 +434,92 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(5);
+	var _product = __webpack_require__(5);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Order = {
+
+	    // Static
+	    statuses: {
+	        notPaid: -1,
+	        paid: 0,
+	        inProgress: 1,
+	        awaitingFeedback: 4,
+	        scheduled: 3,
+	        completed: 2
+	    },
+	    fileNamePrefixSeparator: "-",
+
+	    documentUrl: function documentUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.COVER_LETTER_REVIEW:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.LINKEDIN_PROFILE_REVIEW:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
+	    }
+	};
+
+	exports.default = Order;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Product = {
+
+	    // Static
+	    codes: {
+	        CV_REVIEW: "CV_REVIEW",
+	        COVER_LETTER_REVIEW: "COVER_LETTER_REVIEW",
+	        LINKEDIN_PROFILE_REVIEW: "LINKEDIN_PROFILE_REVIEW"
+	    },
+
+	    humanReadableCode: function humanReadableCode(dbCode) {
+	        switch (dbCode) {
+	            case this.codes.CV_REVIEW:
+	                return "CV";
+	            case this.codes.COVER_LETTER_REVIEW:
+	                return "Cover letter";
+	            default:
+	                return "Linkedin";
+	        }
+	    }
+	};
+
+	exports.default = Product;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _order = __webpack_require__(4);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _product = __webpack_require__(6);
+	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -423,17 +527,24 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _raterProfile = __webpack_require__(7);
+	var _deleteModal = __webpack_require__(7);
+
+	var _deleteModal2 = _interopRequireDefault(_deleteModal);
+
+	var _raterProfile = __webpack_require__(9);
 
 	var _raterProfile2 = _interopRequireDefault(_raterProfile);
 
+	var _couponTag = __webpack_require__(8);
+
+	var _couponTag2 = _interopRequireDefault(_couponTag);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// eslint-disable-next-line no-unused-vars
 	var ListItem = React.createClass({
 	    displayName: "ListItem",
 	    render: function render() {
-	        var _this = this;
-
 	        var order = this.props.order;
 
 	        return React.createElement(
@@ -494,7 +605,7 @@
 	                React.createElement(
 	                    "div",
 	                    null,
-	                    this._coupon(order.coupon),
+	                    React.createElement(_couponTag2.default, { coupon: order.coupon }),
 	                    order.tags.map(function (tag) {
 	                        var reactKey = order.id + "-" + tag;
 
@@ -505,7 +616,17 @@
 	                        );
 	                    }),
 	                    order.containedProductCodes.map(function (productCode) {
-	                        return _this._productCode(productCode, order.id);
+	                        var reactKey = order.id + "-" + productCode;
+
+	                        return React.createElement(
+	                            "span",
+	                            { key: reactKey, className: "order-list-item-tag product-code" },
+	                            React.createElement(
+	                                "a",
+	                                { href: order.documentUrl(_store2.default.config, productCode), target: "_blank" },
+	                                _product2.default.humanReadableCode(productCode)
+	                            )
+	                        );
 	                    }),
 	                    React.createElement(
 	                        "span",
@@ -522,12 +643,8 @@
 	        this._initElements();
 	    },
 	    _initElements: function _initElements() {
-	        var $listItem = $(ReactDOM.findDOMNode(this.refs.li));
-
-	        this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
 	        this.$assignModal = $("#assign-modal");
-
-	        this.$bootstrapTooltips.tooltip();
+	        this.$deleteModal = $("#delete-modal");
 	    },
 	    _cssClassForStatus: function _cssClassForStatus(status) {
 	        switch (status) {
@@ -572,36 +689,23 @@
 	            coupon.campaignName
 	        );
 	    },
-	    _productCode: function _productCode(productCode, orderId) {
-	        var reactKey = orderId + "-" + productCode;
-
-	        return React.createElement(
-	            "span",
-	            { key: reactKey, className: "order-list-item-tag product-code" },
-	            _product2.default.humanReadableCode(productCode)
-	        );
-	    },
 	    _actionBtn: function _actionBtn(order) {
-	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
+
+	        // Raters who are not assigned should still be able to check the assessment, even before it's completed
+	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || order.rater && order.rater.id !== _store2.default.account.id) {
 	            return this._checkBtn();
 	        }
-	        return this._assessBtn(order.rater);
+	        return this._assessBtn();
 	    },
-	    _assessBtn: function _assessBtn(rater) {
-	        var btn = rater ? React.createElement(
-	            "button",
-	            { className: "btn btn-default" },
-	            "Assess"
-	        ) : React.createElement(
-	            "button",
-	            { className: "btn btn-default", disabled: true },
-	            "Assess"
-	        );
-
+	    _assessBtn: function _assessBtn() {
 	        return React.createElement(
 	            "div",
 	            null,
-	            btn
+	            React.createElement(
+	                "button",
+	                { className: "btn btn-default" },
+	                "Assess"
+	            )
 	        );
 	    },
 	    _checkBtn: function _checkBtn() {
@@ -616,7 +720,7 @@
 	        );
 	    },
 	    _secondaryButtons: function _secondaryButtons(order) {
-	        var assignBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || !_store2.default.account.isAdmin() ? null : React.createElement(
+	        var assignBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled ? null : React.createElement(
 	            "button",
 	            { className: "styleless fa fa-user", onClick: this._handleAssignClicked },
 	            React.createElement("i", { className: "fa fa-check", "aria-hidden": "true" })
@@ -635,11 +739,15 @@
 	        );
 	    },
 	    _handleAssignClicked: function _handleAssignClicked() {
+	        _store2.default.currentOrder = this.props.order;
 	        this.$assignModal.modal();
-	        _store2.default.currentOrderId = this.props.order.id;
 	    },
 	    _handleDeleteClicked: function _handleDeleteClicked() {
-	        _store2.default.deleteOrder(this.props.order.id);
+	        _store2.default.currentOrder = this.props.order;
+
+	        ReactDOM.render(React.createElement(_deleteModal2.default), document.querySelector("#delete-modal"));
+
+	        this.$deleteModal.modal();
 	    }
 	});
 
@@ -647,64 +755,198 @@
 	exports.default = ListItem;
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Order = {
-
-	    // Static
-	    statuses: {
-	        notPaid: -1,
-	        paid: 0,
-	        inProgress: 1,
-	        awaitingFeedback: 4,
-	        scheduled: 3,
-	        completed: 2
-	    },
-	    fileNamePrefixSeparator: "-"
-	};
-
-	exports.default = Order;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Product = {
-
-	    // Static
-	    codes: {
-	        CV_REVIEW: "CV_REVIEW",
-	        COVER_LETTER_REVIEW: "COVER_LETTER_REVIEW",
-	        LINKEDIN_PROFILE_REVIEW: "LINKEDIN_PROFILE_REVIEW"
-	    },
-
-	    humanReadableCode: function humanReadableCode(dbCode) {
-	        switch (dbCode) {
-	            case this.codes.CV_REVIEW:
-	                return "CV";
-	            case this.codes.COVER_LETTER_REVIEW:
-	                return "Cover letter";
-	            default:
-	                return "Linkedin";
-	        }
-	    }
-	};
-
-	exports.default = Product;
-
-/***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _product = __webpack_require__(5);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	var _store = __webpack_require__(1);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _couponTag = __webpack_require__(8);
+
+	var _couponTag2 = _interopRequireDefault(_couponTag);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var DeleteModal = React.createClass({
+	    displayName: "DeleteModal",
+	    render: function render() {
+	        var order = _store2.default.currentOrder;
+
+	        return React.createElement(
+	            "div",
+	            { className: "modal-dialog", role: "document" },
+	            React.createElement(
+	                "div",
+	                { className: "modal-content" },
+	                React.createElement(
+	                    "div",
+	                    { className: "modal-header" },
+	                    React.createElement(
+	                        "button",
+	                        { type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close" },
+	                        React.createElement(
+	                            "span",
+	                            { "aria-hidden": "true" },
+	                            "\xD7"
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "h3",
+	                        { className: "modal-title" },
+	                        "Delete this order?"
+	                    )
+	                ),
+	                React.createElement(
+	                    "div",
+	                    { className: "modal-body" },
+	                    React.createElement(
+	                        "section",
+	                        null,
+	                        React.createElement(
+	                            "p",
+	                            null,
+	                            "#",
+	                            order.id
+	                        ),
+	                        React.createElement(
+	                            "p",
+	                            null,
+	                            moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "section",
+	                        null,
+	                        React.createElement(
+	                            "div",
+	                            null,
+	                            React.createElement(
+	                                "p",
+	                                null,
+	                                order.employerSought
+	                            ),
+	                            React.createElement(
+	                                "p",
+	                                null,
+	                                order.positionSought
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            null,
+	                            React.createElement(
+	                                "p",
+	                                null,
+	                                order.customer.firstName
+	                            ),
+	                            React.createElement(
+	                                "p",
+	                                null,
+	                                order.customer.emailAddress
+	                            )
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "section",
+	                        null,
+	                        React.createElement(_couponTag2.default, { coupon: order.coupon }),
+	                        order.tags.map(function (tag) {
+	                            var reactKey = order.id + "-" + tag;
+
+	                            return React.createElement(
+	                                "span",
+	                                { key: reactKey, className: "order-list-item-tag order-tag" },
+	                                tag
+	                            );
+	                        }),
+	                        order.containedProductCodes.map(function (productCode) {
+	                            var reactKey = order.id + "-" + productCode;
+
+	                            return React.createElement(
+	                                "span",
+	                                { key: reactKey, className: "order-list-item-tag product-code" },
+	                                _product2.default.humanReadableCode(productCode)
+	                            );
+	                        }),
+	                        React.createElement(
+	                            "span",
+	                            { className: "order-list-item-tag lang" },
+	                            order.languageCode
+	                        )
+	                    )
+	                ),
+	                React.createElement(
+	                    "div",
+	                    { className: "modal-footer" },
+	                    React.createElement(
+	                        "button",
+	                        { type: "button", className: "btn btn-primary", onClick: this._handleDeleteClicked },
+	                        "Mark as deleted"
+	                    )
+	                )
+	            )
+	        );
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this._initElements();
+	    },
+	    _initElements: function _initElements() {
+	        this.$modal = $("#delete-modal");
+	    },
+	    _handleDeleteClicked: function _handleDeleteClicked() {
+	        _store2.default.deleteCurrentOrder();
+	        this.$modal.modal("hide");
+	    }
+	});
+
+	// eslint-disable-next-line no-unused-vars
+	exports.default = DeleteModal;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var CouponTag = React.createClass({
+	    displayName: "CouponTag",
+	    render: function render() {
+	        var coupon = this.props.coupon;
+
+	        if (!coupon) {
+	            return null;
+	        }
+
+	        return React.createElement(
+	            "span",
+	            { ref: "coupon", className: "order-list-item-tag coupon", "data-toggle": "tooltip", title: coupon.code },
+	            coupon.campaignName
+	        );
+	    },
+	    componentDidMount: function componentDidMount() {
+	        $(ReactDOM.findDOMNode(this.refs.coupon)).tooltip();
+	    }
+	});
+
+	exports.default = CouponTag;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -717,7 +959,7 @@
 	    render: function render() {
 	        var account = this.props.account;
 
-	        if (!this.props.account) {
+	        if (!account) {
 	            return null;
 	        }
 
@@ -746,7 +988,7 @@
 	exports.default = RaterProfile;
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -760,7 +1002,7 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _raterProfile = __webpack_require__(7);
+	var _raterProfile = __webpack_require__(9);
 
 	var _raterProfile2 = _interopRequireDefault(_raterProfile);
 

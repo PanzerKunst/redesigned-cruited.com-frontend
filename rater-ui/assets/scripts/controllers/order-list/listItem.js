@@ -1,9 +1,13 @@
 import Order from "../../models/order";
 import Product from "../../models/product";
 import store from "./store";
+import DeleteModal from "./deleteModal";
 
 // eslint-disable-next-line no-unused-vars
-import RaterProfile from "../raterProfile";
+import RaterProfile from "../components/raterProfile";
+
+// eslint-disable-next-line no-unused-vars
+import CouponTag from "../components/couponTag";
 
 const ListItem = React.createClass({
     render() {
@@ -29,13 +33,19 @@ const ListItem = React.createClass({
                 </section>
                 <section>
                     <div>
-                        {this._coupon(order.coupon)}
+                        <CouponTag coupon={order.coupon}/>
                         {order.tags.map(tag => {
                             const reactKey = order.id + "-" + tag;
 
                             return <span key={reactKey} className="order-list-item-tag order-tag">{tag}</span>;
                         })}
-                        {order.containedProductCodes.map(productCode => this._productCode(productCode, order.id))}
+                        {order.containedProductCodes.map(productCode => {
+                            const reactKey = order.id + "-" + productCode;
+
+                            return (<span key={reactKey} className="order-list-item-tag product-code">
+                                <a href={order.documentUrl(store.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
+                            </span>);
+                        })}
                         <span className="order-list-item-tag lang">{order.languageCode}</span>
                     </div>
                     {this._actionBtn(order)}
@@ -50,12 +60,8 @@ const ListItem = React.createClass({
     },
 
     _initElements() {
-        const $listItem = $(ReactDOM.findDOMNode(this.refs.li));
-
-        this.$bootstrapTooltips = $listItem.find("[data-toggle=tooltip]");
         this.$assignModal = $("#assign-modal");
-
-        this.$bootstrapTooltips.tooltip();
+        this.$deleteModal = $("#delete-modal");
     },
 
     _cssClassForStatus(status) {
@@ -93,27 +99,20 @@ const ListItem = React.createClass({
         return <span className="order-list-item-tag coupon" data-toggle="tooltip" title={coupon.code}>{coupon.campaignName}</span>;
     },
 
-    _productCode(productCode, orderId) {
-        const reactKey = orderId + "-" + productCode;
-
-        return <span key={reactKey} className="order-list-item-tag product-code">{Product.humanReadableCode(productCode)}</span>;
-    },
-
     _actionBtn(order) {
-        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled) {
+
+        // Raters who are not assigned should still be able to check the assessment, even before it's completed
+        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled || (
+            order.rater && order.rater.id !== store.account.id)) {
             return this._checkBtn();
         }
-        return this._assessBtn(order.rater);
+        return this._assessBtn();
     },
 
-    _assessBtn(rater) {
-        const btn = rater ?
-            <button className="btn btn-default">Assess</button> :
-            <button className="btn btn-default" disabled>Assess</button>;
-
+    _assessBtn() {
         return (
             <div>
-                {btn}
+                <button className="btn btn-default">Assess</button>
             </div>
         );
     },
@@ -127,7 +126,7 @@ const ListItem = React.createClass({
     },
 
     _secondaryButtons(order) {
-        const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled || !store.account.isAdmin() ?
+        const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled ?
             null :
             <button className="styleless fa fa-user" onClick={this._handleAssignClicked}>
                 <i className="fa fa-check" aria-hidden="true"></i>
@@ -151,12 +150,19 @@ const ListItem = React.createClass({
     },
 
     _handleAssignClicked() {
+        store.currentOrder = this.props.order;
         this.$assignModal.modal();
-        store.currentOrderId = this.props.order.id;
     },
 
     _handleDeleteClicked() {
-        store.deleteOrder(this.props.order.id);
+        store.currentOrder = this.props.order;
+
+        ReactDOM.render(
+            React.createElement(DeleteModal),
+            document.querySelector("#delete-modal")
+        );
+
+        this.$deleteModal.modal();
     }
 });
 

@@ -12,21 +12,25 @@
       font-size: 14px;
     }
 
-    > ul > li {
-      background-color: white;
+    > ul {
+      margin-bottom: 0;
 
-      padding: 1.5em $spacer-unit-size;
-      margin-bottom: 2em;
+      > li {
+        background-color: white;
 
-      @include list-item-border;
+        padding: 1.5em $spacer-unit-size;
+        margin-bottom: 2em;
 
-      &.in-progress,
-      &.awaiting-feedback {
-        @include list-item-border($brand-warning);
-      }
-      &.completed,
-      &.scheduled {
-        @include list-item-border($brand-success);
+        @include list-item-border;
+
+        &.in-progress,
+        &.awaiting-feedback {
+          @include list-item-border($brand-warning);
+        }
+        &.completed,
+        &.scheduled {
+          @include list-item-border($brand-success);
+        }
       }
     }
 

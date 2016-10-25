@@ -1,5 +1,6 @@
 import {httpStatusCodes} from "../../global";
-import Account from "../../models/Account";
+import Account from "../../models/account";
+import Order from "../../models/order";
 
 const store = {
     reactComponent: null,
@@ -8,7 +9,7 @@ const store = {
     topOrders: [],
     moreOrders: [],
     allRaters: [],
-    currentOrderId: null,
+    currentOrder: null,
     areTopOrdersFetched: false,
 
     init() {
@@ -25,7 +26,9 @@ const store = {
         httpRequest.onreadystatechange = function() {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    this.topOrders = JSON.parse(httpRequest.responseText);
+                    const topOrdersJson = JSON.parse(httpRequest.responseText);
+
+                    this.topOrders = topOrdersJson.map(o => Object.assign(Object.create(Order), o));
                     this.areTopOrdersFetched = true;
                     this.reactComponent.forceUpdate();
                 } else {
@@ -46,7 +49,9 @@ const store = {
         httpRequest.onreadystatechange = function() {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    this.allRaters = JSON.parse(httpRequest.responseText);
+                    const allRatersJson = JSON.parse(httpRequest.responseText);
+
+                    this.allRaters = allRatersJson.map(o => Object.assign(Object.create(Account), o));
                     this.reactComponent.forceUpdate();
                 } else {
                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -58,11 +63,11 @@ const store = {
     },
 
     assignOrderTo(account) {
-        if (!this.currentOrderId) {
-            alert("Error: `this.currentOrderId` must exist, this is a bug!");
+        if (!this.currentOrder) {
+            alert("Error: `this.currentOrder` must exist, this is a bug!");
         } else {
-            const order = _.find(this.topOrders, ["id", this.currentOrderId]) ||
-                _.find(this.moreOrders, ["id", this.currentOrderId]);
+            const predicate = ["id", this.currentOrder.id];
+            const order = _.find(this.topOrders, predicate) || _.find(this.moreOrders, predicate);
 
             order.rater = account;
 
@@ -86,28 +91,34 @@ const store = {
         }
     },
 
-    deleteOrder(orderId) {
-        const type = "DELETE";
-        const url = "/api/orders/" + orderId;
+    deleteCurrentOrder() {
+        if (!this.currentOrder) {
+            alert("Error: `this.currentOrder` must exist, this is a bug!");
+        } else {
+            const orderId = this.currentOrder.id;
 
-        const httpRequest = new XMLHttpRequest();
+            const type = "DELETE";
+            const url = "/api/orders/" + orderId;
 
-        httpRequest.onreadystatechange = function() {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    const predicate = o => o.id === orderId;
+            const httpRequest = new XMLHttpRequest();
 
-                    _.remove(this.topOrders, predicate);
-                    _.remove(this.moreOrders, predicate);
+            httpRequest.onreadystatechange = function() {
+                if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                    if (httpRequest.status === httpStatusCodes.ok) {
+                        const predicate = o => o.id === orderId;
 
-                    this.reactComponent.forceUpdate();
-                } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        _.remove(this.topOrders, predicate);
+                        _.remove(this.moreOrders, predicate);
+
+                        this.reactComponent.forceUpdate();
+                    } else {
+                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    }
                 }
-            }
-        }.bind(this);
-        httpRequest.open(type, url);
-        httpRequest.send();
+            }.bind(this);
+            httpRequest.open(type, url);
+            httpRequest.send();
+        }
     },
 
     searchMore(onAjaxRequestDone) {
@@ -123,7 +134,10 @@ const store = {
                 onAjaxRequestDone();
 
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    this.moreOrders = _.concat(this.moreOrders, JSON.parse(httpRequest.responseText));
+                    const moreOrdersJson = JSON.parse(httpRequest.responseText);
+                    const moreOrders = moreOrdersJson.map(o => Object.assign(Object.create(Order), o));
+
+                    this.moreOrders = _.concat(this.moreOrders, moreOrders);
                     this.reactComponent.forceUpdate();
                 } else {
                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");

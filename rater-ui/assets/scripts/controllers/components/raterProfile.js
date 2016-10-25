@@ -2,7 +2,7 @@ const RaterProfile = React.createClass({
     render() {
         const account = this.props.account;
 
-        if (!this.props.account) {
+        if (!account) {
             return null;
         }
 

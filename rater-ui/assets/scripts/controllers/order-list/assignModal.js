@@ -1,7 +1,7 @@
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
-import RaterProfile from "../raterProfile";
+import RaterProfile from "../components/raterProfile";
 
 const AssignModal = React.createClass({
     getInitialState() {
