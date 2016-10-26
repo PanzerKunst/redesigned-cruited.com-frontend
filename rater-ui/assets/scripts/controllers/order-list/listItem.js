@@ -86,8 +86,8 @@ const ListItem = React.createClass({
             return null;
         }
 
-        const dueDate = moment(order.paymentTimestamp).add(1, "d").subtract(90, "m");
-        const timeLeft = moment.duration(dueDate.valueOf() - moment().valueOf());
+        const dueMoment = moment(order.dueTimestamp);
+        const timeLeft = moment.duration(dueMoment.valueOf() - moment().valueOf());
 
         return <p>{timeLeft.hours()}h{timeLeft.minutes()}m left</p>;
     },

@@ -21,7 +21,8 @@ case class FrontendOrder(id: Long,
                          status: Int,
                          languageCode: String,
                          creationTimestamp: Long,
-                         paymentTimestamp: Long)
+                         paymentTimestamp: Long,
+                         dueTimestamp: Long)
 
 object FrontendOrder {
   implicit val format: Format[FrontendOrder] = (
@@ -42,6 +43,7 @@ object FrontendOrder {
       (JsPath \ "status").format[Int] and
       (JsPath \ "languageCode").format[String] and
       (JsPath \ "creationTimestamp").format[Long] and
-      (JsPath \ "paymentTimestamp").format[Long]
+      (JsPath \ "paymentTimestamp").format[Long] and
+      (JsPath \ "dueTimestamp").format[Long]
     )(FrontendOrder.apply, unlift(FrontendOrder.unapply))
 }

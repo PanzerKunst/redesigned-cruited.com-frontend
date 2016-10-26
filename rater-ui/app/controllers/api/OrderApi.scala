@@ -64,16 +64,36 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
 
             case s: JsSuccess[OrderSearchData] =>
               val orderSearchData = s.get
-              val fromDateOpt = orderSearchData.fromTimestamp match {
+              val fromOpt = orderSearchData.from match {
                 case None => None
                 case Some(ts) => Some(new Date(ts))
               }
-              val toDate = new Date(orderSearchData.toTimestamp)
+              val to = new Date(orderSearchData.to)
 
-              val olderOrdersExcept = orderDto.getOlderOrdersExcept(fromDateOpt, toDate, orderSearchData.excludedOrderIds)
+              val olderOrdersExcept = orderDto.getOlderOrdersExcept(fromOpt, to, orderSearchData.excludedOrderIds)
 
               Ok(Json.toJson(olderOrdersExcept))
           }
+      }
+    }
+  }
+
+  def due = Action { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) => accountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) => Ok(Json.toJson(orderDto.dueOrders))
+      }
+    }
+  }
+
+  def sentToTheCustomerThisMonth() = Action { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) => accountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) => Ok(Json.toJson(orderDto.ordersSentToTheCustomer))
       }
     }
   }

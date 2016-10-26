@@ -20,4 +20,6 @@ PUT           /api/orders                 controllers.api.OrderApi.update
 DELETE        /api/orders/:id             controllers.api.OrderApi.delete(id: Long)
 GET           /api/orders/top             controllers.api.OrderApi.top
 POST          /api/orders/search          controllers.api.OrderApi.search
+GET           /api/orders/due             controllers.api.OrderApi.due
+GET           /api/orders/sent            controllers.api.OrderApi.sentToTheCustomerThisMonth
 GET           /api/accounts/raters        controllers.api.AccountApi.allRaters

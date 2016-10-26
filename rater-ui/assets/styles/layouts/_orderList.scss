@@ -125,6 +125,11 @@
   }
 }
 
+#stats-panel {
+  background-color: $background-body-color;
+  color: $dark-grey;
+}
+
 .no-flexbox {
   #order-list {
     .rater-profile {
