@@ -1,0 +1,22 @@
+@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder)
+
+@main("Rater - Assessment", "assessment") {
+<!--
+    Header
+-->
+@header(Some(account))
+
+} {
+<!--
+    Javascript
+-->
+<script type="text/javascript">
+    CR.ControllerData = {
+        account: @Html(play.api.libs.json.Json.toJson(account).toString()),
+        config: @Html(play.api.libs.json.Json.toJson(config.serialized).toString()),
+        order: @Html(play.api.libs.json.Json.toJson(order).toString())
+    };
+</script>
+
+<script type="text/javascript" src="@routes.Assets.versioned("scripts/assessment.js")"></script>
+}

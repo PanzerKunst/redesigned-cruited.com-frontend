@@ -56,7 +56,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var SignInController = {
+	var controller = {
 	    init: function init() {
 	        ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
 	    },
@@ -198,7 +198,7 @@
 	    })
 	};
 
-	Object.create(SignInController).init();
+	controller.init();
 
 /***/ },
 /* 1 */
@@ -504,11 +504,13 @@
 	        return this._get$error($field, this.checkUrl);
 	    },
 	    _get$error: function _get$error($field, checkType) {
+	        var selector = "p[data-check=" + checkType + "]";
+
 	        if (this._isFieldTypeCheckbox($field)) {
-	            return $field.parent().siblings("p[data-check=" + checkType + "]");
+	            return $field.parent().siblings(selector);
 	        }
 
-	        return $field.parents(".form-group").children("p[data-check=" + checkType + "]");
+	        return $field.parents(".form-group").children(selector);
 	    },
 	    _isToCheckIfEmpty: function _isToCheckIfEmpty($field) {
 	        return this._get$empty($field).length === 1;

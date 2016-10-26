@@ -6,7 +6,7 @@ import ListItem from "./listItem";
 // eslint-disable-next-line no-unused-vars
 import AssignModal from "./assignModal";
 
-const AssessmentListController = {
+const controller = {
     init() {
         store.reactComponent = ReactDOM.render(
             React.createElement(this.reactComponent),
@@ -89,4 +89,4 @@ const AssessmentListController = {
     })
 };
 
-AssessmentListController.init();
+controller.init();

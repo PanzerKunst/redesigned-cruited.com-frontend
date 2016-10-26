@@ -44,7 +44,7 @@ const store = {
                     this.areTopOrdersFetched = true;
                     this.reactComponent.forceUpdate();
                 } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
             }
         };
@@ -66,7 +66,7 @@ const store = {
                     this.allRaters = allRatersJson.map(o => Object.assign(Object.create(Account), o));
                     this.reactComponent.forceUpdate();
                 } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
             }
         };
@@ -89,7 +89,7 @@ const store = {
                     this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
                     this.reactComponent.forceUpdate();
                 } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
             }
         };
@@ -111,7 +111,7 @@ const store = {
                     this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
                     this.reactComponent.forceUpdate();
                 } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
             }
         };
@@ -138,7 +138,7 @@ const store = {
             httpRequest.onreadystatechange = () => {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status !== httpStatusCodes.ok) {
-                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        alert(`AJAX failure doing a ${type} request to "${url}"`);
                     }
                 }
             };
@@ -155,7 +155,7 @@ const store = {
             const orderId = this.currentOrder.id;
 
             const type = "DELETE";
-            const url = "/api/orders/" + orderId;
+            const url = `/api/orders/${orderId}`;
 
             const httpRequest = new XMLHttpRequest();
 
@@ -169,7 +169,7 @@ const store = {
 
                         this.reactComponent.forceUpdate();
                     } else {
-                        alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                        alert(`AJAX failure doing a ${type} request to "${url}"`);
                     }
                 }
             };
@@ -197,7 +197,7 @@ const store = {
                     this.moreOrders = _.concat(this.moreOrders, moreOrders);
                     this.reactComponent.forceUpdate();
                 } else {
-                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
             }
         };

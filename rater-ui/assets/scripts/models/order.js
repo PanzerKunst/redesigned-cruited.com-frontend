@@ -26,7 +26,7 @@ const Order = {
             default:
         }
 
-        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
+        return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}?token=${this.idInBase64}`;
     }
 };
 

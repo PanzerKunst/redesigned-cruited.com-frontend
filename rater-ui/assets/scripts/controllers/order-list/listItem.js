@@ -106,13 +106,15 @@ const ListItem = React.createClass({
             order.rater && order.rater.id !== store.account.id)) {
             return this._checkBtn();
         }
-        return this._assessBtn();
+        return this._assessBtn(order.id);
     },
 
-    _assessBtn() {
+    _assessBtn(orderId) {
+        const link = `/assessments/${orderId}`;
+
         return (
             <div>
-                <button className="btn btn-default">Assess</button>
+                <a href={link} className="btn btn-default">Assess</a>
             </div>
         );
     },

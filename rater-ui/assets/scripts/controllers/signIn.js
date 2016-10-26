@@ -2,7 +2,7 @@ import {httpStatusCodes} from "../global";
 import {enableLoading, disableLoading} from "../services/jqueryAnimator";
 import Validator from "../services/validator";
 
-const SignInController = {
+const controller = {
     init() {
         ReactDOM.render(
             React.createElement(this.reactComponent),
@@ -92,7 +92,7 @@ const SignInController = {
                             if (httpRequest.status === httpStatusCodes.signInIncorrectCredentials) {
                                 this.validator.showErrorMessage(this.$incorrectCredentialsError);
                             } else {
-                                alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                                alert(`AJAX failure doing a ${type} request to "${url}"`);
                             }
                         }
                     }
@@ -108,4 +108,4 @@ const SignInController = {
     })
 };
 
-Object.create(SignInController).init();
+controller.init();

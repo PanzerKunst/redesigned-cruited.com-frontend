@@ -224,11 +224,13 @@ const validator = {
     },
 
     _get$error($field, checkType) {
+        const selector = `p[data-check=${checkType}]`;
+
         if (this._isFieldTypeCheckbox($field)) {
-            return $field.parent().siblings("p[data-check=" + checkType + "]");
+            return $field.parent().siblings(selector);
         }
 
-        return $field.parents(".form-group").children("p[data-check=" + checkType + "]");
+        return $field.parents(".form-group").children(selector);
     },
 
     _isToCheckIfEmpty($field) {

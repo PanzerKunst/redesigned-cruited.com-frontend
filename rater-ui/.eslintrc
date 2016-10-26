@@ -106,7 +106,7 @@ rules:
     object-shorthand: "error"
     one-var-declaration-per-line: "error"
     prefer-const: "error"
-    quotes: ["error", "double"]
+    quotes: ["error", "double", { "allowTemplateLiterals": true }]
     quote-props: ["error", "as-needed"]
     radix: "error"
     require-jsdoc: "off"

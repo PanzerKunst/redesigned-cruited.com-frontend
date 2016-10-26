@@ -10,7 +10,7 @@ const RaterProfile = React.createClass({
         const myLinkedinProfile = account.linkedinProfile;
 
         if (myLinkedinProfile) {
-            myProfilePictureStyleAttr = {backgroundImage: "url(" + myLinkedinProfile.pictureUrl + ")"};
+            myProfilePictureStyleAttr = {backgroundImage: `url(${myLinkedinProfile.pictureUrl})`};
         }
 
         return (

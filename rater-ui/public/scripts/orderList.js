@@ -61,7 +61,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// eslint-disable-next-line no-unused-vars
-	var AssessmentListController = {
+	var controller = {
 	    init: function init() {
 	        _store2.default.reactComponent = ReactDOM.render(React.createElement(this.reactComponent), document.querySelector("[role=main]"));
 
@@ -170,7 +170,7 @@
 	// eslint-disable-next-line no-unused-vars
 
 
-	AssessmentListController.init();
+	controller.init();
 
 /***/ },
 /* 1 */
@@ -285,7 +285,7 @@
 	                      this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
 	                    this.reactComponent.forceUpdate();
 	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                    alert(`AJAX failure doing a ${type} request to "${url}"`);
 	                }
 	            }
 	        };
@@ -303,7 +303,7 @@
 	                      this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
 	                    this.reactComponent.forceUpdate();
 	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                    alert(`AJAX failure doing a ${type} request to "${url}"`);
 	                }
 	            }
 	        };
@@ -752,15 +752,17 @@
 	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || order.rater && order.rater.id !== _store2.default.account.id) {
 	            return this._checkBtn();
 	        }
-	        return this._assessBtn();
+	        return this._assessBtn(order.id);
 	    },
-	    _assessBtn: function _assessBtn() {
+	    _assessBtn: function _assessBtn(orderId) {
+	        var link = "/assessments/" + orderId;
+
 	        return React.createElement(
 	            "div",
 	            null,
 	            React.createElement(
-	                "button",
-	                { className: "btn btn-default" },
+	                "a",
+	                { href: link, className: "btn btn-default" },
 	                "Assess"
 	            )
 	        );

@@ -40,7 +40,7 @@ export function enableLoading($el, text) {
         $el.data("defaultText", defaultText);
         $el.prop("disabled", true);
 
-        btn.innerHTML = "<i class=\"fa fa-spinner fa-pulse\"></i>" + loadingText;
+        btn.innerHTML = `<i class="fa fa-spinner fa-pulse"></i>${loadingText}`;
     }
 }
 

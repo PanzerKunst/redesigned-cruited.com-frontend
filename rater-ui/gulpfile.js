@@ -173,7 +173,8 @@ gulp.task("js-lint", function() {
 gulp.task("js-bundle", function() {
     runWebpack("common.js");
     runWebpack("signIn.js");
-    return runWebpack("orderList.js", "controllers/order-list/");
+    runWebpack("orderList.js", "controllers/order-list/");
+    return runWebpack("assessment.js", "controllers/assessment/");
 });
 
 function runWebpack(entryFileName, srcSubDir) {
