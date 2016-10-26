@@ -39,7 +39,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
           Ok(views.html.dashboard(i18nMessages, currentLanguage, accountOpt, frontendOrders))
             .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode)
-              - SessionService.sessionKeyOrderId)
+            - SessionService.sessionKeyOrderId)
         }
     }
   }
@@ -162,22 +162,28 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         val accountId = AccountService.generateTempAccountIdAndStoreAccount(request.session)
 
         // We also need to update any eventual temp order with that new account ID
-        val orderId = SessionService.getOrderId(request.session).get
-        val orderWithUpdatedAccountId = OrderDto.getOfId(orderId).get.copy(
-          accountId = Some(accountId)
-        )
-        OrderDto.update(orderWithUpdatedAccountId)
+        SessionService.getOrderId(request.session) match {
+          case None => BadRequest("""You have uncovered a bug in the \"Account Creation\" page of our web application.
+            We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
+            Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
+            and that the account ID involved was '""" + accountId + """'.""")
+          case Some(orderId) =>
+            val orderWithUpdatedAccountId = OrderDto.getOfId(orderId).get.copy(
+              accountId = Some(accountId)
+            )
+            OrderDto.update(orderWithUpdatedAccountId)
 
-        Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
-          .withHeaders(doNotCachePage: _*)
-          .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
+            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
+              .withHeaders(doNotCachePage: _*)
+              .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
+        }
 
       case Some(accountId) =>
         val account = AccountDto.getOfId(accountId).get
         val orderId = SessionService.getOrderId(request.session).get
 
         if (!AccountService.isTemporary(accountId)) {
-          if(!orderService.isTemporary(orderId)) {
+          if (!orderService.isTemporary(orderId)) {
             // The order is already finalised. The user is probably navigating back to this page. We load the default page
             Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
               .withHeaders(doNotCachePage: _*)
@@ -235,15 +241,20 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                 val currentLanguage = SessionService.getCurrentLanguage(request.session)
                 val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-                val order = OrderDto.getOfId(orderId).get
-
-                // If the cost is 0, we redirect to the dashboard
-                if (order.getCostAfterReductions == 0) {
-                  emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
-                  Redirect("/?action=orderCompleted")
-                } else {
-                  // We display the payment page
-                  Ok(views.html.order.orderStepPayment(i18nMessages, currentLanguage, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, orderId))
+                OrderDto.getOfId(orderId) match {
+                  case None => BadRequest("""You have uncovered a bug in the \"Payment\" page of our web application.
+            We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
+            Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
+            that the account ID involved was '""" + accountId + """' and the order ID involved was '""" + orderId + """'""")
+                  case Some(order) =>
+                    // If the cost is 0, we redirect to the dashboard
+                    if (order.getCostAfterReductions == 0) {
+                      emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
+                      Redirect("/?action=orderCompleted")
+                    } else {
+                      // We display the payment page
+                      Ok(views.html.order.orderStepPayment(i18nMessages, currentLanguage, Some(account), CruitedProductDto.getAll, ReductionDto.getAll, orderId))
+                    }
                 }
               }
             }
