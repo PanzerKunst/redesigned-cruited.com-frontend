@@ -35,6 +35,9 @@ object Account {
   val typeRater = 3
   val typeAdmin = 1
 
+  val showActive = 1
+  val showDeleted = 2
+
   def getValidLinkedinProfileJson(linkedinProfileAsJsValue: JsValue): JsValue = {
     var linkedinProfile = linkedinProfileAsJsValue.as[JsObject]
 

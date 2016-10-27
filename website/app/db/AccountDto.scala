@@ -119,7 +119,8 @@ object AccountDto {
       val query = """
         select prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
-        where id = """ + id + """;"""
+        where shw = """ + Account.showActive + """
+          and id = """ + id + """;"""
 
       Logger.info("AccountDto.getOfId():" + query)
 
@@ -152,7 +153,8 @@ object AccountDto {
       val query = """
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, lang, pass
         from useri
-        where id > 0
+        where shw = """ + Account.showActive + """
+          and id > 0
           and email = '""" + DbUtil.safetize(emailAddress.toLowerCase) + """'
         limit 1;"""
 
@@ -188,7 +190,8 @@ object AccountDto {
       val query = """
         select id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
-        where id > 0
+        where shw = """ + Account.showActive + """
+          and id > 0
           and linkedin_basic_profile_fields like '%"id":"""" + DbUtil.safetize(linkedInAccountId) + """"%'
         limit 1;"""
 
@@ -223,7 +226,8 @@ object AccountDto {
       val query = """
         select id, prenume, nume, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
-        where id > 0
+        where shw = """ + Account.showActive + """
+          and id > 0
           and email = '""" + DbUtil.safetize(emailAddress.toLowerCase) + """'
           and pass = password('""" + password + """')
         limit 1;"""
@@ -272,7 +276,8 @@ object AccountDto {
       val query = """
         select added_by, max(id) as order_id
         from documents
-        where added_by in (""" + accountIds.mkString(", ") + """)
+        where shw = """ + Account.showActive + """
+          and added_by in (""" + accountIds.mkString(", ") + """)
           and id > 0
           and status = """ + Order.statusIdNotPaid + """
           and 1day_email_sent = 0""" +
@@ -312,7 +317,8 @@ object AccountDto {
       val query = """
         select added_by, max(id) as order_id
         from documents
-        where added_by in (""" + accountIds.mkString(", ") + """)
+        where  shw = """ + Account.showActive + """
+          and added_by in (""" + accountIds.mkString(", ") + """)
           and id > 0
           and status = """ + Order.statusIdNotPaid + """
           and 2days_after_assessment_delivered_email_sent = 0""" +
@@ -386,7 +392,8 @@ object AccountDto {
       val query = """
         select distinct id, prenume, nume, email, linkedin_basic_profile_fields, registered_at, tp, lang
         from useri
-        where id > 0;"""
+        where shw = """ + Account.showActive + """
+          and id > 0;"""
 
       // This log is commented since it spams too much
       // Logger.info("AccountDto.getNonTemporary():" + query)
