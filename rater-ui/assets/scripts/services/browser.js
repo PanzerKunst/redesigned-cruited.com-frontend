@@ -16,8 +16,7 @@ const Browser = {
 
         const styleSheets = document.styleSheets;
 
-        for (let i = 0; i < styleSheets.length; i++) {
-            const styleSheet = styleSheets[i];
+        styleSheets.forEach(styleSheet => {
             const styleSheetRules = styleSheet.cssRules || styleSheet.rules;  // .rules for IE, .cssRules for other browsers
 
             if (styleSheetRules) {
@@ -27,7 +26,7 @@ const Browser = {
                     this.allCssRules[rule.selectorText] = rule.style;
                 }
             }
-        }
+        });
 
         return this.allCssRules;
     },

@@ -3,7 +3,7 @@ import store from "./store";
 // eslint-disable-next-line no-unused-vars
 import RaterProfile from "../components/raterProfile";
 
-const AssignModal = React.createClass({
+const Component = React.createClass({
     getInitialState() {
         return store;
     },
@@ -76,4 +76,4 @@ const AssignModal = React.createClass({
     }
 });
 
-export {AssignModal as default};
+export {Component as default};

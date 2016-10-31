@@ -1,5 +1,4 @@
 import Order from "../../models/order";
-import Product from "../../models/product";
 import store from "./store";
 import DeleteModal from "./deleteModal";
 
@@ -7,9 +6,18 @@ import DeleteModal from "./deleteModal";
 import RaterProfile from "../components/raterProfile";
 
 // eslint-disable-next-line no-unused-vars
-import CouponTag from "../components/couponTag";
+import TimeLeft from "../components/timeLeft";
 
-const ListItem = React.createClass({
+// eslint-disable-next-line no-unused-vars
+import PositionSought from "../components/positionSought";
+
+// eslint-disable-next-line no-unused-vars
+import EmployerSought from "../components/employerSought";
+
+// eslint-disable-next-line no-unused-vars
+import OrderTags from "../components/orderTags";
+
+const Component = React.createClass({
     render() {
         const order = this.props.order;
 
@@ -18,13 +26,13 @@ const ListItem = React.createClass({
                 <section>
                     <RaterProfile account={order.rater} />
                     <p>#{order.id}</p>
-                    {this._timeLeft(order)}
+                    <TimeLeft order={order} />
                     <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
                 </section>
                 <section>
                     <div>
-                        <p>{order.employerSought}</p>
-                        <p>{order.positionSought}</p>
+                        <PositionSought position={order.positionSought} />
+                        <EmployerSought employer={order.employerSought} />
                     </div>
                     <div>
                         <p>{order.customer.firstName}</p>
@@ -32,22 +40,7 @@ const ListItem = React.createClass({
                     </div>
                 </section>
                 <section>
-                    <div>
-                        <CouponTag coupon={order.coupon}/>
-                        {order.tags.map(tag => {
-                            const reactKey = order.id + "-" + tag;
-
-                            return <span key={reactKey} className="order-list-item-tag order-tag">{tag}</span>;
-                        })}
-                        {order.containedProductCodes.map(productCode => {
-                            const reactKey = order.id + "-" + productCode;
-
-                            return (<span key={reactKey} className="order-list-item-tag product-code">
-                                <a href={order.documentUrl(store.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
-                            </span>);
-                        })}
-                        <span className="order-list-item-tag lang">{order.languageCode}</span>
-                    </div>
+                    <OrderTags order={order} config={store.config} />
                     {this._actionBtn(order)}
                     {this._secondaryButtons(order)}
                 </section>
@@ -81,17 +74,6 @@ const ListItem = React.createClass({
         }
     },
 
-    _timeLeft(order) {
-        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled) {
-            return null;
-        }
-
-        const dueMoment = moment(order.dueTimestamp);
-        const timeLeft = moment.duration(dueMoment.valueOf() - moment().valueOf());
-
-        return <p>{timeLeft.hours()}h{timeLeft.minutes()}m left</p>;
-    },
-
     _coupon(coupon) {
         if (!coupon) {
             return null;
@@ -100,29 +82,11 @@ const ListItem = React.createClass({
     },
 
     _actionBtn(order) {
-
-        // Raters who are not assigned should still be able to check the assessment, even before it's completed
-        if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled || (
-            order.rater && order.rater.id !== store.account.id)) {
-            return this._checkBtn();
-        }
-        return this._assessBtn(order.id);
-    },
-
-    _assessBtn(orderId) {
-        const link = `/assessments/${orderId}`;
+        const text = order.isReadOnlyBy(store.account.id) ? "Check" : "Assess";
 
         return (
             <div>
-                <a href={link} className="btn btn-default">Assess</a>
-            </div>
-        );
-    },
-
-    _checkBtn() {
-        return (
-            <div>
-                <button className="btn btn-default" href="">Check</button>
+                <a href={this._assessmentUrl(order.id)} className="btn btn-default">{text}</a>
             </div>
         );
     },
@@ -169,7 +133,11 @@ const ListItem = React.createClass({
         );
 
         this.$deleteModal.modal();
+    },
+
+    _assessmentUrl(orderId) {
+        return `/assessments/${orderId}`;
     }
 });
 
-export {ListItem as default};
+export {Component as default};

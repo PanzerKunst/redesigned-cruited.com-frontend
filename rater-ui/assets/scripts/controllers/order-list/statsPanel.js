@@ -1,6 +1,6 @@
 import store from "./store";
 
-const StatsPanel = React.createClass({
+const Component = React.createClass({
     render() {
         this._processData();
 
@@ -78,4 +78,4 @@ const StatsPanel = React.createClass({
     }
 });
 
-export {StatsPanel as default};
+export {Component as default};

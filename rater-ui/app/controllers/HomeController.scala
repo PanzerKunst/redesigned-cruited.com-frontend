@@ -11,7 +11,7 @@ import services.{Scheduler, GlobalConfig, SessionService}
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(accountDto: AccountDto, orderDto: OrderDto, config: GlobalConfig, scheduler: Scheduler) extends Controller {
+class HomeController @Inject()(config: GlobalConfig, scheduler: Scheduler, accountDto: AccountDto, orderDto: OrderDto) extends Controller {
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {

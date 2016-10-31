@@ -1,10 +1,15 @@
-import Product from "../../models/product";
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
-import CouponTag from "../components/couponTag";
+import PositionSought from "../components/positionSought";
 
-const DeleteModal = React.createClass({
+// eslint-disable-next-line no-unused-vars
+import EmployerSought from "../components/employerSought";
+
+// eslint-disable-next-line no-unused-vars
+import OrderTags from "../components/orderTags";
+
+const Component = React.createClass({
     render() {
         const order = store.currentOrder;
 
@@ -24,8 +29,8 @@ const DeleteModal = React.createClass({
                         </section>
                         <section>
                             <div>
-                                <p>{order.employerSought}</p>
-                                <p>{order.positionSought}</p>
+                                <PositionSought position={order.positionSought} />
+                                <EmployerSought employer={order.employerSought} />
                             </div>
                             <div>
                                 <p>{order.customer.firstName}</p>
@@ -33,18 +38,7 @@ const DeleteModal = React.createClass({
                             </div>
                         </section>
                         <section>
-                            <CouponTag coupon={order.coupon}/>
-                            {order.tags.map(tag => {
-                                const reactKey = order.id + "-" + tag;
-
-                                return <span key={reactKey} className="order-list-item-tag order-tag">{tag}</span>;
-                            })}
-                            {order.containedProductCodes.map(productCode => {
-                                const reactKey = order.id + "-" + productCode;
-
-                                return <span key={reactKey} className="order-list-item-tag product-code">{Product.humanReadableCode(productCode)}</span>;
-                            })}
-                            <span className="order-list-item-tag lang">{order.languageCode}</span>
+                            <OrderTags order={order} config={store.config} />
                         </section>
                     </div>
                     <div className="modal-footer">
@@ -69,4 +63,4 @@ const DeleteModal = React.createClass({
     }
 });
 
-export {DeleteModal as default};
+export {Component as default};

@@ -13,8 +13,9 @@ import play.api.libs.json.{JsNull, Json}
 class AccountDto @Inject()(db: Database) {
   val unknownUserId = 1053
 
-  private val commonClause = """ tp in (""" + Account.typeRater + """, """ + Account.typeAdmin + """)
-                                and id > 0 """
+  private val commonClause = """ shw = """ + Account.showActive + """
+    and id > 0
+    and tp in (""" + Account.typeRater + """, """ + Account.typeAdmin + """)"""
 
   def getOfId(id: Long): Option[Account] = {
     db.withConnection { implicit c =>
@@ -91,7 +92,7 @@ class AccountDto @Inject()(db: Database) {
         where""" + commonClause + """
         order by prenume;"""
 
-      Logger.info("OrderDto.getAllRaters():" + query)
+      Logger.info("AccountDto.getAllRaters():" + query)
 
       val rowParser = long("id") ~ str("prenume") ~ (str("nume") ?) ~ str("email") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
         case id ~ firstName ~ lastNameOpt ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>

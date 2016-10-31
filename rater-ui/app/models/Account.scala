@@ -27,4 +27,7 @@ object Account {
   val typeCustomer = 2
   val typeRater = 3
   val typeAdmin = 1
+
+  val showActive = 1
+  val showDeleted = 2
 }

@@ -12,30 +12,30 @@
       font-size: 14px;
     }
 
-    > ul {
-      margin-bottom: 0;
-
-      > li {
-        background-color: white;
-
-        padding: 1.5em $spacer-unit-size;
-        margin-bottom: 2em;
-
-        @include list-item-border;
-
-        &.in-progress,
-        &.awaiting-feedback {
-          @include list-item-border($brand-warning);
-        }
-        &.completed,
-        &.scheduled {
-          @include list-item-border($brand-success);
-        }
-      }
-    }
-
     .fa-spinner {
       font-size: 2em;
+    }
+  }
+
+  .orders {
+    margin-bottom: 0;
+
+    > li {
+      background-color: white;
+
+      padding: 1.5em $spacer-unit-size;
+      margin-bottom: 2em;
+
+      @include list-item-border;
+
+      &.in-progress,
+      &.awaiting-feedback {
+        @include list-item-border($brand-warning);
+      }
+      &.completed,
+      &.scheduled {
+        @include list-item-border($brand-success);
+      }
     }
   }
 
@@ -54,7 +54,7 @@
   .secondary-buttons {
     > button,
     > a {
-      padding: .5em .6em;
+      padding: 0.5em 0.6em;
       font-size: 1.5em;
       color: $grey;
     }
@@ -103,24 +103,24 @@
 #assign-modal {
   ul {
     margin-bottom: 0;
+  }
 
-    > li {
-      &:not(.disabled) {
-        @include transition(background $default-animation-duration);
+  li {
+    &:not(.disabled) {
+      @include transition(background $default-animation-duration);
 
-        &:hover {
-          cursor: pointer;
-        }
-
-        &:hover,
-        &.selected {
-          background-color: $well-border-color;
-        }
+      &:hover {
+        cursor: pointer;
       }
 
-      &.disabled {
-        color: $well-border-color;
+      &:hover,
+      &.selected {
+        background-color: $well-border-color;
       }
+    }
+
+    &.disabled {
+      color: $well-border-color;
     }
   }
 }

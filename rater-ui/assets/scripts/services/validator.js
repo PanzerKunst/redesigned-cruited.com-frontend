@@ -13,12 +13,14 @@ const validator = {
     checkUrl: "url",
 
     init() {
-        for (let i = 0; i < this.fieldIds.length; i++) {
-            const $field = $("#" + this.fieldIds[i]);
+        let $field;
+
+        this.fieldIds.forEach(id => {
+            $field = $("#" + id);
 
             this._addBlurEvent($field);
             this._addValueChangedEvent($field);
-        }
+        });
     },
 
     isValid() {
@@ -26,8 +28,8 @@ const validator = {
         let isFocusOnFirstInvalidFieldDone = false;
         let $field;
 
-        for (let i = 0; i < this.fieldIds.length; i++) {
-            $field = $("#" + this.fieldIds[i]);
+        this.fieldIds.forEach(id => {
+            $field = $("#" + id);
 
             if (!this._validateField($field, false)) {
                 result = false;
@@ -38,7 +40,7 @@ const validator = {
                     isFocusOnFirstInvalidFieldDone = true;
                 }
             }
-        }
+        });
 
         return result;
     },

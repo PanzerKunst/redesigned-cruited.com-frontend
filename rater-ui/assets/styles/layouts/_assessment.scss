@@ -1,0 +1,91 @@
+@mixin dc-bg($color: $brand-success) {
+  background-color: lighten($color, 30%);
+}
+
+$green-comment-width: 35%;
+$red-comment-width: 100% - $green-comment-width;
+
+#assessment {
+  .with-circles {
+    @include medium-screen {
+      font-size: 14px;
+    }
+    @include large-screen {
+      font-size: 14px;
+    }
+  }
+
+  .tab-pane {
+    > section {
+      background-color: white;
+      padding: 2em 1em 1em;
+      margin-bottom: 3em;
+
+      > h3 {
+        margin-top: 0;
+      }
+    }
+
+    ul {
+      margin-bottom: 0;
+
+      > li {
+        display: flex;
+
+        margin-bottom: 1em;
+      }
+    }
+  }
+
+  .default-comment {
+    &.green {
+      width: $green-comment-width;
+
+      > p,
+      > textarea {
+        @include dc-bg();
+      }
+    }
+    &.red {
+      width: $red-comment-width;
+
+      > p,
+      > textarea {
+        @include dc-bg($brand-danger);
+      }
+    }
+
+    > p {
+      margin-bottom: 0;
+      padding: 0.2em;
+    }
+
+    > textarea {
+      width: 100%;
+      display: none;
+    }
+  }
+
+  #order-details {
+    background-color: white;
+    padding: 1.5em $spacer-unit-size;
+  }
+}
+
+.no-flexbox {
+  #assessment .with-circles .tab-pane ul > li {
+    display: block;
+    @include clearfix;
+  }
+
+  .default-comment {
+    float: left;
+
+    &.green {
+      width: $green-comment-width;
+    }
+    &.red {
+      width: $red-comment-width;
+    }
+  }
+}

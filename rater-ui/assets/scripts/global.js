@@ -9,3 +9,7 @@ export const httpStatusCodes = {
     noContent: 204,
     signInIncorrectCredentials: 230
 };
+
+export const localStorageKeys = {
+    assessmentListComments: "assessmentListComments"
+};

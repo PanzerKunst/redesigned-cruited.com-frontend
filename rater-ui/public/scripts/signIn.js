@@ -221,6 +221,10 @@
 	    signInIncorrectCredentials: 230
 	};
 
+	var localStorageKeys = exports.localStorageKeys = {
+	    assessmentListComments: "assessmentListComments"
+	};
+
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
@@ -313,22 +317,28 @@
 	    checkUrl: "url",
 
 	    init: function init() {
-	        for (var i = 0; i < this.fieldIds.length; i++) {
-	            var $field = $("#" + this.fieldIds[i]);
+	        var _this = this;
 
-	            this._addBlurEvent($field);
-	            this._addValueChangedEvent($field);
-	        }
+	        var $field = void 0;
+
+	        this.fieldIds.forEach(function (id) {
+	            $field = $("#" + id);
+
+	            _this._addBlurEvent($field);
+	            _this._addValueChangedEvent($field);
+	        });
 	    },
 	    isValid: function isValid() {
+	        var _this2 = this;
+
 	        var result = true;
 	        var isFocusOnFirstInvalidFieldDone = false;
 	        var $field = void 0;
 
-	        for (var i = 0; i < this.fieldIds.length; i++) {
-	            $field = $("#" + this.fieldIds[i]);
+	        this.fieldIds.forEach(function (id) {
+	            $field = $("#" + id);
 
-	            if (!this._validateField($field, false)) {
+	            if (!_this2._validateField($field, false)) {
 	                result = false;
 
 	                // We focus on the first invalid field
@@ -337,7 +347,7 @@
 	                    isFocusOnFirstInvalidFieldDone = true;
 	                }
 	            }
-	        }
+	        });
 
 	        return result;
 	    },

@@ -1,4 +1,4 @@
-const RaterProfile = React.createClass({
+const Component = React.createClass({
     render() {
         const account = this.props.account;
 
@@ -22,4 +22,4 @@ const RaterProfile = React.createClass({
     }
 });
 
-export {RaterProfile as default};
+export {Component as default};

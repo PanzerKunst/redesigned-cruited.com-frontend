@@ -2,9 +2,7 @@
   background-position: center top;
   background-repeat: no-repeat;
   background-image: url("./images/section-circles_255.png");
-  @media screen and (min-resolution: 1.3dppx) and (max-width: $medium-content-width),
-    screen and (-webkit-min-device-pixel-ratio: 1.3) and (max-width: $medium-content-width),
-    screen and (min--moz-device-pixel-ratio: 1.3) and (max-width: $medium-content-width) {
+  @media screen and (min-resolution: 1.3dppx) and (max-width: $medium-content-width) {
     background-image: url("./images/section-circles_510.png");
     background-size: 255px 55px;
   }

@@ -54,7 +54,7 @@
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
-	var _assignModal = __webpack_require__(10);
+	var _assignModal = __webpack_require__(13);
 
 	var _assignModal2 = _interopRequireDefault(_assignModal);
 
@@ -97,7 +97,7 @@
 	                    this._topOrders(),
 	                    React.createElement(
 	                        "ul",
-	                        { className: "styleless" },
+	                        { className: "styleless orders" },
 	                        _store2.default.moreOrders.map(function (order) {
 	                            return React.createElement(_listItem2.default, { key: order.id, order: order });
 	                        })
@@ -141,7 +141,7 @@
 	            if (_store2.default.areTopOrdersFetched) {
 	                return React.createElement(
 	                    "ul",
-	                    { className: "styleless" },
+	                    { className: "styleless orders" },
 	                    _store2.default.topOrders.map(function (order) {
 	                        return React.createElement(_listItem2.default, { key: order.id, order: order });
 	                    })
@@ -455,6 +455,10 @@
 	    signInIncorrectCredentials: 230
 	};
 
+	var localStorageKeys = exports.localStorageKeys = {
+	    assessmentListComments: "assessmentListComments"
+	};
+
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
@@ -524,6 +528,12 @@
 	        }
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
+	    },
+
+
+	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
+	    isReadOnlyBy: function isReadOnlyBy(raterId) {
+	        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
 	    }
 	};
 
@@ -576,10 +586,6 @@
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _product = __webpack_require__(5);
-
-	var _product2 = _interopRequireDefault(_product);
-
 	var _store = __webpack_require__(1);
 
 	var _store2 = _interopRequireDefault(_store);
@@ -588,19 +594,34 @@
 
 	var _deleteModal2 = _interopRequireDefault(_deleteModal);
 
-	var _raterProfile = __webpack_require__(9);
+	var _raterProfile = __webpack_require__(11);
 
 	var _raterProfile2 = _interopRequireDefault(_raterProfile);
 
-	var _couponTag = __webpack_require__(8);
+	var _timeLeft = __webpack_require__(12);
 
-	var _couponTag2 = _interopRequireDefault(_couponTag);
+	var _timeLeft2 = _interopRequireDefault(_timeLeft);
+
+	var _positionSought = __webpack_require__(8);
+
+	var _positionSought2 = _interopRequireDefault(_positionSought);
+
+	var _employerSought = __webpack_require__(9);
+
+	var _employerSought2 = _interopRequireDefault(_employerSought);
+
+	var _orderTags = __webpack_require__(10);
+
+	var _orderTags2 = _interopRequireDefault(_orderTags);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// eslint-disable-next-line no-unused-vars
-	var ListItem = React.createClass({
-	    displayName: "ListItem",
+
+
+	// eslint-disable-next-line no-unused-vars
+	var Component = React.createClass({
+	    displayName: "Component",
 	    render: function render() {
 	        var order = this.props.order;
 
@@ -617,7 +638,7 @@
 	                    "#",
 	                    order.id
 	                ),
-	                this._timeLeft(order),
+	                React.createElement(_timeLeft2.default, { order: order }),
 	                React.createElement(
 	                    "p",
 	                    null,
@@ -630,16 +651,8 @@
 	                React.createElement(
 	                    "div",
 	                    null,
-	                    React.createElement(
-	                        "p",
-	                        null,
-	                        order.employerSought
-	                    ),
-	                    React.createElement(
-	                        "p",
-	                        null,
-	                        order.positionSought
-	                    )
+	                    React.createElement(_positionSought2.default, { position: order.positionSought }),
+	                    React.createElement(_employerSought2.default, { employer: order.employerSought })
 	                ),
 	                React.createElement(
 	                    "div",
@@ -659,38 +672,7 @@
 	            React.createElement(
 	                "section",
 	                null,
-	                React.createElement(
-	                    "div",
-	                    null,
-	                    React.createElement(_couponTag2.default, { coupon: order.coupon }),
-	                    order.tags.map(function (tag) {
-	                        var reactKey = order.id + "-" + tag;
-
-	                        return React.createElement(
-	                            "span",
-	                            { key: reactKey, className: "order-list-item-tag order-tag" },
-	                            tag
-	                        );
-	                    }),
-	                    order.containedProductCodes.map(function (productCode) {
-	                        var reactKey = order.id + "-" + productCode;
-
-	                        return React.createElement(
-	                            "span",
-	                            { key: reactKey, className: "order-list-item-tag product-code" },
-	                            React.createElement(
-	                                "a",
-	                                { href: order.documentUrl(_store2.default.config, productCode), target: "_blank" },
-	                                _product2.default.humanReadableCode(productCode)
-	                            )
-	                        );
-	                    }),
-	                    React.createElement(
-	                        "span",
-	                        { className: "order-list-item-tag lang" },
-	                        order.languageCode
-	                    )
-	                ),
+	                React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
 	                this._actionBtn(order),
 	                this._secondaryButtons(order)
 	            )
@@ -719,23 +701,6 @@
 	                return "not-paid";
 	        }
 	    },
-	    _timeLeft: function _timeLeft(order) {
-	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
-	            return null;
-	        }
-
-	        var dueMoment = moment(order.dueTimestamp);
-	        var timeLeft = moment.duration(dueMoment.valueOf() - moment().valueOf());
-
-	        return React.createElement(
-	            "p",
-	            null,
-	            timeLeft.hours(),
-	            "h",
-	            timeLeft.minutes(),
-	            "m left"
-	        );
-	    },
 	    _coupon: function _coupon(coupon) {
 	        if (!coupon) {
 	            return null;
@@ -747,34 +712,15 @@
 	        );
 	    },
 	    _actionBtn: function _actionBtn(order) {
-
-	        // Raters who are not assigned should still be able to check the assessment, even before it's completed
-	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled || order.rater && order.rater.id !== _store2.default.account.id) {
-	            return this._checkBtn();
-	        }
-	        return this._assessBtn(order.id);
-	    },
-	    _assessBtn: function _assessBtn(orderId) {
-	        var link = "/assessments/" + orderId;
+	        var text = order.isReadOnlyBy(_store2.default.account.id) ? "Check" : "Assess";
 
 	        return React.createElement(
 	            "div",
 	            null,
 	            React.createElement(
 	                "a",
-	                { href: link, className: "btn btn-default" },
-	                "Assess"
-	            )
-	        );
-	    },
-	    _checkBtn: function _checkBtn() {
-	        return React.createElement(
-	            "div",
-	            null,
-	            React.createElement(
-	                "button",
-	                { className: "btn btn-default", href: "" },
-	                "Check"
+	                { href: this._assessmentUrl(order.id), className: "btn btn-default" },
+	                text
 	            )
 	        );
 	    },
@@ -813,11 +759,20 @@
 	        ReactDOM.render(React.createElement(_deleteModal2.default), document.querySelector("#delete-modal"));
 
 	        this.$deleteModal.modal();
+	    },
+	    _assessmentUrl: function _assessmentUrl(orderId) {
+	        return "/assessments/" + orderId;
 	    }
 	});
 
 	// eslint-disable-next-line no-unused-vars
-	exports.default = ListItem;
+
+
+	// eslint-disable-next-line no-unused-vars
+
+
+	// eslint-disable-next-line no-unused-vars
+	exports.default = Component;
 
 /***/ },
 /* 7 */
@@ -830,22 +785,27 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(5);
-
-	var _product2 = _interopRequireDefault(_product);
-
 	var _store = __webpack_require__(1);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _couponTag = __webpack_require__(8);
+	var _positionSought = __webpack_require__(8);
 
-	var _couponTag2 = _interopRequireDefault(_couponTag);
+	var _positionSought2 = _interopRequireDefault(_positionSought);
+
+	var _employerSought = __webpack_require__(9);
+
+	var _employerSought2 = _interopRequireDefault(_employerSought);
+
+	var _orderTags = __webpack_require__(10);
+
+	var _orderTags2 = _interopRequireDefault(_orderTags);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var DeleteModal = React.createClass({
-	    displayName: "DeleteModal",
+	// eslint-disable-next-line no-unused-vars
+	var Component = React.createClass({
+	    displayName: "Component",
 	    render: function render() {
 	        var order = _store2.default.currentOrder;
 
@@ -897,16 +857,8 @@
 	                        React.createElement(
 	                            "div",
 	                            null,
-	                            React.createElement(
-	                                "p",
-	                                null,
-	                                order.employerSought
-	                            ),
-	                            React.createElement(
-	                                "p",
-	                                null,
-	                                order.positionSought
-	                            )
+	                            React.createElement(_positionSought2.default, { position: order.positionSought }),
+	                            React.createElement(_employerSought2.default, { employer: order.employerSought })
 	                        ),
 	                        React.createElement(
 	                            "div",
@@ -926,30 +878,7 @@
 	                    React.createElement(
 	                        "section",
 	                        null,
-	                        React.createElement(_couponTag2.default, { coupon: order.coupon }),
-	                        order.tags.map(function (tag) {
-	                            var reactKey = order.id + "-" + tag;
-
-	                            return React.createElement(
-	                                "span",
-	                                { key: reactKey, className: "order-list-item-tag order-tag" },
-	                                tag
-	                            );
-	                        }),
-	                        order.containedProductCodes.map(function (productCode) {
-	                            var reactKey = order.id + "-" + productCode;
-
-	                            return React.createElement(
-	                                "span",
-	                                { key: reactKey, className: "order-list-item-tag product-code" },
-	                                _product2.default.humanReadableCode(productCode)
-	                            );
-	                        }),
-	                        React.createElement(
-	                            "span",
-	                            { className: "order-list-item-tag lang" },
-	                            order.languageCode
-	                        )
+	                        React.createElement(_orderTags2.default, { order: order, config: _store2.default.config })
 	                    )
 	                ),
 	                React.createElement(
@@ -977,7 +906,10 @@
 	});
 
 	// eslint-disable-next-line no-unused-vars
-	exports.default = DeleteModal;
+
+
+	// eslint-disable-next-line no-unused-vars
+	exports.default = Component;
 
 /***/ },
 /* 8 */
@@ -988,27 +920,24 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var CouponTag = React.createClass({
-	    displayName: "CouponTag",
+	var Component = React.createClass({
+	    displayName: "Component",
 	    render: function render() {
-	        var coupon = this.props.coupon;
+	        var position = this.props.position;
 
-	        if (!coupon) {
+	        if (!position) {
 	            return null;
 	        }
 
 	        return React.createElement(
 	            "span",
-	            { ref: "coupon", className: "order-list-item-tag coupon", "data-toggle": "tooltip", title: coupon.code },
-	            coupon.campaignName
+	            { className: "position-sought" },
+	            position
 	        );
-	    },
-	    componentDidMount: function componentDidMount() {
-	        $(ReactDOM.findDOMNode(this.refs.coupon)).tooltip();
 	    }
 	});
 
-	exports.default = CouponTag;
+	exports.default = Component;
 
 /***/ },
 /* 9 */
@@ -1019,8 +948,117 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	var RaterProfile = React.createClass({
-	    displayName: "RaterProfile",
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var employer = this.props.employer;
+
+	        if (!employer) {
+	            return null;
+	        }
+
+	        return React.createElement(
+	            "span",
+	            { className: "employer-sought" },
+	            employer
+	        );
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _product = __webpack_require__(5);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var _this = this;
+
+	        var order = this.props.order;
+
+	        return React.createElement(
+	            "div",
+	            { ref: "root" },
+	            this._couponTag(order.coupon),
+	            order.tags.map(function (tag) {
+	                var reactKey = order.id + "-" + tag;
+
+	                return React.createElement(
+	                    "span",
+	                    { key: reactKey, className: "order-tag tag" },
+	                    tag
+	                );
+	            }),
+	            order.containedProductCodes.map(function (productCode) {
+	                var reactKey = order.id + "-" + productCode;
+
+	                return React.createElement(
+	                    "span",
+	                    { key: reactKey, className: "order-tag product-code" },
+	                    React.createElement(
+	                        "a",
+	                        { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },
+	                        _product2.default.humanReadableCode(productCode)
+	                    )
+	                );
+	            }),
+	            React.createElement(
+	                "span",
+	                { className: "order-tag lang" },
+	                order.languageCode
+	            )
+	        );
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this._initElements();
+	    },
+	    _initElements: function _initElements() {
+	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
+	        var $tooltips = $rootEl.find("[data-toggle=tooltip]");
+
+	        $tooltips.tooltip();
+	    },
+	    _couponTag: function _couponTag(coupon) {
+	        if (!coupon) {
+	            return null;
+	        }
+
+	        return React.createElement(
+	            "span",
+	            { className: "order-tag coupon", "data-toggle": "tooltip", title: coupon.code },
+	            coupon.campaignName
+	        );
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Component = React.createClass({
+	    displayName: "Component",
 	    render: function render() {
 	        var account = this.props.account;
 
@@ -1050,10 +1088,52 @@
 	    }
 	});
 
-	exports.default = RaterProfile;
+	exports.default = Component;
 
 /***/ },
-/* 10 */
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _order = __webpack_require__(4);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var order = this.props.order;
+
+	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
+	            return null;
+	        }
+
+	        var dueMoment = moment(order.dueTimestamp);
+	        var timeLeft = moment.duration(dueMoment.valueOf() - moment().valueOf());
+
+	        return React.createElement(
+	            "p",
+	            null,
+	            timeLeft.hours(),
+	            "h",
+	            timeLeft.minutes(),
+	            "m left"
+	        );
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1067,14 +1147,14 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _raterProfile = __webpack_require__(9);
+	var _raterProfile = __webpack_require__(11);
 
 	var _raterProfile2 = _interopRequireDefault(_raterProfile);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var AssignModal = React.createClass({
-	    displayName: "AssignModal",
+	var Component = React.createClass({
+	    displayName: "Component",
 	    getInitialState: function getInitialState() {
 	        return _store2.default;
 	    },
@@ -1169,7 +1249,7 @@
 	});
 
 	// eslint-disable-next-line no-unused-vars
-	exports.default = AssignModal;
+	exports.default = Component;
 
 /***/ }
 /******/ ]);

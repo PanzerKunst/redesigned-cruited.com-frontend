@@ -1,28 +1,6 @@
 form {
   .form-group {
     margin-bottom: $content-element-margin-bottom;
-
-    &.fg-file-upload {
-      > label {
-        display: block;
-      }
-
-      > div {
-        display: flex;
-
-        > .btn {
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-
-        > input[type=text] {
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-
-          flex-grow: 1;
-        }
-      }
-    }
   }
 
   .field-error,
@@ -56,6 +34,28 @@ form {
       color: $state-danger-text;
       vertical-align: super;
       margin-left: 0.5em;
+    }
+  }
+
+  .fg-file-upload {
+    > label {
+      display: block;
+    }
+
+    > div {
+      display: flex;
+
+      > .btn {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      > input[type=text] {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+
+        flex-grow: 1;
+      }
     }
   }
 }

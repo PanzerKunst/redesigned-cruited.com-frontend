@@ -27,6 +27,11 @@ const Order = {
         }
 
         return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}?token=${this.idInBase64}`;
+    },
+
+    // Raters who are not assigned should still be able to check the assessment, even before it's completed
+    isReadOnlyBy(raterId) {
+        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
     }
 };
 

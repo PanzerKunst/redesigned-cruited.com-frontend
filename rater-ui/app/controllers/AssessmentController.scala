@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject._
 
-import db.{AccountDto, OrderDto}
+import db.{AssessmentDto, AccountDto, OrderDto}
 import play.api.mvc._
 import services.{GlobalConfig, Scheduler, SessionService}
 
@@ -11,14 +11,19 @@ import services.{GlobalConfig, Scheduler, SessionService}
  * application's home page.
  */
 @Singleton
-class AssessmentController @Inject()(accountDto: AccountDto, orderDto: OrderDto, config: GlobalConfig) extends Controller {
+class AssessmentController @Inject()(config: GlobalConfig, accountDto: AccountDto, orderDto: OrderDto, assessmentDto: AssessmentDto) extends Controller {
 
   def index(id: Long) = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/login")
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) => Ok(views.html.assessment(account, config, orderDto.get(id).get))
+        case Some(account) =>
+          val order = orderDto.get(id).get
+          val allDefaultComments = assessmentDto.allDefaultComments
+          val allCommentVariations = assessmentDto.allCommentVariations
+
+          Ok(views.html.assessment(account, config, order, allDefaultComments, allCommentVariations))
       }
     }
   }

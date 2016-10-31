@@ -29,12 +29,13 @@
 @import "components/_lists";
 @import "components/_expandablePanel";
 
-// Layouts/partials
+// Layouts and partials
 @import "layouts/_header";
 @import "layouts/_pageHeader";
 @import "layouts/_pageContent";
 @import "layouts/_signIn";
 @import "layouts/_orderList";
+@import "layouts/_assessment";
 
 // Browser hacks
 @import "_browserSpecific";

@@ -1,4 +1,4 @@
-@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder)
+@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder, allDefaultComments: AllDefaultComments, allCommentVariations: List[CommentVariation])
 
 @main("Rater - Assessment", "assessment") {
 <!--
@@ -14,7 +14,9 @@
     CR.ControllerData = {
         account: @Html(play.api.libs.json.Json.toJson(account).toString()),
         config: @Html(play.api.libs.json.Json.toJson(config.serialized).toString()),
-        order: @Html(play.api.libs.json.Json.toJson(order).toString())
+        order: @Html(play.api.libs.json.Json.toJson(order).toString()),
+        allDefaultComments: @Html(play.api.libs.json.Json.toJson(allDefaultComments).toString()),
+        allCommentVariations: @Html(play.api.libs.json.Json.toJson(allCommentVariations).toString())
     };
 </script>
 

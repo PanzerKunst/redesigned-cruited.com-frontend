@@ -134,6 +134,10 @@
 	    signInIncorrectCredentials: 230
 	};
 
+	var localStorageKeys = exports.localStorageKeys = {
+	    assessmentListComments: "assessmentListComments"
+	};
+
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
@@ -147,6 +151,8 @@
 	    regexOfUserAgentsNotSupportingFlexbox: ["OS 8_", "OS 7_", "OS 6_", "OS 5_", "OS 4_"],
 
 	    cssRules: function cssRules() {
+	        var _this = this;
+
 	        if (this.allCssRules) {
 	            return this.allCssRules;
 	        }
@@ -155,18 +161,17 @@
 
 	        var styleSheets = document.styleSheets;
 
-	        for (var i = 0; i < styleSheets.length; i++) {
-	            var styleSheet = styleSheets[i];
+	        styleSheets.forEach(function (styleSheet) {
 	            var styleSheetRules = styleSheet.cssRules || styleSheet.rules; // .rules for IE, .cssRules for other browsers
 
 	            if (styleSheetRules) {
 	                for (var j = 0; j < styleSheetRules.length; j++) {
 	                    var rule = styleSheetRules[j];
 
-	                    this.allCssRules[rule.selectorText] = rule.style;
+	                    _this.allCssRules[rule.selectorText] = rule.style;
 	                }
 	            }
-	        }
+	        });
 
 	        return this.allCssRules;
 	    },
