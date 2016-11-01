@@ -14,12 +14,9 @@
     }
 }
 
-.boka-samtal .main iframe {
-    height: 126em;
+#ycbmiframecruited {
+    width: $small-content-width - 2*$spacer-unit-size;
     @include medium-screen {
-        height: 73em;
-    }
-    @include large-screen {
-        height: 71em;
+        width: 100%;
     }
 }

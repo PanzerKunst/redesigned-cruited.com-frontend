@@ -46,6 +46,18 @@
             init: function() {
                 // JavaScript to be fired on the about us page
             }
+        },
+        "boka_samtal": {
+            init: function() {
+                // JavaScript to be fired on the "boka samtal" page
+                if (window.addEventListener) {
+                    window.addEventListener("message", function(e) {
+                        if (e.origin === "https://cruited.youcanbook.me") {
+                            document.getElementById("ycbmiframecruited").style.height = e.data + "px";
+                        }
+                    }, false);
+                }
+            }
         }
     };
 
