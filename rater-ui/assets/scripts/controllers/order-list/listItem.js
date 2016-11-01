@@ -94,7 +94,7 @@ const Component = React.createClass({
     _secondaryButtons(order) {
         const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled ?
             null :
-            <button className="styleless fa fa-user" onClick={this._handleAssignClicked}>
+            <button className="styleless fa fa-user" onClick={this._handleAssignClick}>
                 <i className="fa fa-check" aria-hidden="true"></i>
             </button>;
 
@@ -107,7 +107,7 @@ const Component = React.createClass({
         }
 
         const deleteBtn = store.account.isAdmin() ?
-            <button className="styleless fa fa-trash" onClick={this._handleDeleteClicked}></button> :
+            <button className="styleless fa fa-trash" onClick={this._handleDeleteClick}></button> :
             null;
 
         return (
@@ -119,12 +119,12 @@ const Component = React.createClass({
         );
     },
 
-    _handleAssignClicked() {
+    _handleAssignClick() {
         store.currentOrder = this.props.order;
         this.$assignModal.modal();
     },
 
-    _handleDeleteClicked() {
+    _handleDeleteClick() {
         store.currentOrder = this.props.order;
 
         ReactDOM.render(

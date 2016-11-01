@@ -16,7 +16,7 @@ object DefaultComment {
       (JsPath \ "categoryId").format[Long] and
       (JsPath \ "greenText").format[String] and
       (JsPath \ "redText").format[String] and
-      (JsPath \ "score").format[Int] and
+      (JsPath \ "points").format[Int] and
       (JsPath \ "isGrouped").format[Boolean]
     )(DefaultComment.apply, unlift(DefaultComment.unapply))
 

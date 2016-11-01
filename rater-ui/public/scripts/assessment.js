@@ -106,7 +106,7 @@
 	                                { role: "presentation", className: "active" },
 	                                React.createElement(
 	                                    "a",
-	                                    { href: "#CV_REVIEW-comments-selection-panel", "aria-controls": "CV_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClicked },
+	                                    { href: "#CV_REVIEW-comments-selection-panel", "aria-controls": "CV_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
 	                                    "CV"
 	                                )
 	                            ),
@@ -115,7 +115,7 @@
 	                                { role: "presentation" },
 	                                React.createElement(
 	                                    "a",
-	                                    { href: "#COVER_LETTER_REVIEW-comments-selection-panel", "aria-controls": "COVER_LETTER_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClicked },
+	                                    { href: "#COVER_LETTER_REVIEW-comments-selection-panel", "aria-controls": "COVER_LETTER_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
 	                                    "Cover Letter"
 	                                )
 	                            ),
@@ -124,7 +124,7 @@
 	                                { role: "presentation" },
 	                                React.createElement(
 	                                    "a",
-	                                    { href: "#LINKEDIN_PROFILE_REVIEW-comments-selection-panel", "aria-controls": "LINKEDIN_PROFILE_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClicked },
+	                                    { href: "#LINKEDIN_PROFILE_REVIEW-comments-selection-panel", "aria-controls": "LINKEDIN_PROFILE_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
 	                                    "Linkedin Profile"
 	                                )
 	                            )
@@ -168,7 +168,9 @@
 	            return _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
 	                var elId = "category-" + categoryId;
 	                var reactKey = elId;
-	                var assessmentCommentsForThisCategory = _store2.default.assessment.getListComments(categoryProductCode);
+	                var assessmentCommentsForThisCategory = _.filter(_store2.default.assessment.getListComments(categoryProductCode), function (ac) {
+	                    return ac.categoryId === categoryId;
+	                });
 
 	                return React.createElement(
 	                    "section",
@@ -176,7 +178,7 @@
 	                    React.createElement(
 	                        "h3",
 	                        null,
-	                        _category3.default.titles[categoryId]
+	                        _category3.default.titles[_store2.default.order.languageCode][categoryId]
 	                    ),
 	                    React.createElement(
 	                        "ul",
@@ -190,7 +192,7 @@
 	                );
 	            });
 	        },
-	        _handleTabClicked: function _handleTabClicked(e) {
+	        _handleTabClick: function _handleTabClick(e) {
 	            e.preventDefault();
 	            $(e.currentTarget).tab("show");
 	        }
@@ -221,23 +223,41 @@
 	    },
 
 	    titles: {
+	        sv: {
 
-	        // CV
-	        12: "Present achievements and build credibility",
-	        13: "Ensure completeness and correctness",
-	        14: "Be relevant and targeted",
+	            // CV
+	            12: "Redovisa resultat och skapa trovärdighet",
+	            13: "Översiktligt och korrekt",
+	            14: "Rikta och var relevant",
 
-	        // Cover letter
-	        7: "Highlight your potential",
-	        8: "Focus on the employer",
-	        10: "Present achievements and build credibility",
-	        11: "Active, brief and correct",
+	            // Cover letter
+	            7: "Framhäv potential",
+	            8: "Fokusera på arbetsgivaren",
+	            10: "Redovisa resultat och skapa trovärdighet",
+	            11: "Aktivt, kort och korrekt",
 
-	        // Linkedin profile
-	        16: "Be relevant and targeted",
-	        17: "Network and outreach",
-	        18: "Complete and correct profile",
-	        20: "Present achievements and build credibility"
+	            // Linkedin profile
+	            16: "Rikta och var relevant",
+	            17: "Skapa effekt och bygg räckvidd",
+	            18: "Översiktligt och korrekt",
+	            20: "Redovisa resultat och skapa trovärdighet"
+	        },
+
+	        en: {
+	            12: "Present achievements and build credibility",
+	            13: "Ensure completeness and correctness",
+	            14: "Be relevant and targeted",
+
+	            7: "Highlight your potential",
+	            8: "Focus on the employer",
+	            10: "Present achievements and build credibility",
+	            11: "Active, brief and correct",
+
+	            16: "Be relevant and targeted",
+	            17: "Network and outreach",
+	            18: "Complete and correct profile",
+	            20: "Present achievements and build credibility"
+	        }
 	    }
 	};
 
@@ -433,25 +453,26 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Assessment = {
-	    updateListComment: function updateListComment(id, redText) {
+	    updateListComment: function updateListComment(comment) {
 	        var listComments = this._getListCommentsFromLocalStorage();
 	        var listCommentsToUpdate = listComments.cv;
 
 	        if (!_.find(listCommentsToUpdate, function (c) {
-	            return c.id === id;
+	            return c.id === comment.id;
 	        })) {
 	            listCommentsToUpdate = listComments.coverLetter;
-	        }if (!_.find(listCommentsToUpdate, function (c) {
-	            return c.id === id;
+	        }
+	        if (!_.find(listCommentsToUpdate, function (c) {
+	            return c.id === comment.id;
 	        })) {
 	            listCommentsToUpdate = listComments.linkedinProfile;
 	        }
 
 	        var commentToUpdate = _.find(listCommentsToUpdate, function (c) {
-	            return c.id === id;
+	            return c.id === comment.id;
 	        });
 
-	        commentToUpdate.redText = redText;
+	        Object.assign(commentToUpdate, comment);
 
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
@@ -957,30 +978,53 @@
 
 	var Component = React.createClass({
 	    displayName: "Component",
+	    getInitialState: function getInitialState() {
+	        return this.props;
+	    },
 	    render: function render() {
-	        var ac = this.props.assessmentComment;
+	        var ac = this.state.assessmentComment;
+
+	        var greenParagraphClasses = classNames({
+	            selected: ac.isGreenSelected
+	        });
+	        var redParagraphClasses = classNames({
+	            selected: ac.isRedSelected
+	        });
 
 	        return React.createElement(
 	            "li",
 	            { ref: "root" },
 	            React.createElement(
 	                "div",
-	                { className: "default-comment green" },
+	                { className: "assessment-comment id-and-points" },
 	                React.createElement(
 	                    "p",
 	                    null,
+	                    ac.id
+	                ),
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    ac.points
+	                )
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "assessment-comment green" },
+	                React.createElement(
+	                    "p",
+	                    { className: greenParagraphClasses, onClick: this._handleGreenParagraphClick },
 	                    ac.greenText
 	                )
 	            ),
 	            React.createElement(
 	                "div",
-	                { className: "default-comment red" },
+	                { className: "assessment-comment red" },
 	                React.createElement(
 	                    "p",
-	                    { onClick: this._handleTextClick },
+	                    { className: redParagraphClasses, onClick: this._handleRedParagraphClick, onBlur: this._handleRedParagraphBlur },
 	                    ac.redText
-	                ),
-	                React.createElement("textarea", { defaultValue: ac.redText, onBlur: this._handleTextAreaBlur })
+	                )
 	            )
 	        );
 	    },
@@ -990,41 +1034,44 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-	        this.$textareas = $rootEl.find("textarea");
+	        this.$redParagraphs = $rootEl.children(".red").children("p");
 
-	        this._initTextareasHeight();
+	        this._addContentEditableToParagraphs();
 	    },
-	    _initTextareasHeight: function _initTextareasHeight() {
-	        _.forEach(this.$textareas, function (ta) {
-	            if (ta.clientHeight < ta.scrollHeight) {
-	                ta.style.height = ta.scrollHeight + 2 + "px";
-	            }
+	    _addContentEditableToParagraphs: function _addContentEditableToParagraphs() {
+	        _.forEach(this.$redParagraphs, function (p) {
+	            $(p).attr("contenteditable", "true");
 	        });
 	    },
-	    _handleTextClick: function _handleTextClick(e) {
-	        var $p = $(e.currentTarget);
-	        var $ta = $p.siblings();
+	    _handleGreenParagraphClick: function _handleGreenParagraphClick() {
+	        var comment = this.state.assessmentComment;
 
-	        $p.hide();
-	        $ta.show();
-	        this._initTextareaHeight($ta.get(0));
-	        $ta.focus();
+	        comment.isRedSelected = false;
+	        comment.isGreenSelected = true;
+
+	        this._updateAssessmentInStoreAndRefreshUi(comment);
 	    },
-	    _handleTextAreaBlur: function _handleTextAreaBlur(e) {
-	        var $ta = $(e.currentTarget);
-	        var $p = $ta.siblings();
-	        var newRedText = $ta.val();
+	    _handleRedParagraphClick: function _handleRedParagraphClick() {
+	        var comment = this.state.assessmentComment;
 
-	        $p.text(newRedText);
-	        $ta.hide();
-	        $p.show();
+	        comment.isGreenSelected = false;
+	        comment.isRedSelected = true;
 
-	        _store2.default.assessment.updateListComment(this.props.assessmentComment.id, newRedText);
+	        this._updateAssessmentInStoreAndRefreshUi(comment);
 	    },
-	    _initTextareaHeight: function _initTextareaHeight(ta) {
-	        if (ta.clientHeight < ta.scrollHeight) {
-	            ta.style.height = ta.scrollHeight + 2 + "px";
-	        }
+	    _handleRedParagraphBlur: function _handleRedParagraphBlur(e) {
+	        var comment = this.state.assessmentComment;
+
+	        comment.redText = $(e.currentTarget).text();
+
+	        this._updateAssessmentInStoreAndRefreshUi(comment);
+	    },
+	    _updateAssessmentInStoreAndRefreshUi: function _updateAssessmentInStoreAndRefreshUi(comment) {
+	        this.setState({
+	            assessmentComment: comment
+	        });
+
+	        _store2.default.assessment.updateListComment(comment);
 	    }
 	});
 

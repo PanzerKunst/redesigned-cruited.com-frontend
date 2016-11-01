@@ -1,17 +1,31 @@
 import store from "./store";
 
 const Component = React.createClass({
+    getInitialState() {
+        return this.props;
+    },
+
     render() {
-        const ac = this.props.assessmentComment;
+        const ac = this.state.assessmentComment;
+
+        const greenParagraphClasses = classNames({
+            selected: ac.isGreenSelected
+        });
+        const redParagraphClasses = classNames({
+            selected: ac.isRedSelected
+        });
 
         return (
             <li ref="root">
-                <div className="default-comment green">
-                    <p>{ac.greenText}</p>
+                <div className="assessment-comment id-and-points">
+                    <p>{ac.id}</p>
+                    <p>{ac.points}</p>
                 </div>
-                <div className="default-comment red">
-                    <p onClick={this._handleTextClick}>{ac.redText}</p>
-                    <textarea defaultValue={ac.redText} onBlur={this._handleTextAreaBlur} />
+                <div className="assessment-comment green">
+                    <p className={greenParagraphClasses} onClick={this._handleGreenParagraphClick}>{ac.greenText}</p>
+                </div>
+                <div className="assessment-comment red">
+                    <p className={redParagraphClasses} onClick={this._handleRedParagraphClick} onBlur={this._handleRedParagraphBlur}>{ac.redText}</p>
                 </div>
             </li>
         );
@@ -24,45 +38,49 @@ const Component = React.createClass({
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-        this.$textareas = $rootEl.find("textarea");
+        this.$redParagraphs = $rootEl.children(".red").children("p");
 
-        this._initTextareasHeight();
+        this._addContentEditableToParagraphs();
     },
 
-    _initTextareasHeight() {
-        _.forEach(this.$textareas, ta => {
-            if (ta.clientHeight < ta.scrollHeight) {
-                ta.style.height = (ta.scrollHeight + 2) + "px";
-            }
+    _addContentEditableToParagraphs() {
+        _.forEach(this.$redParagraphs, p => {
+            $(p).attr("contenteditable", "true");
         });
     },
 
-    _handleTextClick(e) {
-        const $p = $(e.currentTarget);
-        const $ta = $p.siblings();
+    _handleGreenParagraphClick() {
+        const comment = this.state.assessmentComment;
 
-        $p.hide();
-        $ta.show();
-        this._initTextareaHeight($ta.get(0));
-        $ta.focus();
+        comment.isRedSelected = false;
+        comment.isGreenSelected = true;
+
+        this._updateAssessmentInStoreAndRefreshUi(comment);
     },
 
-    _handleTextAreaBlur(e) {
-        const $ta = $(e.currentTarget);
-        const $p = $ta.siblings();
-        const newRedText = $ta.val();
+    _handleRedParagraphClick() {
+        const comment = this.state.assessmentComment;
 
-        $p.text(newRedText);
-        $ta.hide();
-        $p.show();
+        comment.isGreenSelected = false;
+        comment.isRedSelected = true;
 
-        store.assessment.updateListComment(this.props.assessmentComment.id, newRedText);
+        this._updateAssessmentInStoreAndRefreshUi(comment);
     },
 
-    _initTextareaHeight(ta) {
-        if (ta.clientHeight < ta.scrollHeight) {
-            ta.style.height = (ta.scrollHeight + 2) + "px";
-        }
+    _handleRedParagraphBlur(e) {
+        const comment = this.state.assessmentComment;
+
+        comment.redText = $(e.currentTarget).text();
+
+        this._updateAssessmentInStoreAndRefreshUi(comment);
+    },
+
+    _updateAssessmentInStoreAndRefreshUi(comment) {
+        this.setState({
+            assessmentComment: comment
+        });
+
+        store.assessment.updateListComment(comment);
     }
 });
 

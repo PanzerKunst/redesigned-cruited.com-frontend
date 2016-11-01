@@ -129,19 +129,22 @@ function runWebpack(entryFileName, srcSubDir) {
         .pipe(gulp.dest(scriptDistDir));
 };
 
-// ### Concatenating large libraries used in most pages. Those listed in `.eslintrc > globals`
 // `gulp js-libs`
 gulp.task("js-libs", function() {
     runSequence("js-libs-concat",
         "js-libs-uglify");
 });
 
+// ### Concatenating large libraries used in most pages. Those listed in `.eslintrc > globals`
 gulp.task("js-libs-concat", function() {
     return streamSeries(
         gulp.src("node_modules/jquery/dist/jquery.slim.js"),
         gulp.src("node_modules/lodash/lodash.js"),
         gulp.src("node_modules/react/dist/react.js"),
         gulp.src("node_modules/react-dom/dist/react-dom.js"),
+        gulp.src("node_modules/classnames/index.js"),
+        gulp.src("node_modules/classnames/bind.js"),
+        gulp.src("node_modules/classnames/dedupe.js"),
         gulp.src("node_modules/gsap/src/uncompressed/TweenLite.js"),
         gulp.src("node_modules/gsap/src/uncompressed/easing/EasePack.js"),
         gulp.src("node_modules/gsap/src/uncompressed/plugins/CSSPlugin.js"),

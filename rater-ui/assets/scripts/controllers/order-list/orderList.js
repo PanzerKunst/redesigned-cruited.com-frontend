@@ -39,7 +39,7 @@ const controller = {
                                 <i className="fa fa-spinner fa-pulse"/>
                             </div>
                             <div id="load-more-link-panel">
-                                <a onClick={this._handleLoadMoreClicked}>Load more</a>
+                                <a onClick={this._handleLoadMoreClick}>Load more</a>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,7 @@ const controller = {
                 </div>);
         },
 
-        _handleLoadMoreClicked() {
+        _handleLoadMoreClick() {
             this._searchMore();
         },
 

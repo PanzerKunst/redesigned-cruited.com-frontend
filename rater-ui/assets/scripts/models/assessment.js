@@ -4,19 +4,20 @@ import {localStorageKeys} from "../global";
 import store from "../controllers/assessment/store";
 
 const Assessment = {
-    updateListComment(id, redText) {
+    updateListComment(comment) {
         const listComments = this._getListCommentsFromLocalStorage();
         let listCommentsToUpdate = listComments.cv;
 
-        if (!_.find(listCommentsToUpdate, c => c.id === id)) {
+        if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
             listCommentsToUpdate = listComments.coverLetter;
-        } if (!_.find(listCommentsToUpdate, c => c.id === id)) {
+        }
+        if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
             listCommentsToUpdate = listComments.linkedinProfile;
         }
 
-        const commentToUpdate = _.find(listCommentsToUpdate, c => c.id === id);
+        const commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
 
-        commentToUpdate.redText = redText;
+        Object.assign(commentToUpdate, comment);
 
         this._saveListCommentsInLocalStorage(listComments);
     },

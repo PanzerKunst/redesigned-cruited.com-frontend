@@ -22,7 +22,7 @@ const Component = React.createClass({
                         <div className="modal-body">
                             <ul className="styleless">
                                 {store.allRaters.map(account => (
-                                        <li key={account.id} onClick={this._handleItemClicked} data-account-id={account.id}>
+                                        <li key={account.id} onClick={this._handleItemClick} data-account-id={account.id}>
                                             <RaterProfile account={account} />
                                         </li>)
                                 )}
@@ -64,7 +64,7 @@ const Component = React.createClass({
         });
     },
 
-    _handleItemClicked(e) {
+    _handleItemClick(e) {
         const $li = $(e.currentTarget);
 
         if (!$li.hasClass("disabled")) {

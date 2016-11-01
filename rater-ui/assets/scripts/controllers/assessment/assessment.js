@@ -35,13 +35,13 @@ const controller = {
                         <section>
                             <ul className="nav nav-tabs" role="tablist">
                                 <li role="presentation" className="active">
-                                    <a href="#CV_REVIEW-comments-selection-panel" aria-controls="CV_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClicked}>CV</a>
+                                    <a href="#CV_REVIEW-comments-selection-panel" aria-controls="CV_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClick}>CV</a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#COVER_LETTER_REVIEW-comments-selection-panel" aria-controls="COVER_LETTER_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClicked}>Cover Letter</a>
+                                    <a href="#COVER_LETTER_REVIEW-comments-selection-panel" aria-controls="COVER_LETTER_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClick}>Cover Letter</a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#LINKEDIN_PROFILE_REVIEW-comments-selection-panel" aria-controls="LINKEDIN_PROFILE_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClicked}>Linkedin Profile</a>
+                                    <a href="#LINKEDIN_PROFILE_REVIEW-comments-selection-panel" aria-controls="LINKEDIN_PROFILE_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClick}>Linkedin Profile</a>
                                 </li>
                             </ul>
 
@@ -75,11 +75,11 @@ const controller = {
             return store.categoryIds[categoryProductCode].map(categoryId => {
                 const elId = `category-${categoryId}`;
                 const reactKey = elId;
-                const assessmentCommentsForThisCategory = store.assessment.getListComments(categoryProductCode);
+                const assessmentCommentsForThisCategory = _.filter(store.assessment.getListComments(categoryProductCode), ac => ac.categoryId === categoryId);
 
                 return (
                     <section key={reactKey} id={elId}>
-                        <h3>{Category.titles[categoryId]}</h3>
+                        <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
 
                         <ul className="styleless">
                         {assessmentCommentsForThisCategory.map(ac => {
@@ -93,7 +93,7 @@ const controller = {
             });
         },
 
-        _handleTabClicked(e) {
+        _handleTabClick(e) {
             e.preventDefault();
             $(e.currentTarget).tab("show");
         }

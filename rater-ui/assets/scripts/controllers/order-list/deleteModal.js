@@ -42,7 +42,7 @@ const Component = React.createClass({
                         </section>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary" onClick={this._handleDeleteClicked}>Mark as deleted</button>
+                        <button type="button" className="btn btn-primary" onClick={this._handleDeleteClick}>Mark as deleted</button>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@ const Component = React.createClass({
         this.$modal = $("#delete-modal");
     },
 
-    _handleDeleteClicked() {
+    _handleDeleteClick() {
         store.deleteCurrentOrder();
         this.$modal.modal("hide");
     }

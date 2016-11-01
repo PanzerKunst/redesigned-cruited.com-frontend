@@ -1,9 +1,10 @@
-@mixin dc-bg($color: $brand-success) {
+@mixin comment-bg($color: red) {
   background-color: lighten($color, 30%);
 }
 
-$green-comment-width: 35%;
-$red-comment-width: 100% - $green-comment-width;
+$comment-id-and-points-width: 5%;
+$green-comment-width: 27.5%;
+$red-comment-width: 100% - $comment-id-and-points-width - $green-comment-width;
 
 #assessment {
   .with-circles {
@@ -13,6 +14,11 @@ $red-comment-width: 100% - $green-comment-width;
     @include large-screen {
       font-size: 14px;
     }
+  }
+
+  #order-details {
+    background-color: white;
+    padding: 1.5em $spacer-unit-size;
   }
 
   .tab-pane {
@@ -28,64 +34,77 @@ $red-comment-width: 100% - $green-comment-width;
 
     ul {
       margin-bottom: 0;
+    }
 
-      > li {
+    li {
+      margin-bottom: 1em;
+    }
+
+    .assessment-comment {
+      > p {
+        margin-bottom: 0;
+        padding: 0.2em 0.4em;
+      }
+
+      > span {
+        position: absolute;
+        bottom: 0;
+      }
+    }
+
+    .id-and-points > p {
+      text-align: center;
+    }
+
+    .green,
+    .red {
+      cursor: pointer;
+      position: relative;
+
+      > p {
+        height: 100%;
+        background-color: $gradient-light-grey;
+      }
+    }
+
+    .green > .selected {
+      @include comment-bg($brand-success);
+    }
+    .red > .selected {
+      @include comment-bg();
+    }
+  }
+
+  @include medium-screen {
+    .tab-pane {
+      li {
         display: flex;
+      }
 
-        margin-bottom: 1em;
+      .id-and-points {
+        width: $comment-id-and-points-width;
+      }
+      .green {
+        width: $green-comment-width;
+      }
+      .red {
+        width: $red-comment-width;
       }
     }
-  }
-
-  .default-comment {
-    &.green {
-      width: $green-comment-width;
-
-      > p,
-      > textarea {
-        @include dc-bg();
-      }
-    }
-    &.red {
-      width: $red-comment-width;
-
-      > p,
-      > textarea {
-        @include dc-bg($brand-danger);
-      }
-    }
-
-    > p {
-      margin-bottom: 0;
-      padding: 0.2em;
-    }
-
-    > textarea {
-      width: 100%;
-      display: none;
-    }
-  }
-
-  #order-details {
-    background-color: white;
-    padding: 1.5em $spacer-unit-size;
   }
 }
 
 .no-flexbox {
-  #assessment .with-circles .tab-pane ul > li {
-    display: block;
-    @include clearfix;
-  }
+  @include medium-screen {
+    #assessment .tab-pane {
+      li {
+        display: block;
+        @include clearfix;
+      }
 
-  .default-comment {
-    float: left;
-
-    &.green {
-      width: $green-comment-width;
-    }
-    &.red {
-      width: $red-comment-width;
+      .assessment-comment {
+        float: left;
+      }
     }
   }
 }

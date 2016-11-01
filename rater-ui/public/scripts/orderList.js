@@ -115,7 +115,7 @@
 	                            { id: "load-more-link-panel" },
 	                            React.createElement(
 	                                "a",
-	                                { onClick: this._handleLoadMoreClicked },
+	                                { onClick: this._handleLoadMoreClick },
 	                                "Load more"
 	                            )
 	                        )
@@ -153,7 +153,7 @@
 	                React.createElement("i", { className: "fa fa-spinner fa-pulse" })
 	            );
 	        },
-	        _handleLoadMoreClicked: function _handleLoadMoreClicked() {
+	        _handleLoadMoreClick: function _handleLoadMoreClick() {
 	            this._searchMore();
 	        },
 	        _searchMore: function _searchMore() {
@@ -727,7 +727,7 @@
 	    _secondaryButtons: function _secondaryButtons(order) {
 	        var assignBtn = order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled ? null : React.createElement(
 	            "button",
-	            { className: "styleless fa fa-user", onClick: this._handleAssignClicked },
+	            { className: "styleless fa fa-user", onClick: this._handleAssignClick },
 	            React.createElement("i", { className: "fa fa-check", "aria-hidden": "true" })
 	        );
 
@@ -739,7 +739,7 @@
 	            viewBtn = React.createElement("a", { href: href, target: "_blank", className: "fa fa-eye" });
 	        }
 
-	        var deleteBtn = _store2.default.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClicked }) : null;
+	        var deleteBtn = _store2.default.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClick }) : null;
 
 	        return React.createElement(
 	            "div",
@@ -749,11 +749,11 @@
 	            deleteBtn
 	        );
 	    },
-	    _handleAssignClicked: function _handleAssignClicked() {
+	    _handleAssignClick: function _handleAssignClick() {
 	        _store2.default.currentOrder = this.props.order;
 	        this.$assignModal.modal();
 	    },
-	    _handleDeleteClicked: function _handleDeleteClicked() {
+	    _handleDeleteClick: function _handleDeleteClick() {
 	        _store2.default.currentOrder = this.props.order;
 
 	        ReactDOM.render(React.createElement(_deleteModal2.default), document.querySelector("#delete-modal"));
@@ -886,7 +886,7 @@
 	                    { className: "modal-footer" },
 	                    React.createElement(
 	                        "button",
-	                        { type: "button", className: "btn btn-primary", onClick: this._handleDeleteClicked },
+	                        { type: "button", className: "btn btn-primary", onClick: this._handleDeleteClick },
 	                        "Mark as deleted"
 	                    )
 	                )
@@ -899,7 +899,7 @@
 	    _initElements: function _initElements() {
 	        this.$modal = $("#delete-modal");
 	    },
-	    _handleDeleteClicked: function _handleDeleteClicked() {
+	    _handleDeleteClick: function _handleDeleteClick() {
 	        _store2.default.deleteCurrentOrder();
 	        this.$modal.modal("hide");
 	    }
@@ -1197,7 +1197,7 @@
 	                            _store2.default.allRaters.map(function (account) {
 	                                return React.createElement(
 	                                    "li",
-	                                    { key: account.id, onClick: _this._handleItemClicked, "data-account-id": account.id },
+	                                    { key: account.id, onClick: _this._handleItemClick, "data-account-id": account.id },
 	                                    React.createElement(_raterProfile2.default, { account: account })
 	                                );
 	                            })
@@ -1236,7 +1236,7 @@
 	            $(liCurrentlyAssigned).addClass("disabled");
 	        });
 	    },
-	    _handleItemClicked: function _handleItemClicked(e) {
+	    _handleItemClick: function _handleItemClick(e) {
 	        var $li = $(e.currentTarget);
 
 	        if (!$li.hasClass("disabled")) {
