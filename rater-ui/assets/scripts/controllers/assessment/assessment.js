@@ -75,14 +75,14 @@ const controller = {
             return store.categoryIds[categoryProductCode].map(categoryId => {
                 const elId = `category-${categoryId}`;
                 const reactKey = elId;
-                const assessmentCommentsForThisCategory = _.filter(store.assessment.getListComments(categoryProductCode), ac => ac.categoryId === categoryId);
+                const listCommentsForThisCategory = _.filter(store.assessment.getListComments(categoryProductCode), ac => ac.categoryId === categoryId);
 
                 return (
                     <section key={reactKey} id={elId}>
                         <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
 
                         <ul className="styleless">
-                        {assessmentCommentsForThisCategory.map(ac => {
+                        {listCommentsForThisCategory.map(ac => {
                             const reactKey2 = `assessment-list-comment-${ac.id}`;
 
                             return <GreenRedDefaultComment key={reactKey2} assessmentComment={ac} />;

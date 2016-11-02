@@ -11,5 +11,5 @@ export const httpStatusCodes = {
 };
 
 export const localStorageKeys = {
-    assessmentListComments: "assessmentListComments"
+    myAssessments: "myAssessments"
 };

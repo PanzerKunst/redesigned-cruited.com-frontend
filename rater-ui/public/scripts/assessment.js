@@ -168,7 +168,7 @@
 	            return _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
 	                var elId = "category-" + categoryId;
 	                var reactKey = elId;
-	                var assessmentCommentsForThisCategory = _.filter(_store2.default.assessment.getListComments(categoryProductCode), function (ac) {
+	                var listCommentsForThisCategory = _.filter(_store2.default.assessment.getListComments(categoryProductCode), function (ac) {
 	                    return ac.categoryId === categoryId;
 	                });
 
@@ -183,7 +183,7 @@
 	                    React.createElement(
 	                        "ul",
 	                        { className: "styleless" },
-	                        assessmentCommentsForThisCategory.map(function (ac) {
+	                        listCommentsForThisCategory.map(function (ac) {
 	                            var reactKey2 = "assessment-list-comment-" + ac.id;
 
 	                            return React.createElement(_greenRedDefaultComment2.default, { key: reactKey2, assessmentComment: ac });
@@ -489,18 +489,22 @@
 	    _getListCommentsForCategoryContainingCommentId: function _getListCommentsForCategoryContainingCommentId(id, categoryProductCode) {
 	        var listCommentsForCategory = this.getListComments(categoryProductCode);
 
-	        if (_.find(listCommentsForCategory, function (c) {
+	        return _.find(listCommentsForCategory, function (c) {
 	            return c.id === id;
-	        })) {
-	            return listCommentsForCategory;
-	        }
-	        return null;
+	        }) ? listCommentsForCategory : null;
 	    },
 	    _getListCommentsFromLocalStorage: function _getListCommentsFromLocalStorage() {
-	        return _browser2.default.getFromLocalStorage(_global.localStorageKeys.assessmentListComments);
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+
+	        return myAssessments && myAssessments[_store2.default.order.id] ? myAssessments[_store2.default.order.id].listComments : null;
 	    },
 	    _saveListCommentsInLocalStorage: function _saveListCommentsInLocalStorage(comments) {
-	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.assessmentListComments, comments);
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
+
+	        myAssessments[_store2.default.order.id] = myAssessments[_store2.default.order.id] || {};
+	        myAssessments[_store2.default.order.id].listComments = comments;
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    }
 	};
 
@@ -643,7 +647,7 @@
 	};
 
 	var localStorageKeys = exports.localStorageKeys = {
-	    assessmentListComments: "assessmentListComments"
+	    myAssessments: "myAssessments"
 	};
 
 /***/ },
@@ -984,6 +988,11 @@
 	    render: function render() {
 	        var ac = this.state.assessmentComment;
 
+	        var listCommentClasses = classNames({
+	            "list-comment": true,
+	            grouped: ac.isGrouped
+	        });
+
 	        var greenParagraphClasses = classNames({
 	            selected: ac.isGreenSelected
 	        });
@@ -993,24 +1002,10 @@
 
 	        return React.createElement(
 	            "li",
-	            { ref: "root" },
+	            { ref: "root", className: listCommentClasses },
 	            React.createElement(
 	                "div",
-	                { className: "assessment-comment id-and-points" },
-	                React.createElement(
-	                    "p",
-	                    null,
-	                    ac.id
-	                ),
-	                React.createElement(
-	                    "p",
-	                    null,
-	                    ac.points
-	                )
-	            ),
-	            React.createElement(
-	                "div",
-	                { className: "assessment-comment green" },
+	                { className: "green" },
 	                React.createElement(
 	                    "p",
 	                    { className: greenParagraphClasses, onClick: this._handleGreenParagraphClick },
@@ -1019,11 +1014,26 @@
 	            ),
 	            React.createElement(
 	                "div",
-	                { className: "assessment-comment red" },
+	                { className: "red" },
 	                React.createElement(
 	                    "p",
 	                    { className: redParagraphClasses, onClick: this._handleRedParagraphClick, onBlur: this._handleRedParagraphBlur },
 	                    ac.redText
+	                )
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "id-and-points" },
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    ac.id
+	                ),
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    ac.points,
+	                    "pt"
 	                )
 	            )
 	        );

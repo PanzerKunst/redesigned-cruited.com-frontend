@@ -135,7 +135,7 @@
 	};
 
 	var localStorageKeys = exports.localStorageKeys = {
-	    assessmentListComments: "assessmentListComments"
+	    myAssessments: "myAssessments"
 	};
 
 /***/ },

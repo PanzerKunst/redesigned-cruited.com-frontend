@@ -8,6 +8,11 @@ const Component = React.createClass({
     render() {
         const ac = this.state.assessmentComment;
 
+        const listCommentClasses = classNames({
+            "list-comment": true,
+            grouped: ac.isGrouped
+        });
+
         const greenParagraphClasses = classNames({
             selected: ac.isGreenSelected
         });
@@ -16,16 +21,16 @@ const Component = React.createClass({
         });
 
         return (
-            <li ref="root">
-                <div className="assessment-comment id-and-points">
-                    <p>{ac.id}</p>
-                    <p>{ac.points}</p>
-                </div>
-                <div className="assessment-comment green">
+            <li ref="root" className={listCommentClasses}>
+                <div className="green">
                     <p className={greenParagraphClasses} onClick={this._handleGreenParagraphClick}>{ac.greenText}</p>
                 </div>
-                <div className="assessment-comment red">
+                <div className="red">
                     <p className={redParagraphClasses} onClick={this._handleRedParagraphClick} onBlur={this._handleRedParagraphBlur}>{ac.redText}</p>
+                </div>
+                <div className="id-and-points">
+                    <p>{ac.id}</p>
+                    <p>{ac.points}pt</p>
                 </div>
             </li>
         );

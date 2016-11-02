@@ -107,7 +107,7 @@
 
   li {
     &:not(.disabled) {
-      @include transition(background $default-animation-duration);
+      @include transition(background-color $default-animation-duration ease);
 
       &:hover {
         cursor: pointer;

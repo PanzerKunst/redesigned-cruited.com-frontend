@@ -36,18 +36,22 @@ const Assessment = {
     _getListCommentsForCategoryContainingCommentId(id, categoryProductCode) {
         const listCommentsForCategory = this.getListComments(categoryProductCode);
 
-        if (_.find(listCommentsForCategory, c => c.id === id)) {
-            return listCommentsForCategory;
-        }
-        return null;
+        return _.find(listCommentsForCategory, c => c.id === id) ? listCommentsForCategory : null;
     },
 
     _getListCommentsFromLocalStorage() {
-        return Browser.getFromLocalStorage(localStorageKeys.assessmentListComments);
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        return myAssessments && myAssessments[store.order.id] ? myAssessments[store.order.id].listComments : null;
     },
 
     _saveListCommentsInLocalStorage(comments) {
-        Browser.saveInLocalStorage(localStorageKeys.assessmentListComments, comments);
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments) || {};
+
+        myAssessments[store.order.id] = myAssessments[store.order.id] || {};
+        myAssessments[store.order.id].listComments = comments;
+
+        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     }
 };
 
