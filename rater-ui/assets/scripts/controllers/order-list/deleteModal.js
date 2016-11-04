@@ -1,13 +1,13 @@
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
-import PositionSought from "../components/positionSought";
+import PositionSought from "../common-components/positionSought";
 
 // eslint-disable-next-line no-unused-vars
-import EmployerSought from "../components/employerSought";
+import EmployerSought from "../common-components/employerSought";
 
 // eslint-disable-next-line no-unused-vars
-import OrderTags from "../components/orderTags";
+import OrderTags from "../common-components/orderTags";
 
 const Component = React.createClass({
     render() {
@@ -45,8 +45,7 @@ const Component = React.createClass({
                         <button type="button" className="btn btn-primary" onClick={this._handleDeleteClick}>Mark as deleted</button>
                     </div>
                 </div>
-            </div>
-        );
+            </div>);
     },
 
     componentDidMount() {

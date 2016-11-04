@@ -996,20 +996,16 @@
 	            { ref: "root" },
 	            this._couponTag(order.coupon),
 	            order.tags.map(function (tag) {
-	                var reactKey = order.id + "-" + tag;
-
 	                return React.createElement(
 	                    "span",
-	                    { key: reactKey, className: "order-tag tag" },
+	                    { key: order.id + "-" + tag, className: "order-tag tag" },
 	                    tag
 	                );
 	            }),
 	            order.containedProductCodes.map(function (productCode) {
-	                var reactKey = order.id + "-" + productCode;
-
 	                return React.createElement(
 	                    "span",
-	                    { key: reactKey, className: "order-tag product-code" },
+	                    { key: order.id + "-" + productCode, className: "order-tag product-code" },
 	                    React.createElement(
 	                        "a",
 	                        { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },

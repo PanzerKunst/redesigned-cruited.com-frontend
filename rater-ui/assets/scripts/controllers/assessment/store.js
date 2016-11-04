@@ -15,6 +15,26 @@ const store = {
         this._initCategories();
     },
 
+    updateListComment(comment) {
+        this.assessment.updateListComment(comment);
+        this.reactComponent.forceUpdate();
+    },
+
+    updateTopComment(comment) {
+        this.assessment.updateTopComment(comment);
+        this.reactComponent.forceUpdate();
+    },
+
+    resetTopComment(comment) {
+        this.assessment.resetTopComment(comment);
+        this.reactComponent.forceUpdate();
+    },
+
+    removeTopComment(comment) {
+        this.assessment.removeTopComment(comment);
+        this.reactComponent.forceUpdate();
+    },
+
     _initCategories() {
         const predicate = dc => dc.categoryId;
 

@@ -3,19 +3,19 @@ import store from "./store";
 import DeleteModal from "./deleteModal";
 
 // eslint-disable-next-line no-unused-vars
-import RaterProfile from "../components/raterProfile";
+import RaterProfile from "./raterProfile";
 
 // eslint-disable-next-line no-unused-vars
-import TimeLeft from "../components/timeLeft";
+import TimeLeft from "../common-components/timeLeft";
 
 // eslint-disable-next-line no-unused-vars
-import PositionSought from "../components/positionSought";
+import PositionSought from "../common-components/positionSought";
 
 // eslint-disable-next-line no-unused-vars
-import EmployerSought from "../components/employerSought";
+import EmployerSought from "../common-components/employerSought";
 
 // eslint-disable-next-line no-unused-vars
-import OrderTags from "../components/orderTags";
+import OrderTags from "../common-components/orderTags";
 
 const Component = React.createClass({
     render() {
@@ -44,8 +44,7 @@ const Component = React.createClass({
                     {this._actionBtn(order)}
                     {this._secondaryButtons(order)}
                 </section>
-            </li>
-        );
+            </li>);
     },
 
     componentDidMount() {
@@ -87,8 +86,7 @@ const Component = React.createClass({
         return (
             <div>
                 <a href={this._assessmentUrl(order.id)} className="btn btn-default">{text}</a>
-            </div>
-        );
+            </div>);
     },
 
     _secondaryButtons(order) {
@@ -115,8 +113,7 @@ const Component = React.createClass({
                 {assignBtn}
                 {viewBtn}
                 {deleteBtn}
-            </div>
-        );
+            </div>);
     },
 
     _handleAssignClick() {

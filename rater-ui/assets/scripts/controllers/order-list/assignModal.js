@@ -1,7 +1,7 @@
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
-import RaterProfile from "../components/raterProfile";
+import RaterProfile from "./raterProfile";
 
 const Component = React.createClass({
     getInitialState() {
@@ -21,17 +21,16 @@ const Component = React.createClass({
                         </div>
                         <div className="modal-body">
                             <ul className="styleless">
-                                {store.allRaters.map(account => (
-                                        <li key={account.id} onClick={this._handleItemClick} data-account-id={account.id}>
-                                            <RaterProfile account={account} />
-                                        </li>)
-                                )}
+                            {store.allRaters.map(account =>
+                                <li key={account.id} onClick={this._handleItemClick} data-account-id={account.id}>
+                                    <RaterProfile account={account} />
+                                </li>
+                            )}
                             </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
+            </div>);
     },
 
     componentDidUpdate() {

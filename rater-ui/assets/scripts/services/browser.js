@@ -54,7 +54,7 @@ const Browser = {
         ).getPropertyValue("content");
 
         // In some browsers like Firefox, "content" is wrapped by double-quotes, that's why doing "return content === "GLOBAL_MEDIUM_SCREEN_BREAKPOINT" would be false.
-        return _.contains(content, "GLOBAL_MEDIUM_SCREEN_BREAKPOINT");
+        return content.indexOf("GLOBAL_MEDIUM_SCREEN_BREAKPOINT") >= 0;
     },
 
     isLargeScreen() {
@@ -62,7 +62,7 @@ const Browser = {
             document.querySelector("body"), ":after"
         ).getPropertyValue("content");
 
-        return _.contains(content, "GLOBAL_LARGE_SCREEN_BREAKPOINT");
+        return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
     },
 
     isSmallScreen() {

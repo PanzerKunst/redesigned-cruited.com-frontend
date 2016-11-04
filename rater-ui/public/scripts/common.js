@@ -193,12 +193,12 @@
 	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
 
 	        // In some browsers like Firefox, "content" is wrapped by double-quotes, that's why doing "return content === "GLOBAL_MEDIUM_SCREEN_BREAKPOINT" would be false.
-	        return _.contains(content, "GLOBAL_MEDIUM_SCREEN_BREAKPOINT");
+	        return content.indexOf("GLOBAL_MEDIUM_SCREEN_BREAKPOINT") >= 0;
 	    },
 	    isLargeScreen: function isLargeScreen() {
 	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
 
-	        return _.contains(content, "GLOBAL_LARGE_SCREEN_BREAKPOINT");
+	        return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
 	    },
 	    isSmallScreen: function isSmallScreen() {
 	        return !this.isMediumScreen() && !this.isLargeScreen();

@@ -32,7 +32,9 @@ const controller = {
                     <div className="with-circles">
                         {this._topOrders()}
                         <ul className="styleless orders">
-                            {store.moreOrders.map(order => <ListItem key={order.id} order={order} />)}
+                        {store.moreOrders.map(order =>
+                            <ListItem key={order.id} order={order} />
+                        )}
                         </ul>
                         <div id="load-more-panel">
                             <div className="centered-contents">
@@ -46,8 +48,7 @@ const controller = {
 
                     <AssignModal />
                     <div id="delete-modal" className="modal fade" tabIndex="-1" role="dialog"></div>
-                </div>
-            );
+                </div>);
         },
 
         componentDidMount() {
@@ -69,7 +70,9 @@ const controller = {
             if (store.areTopOrdersFetched) {
                 return (
                     <ul className="styleless orders">
-                        {store.topOrders.map(order => <ListItem key={order.id} order={order} />)}
+                    {store.topOrders.map(order =>
+                        <ListItem key={order.id} order={order} />
+                    )}
                     </ul>);
             }
             return (

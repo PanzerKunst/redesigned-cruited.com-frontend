@@ -8,6 +8,8 @@ $comment-id-and-points-width: 7%;
 $green-comment-width: 27.5%;
 $red-comment-width: 100% - $comment-id-and-points-width - $green-comment-width;
 
+$white-section-padding: 2em 1em 1em;
+
 #assessment {
   .with-circles {
     @include medium-screen {
@@ -26,12 +28,12 @@ $red-comment-width: 100% - $comment-id-and-points-width - $green-comment-width;
   .tab-pane {
     > section {
       background-color: white;
-      padding: 2em 1em 1em;
+      padding: $white-section-padding;
       margin-bottom: 3em;
+    }
 
-      > h3 {
-        margin-top: 0;
-      }
+    h3 {
+      margin-top: 0;
     }
 
     ul {
@@ -108,6 +110,16 @@ $red-comment-width: 100% - $comment-id-and-points-width - $green-comment-width;
     &:first-child {
       padding-top: $list-comment-paragraph-padding-top;
     }
+  }
+
+  .overall-comment {
+    height: 6em;
+  }
+
+  .assessment-form > ul > li {
+    background-color: white;
+    padding: $white-section-padding;
+    margin: 0 -1em $content-element-margin-bottom -1em;
   }
 }
 

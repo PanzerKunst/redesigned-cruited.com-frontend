@@ -40,8 +40,7 @@ const controller = {
                             </form>
                         </div>
                     </div>
-                </div>
-            );
+                </div>);
         },
 
         componentDidMount() {

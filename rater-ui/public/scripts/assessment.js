@@ -46,23 +46,45 @@
 
 	"use strict";
 
-	var _category2 = __webpack_require__(1);
+	var _category = __webpack_require__(1);
 
-	var _category3 = _interopRequireDefault(_category2);
+	var _category2 = _interopRequireDefault(_category);
 
 	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _orderDetails = __webpack_require__(9);
+	var _positionSought = __webpack_require__(9);
 
-	var _orderDetails2 = _interopRequireDefault(_orderDetails);
+	var _positionSought2 = _interopRequireDefault(_positionSought);
 
-	var _greenRedDefaultComment = __webpack_require__(14);
+	var _employerSought = __webpack_require__(10);
 
-	var _greenRedDefaultComment2 = _interopRequireDefault(_greenRedDefaultComment);
+	var _employerSought2 = _interopRequireDefault(_employerSought);
+
+	var _orderTags = __webpack_require__(11);
+
+	var _orderTags2 = _interopRequireDefault(_orderTags);
+
+	var _timeLeft = __webpack_require__(12);
+
+	var _timeLeft2 = _interopRequireDefault(_timeLeft);
+
+	var _greenRedAssessmentComment = __webpack_require__(13);
+
+	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
+
+	var _topComment = __webpack_require__(14);
+
+	var _topComment2 = _interopRequireDefault(_topComment);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// eslint-disable-next-line no-unused-vars
+
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 	var controller = {
@@ -79,6 +101,8 @@
 	            return _store2.default;
 	        },
 	        render: function render() {
+	            var order = _store2.default.order;
+
 	            return React.createElement(
 	                "div",
 	                { id: "content" },
@@ -94,59 +118,101 @@
 	                React.createElement(
 	                    "div",
 	                    { className: "with-circles" },
-	                    React.createElement(_orderDetails2.default, null),
 	                    React.createElement(
-	                        "section",
-	                        null,
+	                        "div",
+	                        { id: "order-details" },
 	                        React.createElement(
-	                            "ul",
-	                            { className: "nav nav-tabs", role: "tablist" },
+	                            "section",
+	                            null,
 	                            React.createElement(
-	                                "li",
-	                                { role: "presentation", className: "active" },
-	                                React.createElement(
-	                                    "a",
-	                                    { href: "#CV_REVIEW-comments-selection-panel", "aria-controls": "CV_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
-	                                    "CV"
-	                                )
+	                                "div",
+	                                null,
+	                                React.createElement(_positionSought2.default, { position: order.positionSought }),
+	                                React.createElement(_employerSought2.default, { employer: order.employerSought })
+	                            ),
+	                            this._customerComment(order.customerComment),
+	                            this._jobAdUrl(order.jobAdUrl)
+	                        ),
+	                        React.createElement(
+	                            "section",
+	                            null,
+	                            React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
+	                            this._linkedinProfilePic(order.customer.linkedinProfile),
+	                            React.createElement(
+	                                "p",
+	                                null,
+	                                order.customer.firstName,
+	                                " ",
+	                                order.customer.lastName
 	                            ),
 	                            React.createElement(
-	                                "li",
-	                                { role: "presentation" },
-	                                React.createElement(
-	                                    "a",
-	                                    { href: "#COVER_LETTER_REVIEW-comments-selection-panel", "aria-controls": "COVER_LETTER_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
-	                                    "Cover Letter"
-	                                )
-	                            ),
-	                            React.createElement(
-	                                "li",
-	                                { role: "presentation" },
-	                                React.createElement(
-	                                    "a",
-	                                    { href: "#LINKEDIN_PROFILE_REVIEW-comments-selection-panel", "aria-controls": "LINKEDIN_PROFILE_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
-	                                    "Linkedin Profile"
-	                                )
+	                                "p",
+	                                null,
+	                                order.customer.emailAddress
 	                            )
 	                        ),
 	                        React.createElement(
-	                            "div",
-	                            { className: "tab-content" },
+	                            "section",
+	                            null,
 	                            React.createElement(
 	                                "div",
-	                                { role: "tabpanel", className: "tab-pane fade in active", id: "CV_REVIEW-comments-selection-panel" },
-	                                this._category(_category3.default.productCodes.cv)
+	                                null,
+	                                this._previewBtn(order.isReadOnlyBy(_store2.default.account.id))
 	                            ),
+	                            React.createElement(_timeLeft2.default, { order: order })
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "ul",
+	                        { className: "nav nav-tabs", role: "tablist" },
+	                        React.createElement(
+	                            "li",
+	                            { role: "presentation", className: "active" },
 	                            React.createElement(
-	                                "div",
-	                                { role: "tabpanel", className: "tab-pane fade", id: "COVER_LETTER_REVIEW-comments-selection-panel" },
-	                                this._category(_category3.default.productCodes.coverLetter)
-	                            ),
-	                            React.createElement(
-	                                "div",
-	                                { role: "tabpanel", className: "tab-pane fade", id: "LINKEDIN_PROFILE_REVIEW-comments-selection-panel" },
-	                                this._category(_category3.default.productCodes.linkedinProfile)
+	                                "a",
+	                                { href: "#CV_REVIEW-comments-selection-panel", "aria-controls": "CV_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
+	                                "CV"
 	                            )
+	                        ),
+	                        React.createElement(
+	                            "li",
+	                            { role: "presentation" },
+	                            React.createElement(
+	                                "a",
+	                                { href: "#COVER_LETTER_REVIEW-comments-selection-panel", "aria-controls": "COVER_LETTER_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
+	                                "Cover Letter"
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "li",
+	                            { role: "presentation" },
+	                            React.createElement(
+	                                "a",
+	                                { href: "#LINKEDIN_PROFILE_REVIEW-comments-selection-panel", "aria-controls": "LINKEDIN_PROFILE_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
+	                                "Linkedin Profile"
+	                            )
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "tab-content" },
+	                        React.createElement(
+	                            "div",
+	                            { role: "tabpanel", className: "tab-pane fade in active", id: "CV_REVIEW-comments-selection-panel" },
+	                            this._listCategory(_category2.default.productCodes.cv),
+	                            this._assessmentForm(_category2.default.productCodes.cv)
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            { role: "tabpanel", className: "tab-pane fade", id: "COVER_LETTER_REVIEW-comments-selection-panel" },
+	                            this._listCategory(_category2.default.productCodes.coverLetter),
+	                            this._assessmentForm(_category2.default.productCodes.coverLetter)
+	                        ),
+	                        React.createElement(
+	                            "div",
+	                            { role: "tabpanel", className: "tab-pane fade", id: "LINKEDIN_PROFILE_REVIEW-comments-selection-panel" },
+	                            this._listCategory(_category2.default.productCodes.linkedinProfile),
+	                            this._assessmentForm(_category2.default.productCodes.linkedinProfile)
 	                        )
 	                    )
 	                )
@@ -161,36 +227,127 @@
 	                text
 	            );
 	        },
-	        _category: function _category(categoryProductCode) {
-	            if (!_store2.default.categoryIds) {
+	        _customerComment: function _customerComment(customerComment) {
+	            if (!customerComment) {
 	                return null;
 	            }
-	            return _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
-	                var elId = "category-" + categoryId;
-	                var reactKey = elId;
-	                var listCommentsForThisCategory = _.filter(_store2.default.assessment.getListComments(categoryProductCode), function (ac) {
-	                    return ac.categoryId === categoryId;
+	            return React.createElement(
+	                "p",
+	                null,
+	                customerComment
+	            );
+	        },
+	        _jobAdUrl: function _jobAdUrl(jobAdUrl) {
+	            if (!jobAdUrl) {
+	                return null;
+	            }
+	            return React.createElement(
+	                "a",
+	                { href: jobAdUrl, target: "_blank" },
+	                "Job ad"
+	            );
+	        },
+	        _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
+	            if (!linkedinProfile) {
+	                return null;
+	            }
+
+	            var style = { backgroundImage: "url(" + linkedinProfile.pictureUrl + ")" };
+
+	            return React.createElement("div", { style: style });
+	        },
+	        _previewBtn: function _previewBtn(isReadOnly) {
+	            if (isReadOnly) {
+	                return null;
+	            }
+	            return React.createElement(
+	                "button",
+	                { className: "btn btn-primary" },
+	                "Preview assessment"
+	            );
+	        },
+	        _listCategory: function _listCategory(categoryProductCode) {
+	            if (_store2.default.categoryIds) {
+	                return _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
+	                    var elId = "list-category-" + categoryId;
+	                    var listCommentsForThisCategory = _.filter(_store2.default.assessment.listComments(categoryProductCode), function (ac) {
+	                        return ac.categoryId === categoryId;
+	                    });
+
+	                    return React.createElement(
+	                        "section",
+	                        { key: elId, id: elId },
+	                        React.createElement(
+	                            "h3",
+	                            null,
+	                            _category2.default.titles[_store2.default.order.languageCode][categoryId]
+	                        ),
+	                        React.createElement(
+	                            "ul",
+	                            { className: "styleless" },
+	                            listCommentsForThisCategory.map(function (ac) {
+	                                return React.createElement(_greenRedAssessmentComment2.default, { key: "assessment-list-comment-" + ac.id, comment: ac });
+	                            })
+	                        )
+	                    );
 	                });
+	            }
 
-	                return React.createElement(
-	                    "section",
-	                    { key: reactKey, id: elId },
+	            return null;
+	        },
+	        _assessmentForm: function _assessmentForm(categoryProductCode) {
+	            return React.createElement(
+	                "form",
+	                { className: "assessment-form single-column-panel" },
+	                React.createElement(
+	                    "div",
+	                    { className: "form-group" },
 	                    React.createElement(
-	                        "h3",
+	                        "label",
 	                        null,
-	                        _category3.default.titles[_store2.default.order.languageCode][categoryId]
+	                        "Overall comment"
 	                    ),
-	                    React.createElement(
-	                        "ul",
-	                        { className: "styleless" },
-	                        listCommentsForThisCategory.map(function (ac) {
-	                            var reactKey2 = "assessment-list-comment-" + ac.id;
+	                    React.createElement("textarea", { className: "form-control overall-comment" })
+	                ),
+	                this._topComments(categoryProductCode)
+	            );
+	        },
+	        _topComments: function _topComments(categoryProductCode) {
+	            var _this = this;
 
-	                            return React.createElement(_greenRedDefaultComment2.default, { key: reactKey2, assessmentComment: ac });
-	                        })
-	                    )
+	            if (_store2.default.categoryIds) {
+	                return React.createElement(
+	                    "ul",
+	                    { className: "styleless" },
+	                    _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
+	                        return React.createElement(
+	                            "li",
+	                            { key: "assessment-category-" + categoryId },
+	                            React.createElement(
+	                                "h3",
+	                                null,
+	                                _category2.default.titles[_store2.default.order.languageCode][categoryId]
+	                            ),
+	                            _this._topCommentsForCategory(categoryProductCode, categoryId)
+	                        );
+	                    })
 	                );
-	            });
+	            }
+
+	            return null;
+	        },
+	        _topCommentsForCategory: function _topCommentsForCategory(categoryProductCode, categoryId) {
+	            if (_store2.default.assessment.areAllListCommentsSelected(categoryProductCode)) {
+	                return React.createElement(
+	                    "ul",
+	                    { className: "styleless" },
+	                    _store2.default.assessment.topComments(categoryProductCode, categoryId).map(function (comment) {
+	                        return React.createElement(_topComment2.default, { key: "top-comment-" + comment.id, comment: comment });
+	                    })
+	                );
+	            }
+
+	            return null;
 	        },
 	        _handleTabClick: function _handleTabClick(e) {
 	            e.preventDefault();
@@ -198,6 +355,12 @@
 	        }
 	    })
 	};
+
+	// eslint-disable-next-line no-unused-vars
+
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 
@@ -258,6 +421,35 @@
 	            18: "Complete and correct profile",
 	            20: "Present achievements and build credibility"
 	        }
+	    },
+
+	    productCodeFromCategoryId: function productCodeFromCategoryId(categoryId) {
+	        switch (categoryId) {
+	            case 12:
+	                return this.productCodes.cv;
+	            case 13:
+	                return this.productCodes.cv;
+	            case 14:
+	                return this.productCodes.cv;
+
+	            case 7:
+	                return this.productCodes.coverLetter;
+	            case 8:
+	                return this.productCodes.coverLetter;
+	            case 10:
+	                return this.productCodes.coverLetter;
+	            case 11:
+	                return this.productCodes.coverLetter;
+
+	            case 16:
+	                return this.productCodes.linkedinProfile;
+	            case 17:
+	                return this.productCodes.linkedinProfile;
+	            case 18:
+	                return this.productCodes.linkedinProfile;
+	            default:
+	                return this.productCodes.linkedinProfile;
+	        }
 	    }
 	};
 
@@ -299,6 +491,22 @@
 
 	    init: function init() {
 	        this._initCategories();
+	    },
+	    updateListComment: function updateListComment(comment) {
+	        this.assessment.updateListComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateTopComment: function updateTopComment(comment) {
+	        this.assessment.updateTopComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    resetTopComment: function resetTopComment(comment) {
+	        this.assessment.resetTopComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    removeTopComment: function removeTopComment(comment) {
+	        this.assessment.removeTopComment(comment);
+	        this.reactComponent.forceUpdate();
 	    },
 	    _initCategories: function _initCategories() {
 	        var predicate = function predicate(dc) {
@@ -440,11 +648,15 @@
 	});
 	exports.default = undefined;
 
-	var _browser = __webpack_require__(7);
+	var _global = __webpack_require__(7);
+
+	var _category = __webpack_require__(1);
+
+	var _category2 = _interopRequireDefault(_category);
+
+	var _browser = __webpack_require__(8);
 
 	var _browser2 = _interopRequireDefault(_browser);
-
-	var _global = __webpack_require__(8);
 
 	var _store = __webpack_require__(2);
 
@@ -453,6 +665,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Assessment = {
+
+	    // Static
+	    nbTopComments: 3,
+
 	    updateListComment: function updateListComment(comment) {
 	        var listComments = this._getListCommentsFromLocalStorage();
 	        var listCommentsToUpdate = listComments.cv;
@@ -476,7 +692,7 @@
 
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
-	    getListComments: function getListComments(categoryProductCode) {
+	    listComments: function listComments(categoryProductCode) {
 	        var listComments = this._getListCommentsFromLocalStorage();
 
 	        if (!listComments) {
@@ -486,8 +702,82 @@
 
 	        return listComments[categoryProductCode];
 	    },
+	    topComments: function topComments(categoryProductCode, categoryId) {
+	        var topCommentsFromLocalStorage = this._getTopCommentsFromLocalStorage();
+
+	        if (topCommentsFromLocalStorage && topCommentsFromLocalStorage.haveBeenEdited) {
+	            return _.filter(topCommentsFromLocalStorage[categoryProductCode], function (ac) {
+	                return ac.categoryId === categoryId;
+	            });
+	        }
+
+	        var topCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
+
+	        this._saveAllTopCommentsInLocalStorage(categoryProductCode, topCommentsForCategory);
+
+	        return topCommentsForCategory;
+	    },
+	    updateTopComment: function updateTopComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+
+	        this._saveTopCommentInLocalStorage(categoryProductCode, comment);
+	    },
+	    resetTopComment: function resetTopComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var originalComment = _.find(this.listComments(categoryProductCode), function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        this._saveTopCommentInLocalStorage(categoryProductCode, originalComment);
+	    },
+	    removeTopComment: function removeTopComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+
+	        this._removeTopCommentFromLocalStorage(categoryProductCode, comment);
+	    },
+	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
+	        var listComments = this._getListCommentsFromLocalStorage();
+	        var listCommentsForCategory = listComments ? listComments[categoryProductCode] : null;
+
+	        if (!listCommentsForCategory) {
+	            return false;
+	        }
+
+	        for (var i = 0; i < listCommentsForCategory.length; i++) {
+	            var c = listCommentsForCategory[i];
+
+	            if (!c.isGreenSelected && !c.isRedSelected) {
+	                return false;
+	            }
+	        }
+
+	        return true;
+	    },
+	    _calculateTopComments: function _calculateTopComments(categoryProductCode, categoryId) {
+	        var redCommentsForCategory = _.filter(this.listComments(categoryProductCode), function (ac) {
+	            return ac.categoryId === categoryId && ac.isRedSelected === true;
+	        });
+	        var topCommentsForCategory = [];
+
+	        var loopCondition = function () {
+	            if (redCommentsForCategory.length < this.nbTopComments) {
+	                return topCommentsForCategory.length < redCommentsForCategory.length;
+	            }
+	            return topCommentsForCategory.length < this.nbTopComments;
+	        }.bind(this);
+
+	        while (loopCondition()) {
+	            var topComment = this._findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory);
+
+	            if (topComment) {
+	                topCommentsForCategory.push(topComment);
+	            }
+	        }
+
+	        return topCommentsForCategory;
+	    },
 	    _getListCommentsForCategoryContainingCommentId: function _getListCommentsForCategoryContainingCommentId(id, categoryProductCode) {
-	        var listCommentsForCategory = this.getListComments(categoryProductCode);
+	        var listCommentsForCategory = this.listComments(categoryProductCode);
 
 	        return _.find(listCommentsForCategory, function (c) {
 	            return c.id === id;
@@ -500,11 +790,83 @@
 	    },
 	    _saveListCommentsInLocalStorage: function _saveListCommentsInLocalStorage(comments) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
+	        var orderId = _store2.default.order.id;
 
-	        myAssessments[_store2.default.order.id] = myAssessments[_store2.default.order.id] || {};
-	        myAssessments[_store2.default.order.id].listComments = comments;
+	        myAssessments[orderId] = myAssessments[orderId] || {};
+	        myAssessments[orderId].listComments = comments;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
+	    },
+	    _getTopCommentsFromLocalStorage: function _getTopCommentsFromLocalStorage() {
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+	        var orderId = _store2.default.order.id;
+
+	        return myAssessments && myAssessments[orderId] ? myAssessments[orderId].topComments : null;
+	    },
+	    _saveAllTopCommentsInLocalStorage: function _saveAllTopCommentsInLocalStorage(categoryProductCode, comments) {
+	        var orderId = _store2.default.order.id;
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+
+	        myAssessments[orderId].topComments = myAssessments[orderId].topComments || {};
+
+	        // We remove the comments of the same ID
+	        comments.forEach(function (comment) {
+	            return _.remove(myAssessments[orderId].topComments[categoryProductCode], function (c) {
+	                return c.id === comment.id;
+	            });
+	        });
+
+	        myAssessments[orderId].topComments[categoryProductCode] = _.concat(myAssessments[orderId].topComments[categoryProductCode] || [], comments);
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
+	    },
+	    _saveTopCommentInLocalStorage: function _saveTopCommentInLocalStorage(categoryProductCode, comment) {
+	        var orderId = _store2.default.order.id;
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+	        var commentToUpdate = _.find(myAssessments[orderId].topComments[categoryProductCode], function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        if (commentToUpdate) {
+	            Object.assign(commentToUpdate, comment);
+	        } else {
+	            myAssessments[orderId].topComments[categoryProductCode].push(comment);
+	        }
+
+	        myAssessments[orderId].topComments.haveBeenEdited = true;
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
+	    },
+	    _removeTopCommentFromLocalStorage: function _removeTopCommentFromLocalStorage(categoryProductCode, comment) {
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+	        var orderId = _store2.default.order.id;
+
+	        _.remove(myAssessments[orderId].topComments[categoryProductCode], function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        myAssessments[orderId].topComments.haveBeenEdited = true;
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
+	    },
+	    _findRedCommentWithMostPointsInListExcept: function _findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory) {
+	        var commentWithMostPoints = null;
+
+	        redCommentsForCategory.forEach(function (redComment) {
+	            var isCommentAlreadyInList = _.find(topCommentsForCategory, function (tc) {
+	                return tc.id === redComment.id;
+	            });
+
+	            if (!isCommentAlreadyInList) {
+	                if (commentWithMostPoints === null) {
+	                    commentWithMostPoints = redComment;
+	                } else if (redComment.points > commentWithMostPoints.points) {
+	                    commentWithMostPoints = redComment;
+	                }
+	            }
+	        });
+
+	        return commentWithMostPoints;
 	    }
 	};
 
@@ -512,6 +874,31 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+	var localStorageKeys = exports.localStorageKeys = {
+	    myAssessments: "myAssessments"
+	};
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -565,12 +952,12 @@
 	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
 
 	        // In some browsers like Firefox, "content" is wrapped by double-quotes, that's why doing "return content === "GLOBAL_MEDIUM_SCREEN_BREAKPOINT" would be false.
-	        return _.contains(content, "GLOBAL_MEDIUM_SCREEN_BREAKPOINT");
+	        return content.indexOf("GLOBAL_MEDIUM_SCREEN_BREAKPOINT") >= 0;
 	    },
 	    isLargeScreen: function isLargeScreen() {
 	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
 
-	        return _.contains(content, "GLOBAL_LARGE_SCREEN_BREAKPOINT");
+	        return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
 	    },
 	    isSmallScreen: function isSmallScreen() {
 	        return !this.isMediumScreen() && !this.isLargeScreen();
@@ -626,166 +1013,7 @@
 	exports.default = Browser;
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var animationDurations = exports.animationDurations = {
-	    short: 0.2,
-	    medium: 0.5
-	};
-
-	var httpStatusCodes = exports.httpStatusCodes = {
-	    ok: 200,
-	    created: 201,
-	    noContent: 204,
-	    signInIncorrectCredentials: 230
-	};
-
-	var localStorageKeys = exports.localStorageKeys = {
-	    myAssessments: "myAssessments"
-	};
-
-/***/ },
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
-
-	var _store = __webpack_require__(2);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	var _positionSought = __webpack_require__(10);
-
-	var _positionSought2 = _interopRequireDefault(_positionSought);
-
-	var _employerSought = __webpack_require__(11);
-
-	var _employerSought2 = _interopRequireDefault(_employerSought);
-
-	var _orderTags = __webpack_require__(12);
-
-	var _orderTags2 = _interopRequireDefault(_orderTags);
-
-	var _timeLeft = __webpack_require__(13);
-
-	var _timeLeft2 = _interopRequireDefault(_timeLeft);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// eslint-disable-next-line no-unused-vars
-
-
-	// eslint-disable-next-line no-unused-vars
-	var Component = React.createClass({
-	    displayName: "Component",
-	    render: function render() {
-	        var order = _store2.default.order;
-
-	        return React.createElement(
-	            "div",
-	            { id: "order-details" },
-	            React.createElement(
-	                "section",
-	                null,
-	                React.createElement(
-	                    "div",
-	                    null,
-	                    React.createElement(_positionSought2.default, { position: order.positionSought }),
-	                    React.createElement(_employerSought2.default, { employer: order.employerSought })
-	                ),
-	                this._customerComment(order.customerComment),
-	                this._jobAdUrl(order.jobAdUrl)
-	            ),
-	            React.createElement(
-	                "section",
-	                null,
-	                React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
-	                this._linkedinProfilePic(order.customer.linkedinProfile),
-	                React.createElement(
-	                    "p",
-	                    null,
-	                    order.customer.firstName,
-	                    " ",
-	                    order.customer.lastName
-	                ),
-	                React.createElement(
-	                    "p",
-	                    null,
-	                    order.customer.emailAddress
-	                )
-	            ),
-	            React.createElement(
-	                "section",
-	                null,
-	                React.createElement(
-	                    "div",
-	                    null,
-	                    this._previewBtn(order.isReadOnlyBy(_store2.default.account.id))
-	                ),
-	                React.createElement(_timeLeft2.default, { order: order })
-	            )
-	        );
-	    },
-	    _customerComment: function _customerComment(customerComment) {
-	        if (!customerComment) {
-	            return null;
-	        }
-	        return React.createElement(
-	            "p",
-	            null,
-	            customerComment
-	        );
-	    },
-	    _jobAdUrl: function _jobAdUrl(jobAdUrl) {
-	        if (!jobAdUrl) {
-	            return null;
-	        }
-	        return React.createElement(
-	            "a",
-	            { href: jobAdUrl, target: "_blank" },
-	            "Job ad"
-	        );
-	    },
-	    _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
-	        if (!linkedinProfile) {
-	            return null;
-	        }
-
-	        var style = { backgroundImage: "url(" + linkedinProfile.pictureUrl + ")" };
-
-	        return React.createElement("div", { style: style });
-	    },
-	    _previewBtn: function _previewBtn(isReadOnly) {
-	        if (isReadOnly) {
-	            return null;
-	        }
-	        return React.createElement(
-	            "button",
-	            { className: "btn btn-primary" },
-	            "Preview assessment"
-	        );
-	    }
-	});
-
-	// eslint-disable-next-line no-unused-vars
-
-
-	// eslint-disable-next-line no-unused-vars
-	exports.default = Component;
-
-/***/ },
-/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -813,7 +1041,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -841,7 +1069,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -869,20 +1097,16 @@
 	            { ref: "root" },
 	            this._couponTag(order.coupon),
 	            order.tags.map(function (tag) {
-	                var reactKey = order.id + "-" + tag;
-
 	                return React.createElement(
 	                    "span",
-	                    { key: reactKey, className: "order-tag tag" },
+	                    { key: order.id + "-" + tag, className: "order-tag tag" },
 	                    tag
 	                );
 	            }),
 	            order.containedProductCodes.map(function (productCode) {
-	                var reactKey = order.id + "-" + productCode;
-
 	                return React.createElement(
 	                    "span",
-	                    { key: reactKey, className: "order-tag product-code" },
+	                    { key: order.id + "-" + productCode, className: "order-tag product-code" },
 	                    React.createElement(
 	                        "a",
 	                        { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },
@@ -922,7 +1146,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -964,6 +1188,120 @@
 	exports.default = Component;
 
 /***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _store = __webpack_require__(2);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var c = this.props.comment;
+
+	        var listCommentClasses = classNames({
+	            "list-comment": true,
+	            grouped: c.isGrouped
+	        });
+
+	        var greenParagraphClasses = classNames({
+	            selected: c.isGreenSelected
+	        });
+	        var redParagraphClasses = classNames({
+	            selected: c.isRedSelected
+	        });
+
+	        return React.createElement(
+	            "li",
+	            { ref: "root", className: listCommentClasses },
+	            React.createElement(
+	                "div",
+	                { className: "green" },
+	                React.createElement(
+	                    "p",
+	                    { className: greenParagraphClasses, onClick: this._handleGreenParagraphClick },
+	                    c.greenText
+	                )
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "red" },
+	                React.createElement(
+	                    "p",
+	                    { className: redParagraphClasses, onClick: this._handleRedParagraphClick, onBlur: this._handleRedParagraphBlur },
+	                    c.redText
+	                )
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "id-and-points" },
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    c.id
+	                ),
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    c.points,
+	                    "pt"
+	                )
+	            )
+	        );
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this._initElements();
+	    },
+	    _initElements: function _initElements() {
+	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
+
+	        this.$redParagraphs = $rootEl.children(".red").children("p");
+
+	        this._addContentEditableToParagraphs();
+	    },
+	    _addContentEditableToParagraphs: function _addContentEditableToParagraphs() {
+	        _.forEach(this.$redParagraphs, function (p) {
+	            return $(p).attr("contenteditable", "true");
+	        });
+	    },
+	    _handleGreenParagraphClick: function _handleGreenParagraphClick() {
+	        var c = this.props.comment;
+
+	        c.isRedSelected = false;
+	        c.isGreenSelected = true;
+
+	        _store2.default.updateListComment(c);
+	    },
+	    _handleRedParagraphClick: function _handleRedParagraphClick() {
+	        var c = this.props.comment;
+
+	        c.isGreenSelected = false;
+	        c.isRedSelected = true;
+
+	        _store2.default.updateListComment(c);
+	    },
+	    _handleRedParagraphBlur: function _handleRedParagraphBlur(e) {
+	        var c = this.props.comment;
+
+	        c.redText = $(e.currentTarget).text();
+
+	        _store2.default.updateListComment(c);
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -982,60 +1320,19 @@
 
 	var Component = React.createClass({
 	    displayName: "Component",
-	    getInitialState: function getInitialState() {
-	        return this.props;
-	    },
 	    render: function render() {
-	        var ac = this.state.assessmentComment;
-
-	        var listCommentClasses = classNames({
-	            "list-comment": true,
-	            grouped: ac.isGrouped
-	        });
-
-	        var greenParagraphClasses = classNames({
-	            selected: ac.isGreenSelected
-	        });
-	        var redParagraphClasses = classNames({
-	            selected: ac.isRedSelected
-	        });
+	        var c = this.props.comment;
 
 	        return React.createElement(
 	            "li",
-	            { ref: "root", className: listCommentClasses },
+	            { ref: "root", "data-comment-id": c.id },
 	            React.createElement(
-	                "div",
-	                { className: "green" },
-	                React.createElement(
-	                    "p",
-	                    { className: greenParagraphClasses, onClick: this._handleGreenParagraphClick },
-	                    ac.greenText
-	                )
+	                "p",
+	                { onBlur: this._handleParagraphBlur },
+	                c.redText
 	            ),
-	            React.createElement(
-	                "div",
-	                { className: "red" },
-	                React.createElement(
-	                    "p",
-	                    { className: redParagraphClasses, onClick: this._handleRedParagraphClick, onBlur: this._handleRedParagraphBlur },
-	                    ac.redText
-	                )
-	            ),
-	            React.createElement(
-	                "div",
-	                { className: "id-and-points" },
-	                React.createElement(
-	                    "p",
-	                    null,
-	                    ac.id
-	                ),
-	                React.createElement(
-	                    "p",
-	                    null,
-	                    ac.points,
-	                    "pt"
-	                )
-	            )
+	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick })
 	        );
 	    },
 	    componentDidMount: function componentDidMount() {
@@ -1044,44 +1341,22 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-	        this.$redParagraphs = $rootEl.children(".red").children("p");
+	        this.$p = $rootEl.children("p");
 
-	        this._addContentEditableToParagraphs();
+	        this.$p.attr("contenteditable", "true");
 	    },
-	    _addContentEditableToParagraphs: function _addContentEditableToParagraphs() {
-	        _.forEach(this.$redParagraphs, function (p) {
-	            $(p).attr("contenteditable", "true");
-	        });
+	    _handleParagraphBlur: function _handleParagraphBlur() {
+	        var c = this.props.comment;
+
+	        c.redText = this.$p.text();
+
+	        _store2.default.updateTopComment(c);
 	    },
-	    _handleGreenParagraphClick: function _handleGreenParagraphClick() {
-	        var comment = this.state.assessmentComment;
-
-	        comment.isRedSelected = false;
-	        comment.isGreenSelected = true;
-
-	        this._updateAssessmentInStoreAndRefreshUi(comment);
+	    _handleResetClick: function _handleResetClick() {
+	        _store2.default.resetTopComment(this.props.comment);
 	    },
-	    _handleRedParagraphClick: function _handleRedParagraphClick() {
-	        var comment = this.state.assessmentComment;
-
-	        comment.isGreenSelected = false;
-	        comment.isRedSelected = true;
-
-	        this._updateAssessmentInStoreAndRefreshUi(comment);
-	    },
-	    _handleRedParagraphBlur: function _handleRedParagraphBlur(e) {
-	        var comment = this.state.assessmentComment;
-
-	        comment.redText = $(e.currentTarget).text();
-
-	        this._updateAssessmentInStoreAndRefreshUi(comment);
-	    },
-	    _updateAssessmentInStoreAndRefreshUi: function _updateAssessmentInStoreAndRefreshUi(comment) {
-	        this.setState({
-	            assessmentComment: comment
-	        });
-
-	        _store2.default.assessment.updateListComment(comment);
+	    _handleRemoveClick: function _handleRemoveClick() {
+	        _store2.default.removeTopComment(this.props.comment);
 	    }
 	});
 

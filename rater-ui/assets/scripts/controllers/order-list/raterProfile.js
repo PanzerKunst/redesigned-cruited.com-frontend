@@ -17,8 +17,7 @@ const Component = React.createClass({
             <article className="rater-profile">
                 <div className="profile-picture" style={myProfilePictureStyleAttr}></div>
                 <span>{account.firstName} {account.lastName}</span>
-            </article>
-        );
+            </article>);
     }
 });
 
