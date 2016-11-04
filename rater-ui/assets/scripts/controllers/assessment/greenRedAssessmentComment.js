@@ -53,7 +53,12 @@ const Component = React.createClass({
         const c = this.props.comment;
 
         c.isRedSelected = false;
-        c.isGreenSelected = true;
+
+        // TODO: remove
+        c.isGreenSelected = !c.isGreenSelected;
+
+        /* TODO: uncomment when the above code is removed
+         comment.isGreenSelected = true; */
 
         store.updateListComment(c);
     },

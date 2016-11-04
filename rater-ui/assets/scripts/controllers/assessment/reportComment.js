@@ -3,11 +3,14 @@ import store from "./store";
 const Component = React.createClass({
     render() {
         const c = this.props.comment;
+        const liClasses = classNames({
+            red: c.isRedSelected,
+            "well-done": c.isWellDone
+        });
 
         return (
-            <li ref="root" data-comment-id={c.id}>
+            <li ref="root" data-comment-id={c.id} className={liClasses}>
                 <p onBlur={this._handleParagraphBlur}>{c.redText}</p>
-                <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
                 <button type="button" className="styleless fa fa-trash" onClick={this._handleRemoveClick} />
             </li>);
     },
@@ -19,25 +22,19 @@ const Component = React.createClass({
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-        this.$p = $rootEl.children("p");
-
-        this.$p.attr("contenteditable", "true");
+        $rootEl.children("p").attr("contenteditable", "true");
     },
 
-    _handleParagraphBlur() {
+    _handleParagraphBlur(e) {
         const c = this.props.comment;
 
-        c.redText = this.$p.text();
+        c.redText = $(e.currentTarget).text();
 
-        store.updateTopComment(c);
-    },
-
-    _handleResetClick() {
-        store.resetTopComment(this.props.comment);
+        store.addOrUpdateReportComment(c);
     },
 
     _handleRemoveClick() {
-        store.removeTopComment(this.props.comment);
+        store.removeReportComment(this.props.comment);
     }
 });
 

@@ -1,4 +1,5 @@
 import Category from "../../models/category";
+import Assessment from "../../models/assessment";
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
@@ -17,7 +18,7 @@ import TimeLeft from "../common-components/timeLeft";
 import GreenRedAssessmentComment from "./greenRedAssessmentComment";
 
 // eslint-disable-next-line no-unused-vars
-import TopComment from "./topComment";
+import ReportCategory from "./reportCategory";
 
 const controller = {
     init() {
@@ -67,29 +68,14 @@ const controller = {
                         </div>
 
                         <ul className="nav nav-tabs" role="tablist">
-                            <li role="presentation" className="active">
-                                <a href="#CV_REVIEW-comments-selection-panel" aria-controls="CV_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClick}>CV</a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#COVER_LETTER_REVIEW-comments-selection-panel" aria-controls="COVER_LETTER_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClick}>Cover Letter</a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#LINKEDIN_PROFILE_REVIEW-comments-selection-panel" aria-controls="LINKEDIN_PROFILE_REVIEW-comments-selection-panel" role="tab" data-toggle="tab" onClick={this._handleTabClick}>Linkedin Profile</a>
-                            </li>
+                            {this._tab(Category.productCodes.cv, "CV", true)}
+                            {this._tab(Category.productCodes.coverLetter, "Cover Letter")}
+                            {this._tab(Category.productCodes.linkedinProfile, "Linkedin Profile")}
                         </ul>
                         <div className="tab-content">
-                            <div role="tabpanel" className="tab-pane fade in active" id="CV_REVIEW-comments-selection-panel">
-                                {this._listCategory(Category.productCodes.cv)}
-                                {this._assessmentForm(Category.productCodes.cv)}
-                            </div>
-                            <div role="tabpanel" className="tab-pane fade" id="COVER_LETTER_REVIEW-comments-selection-panel">
-                                {this._listCategory(Category.productCodes.coverLetter)}
-                                {this._assessmentForm(Category.productCodes.coverLetter)}
-                            </div>
-                            <div role="tabpanel" className="tab-pane fade" id="LINKEDIN_PROFILE_REVIEW-comments-selection-panel">
-                                {this._listCategory(Category.productCodes.linkedinProfile)}
-                                {this._assessmentForm(Category.productCodes.linkedinProfile)}
-                            </div>
+                            {this._tabPane(Category.productCodes.cv, true)}
+                            {this._tabPane(Category.productCodes.coverLetter)}
+                            {this._tabPane(Category.productCodes.linkedinProfile)}
                         </div>
                     </div>
                 </div>);
@@ -132,20 +118,46 @@ const controller = {
             return <button className="btn btn-primary">Preview assessment</button>;
         },
 
+        _tab(categoryProductCode, label, isActive = false) {
+            const classes = classNames({
+                active: isActive
+            });
+            const attr = `${categoryProductCode}-comments-selection-panel`;
+
+            return (
+                <li role="presentation" className={classes}>
+                    <a href={`#${attr}`} aria-controls={attr} role="tab" data-toggle="tab" onClick={this._handleTabClick}>{label}</a>
+                </li>);
+        },
+
+        _tabPane(categoryProductCode, isActive = false) {
+            const classes = classNames({
+                "tab-pane fade in": true,
+                active: isActive
+            });
+            const attr = `${categoryProductCode}-comments-selection-panel`;
+
+            return (
+                <div role="tabpanel" className={classes} id={attr} data-product-code={categoryProductCode}>
+                    {this._listCategory(categoryProductCode)}
+                    {this._assessmentForm(categoryProductCode)}
+                </div>);
+        },
+
         _listCategory(categoryProductCode) {
             if (store.categoryIds) {
                 return store.categoryIds[categoryProductCode].map(categoryId => {
                     const elId = `list-category-${categoryId}`;
-                    const listCommentsForThisCategory = _.filter(store.assessment.listComments(categoryProductCode), ac => ac.categoryId === categoryId);
+                    const listCommentsForThisCategory = _.filter(Assessment.listComments(categoryProductCode), ac => ac.categoryId === categoryId);
 
                     return (
                         <section key={elId} id={elId}>
                             <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
 
                             <ul className="styleless">
-                        {listCommentsForThisCategory.map(ac =>
-                                <GreenRedAssessmentComment key={`assessment-list-comment-${ac.id}`} comment={ac} />
-                        )}
+                            {listCommentsForThisCategory.map(ac =>
+                                    <GreenRedAssessmentComment key={`assessment-list-comment-${ac.id}`} comment={ac} />
+                            )}
                             </ul>
                         </section>);
                 });
@@ -156,37 +168,21 @@ const controller = {
 
         _assessmentForm(categoryProductCode) {
             return (
-                <form className="assessment-form single-column-panel">
+                <form className="report-form single-column-panel">
                     <div className="form-group">
                         <label>Overall comment</label>
                         <textarea className="form-control overall-comment" />
                     </div>
-                    {this._topComments(categoryProductCode)}
+                    {this._reportCategories(categoryProductCode)}
                 </form>);
         },
 
-        _topComments(categoryProductCode) {
-            if (store.categoryIds) {
+        _reportCategories(categoryProductCode) {
+            if (store.categoryIds && Assessment.areAllListCommentsSelected(categoryProductCode)) {
                 return (
                     <ul className="styleless">
                     {store.categoryIds[categoryProductCode].map(categoryId =>
-                            <li key={`assessment-category-${categoryId}`}>
-                                <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
-                                {this._topCommentsForCategory(categoryProductCode, categoryId)}
-                            </li>
-                    )}
-                    </ul>);
-            }
-
-            return null;
-        },
-
-        _topCommentsForCategory(categoryProductCode, categoryId) {
-            if (store.assessment.areAllListCommentsSelected(categoryProductCode)) {
-                return (
-                    <ul className="styleless">
-                    {store.assessment.topComments(categoryProductCode, categoryId).map(comment =>
-                            <TopComment key={`top-comment-${comment.id}`} comment={comment} />
+                        <ReportCategory key={`top-comment-category-${categoryId}`} categoryProductCode={categoryProductCode} categoryId={categoryId} />
                     )}
                     </ul>);
             }

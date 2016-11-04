@@ -50,7 +50,11 @@
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _store = __webpack_require__(2);
+	var _assessment = __webpack_require__(2);
+
+	var _assessment2 = _interopRequireDefault(_assessment);
+
+	var _store = __webpack_require__(5);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -74,9 +78,9 @@
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _topComment = __webpack_require__(14);
+	var _reportCategory = __webpack_require__(14);
 
-	var _topComment2 = _interopRequireDefault(_topComment);
+	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -165,55 +169,16 @@
 	                    React.createElement(
 	                        "ul",
 	                        { className: "nav nav-tabs", role: "tablist" },
-	                        React.createElement(
-	                            "li",
-	                            { role: "presentation", className: "active" },
-	                            React.createElement(
-	                                "a",
-	                                { href: "#CV_REVIEW-comments-selection-panel", "aria-controls": "CV_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
-	                                "CV"
-	                            )
-	                        ),
-	                        React.createElement(
-	                            "li",
-	                            { role: "presentation" },
-	                            React.createElement(
-	                                "a",
-	                                { href: "#COVER_LETTER_REVIEW-comments-selection-panel", "aria-controls": "COVER_LETTER_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
-	                                "Cover Letter"
-	                            )
-	                        ),
-	                        React.createElement(
-	                            "li",
-	                            { role: "presentation" },
-	                            React.createElement(
-	                                "a",
-	                                { href: "#LINKEDIN_PROFILE_REVIEW-comments-selection-panel", "aria-controls": "LINKEDIN_PROFILE_REVIEW-comments-selection-panel", role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
-	                                "Linkedin Profile"
-	                            )
-	                        )
+	                        this._tab(_category2.default.productCodes.cv, "CV", true),
+	                        this._tab(_category2.default.productCodes.coverLetter, "Cover Letter"),
+	                        this._tab(_category2.default.productCodes.linkedinProfile, "Linkedin Profile")
 	                    ),
 	                    React.createElement(
 	                        "div",
 	                        { className: "tab-content" },
-	                        React.createElement(
-	                            "div",
-	                            { role: "tabpanel", className: "tab-pane fade in active", id: "CV_REVIEW-comments-selection-panel" },
-	                            this._listCategory(_category2.default.productCodes.cv),
-	                            this._assessmentForm(_category2.default.productCodes.cv)
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { role: "tabpanel", className: "tab-pane fade", id: "COVER_LETTER_REVIEW-comments-selection-panel" },
-	                            this._listCategory(_category2.default.productCodes.coverLetter),
-	                            this._assessmentForm(_category2.default.productCodes.coverLetter)
-	                        ),
-	                        React.createElement(
-	                            "div",
-	                            { role: "tabpanel", className: "tab-pane fade", id: "LINKEDIN_PROFILE_REVIEW-comments-selection-panel" },
-	                            this._listCategory(_category2.default.productCodes.linkedinProfile),
-	                            this._assessmentForm(_category2.default.productCodes.linkedinProfile)
-	                        )
+	                        this._tabPane(_category2.default.productCodes.cv, true),
+	                        this._tabPane(_category2.default.productCodes.coverLetter),
+	                        this._tabPane(_category2.default.productCodes.linkedinProfile)
 	                    )
 	                )
 	            );
@@ -266,11 +231,45 @@
 	                "Preview assessment"
 	            );
 	        },
+	        _tab: function _tab(categoryProductCode, label) {
+	            var isActive = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+	            var classes = classNames({
+	                active: isActive
+	            });
+	            var attr = categoryProductCode + "-comments-selection-panel";
+
+	            return React.createElement(
+	                "li",
+	                { role: "presentation", className: classes },
+	                React.createElement(
+	                    "a",
+	                    { href: "#" + attr, "aria-controls": attr, role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
+	                    label
+	                )
+	            );
+	        },
+	        _tabPane: function _tabPane(categoryProductCode) {
+	            var isActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	            var classes = classNames({
+	                "tab-pane fade in": true,
+	                active: isActive
+	            });
+	            var attr = categoryProductCode + "-comments-selection-panel";
+
+	            return React.createElement(
+	                "div",
+	                { role: "tabpanel", className: classes, id: attr, "data-product-code": categoryProductCode },
+	                this._listCategory(categoryProductCode),
+	                this._assessmentForm(categoryProductCode)
+	            );
+	        },
 	        _listCategory: function _listCategory(categoryProductCode) {
 	            if (_store2.default.categoryIds) {
 	                return _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
 	                    var elId = "list-category-" + categoryId;
-	                    var listCommentsForThisCategory = _.filter(_store2.default.assessment.listComments(categoryProductCode), function (ac) {
+	                    var listCommentsForThisCategory = _.filter(_assessment2.default.listComments(categoryProductCode), function (ac) {
 	                        return ac.categoryId === categoryId;
 	                    });
 
@@ -298,7 +297,7 @@
 	        _assessmentForm: function _assessmentForm(categoryProductCode) {
 	            return React.createElement(
 	                "form",
-	                { className: "assessment-form single-column-panel" },
+	                { className: "report-form single-column-panel" },
 	                React.createElement(
 	                    "div",
 	                    { className: "form-group" },
@@ -309,40 +308,16 @@
 	                    ),
 	                    React.createElement("textarea", { className: "form-control overall-comment" })
 	                ),
-	                this._topComments(categoryProductCode)
+	                this._reportCategories(categoryProductCode)
 	            );
 	        },
-	        _topComments: function _topComments(categoryProductCode) {
-	            var _this = this;
-
-	            if (_store2.default.categoryIds) {
+	        _reportCategories: function _reportCategories(categoryProductCode) {
+	            if (_store2.default.categoryIds && _assessment2.default.areAllListCommentsSelected(categoryProductCode)) {
 	                return React.createElement(
 	                    "ul",
 	                    { className: "styleless" },
 	                    _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
-	                        return React.createElement(
-	                            "li",
-	                            { key: "assessment-category-" + categoryId },
-	                            React.createElement(
-	                                "h3",
-	                                null,
-	                                _category2.default.titles[_store2.default.order.languageCode][categoryId]
-	                            ),
-	                            _this._topCommentsForCategory(categoryProductCode, categoryId)
-	                        );
-	                    })
-	                );
-	            }
-
-	            return null;
-	        },
-	        _topCommentsForCategory: function _topCommentsForCategory(categoryProductCode, categoryId) {
-	            if (_store2.default.assessment.areAllListCommentsSelected(categoryProductCode)) {
-	                return React.createElement(
-	                    "ul",
-	                    { className: "styleless" },
-	                    _store2.default.assessment.topComments(categoryProductCode, categoryId).map(function (comment) {
-	                        return React.createElement(_topComment2.default, { key: "top-comment-" + comment.id, comment: comment });
+	                        return React.createElement(_reportCategory2.default, { key: "top-comment-category-" + categoryId, categoryProductCode: categoryProductCode, categoryId: categoryId });
 	                    })
 	                );
 	            }
@@ -451,6 +426,9 @@
 	                return this.productCodes.linkedinProfile;
 	        }
 	    }
+
+	    // Instance
+
 	};
 
 	exports.default = Category;
@@ -466,199 +444,17 @@
 	});
 	exports.default = undefined;
 
-	var _account = __webpack_require__(3);
-
-	var _account2 = _interopRequireDefault(_account);
-
-	var _order = __webpack_require__(4);
-
-	var _order2 = _interopRequireDefault(_order);
-
-	var _assessment = __webpack_require__(6);
-
-	var _assessment2 = _interopRequireDefault(_assessment);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var store = {
-	    reactComponent: null,
-	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
-	    config: CR.ControllerData.config,
-	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
-	    allDefaultComments: CR.ControllerData.allDefaultComments,
-	    allCommentVariations: CR.ControllerData.allCommentVariations,
-	    assessment: Object.create(_assessment2.default),
-
-	    init: function init() {
-	        this._initCategories();
-	    },
-	    updateListComment: function updateListComment(comment) {
-	        this.assessment.updateListComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    updateTopComment: function updateTopComment(comment) {
-	        this.assessment.updateTopComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    resetTopComment: function resetTopComment(comment) {
-	        this.assessment.resetTopComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    removeTopComment: function removeTopComment(comment) {
-	        this.assessment.removeTopComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    _initCategories: function _initCategories() {
-	        var predicate = function predicate(dc) {
-	            return dc.categoryId;
-	        };
-
-	        this.categoryIds = {
-	            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
-	            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
-	            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
-	        };
-
-	        this.reactComponent.forceUpdate();
-	    }
-	};
-
-	exports.default = store;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Account = {
-
-	    // Static
-	    types: {
-	        customer: 2,
-	        rater: 3,
-	        admin: 1
-	    },
-
-	    isAdmin: function isAdmin() {
-	        return this.type === this.types.admin;
-	    }
-	};
-
-	exports.default = Account;
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
-
-	var _product = __webpack_require__(5);
-
-	var _product2 = _interopRequireDefault(_product);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Order = {
-
-	    // Static
-	    statuses: {
-	        notPaid: -1,
-	        paid: 0,
-	        inProgress: 1,
-	        awaitingFeedback: 4,
-	        scheduled: 3,
-	        completed: 2
-	    },
-	    fileNamePrefixSeparator: "-",
-
-	    documentUrl: function documentUrl(config, productCode) {
-	        var urlMiddle = "cv";
-
-	        switch (productCode) {
-	            case _product2.default.codes.COVER_LETTER_REVIEW:
-	                urlMiddle = "cover-letter";
-	                break;
-	            case _product2.default.codes.LINKEDIN_PROFILE_REVIEW:
-	                urlMiddle = "linkedin-profile";
-	                break;
-	            default:
-	        }
-
-	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
-	    },
-
-
-	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
-	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
-	    }
-	};
-
-	exports.default = Order;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Product = {
-
-	    // Static
-	    codes: {
-	        CV_REVIEW: "CV_REVIEW",
-	        COVER_LETTER_REVIEW: "COVER_LETTER_REVIEW",
-	        LINKEDIN_PROFILE_REVIEW: "LINKEDIN_PROFILE_REVIEW"
-	    },
-
-	    humanReadableCode: function humanReadableCode(dbCode) {
-	        switch (dbCode) {
-	            case this.codes.CV_REVIEW:
-	                return "CV";
-	            case this.codes.COVER_LETTER_REVIEW:
-	                return "Cover letter";
-	            default:
-	                return "Linkedin";
-	        }
-	    }
-	};
-
-	exports.default = Product;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
-
-	var _global = __webpack_require__(7);
+	var _global = __webpack_require__(3);
 
 	var _category = __webpack_require__(1);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _browser = __webpack_require__(8);
+	var _browser = __webpack_require__(4);
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(5);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -702,38 +498,36 @@
 
 	        return listComments[categoryProductCode];
 	    },
-	    topComments: function topComments(categoryProductCode, categoryId) {
-	        var topCommentsFromLocalStorage = this._getTopCommentsFromLocalStorage();
+	    reportComments: function reportComments(categoryProductCode, categoryId) {
+	        var reportCommentsFromLocalStorage = this._getReportCommentsFromLocalStorage();
 
-	        if (topCommentsFromLocalStorage && topCommentsFromLocalStorage.haveBeenEdited) {
-	            return _.filter(topCommentsFromLocalStorage[categoryProductCode], function (ac) {
+	        if (reportCommentsFromLocalStorage && reportCommentsFromLocalStorage.haveBeenEdited) {
+	            return _.filter(reportCommentsFromLocalStorage[categoryProductCode], function (ac) {
 	                return ac.categoryId === categoryId;
 	            });
 	        }
 
-	        var topCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
+	        var reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
 
-	        this._saveAllTopCommentsInLocalStorage(categoryProductCode, topCommentsForCategory);
+	        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
 
-	        return topCommentsForCategory;
+	        return reportCommentsForCategory;
 	    },
-	    updateTopComment: function updateTopComment(comment) {
+	    resetCategory: function resetCategory(categoryId) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
+	        var reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
+
+	        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
+	    },
+	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 
-	        this._saveTopCommentInLocalStorage(categoryProductCode, comment);
+	        this._saveReportCommentInLocalStorage(categoryProductCode, comment);
 	    },
-	    resetTopComment: function resetTopComment(comment) {
-	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var originalComment = _.find(this.listComments(categoryProductCode), function (c) {
-	            return c.id === comment.id;
-	        });
-
-	        this._saveTopCommentInLocalStorage(categoryProductCode, originalComment);
-	    },
-	    removeTopComment: function removeTopComment(comment) {
+	    removeReportComment: function removeReportComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 
-	        this._removeTopCommentFromLocalStorage(categoryProductCode, comment);
+	        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
 	    },
 	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
 	        var listComments = this._getListCommentsFromLocalStorage();
@@ -797,13 +591,13 @@
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
-	    _getTopCommentsFromLocalStorage: function _getTopCommentsFromLocalStorage() {
+	    _getReportCommentsFromLocalStorage: function _getReportCommentsFromLocalStorage() {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 	        var orderId = _store2.default.order.id;
 
 	        return myAssessments && myAssessments[orderId] ? myAssessments[orderId].topComments : null;
 	    },
-	    _saveAllTopCommentsInLocalStorage: function _saveAllTopCommentsInLocalStorage(categoryProductCode, comments) {
+	    _saveAllReportCommentsInLocalStorage: function _saveAllReportCommentsInLocalStorage(categoryProductCode, comments) {
 	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
@@ -820,7 +614,7 @@
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
-	    _saveTopCommentInLocalStorage: function _saveTopCommentInLocalStorage(categoryProductCode, comment) {
+	    _saveReportCommentInLocalStorage: function _saveReportCommentInLocalStorage(categoryProductCode, comment) {
 	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 	        var commentToUpdate = _.find(myAssessments[orderId].topComments[categoryProductCode], function (c) {
@@ -837,7 +631,7 @@
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
-	    _removeTopCommentFromLocalStorage: function _removeTopCommentFromLocalStorage(categoryProductCode, comment) {
+	    _removeReportCommentFromLocalStorage: function _removeReportCommentFromLocalStorage(categoryProductCode, comment) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 	        var orderId = _store2.default.order.id;
 
@@ -868,12 +662,15 @@
 
 	        return commentWithMostPoints;
 	    }
+
+	    // Instance
+
 	};
 
 	exports.default = Assessment;
 
 /***/ },
-/* 7 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -898,7 +695,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1013,6 +810,192 @@
 	exports.default = Browser;
 
 /***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _account = __webpack_require__(6);
+
+	var _account2 = _interopRequireDefault(_account);
+
+	var _order = __webpack_require__(7);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	var _assessment = __webpack_require__(2);
+
+	var _assessment2 = _interopRequireDefault(_assessment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var store = {
+	    reactComponent: null,
+	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
+	    config: CR.ControllerData.config,
+	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
+	    allDefaultComments: CR.ControllerData.allDefaultComments,
+	    allCommentVariations: CR.ControllerData.allCommentVariations,
+
+	    init: function init() {
+	        this._initCategories();
+	    },
+	    updateListComment: function updateListComment(comment) {
+	        _assessment2.default.updateListComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    resetCategory: function resetCategory(categoryId) {
+	        _assessment2.default.resetCategory(categoryId);
+	        this.reactComponent.forceUpdate();
+	    },
+	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
+	        _assessment2.default.addOrUpdateTopComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    removeReportComment: function removeReportComment(comment) {
+	        _assessment2.default.removeTopComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    _initCategories: function _initCategories() {
+	        var predicate = function predicate(dc) {
+	            return dc.categoryId;
+	        };
+
+	        this.categoryIds = {
+	            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
+	            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
+	            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
+	        };
+
+	        this.reactComponent.forceUpdate();
+	    }
+	};
+
+	exports.default = store;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Account = {
+
+	    // Static
+	    types: {
+	        customer: 2,
+	        rater: 3,
+	        admin: 1
+	    },
+
+	    // Instance
+	    isAdmin: function isAdmin() {
+	        return this.type === this.types.admin;
+	    }
+	};
+
+	exports.default = Account;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _product = __webpack_require__(8);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Order = {
+
+	    // Static
+	    statuses: {
+	        notPaid: -1,
+	        paid: 0,
+	        inProgress: 1,
+	        awaitingFeedback: 4,
+	        scheduled: 3,
+	        completed: 2
+	    },
+	    fileNamePrefixSeparator: "-",
+
+	    // Instance
+	    documentUrl: function documentUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.COVER_LETTER_REVIEW:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.LINKEDIN_PROFILE_REVIEW:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
+	    },
+
+
+	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
+	    isReadOnlyBy: function isReadOnlyBy(raterId) {
+	        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	    }
+	};
+
+	exports.default = Order;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Product = {
+
+	    // Static
+	    codes: {
+	        cv: "CV_REVIEW",
+	        coverLetter: "COVER_LETTER_REVIEW",
+	        linkedinProfile: "LINKEDIN_PROFILE_REVIEW"
+	    },
+
+	    humanReadableCode: function humanReadableCode(dbCode) {
+	        switch (dbCode) {
+	            case this.codes.cv:
+	                return "CV";
+	            case this.codes.coverLetter:
+	                return "Cover letter";
+	            default:
+	                return "Linkedin";
+	        }
+	    }
+
+	    // Instance
+
+	};
+
+	exports.default = Product;
+
+/***/ },
 /* 9 */
 /***/ function(module, exports) {
 
@@ -1079,7 +1062,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(5);
+	var _product = __webpack_require__(8);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1156,7 +1139,7 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(4);
+	var _order = __webpack_require__(7);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -1198,7 +1181,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(5);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1278,7 +1261,12 @@
 	        var c = this.props.comment;
 
 	        c.isRedSelected = false;
-	        c.isGreenSelected = true;
+
+	        // TODO: remove
+	        c.isGreenSelected = !c.isGreenSelected;
+
+	        /* TODO: uncomment when the above code is removed
+	         comment.isGreenSelected = true; */
 
 	        _store2.default.updateListComment(c);
 	    },
@@ -1312,7 +1300,174 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(2);
+	var _category = __webpack_require__(1);
+
+	var _category2 = _interopRequireDefault(_category);
+
+	var _assessment = __webpack_require__(2);
+
+	var _assessment2 = _interopRequireDefault(_assessment);
+
+	var _string = __webpack_require__(15);
+
+	var _string2 = _interopRequireDefault(_string);
+
+	var _keyboard = __webpack_require__(16);
+
+	var _keyboard2 = _interopRequireDefault(_keyboard);
+
+	var _store = __webpack_require__(5);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	var _reportComment = __webpack_require__(17);
+
+	var _reportComment2 = _interopRequireDefault(_reportComment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var categoryId = this.props.categoryId;
+
+	        return React.createElement(
+	            "li",
+	            { ref: "root" },
+	            React.createElement(
+	                "h3",
+	                null,
+	                _category2.default.titles[_store2.default.order.languageCode][categoryId]
+	            ),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
+	            React.createElement(
+	                "ul",
+	                { className: "styleless" },
+	                _assessment2.default.reportComments(this.props.categoryProductCode, categoryId).map(function (comment) {
+	                    return React.createElement(_reportComment2.default, { key: "top-comment-" + comment.id, comment: comment });
+	                })
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "comment-composer" },
+	                React.createElement("p", { onKeyUp: this._handleComposerKeyUp }),
+	                React.createElement("button", { type: "button", className: "styleless fa fa-times", onClick: this._hideComposer })
+	            ),
+	            React.createElement(
+	                "a",
+	                { onClick: this._handleAddCommentClick },
+	                "+ Add comment"
+	            )
+	        );
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this._initElements();
+	    },
+	    _initElements: function _initElements() {
+	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
+
+	        this.$composer = $rootEl.children(".comment-composer");
+
+	        this.$composer.children("p").attr("contenteditable", "true");
+	    },
+	    _handleResetClick: function _handleResetClick() {
+	        _store2.default.resetCategory(this.props.categoryId);
+	    },
+	    _handleAddCommentClick: function _handleAddCommentClick() {
+	        this.$composer.show();
+	    },
+	    _handleComposerKeyUp: function _handleComposerKeyUp(e) {
+	        var $p = $(e.currentTarget);
+
+	        if (e.keyCode === _keyboard2.default.keyCodes.enter) {
+	            this._hideComposer();
+
+	            _store2.default.addOrUpdateReportComment({
+	                id: _string2.default.uuid(),
+	                categoryId: this.props.categoryId,
+	                redText: $p.text()
+	            });
+
+	            $p.text(null);
+	        }
+	    },
+	    _hideComposer: function _hideComposer() {
+	        this.$composer.hide();
+	    }
+	});
+
+	// eslint-disable-next-line no-unused-vars
+	exports.default = Component;
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var StringUtils = {
+	    template: function template(text, key, value) {
+	        var regex = new RegExp("{" + key + "}", "g");
+
+	        return text.replace(regex, value);
+	    },
+	    uuid: function uuid() {
+	        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+	            var r = Math.random() * 16 | 0;
+	            var v = c === "x" ? r : r & 0x3 | 0x8;
+
+	            return v.toString(16);
+	        });
+	    }
+	};
+
+	exports.default = StringUtils;
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Keyboard = {
+	    keyCodes: {
+	        backspace: 8,
+	        tab: 9,
+	        enter: 13,
+	        shift: 16,
+	        ctrl: 17,
+	        alt: 18,
+	        escape: 27,
+	        space: 32
+	    },
+
+	    isPressedKeyText: function isPressedKeyText(e) {
+	        var keyCode = e.keyCode;
+
+	        return keyCode !== this.keyCode.tab && keyCode !== this.keyCode.enter && keyCode !== this.keyCode.shift && keyCode !== this.keyCode.ctrl && keyCode !== this.keyCode.alt && keyCode !== this.keyCode.escape && keyCode !== this.keyCode.space;
+	    }
+	};
+
+	exports.default = Keyboard;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _store = __webpack_require__(5);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1322,16 +1477,19 @@
 	    displayName: "Component",
 	    render: function render() {
 	        var c = this.props.comment;
+	        var liClasses = classNames({
+	            red: c.isRedSelected,
+	            "well-done": c.isWellDone
+	        });
 
 	        return React.createElement(
 	            "li",
-	            { ref: "root", "data-comment-id": c.id },
+	            { ref: "root", "data-comment-id": c.id, className: liClasses },
 	            React.createElement(
 	                "p",
 	                { onBlur: this._handleParagraphBlur },
 	                c.redText
 	            ),
-	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
 	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick })
 	        );
 	    },
@@ -1341,22 +1499,17 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-	        this.$p = $rootEl.children("p");
-
-	        this.$p.attr("contenteditable", "true");
+	        $rootEl.children("p").attr("contenteditable", "true");
 	    },
-	    _handleParagraphBlur: function _handleParagraphBlur() {
+	    _handleParagraphBlur: function _handleParagraphBlur(e) {
 	        var c = this.props.comment;
 
-	        c.redText = this.$p.text();
+	        c.redText = $(e.currentTarget).text();
 
-	        _store2.default.updateTopComment(c);
-	    },
-	    _handleResetClick: function _handleResetClick() {
-	        _store2.default.resetTopComment(this.props.comment);
+	        _store2.default.addOrUpdateReportComment(c);
 	    },
 	    _handleRemoveClick: function _handleRemoveClick() {
-	        _store2.default.removeTopComment(this.props.comment);
+	        _store2.default.removeReportComment(this.props.comment);
 	    }
 	});
 

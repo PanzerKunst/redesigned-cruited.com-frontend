@@ -477,6 +477,7 @@
 	        admin: 1
 	    },
 
+	    // Instance
 	    isAdmin: function isAdmin() {
 	        return this.type === this.types.admin;
 	    }
@@ -514,6 +515,7 @@
 	    },
 	    fileNamePrefixSeparator: "-",
 
+	    // Instance
 	    documentUrl: function documentUrl(config, productCode) {
 	        var urlMiddle = "cv";
 
@@ -552,21 +554,24 @@
 
 	    // Static
 	    codes: {
-	        CV_REVIEW: "CV_REVIEW",
-	        COVER_LETTER_REVIEW: "COVER_LETTER_REVIEW",
-	        LINKEDIN_PROFILE_REVIEW: "LINKEDIN_PROFILE_REVIEW"
+	        cv: "CV_REVIEW",
+	        coverLetter: "COVER_LETTER_REVIEW",
+	        linkedinProfile: "LINKEDIN_PROFILE_REVIEW"
 	    },
 
 	    humanReadableCode: function humanReadableCode(dbCode) {
 	        switch (dbCode) {
-	            case this.codes.CV_REVIEW:
+	            case this.codes.cv:
 	                return "CV";
-	            case this.codes.COVER_LETTER_REVIEW:
+	            case this.codes.coverLetter:
 	                return "Cover letter";
 	            default:
 	                return "Linkedin";
 	        }
 	    }
+
+	    // Instance
+
 	};
 
 	exports.default = Product;

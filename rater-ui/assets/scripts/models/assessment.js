@@ -37,37 +37,37 @@ const Assessment = {
         return listComments[categoryProductCode];
     },
 
-    topComments(categoryProductCode, categoryId) {
-        const topCommentsFromLocalStorage = this._getTopCommentsFromLocalStorage();
+    reportComments(categoryProductCode, categoryId) {
+        const reportCommentsFromLocalStorage = this._getReportCommentsFromLocalStorage();
 
-        if (topCommentsFromLocalStorage && topCommentsFromLocalStorage.haveBeenEdited) {
-            return _.filter(topCommentsFromLocalStorage[categoryProductCode], ac => ac.categoryId === categoryId);
+        if (reportCommentsFromLocalStorage && reportCommentsFromLocalStorage.haveBeenEdited) {
+            return _.filter(reportCommentsFromLocalStorage[categoryProductCode], ac => ac.categoryId === categoryId);
         }
 
-        const topCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
+        const reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
 
-        this._saveAllTopCommentsInLocalStorage(categoryProductCode, topCommentsForCategory);
+        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
 
-        return topCommentsForCategory;
+        return reportCommentsForCategory;
     },
 
-    updateTopComment(comment) {
-        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+    resetCategory(categoryId) {
+        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+        const reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
 
-        this._saveTopCommentInLocalStorage(categoryProductCode, comment);
+        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
     },
 
-    resetTopComment(comment) {
+    addOrUpdateReportComment(comment) {
         const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-        const originalComment = _.find(this.listComments(categoryProductCode), c => c.id === comment.id);
 
-        this._saveTopCommentInLocalStorage(categoryProductCode, originalComment);
+        this._saveReportCommentInLocalStorage(categoryProductCode, comment);
     },
 
-    removeTopComment(comment) {
+    removeReportComment(comment) {
         const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
 
-        this._removeTopCommentFromLocalStorage(categoryProductCode, comment);
+        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
     },
 
     areAllListCommentsSelected(categoryProductCode) {
@@ -133,14 +133,14 @@ const Assessment = {
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
-    _getTopCommentsFromLocalStorage() {
+    _getReportCommentsFromLocalStorage() {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
         const orderId = store.order.id;
 
         return myAssessments && myAssessments[orderId] ? myAssessments[orderId].topComments : null;
     },
 
-    _saveAllTopCommentsInLocalStorage(categoryProductCode, comments) {
+    _saveAllReportCommentsInLocalStorage(categoryProductCode, comments) {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
@@ -154,7 +154,7 @@ const Assessment = {
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
-    _saveTopCommentInLocalStorage(categoryProductCode, comment) {
+    _saveReportCommentInLocalStorage(categoryProductCode, comment) {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
         const commentToUpdate = _.find(myAssessments[orderId].topComments[categoryProductCode], c => c.id === comment.id);
@@ -170,7 +170,7 @@ const Assessment = {
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
-    _removeTopCommentFromLocalStorage(categoryProductCode, comment) {
+    _removeReportCommentFromLocalStorage(categoryProductCode, comment) {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
         const orderId = store.order.id;
 
@@ -198,6 +198,8 @@ const Assessment = {
 
         return commentWithMostPoints;
     }
+
+    // Instance
 };
 
 export {Assessment as default};

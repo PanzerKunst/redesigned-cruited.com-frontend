@@ -9,29 +9,28 @@ const store = {
     order: Object.assign(Object.create(Order), CR.ControllerData.order),
     allDefaultComments: CR.ControllerData.allDefaultComments,
     allCommentVariations: CR.ControllerData.allCommentVariations,
-    assessment: Object.create(Assessment),
 
     init() {
         this._initCategories();
     },
 
     updateListComment(comment) {
-        this.assessment.updateListComment(comment);
+        Assessment.updateListComment(comment);
         this.reactComponent.forceUpdate();
     },
 
-    updateTopComment(comment) {
-        this.assessment.updateTopComment(comment);
+    resetCategory(categoryId) {
+        Assessment.resetCategory(categoryId);
         this.reactComponent.forceUpdate();
     },
 
-    resetTopComment(comment) {
-        this.assessment.resetTopComment(comment);
+    addOrUpdateReportComment(comment) {
+        Assessment.addOrUpdateTopComment(comment);
         this.reactComponent.forceUpdate();
     },
 
-    removeTopComment(comment) {
-        this.assessment.removeTopComment(comment);
+    removeReportComment(comment) {
+        Assessment.removeTopComment(comment);
         this.reactComponent.forceUpdate();
     },
 

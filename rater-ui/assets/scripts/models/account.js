@@ -7,6 +7,7 @@ const Account = {
         admin: 1
     },
 
+    // Instance
     isAdmin() {
         return this.type === this.types.admin;
     }

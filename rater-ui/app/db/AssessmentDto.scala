@@ -5,6 +5,7 @@ import javax.inject.{Inject, Singleton}
 import anorm.SqlParser._
 import anorm._
 import models._
+import models.frontend.FrontendCommentVariation
 import play.api.Logger
 import play.api.db.Database
 
@@ -17,7 +18,7 @@ class AssessmentDto @Inject()(db: Database) {
       val query = """
       select dc.id, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, dc.type as doc_type, score, grouped
       from defaults dc
-      inner join default_categories c on c.id = dc.category
+        inner join default_categories c on c.id = dc.category
       where dc.shw = 1
         and c.shw = 1
       order by category, dc.ordd;"""
@@ -46,26 +47,43 @@ class AssessmentDto @Inject()(db: Database) {
     }
   }
 
-  def allCommentVariations: List[CommentVariation] = {
+  def allCommentVariations: List[FrontendCommentVariation] = {
     db.withConnection { implicit c =>
       val query = """
-      select v.id, id_default, variation,
+      select v.id, variation,
+        dc.id as id_default, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, dc.type as doc_type, score, grouped,
         variation_type.tag_type, variation_type.edition_id as tag_id
       from default_variations v
-      inner join product_edition_variation variation_type on variation_type.variation_id = v.id
-      where shw = 1
+        inner join defaults dc on dc.id = v.id_default
+        inner join default_categories c on c.id = dc.category
+        inner join product_edition_variation variation_type on variation_type.variation_id = v.id
+      where v.shw = 1
+        and dc.shw = 1
+        and c.shw = 1
       order by id_default, tag_type;"""
 
       Logger.info("AssessmentDto.getAllCommentVariations():" + query)
 
-      val rowParser = long("id") ~ long("id_default") ~ str("variation") ~
+      val rowParser = long("id") ~ str("variation") ~
+        long("id_default") ~ long("category_id") ~ str("name_good") ~ str("name_bad") ~ str("doc_type") ~ int("score") ~ int("grouped") ~
         str("tag_type") ~ long("tag_id") map {
-        case id ~ defaultCommentId ~ text ~
+        case id ~ text ~
+          defaultCommentId ~ categoryId ~ greenText ~ redText ~ dbDocType ~ points ~ grouped ~
           tagType ~ tagId =>
 
-          CommentVariation(
+          FrontendCommentVariation(
             id = id,
-            defaultCommentId = defaultCommentId,
+            defaultComment = DefaultComment(
+              id = defaultCommentId,
+              categoryId = categoryId,
+              greenText = greenText,
+              redText = redText,
+              points = points,
+              isGrouped = grouped match {
+                case DefaultComment.dbGroupedFalse => false
+                case _ => true
+              }
+            ),
             text = text,
             editionId = tagType match {
               case CommentVariation.dbTagTypeEdition => Some(tagId)

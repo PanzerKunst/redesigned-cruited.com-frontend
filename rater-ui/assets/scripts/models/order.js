@@ -13,6 +13,7 @@ const Order = {
     },
     fileNamePrefixSeparator: "-",
 
+    // Instance
     documentUrl(config, productCode) {
         let urlMiddle = "cv";
 

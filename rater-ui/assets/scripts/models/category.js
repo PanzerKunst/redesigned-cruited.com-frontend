@@ -73,6 +73,8 @@ const Category = {
                 return this.productCodes.linkedinProfile;
         }
     }
+
+    // Instance
 };
 
 export {Category as default};
