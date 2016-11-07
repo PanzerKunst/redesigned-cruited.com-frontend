@@ -10,9 +10,11 @@ const Component = React.createClass({
         });
 
         const greenParagraphClasses = classNames({
+            "comment-paragraph": true,
             selected: c.isGreenSelected
         });
         const redParagraphClasses = classNames({
+            "comment-paragraph": true,
             selected: c.isRedSelected
         });
 

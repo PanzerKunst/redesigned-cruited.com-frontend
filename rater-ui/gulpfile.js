@@ -153,6 +153,7 @@ gulp.task("js-libs-concat", function() {
         gulp.src("node_modules/bootstrap-sass/assets/javascripts/bootstrap/modal.js"),
         gulp.src("node_modules/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"),
         gulp.src("node_modules/bootstrap-sass/assets/javascripts/bootstrap/tab.js"),
+        gulp.src("node_modules/sortablejs/Sortable.js"),
         gulp.src(scriptVendorFiles))
         .pipe(concat(scriptDistFileNameConcat))
         .pipe(gulp.dest(scriptDistDir));

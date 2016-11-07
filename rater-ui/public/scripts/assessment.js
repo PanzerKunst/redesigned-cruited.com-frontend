@@ -54,31 +54,31 @@
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _store = __webpack_require__(5);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _positionSought = __webpack_require__(9);
+	var _positionSought = __webpack_require__(10);
 
 	var _positionSought2 = _interopRequireDefault(_positionSought);
 
-	var _employerSought = __webpack_require__(10);
+	var _employerSought = __webpack_require__(11);
 
 	var _employerSought2 = _interopRequireDefault(_employerSought);
 
-	var _orderTags = __webpack_require__(11);
+	var _orderTags = __webpack_require__(12);
 
 	var _orderTags2 = _interopRequireDefault(_orderTags);
 
-	var _timeLeft = __webpack_require__(12);
+	var _timeLeft = __webpack_require__(13);
 
 	var _timeLeft2 = _interopRequireDefault(_timeLeft);
 
-	var _greenRedAssessmentComment = __webpack_require__(13);
+	var _greenRedAssessmentComment = __webpack_require__(14);
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _reportCategory = __webpack_require__(14);
+	var _reportCategory = __webpack_require__(15);
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
@@ -454,7 +454,11 @@
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _store = __webpack_require__(5);
+	var _array = __webpack_require__(5);
+
+	var _array2 = _interopRequireDefault(_array);
+
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -528,6 +532,14 @@
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 
 	        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
+	    },
+	    reorderReportComment: function reorderReportComment(categoryId, oldIndex, newIndex) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
+	        var reportCommentsForCategory = this.reportComments(categoryProductCode, categoryId);
+
+	        _array2.default.move(reportCommentsForCategory, oldIndex, newIndex);
+
+	        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
 	    },
 	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
 	        var listComments = this._getListCommentsFromLocalStorage();
@@ -603,10 +615,10 @@
 
 	        myAssessments[orderId].topComments = myAssessments[orderId].topComments || {};
 
-	        // We remove the comments of the same ID
+	        // We remove all comments of that category
 	        comments.forEach(function (comment) {
 	            return _.remove(myAssessments[orderId].topComments[categoryProductCode], function (c) {
-	                return c.id === comment.id;
+	                return c.categoryId === comment.categoryId;
 	            });
 	        });
 
@@ -811,6 +823,23 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var ArrayUtils = {
+	    move: function move(array, from, to) {
+	        array.splice(to, 0, array.splice(from, 1)[0]);
+	    }
+	};
+
+	exports.default = ArrayUtils;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -820,11 +849,11 @@
 	});
 	exports.default = undefined;
 
-	var _account = __webpack_require__(6);
+	var _account = __webpack_require__(7);
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _order = __webpack_require__(7);
+	var _order = __webpack_require__(8);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -854,12 +883,15 @@
 	        this.reactComponent.forceUpdate();
 	    },
 	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
-	        _assessment2.default.addOrUpdateTopComment(comment);
+	        _assessment2.default.addOrUpdateReportComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
 	    removeReportComment: function removeReportComment(comment) {
-	        _assessment2.default.removeTopComment(comment);
+	        _assessment2.default.removeReportComment(comment);
 	        this.reactComponent.forceUpdate();
+	    },
+	    handleReportCommentsReorder: function handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
+	        _assessment2.default.reorderReportComment(categoryId, oldIndex, newIndex);
 	    },
 	    _initCategories: function _initCategories() {
 	        var predicate = function predicate(dc) {
@@ -879,7 +911,7 @@
 	exports.default = store;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -905,7 +937,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -915,7 +947,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(8);
+	var _product = __webpack_require__(9);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -961,7 +993,7 @@
 	exports.default = Order;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -996,7 +1028,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1024,7 +1056,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1052,7 +1084,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1062,7 +1094,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(8);
+	var _product = __webpack_require__(9);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1129,7 +1161,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1139,7 +1171,7 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(7);
+	var _order = __webpack_require__(8);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -1171,7 +1203,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1181,7 +1213,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(5);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1198,9 +1230,11 @@
 	        });
 
 	        var greenParagraphClasses = classNames({
+	            "comment-paragraph": true,
 	            selected: c.isGreenSelected
 	        });
 	        var redParagraphClasses = classNames({
+	            "comment-paragraph": true,
 	            selected: c.isRedSelected
 	        });
 
@@ -1290,7 +1324,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1308,19 +1342,19 @@
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _string = __webpack_require__(15);
+	var _string = __webpack_require__(16);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _keyboard = __webpack_require__(16);
+	var _keyboard = __webpack_require__(17);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _store = __webpack_require__(5);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _reportComment = __webpack_require__(17);
+	var _reportComment = __webpack_require__(18);
 
 	var _reportComment2 = _interopRequireDefault(_reportComment);
 
@@ -1333,7 +1367,7 @@
 
 	        return React.createElement(
 	            "li",
-	            { ref: "root" },
+	            { ref: "root", className: "report-category" },
 	            React.createElement(
 	                "h3",
 	                null,
@@ -1350,13 +1384,13 @@
 	            React.createElement(
 	                "div",
 	                { className: "comment-composer" },
-	                React.createElement("p", { onKeyUp: this._handleComposerKeyUp }),
+	                React.createElement("textarea", { className: "form-control", onKeyUp: this._handleComposerKeyUp }),
 	                React.createElement("button", { type: "button", className: "styleless fa fa-times", onClick: this._hideComposer })
 	            ),
 	            React.createElement(
 	                "a",
 	                { onClick: this._handleAddCommentClick },
-	                "+ Add comment"
+	                "Add comment"
 	            )
 	        );
 	    },
@@ -1366,18 +1400,34 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
+	        this.$commentList = $rootEl.children("ul");
 	        this.$composer = $rootEl.children(".comment-composer");
+	        this.$textarea = this.$composer.children("textarea");
 
-	        this.$composer.children("p").attr("contenteditable", "true");
+	        this._makeCommentsSortable();
+	    },
+	    _makeCommentsSortable: function _makeCommentsSortable() {
+	        var _this = this;
+
+	        // eslint-disable-next-line no-new
+	        new Sortable(this.$commentList.get(0), {
+	            animation: 150,
+	            onUpdate: function onUpdate(e) {
+	                return _store2.default.handleReportCommentsReorder(_this.props.categoryId, e.oldIndex, e.newIndex);
+	            },
+	            handle: ".fa-bars"
+	        });
 	    },
 	    _handleResetClick: function _handleResetClick() {
 	        _store2.default.resetCategory(this.props.categoryId);
 	    },
 	    _handleAddCommentClick: function _handleAddCommentClick() {
 	        this.$composer.show();
+	        this.$textarea.focus();
+	        this._adaptTextareaHeight();
 	    },
 	    _handleComposerKeyUp: function _handleComposerKeyUp(e) {
-	        var $p = $(e.currentTarget);
+	        this._adaptTextareaHeight();
 
 	        if (e.keyCode === _keyboard2.default.keyCodes.enter) {
 	            this._hideComposer();
@@ -1385,10 +1435,17 @@
 	            _store2.default.addOrUpdateReportComment({
 	                id: _string2.default.uuid(),
 	                categoryId: this.props.categoryId,
-	                redText: $p.text()
+	                redText: this.$textarea.val()
 	            });
 
-	            $p.text(null);
+	            this.$textarea.val(null);
+	        }
+	    },
+	    _adaptTextareaHeight: function _adaptTextareaHeight() {
+	        var ta = this.$textarea.get(0);
+
+	        if (ta.clientHeight < ta.scrollHeight) {
+	            ta.style.height = ta.scrollHeight + 2 + "px";
 	        }
 	    },
 	    _hideComposer: function _hideComposer() {
@@ -1400,7 +1457,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1427,7 +1484,7 @@
 	exports.default = StringUtils;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1457,7 +1514,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1467,7 +1524,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(5);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1478,16 +1535,17 @@
 	    render: function render() {
 	        var c = this.props.comment;
 	        var liClasses = classNames({
-	            red: c.isRedSelected,
+	            "from-list": c.isRedSelected,
 	            "well-done": c.isWellDone
 	        });
 
 	        return React.createElement(
 	            "li",
 	            { ref: "root", "data-comment-id": c.id, className: liClasses },
+	            React.createElement("span", { className: "fa fa-bars" }),
 	            React.createElement(
 	                "p",
-	                { onBlur: this._handleParagraphBlur },
+	                { className: "comment-paragraph", onBlur: this._handleParagraphBlur },
 	                c.redText
 	            ),
 	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick })

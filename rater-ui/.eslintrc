@@ -149,6 +149,7 @@ globals:
     classNames: true
     TweenLite: true
     moment: true
+    Sortable: true
     Modernizr: true
     CR: true
 

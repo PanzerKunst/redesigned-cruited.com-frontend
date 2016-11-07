@@ -4,13 +4,14 @@ const Component = React.createClass({
     render() {
         const c = this.props.comment;
         const liClasses = classNames({
-            red: c.isRedSelected,
+            "from-list": c.isRedSelected,
             "well-done": c.isWellDone
         });
 
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
-                <p onBlur={this._handleParagraphBlur}>{c.redText}</p>
+                <span className="fa fa-bars"></span>
+                <p className="comment-paragraph" onBlur={this._handleParagraphBlur}>{c.redText}</p>
                 <button type="button" className="styleless fa fa-trash" onClick={this._handleRemoveClick} />
             </li>);
     },

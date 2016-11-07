@@ -25,13 +25,17 @@ const store = {
     },
 
     addOrUpdateReportComment(comment) {
-        Assessment.addOrUpdateTopComment(comment);
+        Assessment.addOrUpdateReportComment(comment);
         this.reactComponent.forceUpdate();
     },
 
     removeReportComment(comment) {
-        Assessment.removeTopComment(comment);
+        Assessment.removeReportComment(comment);
         this.reactComponent.forceUpdate();
+    },
+
+    handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
+        Assessment.reorderReportComment(categoryId, oldIndex, newIndex);
     },
 
     _initCategories() {

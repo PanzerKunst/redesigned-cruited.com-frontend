@@ -1,6 +1,7 @@
 import {localStorageKeys} from "../global";
 import Category from "./category";
 import Browser from "../services/browser";
+import ArrayUtils from "../services/array";
 import store from "../controllers/assessment/store";
 
 const Assessment = {
@@ -68,6 +69,15 @@ const Assessment = {
         const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
 
         this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
+    },
+
+    reorderReportComment(categoryId, oldIndex, newIndex) {
+        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+        const reportCommentsForCategory = this.reportComments(categoryProductCode, categoryId);
+
+        ArrayUtils.move(reportCommentsForCategory, oldIndex, newIndex);
+
+        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
     },
 
     areAllListCommentsSelected(categoryProductCode) {
@@ -146,8 +156,8 @@ const Assessment = {
 
         myAssessments[orderId].topComments = myAssessments[orderId].topComments || {};
 
-        // We remove the comments of the same ID
-        comments.forEach(comment => _.remove(myAssessments[orderId].topComments[categoryProductCode], c => c.id === comment.id));
+        // We remove all comments of that category
+        comments.forEach(comment => _.remove(myAssessments[orderId].topComments[categoryProductCode], c => c.categoryId === comment.categoryId));
 
         myAssessments[orderId].topComments[categoryProductCode] = _.concat(myAssessments[orderId].topComments[categoryProductCode] || [], comments);
 
