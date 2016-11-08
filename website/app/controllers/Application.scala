@@ -122,7 +122,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
 
     if (request.queryString.contains("lang")) {
-      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString.get("lang").get.head).get
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString.get("lang").get.head).getOrElse(SupportedLanguageDto.all.head)
     }
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
@@ -163,7 +163,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
         // We also need to update any eventual temp order with that new account ID
         SessionService.getOrderId(request.session) match {
-          case None => BadRequest("""You have uncovered a bug in the \"Account Creation\" page of our web application.
+          case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
             We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
             and that the account ID involved was '""" + accountId + """'.""")
@@ -242,7 +242,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                 val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
                 OrderDto.getOfId(orderId) match {
-                  case None => BadRequest("""You have uncovered a bug in the \"Payment\" page of our web application.
+                  case None => BadRequest( """You have uncovered a bug in the \"Payment\" page of our web application.
             We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
             that the account ID involved was '""" + accountId + """' and the order ID involved was '""" + orderId + """'""")
@@ -435,10 +435,19 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
       val accountId = SessionService.getAccountId(request.session) match {
         case Some(id) => id
-        case None => AccountDto.getOfLinkedinAccountId((linkedinProfile \ "id").as[String]) match {
-          case None => AccountService.generateTempAccountIdAndStoreAccount(request.session)
-          case Some(account) => account.id
-        }
+        case None =>
+          val linkedinAccountId = (linkedinProfile \ "id").as[String]
+
+          AccountDto.getOfLinkedinAccountId(linkedinAccountId) match {
+            case Some(account) => account.id
+            case None =>
+              val emailAddressFromLinkedin = (linkedinProfile \ "emailAddress").as[String]
+
+              AccountDto.getOfEmailAddress(emailAddressFromLinkedin) match {
+                case Some(existingAccount) => existingAccount.id
+                case None => AccountService.generateTempAccountIdAndStoreAccount(request.session)
+              }
+          }
       }
 
       AccountDto.getOfId(accountId) match {
