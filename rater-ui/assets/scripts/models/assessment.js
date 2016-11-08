@@ -7,10 +7,11 @@ import store from "../controllers/assessment/store";
 const Assessment = {
 
     // Static
-    nbTopComments: 3,
+    nbReportComments: 3,
+    minScoreForWellDoneComment: 80,
 
     updateListComment(comment) {
-        const listComments = this._getListCommentsFromLocalStorage();
+        const listComments = this._listCommentsFromLocalStorage();
         let listCommentsToUpdate = listComments.cv;
 
         if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
@@ -28,7 +29,7 @@ const Assessment = {
     },
 
     listComments(categoryProductCode) {
-        let listComments = this._getListCommentsFromLocalStorage();
+        let listComments = this._listCommentsFromLocalStorage();
 
         if (!listComments) {
             listComments = _.cloneDeep(store.allDefaultComments);
@@ -38,50 +39,8 @@ const Assessment = {
         return listComments[categoryProductCode];
     },
 
-    reportComments(categoryProductCode, categoryId) {
-        const reportCommentsFromLocalStorage = this._getReportCommentsFromLocalStorage();
-
-        if (reportCommentsFromLocalStorage && reportCommentsFromLocalStorage.haveBeenEdited) {
-            return _.filter(reportCommentsFromLocalStorage[categoryProductCode], ac => ac.categoryId === categoryId);
-        }
-
-        const reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
-
-        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
-
-        return reportCommentsForCategory;
-    },
-
-    resetCategory(categoryId) {
-        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
-        const reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
-
-        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
-    },
-
-    addOrUpdateReportComment(comment) {
-        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-
-        this._saveReportCommentInLocalStorage(categoryProductCode, comment);
-    },
-
-    removeReportComment(comment) {
-        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-
-        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
-    },
-
-    reorderReportComment(categoryId, oldIndex, newIndex) {
-        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
-        const reportCommentsForCategory = this.reportComments(categoryProductCode, categoryId);
-
-        ArrayUtils.move(reportCommentsForCategory, oldIndex, newIndex);
-
-        this._saveAllReportCommentsInLocalStorage(categoryProductCode, reportCommentsForCategory);
-    },
-
     areAllListCommentsSelected(categoryProductCode) {
-        const listComments = this._getListCommentsFromLocalStorage();
+        const listComments = this._listCommentsFromLocalStorage();
         const listCommentsForCategory = listComments ? listComments[categoryProductCode] : null;
 
         if (!listCommentsForCategory) {
@@ -99,15 +58,107 @@ const Assessment = {
         return true;
     },
 
+    /* TODO: remove
+     reportComments(categoryProductCode, categoryId) {
+     const reportFromLocalStorage = this._getReportFromLocalStorage();
+
+     if (reportFromLocalStorage && reportFromLocalStorage.hasBeenEdited) {
+     return reportFromLocalStorage[categoryProductCode][`${categoryId}`].comments;
+     }
+
+     const reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
+
+     this._saveReportCommentsInLocalStorage(categoryProductCode, categoryId, reportCommentsForCategory);
+
+     return reportCommentsForCategory;
+     },
+
+     reportWellDoneComment(categoryProductCode, categoryId) {
+     const reportFromLocalStorage = this._getReportFromLocalStorage();
+
+     if (reportFromLocalStorage && reportFromLocalStorage[categoryProductCode] && reportFromLocalStorage[categoryProductCode][`${categoryId}`]) {
+     return reportFromLocalStorage[categoryProductCode][`${categoryId}`].wellDoneComment;
+     }
+
+     return null;
+     }, */
+
+    reportCategory(categoryProductCode, categoryId) {
+        const orderId = store.order.id;
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        if (myAssessments[orderId].report &&
+            myAssessments[orderId].report[categoryProductCode] &&
+            myAssessments[orderId].report[categoryProductCode][`${categoryId}`]) {
+
+            return myAssessments[orderId].report[categoryProductCode][`${categoryId}`];
+        }
+
+        const reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
+
+        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+
+        return reportCategory;
+    },
+
+    resetCategory(categoryId) {
+        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+        const reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
+
+        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+    },
+
+    addOrUpdateReportComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+
+        this._saveReportCommentInLocalStorage(categoryProductCode, comment);
+    },
+
+    removeReportComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+
+        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
+    },
+
+    reorderReportComment(categoryId, oldIndex, newIndex) {
+        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+        const reportCategory = this.reportCategory(categoryProductCode, categoryId);
+
+        ArrayUtils.move(reportCategory.comments, oldIndex, newIndex);
+
+        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+    },
+
+    // (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100
+    categoryScore(categoryId) {
+        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+        const listCommentsForCategory = _.filter(this.listComments(categoryProductCode), ac => ac.categoryId === categoryId);
+        const reportCategory = this.reportCategory(categoryProductCode, categoryId);
+
+        let sumOfAllPoints = 0;
+
+        for (let i = 0; i < listCommentsForCategory.length; i++) {
+            sumOfAllPoints += listCommentsForCategory[i].points;
+        }
+
+        let sumOfRedPoints = 0;
+
+        for (let i = 0; i < reportCategory.comments.length; i++) {
+            sumOfRedPoints += reportCategory.comments[i].points;
+        }
+
+        return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
+    },
+
     _calculateTopComments(categoryProductCode, categoryId) {
         const redCommentsForCategory = _.filter(this.listComments(categoryProductCode), ac => ac.categoryId === categoryId && ac.isRedSelected === true);
         const topCommentsForCategory = [];
 
         const loopCondition = function() {
-            if (redCommentsForCategory.length < this.nbTopComments) {
+            if (redCommentsForCategory.length < this.nbReportComments) {
                 return topCommentsForCategory.length < redCommentsForCategory.length;
             }
-            return topCommentsForCategory.length < this.nbTopComments;
+            return topCommentsForCategory.length < this.nbReportComments;
         }.bind(this);
 
         while (loopCondition()) {
@@ -121,13 +172,14 @@ const Assessment = {
         return topCommentsForCategory;
     },
 
-    _getListCommentsForCategoryContainingCommentId(id, categoryProductCode) {
-        const listCommentsForCategory = this.listComments(categoryProductCode);
+    /* TODO: remove?
+     _listCommentsForCategoryContainingCommentId(id, categoryProductCode) {
+     const listCommentsForCategory = this.listComments(categoryProductCode);
 
-        return _.find(listCommentsForCategory, c => c.id === id) ? listCommentsForCategory : null;
-    },
+     return _.find(listCommentsForCategory, c => c.id === id) ? listCommentsForCategory : null;
+     }, */
 
-    _getListCommentsFromLocalStorage() {
+    _listCommentsFromLocalStorage() {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
         return myAssessments && myAssessments[store.order.id] ? myAssessments[store.order.id].listComments : null;
@@ -143,23 +195,58 @@ const Assessment = {
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
-    _getReportCommentsFromLocalStorage() {
-        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-        const orderId = store.order.id;
-
-        return myAssessments && myAssessments[orderId] ? myAssessments[orderId].topComments : null;
+    _defaultReportCategory(categoryProductCode, categoryId) {
+        return {
+            comments: this._calculateTopComments(categoryProductCode, categoryId)
+        };
     },
 
-    _saveAllReportCommentsInLocalStorage(categoryProductCode, comments) {
+    /* TODO: remove
+     _getReportFromLocalStorage() {
+     const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+     const orderId = store.order.id;
+
+     return myAssessments && myAssessments[orderId] ? myAssessments[orderId].report : null;
+     }, */
+
+    /*
+     * Structure of the report object:
+     * {
+     *   cv: {
+     *     12: {
+     *       comments: [],
+     *       wellDoneComment: null
+     *     }
+     *     13: {
+     *       comments: [],
+     *       wellDoneComment: null
+     *     }
+     *     14: {
+     *       comments: [],
+     *       wellDoneComment: null
+     *     }
+     *   },
+     *   coverLetter: {
+     *     7: {
+     *       comments: [],
+     *       wellDoneComment: null
+     *     }
+     *   },
+     *   linkedinProfile: {
+     *     16: {
+     *       comments: [],
+     *       wellDoneComment: null
+     *     }
+     *   }
+     * }
+     */
+    _saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory) {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
-        myAssessments[orderId].topComments = myAssessments[orderId].topComments || {};
-
-        // We remove all comments of that category
-        comments.forEach(comment => _.remove(myAssessments[orderId].topComments[categoryProductCode], c => c.categoryId === comment.categoryId));
-
-        myAssessments[orderId].topComments[categoryProductCode] = _.concat(myAssessments[orderId].topComments[categoryProductCode] || [], comments);
+        myAssessments[orderId].report = myAssessments[orderId].report || {};
+        myAssessments[orderId].report[categoryProductCode] = myAssessments[orderId].report[categoryProductCode] || {};
+        myAssessments[orderId].report[categoryProductCode][`${categoryId}`] = reportCategory;
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
@@ -167,15 +254,15 @@ const Assessment = {
     _saveReportCommentInLocalStorage(categoryProductCode, comment) {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-        const commentToUpdate = _.find(myAssessments[orderId].topComments[categoryProductCode], c => c.id === comment.id);
+        const commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode][`${comment.categoryId}`].comments, c => c.id === comment.id);
 
         if (commentToUpdate) {
             Object.assign(commentToUpdate, comment);
         } else {
-            myAssessments[orderId].topComments[categoryProductCode].push(comment);
+            myAssessments[orderId].report[categoryProductCode][`${comment.categoryId}`].comments.push(comment);
         }
 
-        myAssessments[orderId].topComments.haveBeenEdited = true;
+        myAssessments[orderId].report.hasBeenEdited = true;
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
@@ -184,18 +271,18 @@ const Assessment = {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
         const orderId = store.order.id;
 
-        _.remove(myAssessments[orderId].topComments[categoryProductCode], c => c.id === comment.id);
+        _.remove(myAssessments[orderId].report[categoryProductCode][`${comment.categoryId}`].comments, c => c.id === comment.id);
 
-        myAssessments[orderId].topComments.haveBeenEdited = true;
+        myAssessments[orderId].report.hasBeenEdited = true;
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
-    _findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory) {
+    _findRedCommentWithMostPointsInListExcept(redCommentsForCategory, reportCommentsForCategory) {
         let commentWithMostPoints = null;
 
         redCommentsForCategory.forEach(redComment => {
-            const isCommentAlreadyInList = _.find(topCommentsForCategory, tc => tc.id === redComment.id);
+            const isCommentAlreadyInList = _.find(reportCommentsForCategory, tc => tc.id === redComment.id);
 
             if (!isCommentAlreadyInList) {
                 if (commentWithMostPoints === null) {

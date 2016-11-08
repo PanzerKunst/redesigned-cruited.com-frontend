@@ -156,7 +156,7 @@ const controller = {
 
                             <ul className="styleless">
                             {listCommentsForThisCategory.map(ac =>
-                                    <GreenRedAssessmentComment key={`assessment-list-comment-${ac.id}`} comment={ac} />
+                                    <GreenRedAssessmentComment key={ac.id} comment={ac} />
                             )}
                             </ul>
                         </section>);
@@ -182,7 +182,7 @@ const controller = {
                 return (
                     <ul className="styleless">
                     {store.categoryIds[categoryProductCode].map(categoryId =>
-                        <ReportCategory key={`top-comment-category-${categoryId}`} categoryProductCode={categoryProductCode} categoryId={categoryId} />
+                        <ReportCategory key={categoryId} categoryProductCode={categoryProductCode} categoryId={categoryId} />
                     )}
                     </ul>);
             }

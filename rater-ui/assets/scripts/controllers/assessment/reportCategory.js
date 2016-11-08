@@ -9,15 +9,19 @@ import ReportComment from "./reportComment";
 
 const Component = React.createClass({
     render() {
+        const categoryProductCode = this.props.categoryProductCode;
         const categoryId = this.props.categoryId;
+
+        this.reportCategory = Assessment.reportCategory(categoryProductCode, categoryId);
 
         return (
             <li ref="root" className="report-category">
                 <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
                 <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
+                {this._wellDoneComment()}
                 <ul className="styleless">
-                {Assessment.reportComments(this.props.categoryProductCode, categoryId).map(comment =>
-                        <ReportComment key={`top-comment-${comment.id}`} comment={comment} />
+                {this.reportCategory.comments.map(comment =>
+                        <ReportComment key={comment.id} comment={comment} />
                 )}
                 </ul>
                 <div className="comment-composer">
@@ -50,6 +54,20 @@ const Component = React.createClass({
             onUpdate: e => store.handleReportCommentsReorder(this.props.categoryId, e.oldIndex, e.newIndex),
             handle: ".fa-bars"
         });
+    },
+
+    _wellDoneComment() {
+        if (Assessment.categoryScore(this.props.categoryId) < Assessment.minScoreForWellDoneComment) {
+            return null;
+        }
+
+        const wellDoneCommentText = this.reportCategory.wellDoneComment || "Well done m8!";
+
+        return (
+            <div>
+                <label>Top comment</label>
+                <textarea className="form-control" defaultValue={wellDoneCommentText}/>
+            </div>);
     },
 
     _handleResetClick() {
