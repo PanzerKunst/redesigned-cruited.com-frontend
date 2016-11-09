@@ -8,19 +8,22 @@ import store from "./store";
 import ReportComment from "./reportComment";
 
 const Component = React.createClass({
-    render() {
-        const categoryProductCode = this.props.categoryProductCode;
-        const categoryId = this.props.categoryId;
+    getInitialState() {
+        return {
+            wellDoneComment: this.props.reportCategory.wellDoneComment || this._defaultWellDoneComment()
+        };
+    },
 
-        this.reportCategory = Assessment.reportCategory(categoryProductCode, categoryId);
+    render() {
+        const reportCategory = this.props.reportCategory;
 
         return (
             <li ref="root" className="report-category">
-                <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
+                <h3>{Category.titles[store.order.languageCode][reportCategory.id]}</h3>
                 <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
                 {this._wellDoneComment()}
                 <ul className="styleless">
-                {this.reportCategory.comments.map(comment =>
+                {reportCategory.comments.map(comment =>
                         <ReportComment key={comment.id} comment={comment} />
                 )}
                 </ul>
@@ -39,9 +42,13 @@ const Component = React.createClass({
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
+        this.$wellDoneCommentComposer = $rootEl.children(".well-done-comment-composer");
+        this.$wellDoneCommentTextarea = this.$wellDoneCommentComposer.children("textarea");
+
         this.$commentList = $rootEl.children("ul");
-        this.$composer = $rootEl.children(".comment-composer");
-        this.$textarea = this.$composer.children("textarea");
+
+        this.$addCommentComposer = $rootEl.children(".comment-composer");
+        this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
 
         this._makeCommentsSortable();
     },
@@ -51,32 +58,34 @@ const Component = React.createClass({
         // eslint-disable-next-line no-new
         new Sortable(this.$commentList.get(0), {
             animation: 150,
-            onUpdate: e => store.handleReportCommentsReorder(this.props.categoryId, e.oldIndex, e.newIndex),
+            onUpdate: e => store.handleReportCommentsReorder(this.props.reportCategory.id, e.oldIndex, e.newIndex),
             handle: ".fa-bars"
         });
     },
 
     _wellDoneComment() {
-        if (Assessment.categoryScore(this.props.categoryId) < Assessment.minScoreForWellDoneComment) {
+        if (Assessment.categoryScore(this.props.reportCategory.id) < Assessment.minScoreForWellDoneComment) {
             return null;
         }
 
-        const wellDoneCommentText = this.reportCategory.wellDoneComment || "Well done m8!";
-
         return (
-            <div>
+            <div className="well-done-comment-composer">
                 <label>Top comment</label>
-                <textarea className="form-control" defaultValue={wellDoneCommentText}/>
+                <textarea className="form-control" value={this.state.wellDoneComment} onChange={this._handleWellDoneCommentTextareaChange} onBlur={this._handleWellDoneCommentTextareaBlur}/>
             </div>);
     },
 
+    _defaultWellDoneComment() {
+        return Category.wellDoneComments[store.order.languageCode][this.props.reportCategory.id];
+    },
+
     _handleResetClick() {
-        store.resetCategory(this.props.categoryId);
+        store.resetReportCategory(this.props.reportCategory.id);
     },
 
     _handleAddCommentClick() {
-        this.$composer.show();
-        this.$textarea.focus();
+        this.$addCommentComposer.show();
+        this.$addCommentTextarea.focus();
         this._adaptTextareaHeight();
     },
 
@@ -88,16 +97,30 @@ const Component = React.createClass({
 
             store.addOrUpdateReportComment({
                 id: StringUtils.uuid(),
-                categoryId: this.props.categoryId,
-                redText: this.$textarea.val()
+                categoryId: this.props.reportCategory.id,
+                redText: this.$addCommentTextarea.val()
             });
 
-            this.$textarea.val(null);
+            this.$addCommentTextarea.val(null);
         }
     },
 
+    _handleWellDoneCommentTextareaChange() {
+        this.setState({
+            wellDoneComment: this.$wellDoneCommentTextarea.val()
+        });
+    },
+
+    _handleWellDoneCommentTextareaBlur() {
+        const updatedReportCategory = this.props.reportCategory;
+
+        updatedReportCategory.wellDoneComment = this.state.wellDoneComment;
+
+        store.updateReportCategory(updatedReportCategory);
+    },
+
     _adaptTextareaHeight() {
-        const ta = this.$textarea.get(0);
+        const ta = this.$addCommentTextarea.get(0);
 
         if (ta.clientHeight < ta.scrollHeight) {
             ta.style.height = (ta.scrollHeight + 2) + "px";
@@ -105,7 +128,7 @@ const Component = React.createClass({
     },
 
     _hideComposer() {
-        this.$composer.hide();
+        this.$addCommentComposer.hide();
     }
 });
 

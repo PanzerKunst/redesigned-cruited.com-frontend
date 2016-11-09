@@ -520,10 +520,10 @@
 	        var urlMiddle = "cv";
 
 	        switch (productCode) {
-	            case _product2.default.codes.COVER_LETTER_REVIEW:
+	            case _product2.default.codes.coverLetter:
 	                urlMiddle = "cover-letter";
 	                break;
-	            case _product2.default.codes.LINKEDIN_PROFILE_REVIEW:
+	            case _product2.default.codes.linkedinProfile:
 	                urlMiddle = "linkedin-profile";
 	                break;
 	            default:

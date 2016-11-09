@@ -317,7 +317,11 @@
 	                    "ul",
 	                    { className: "styleless" },
 	                    _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
-	                        return React.createElement(_reportCategory2.default, { key: categoryId, categoryProductCode: categoryProductCode, categoryId: categoryId });
+	                        var reportCategory = _assessment2.default.reportCategory(categoryProductCode, categoryId);
+
+	                        reportCategory.id = categoryId;
+
+	                        return React.createElement(_reportCategory2.default, { key: categoryId, reportCategory: reportCategory });
 	                    })
 	                );
 	            }
@@ -395,6 +399,39 @@
 	            17: "Network and outreach",
 	            18: "Complete and correct profile",
 	            20: "Present achievements and build credibility"
+	        }
+	    },
+
+	    wellDoneComments: {
+	        sv: {
+	            12: "Bra jobbat i denna kategori! Du har lyckats beskriva dina erfarenheter på ett bra sätt.",
+	            13: "Bra jobbat på detta område! Du har en snygg och överskådlig cv.",
+	            14: "Bra jobbat på detta område! Din cv är riktad till den tjänst du söker på ett bra sätt.",
+
+	            7: "Bra jobbat i denna kategori! Du har lyckats framhäva din potential på ett bra sätt.",
+	            8: "Bra jobbat på detta område! Du visar att du är påläst om arbetsgivaren och varför du passar för tjänsten.",
+	            10: "Bra jobbat på detta område! Du framhäver dina egenskaper på ett bra och trovärdigt vis.",
+	            11: "Bra jobbat i denna kategori! Ditt brev är tydligt, snyggt och korrekt.",
+
+	            16: "Bra jobbat på detta område! Din profil har en tydlig inriktning och du är relevant för din målgrupp.",
+	            17: "Bra jobbat på detta område! Fortsätt att bygga ditt nätverk och var aktiv på LinkedIn.",
+	            18: "Bra jobbat på detta område! Du har en tydlig och korrekt profil.",
+	            20: "Bra jobbat i denna kategori! Din profil ger ett trovärdigt intryck och du har beskrivit dina erfarenheter och utbildningar väl."
+	        },
+	        en: {
+	            12: "Very well done in this area!",
+	            13: "Very well done in this area! You have a professional looking cv, that meets all the expected qualities.",
+	            14: "Very well done in this area!",
+
+	            7: "Very well done in this area!",
+	            8: "Very well done in this area!",
+	            10: "Very well done in this area!",
+	            11: "Very well done in this area!",
+
+	            16: "Very well done in this area!",
+	            17: "Very well done in this area!",
+	            18: "Very well done in this area!",
+	            20: "Very well done in this area!"
 	        }
 	    },
 
@@ -521,33 +558,13 @@
 
 	        return true;
 	    },
-
-
-	    /* TODO: remove
-	     reportComments(categoryProductCode, categoryId) {
-	     const reportFromLocalStorage = this._getReportFromLocalStorage();
-	       if (reportFromLocalStorage && reportFromLocalStorage.hasBeenEdited) {
-	     return reportFromLocalStorage[categoryProductCode][`${categoryId}`].comments;
-	     }
-	       const reportCommentsForCategory = this._calculateTopComments(categoryProductCode, categoryId);
-	       this._saveReportCommentsInLocalStorage(categoryProductCode, categoryId, reportCommentsForCategory);
-	       return reportCommentsForCategory;
-	     },
-	       reportWellDoneComment(categoryProductCode, categoryId) {
-	     const reportFromLocalStorage = this._getReportFromLocalStorage();
-	       if (reportFromLocalStorage && reportFromLocalStorage[categoryProductCode] && reportFromLocalStorage[categoryProductCode][`${categoryId}`]) {
-	     return reportFromLocalStorage[categoryProductCode][`${categoryId}`].wellDoneComment;
-	     }
-	       return null;
-	     }, */
-
 	    reportCategory: function reportCategory(categoryProductCode, categoryId) {
 	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        if (myAssessments[orderId].report && myAssessments[orderId].report[categoryProductCode] && myAssessments[orderId].report[categoryProductCode]["" + categoryId]) {
+	        if (myAssessments[orderId].report && myAssessments[orderId].report[categoryProductCode] && myAssessments[orderId].report[categoryProductCode][categoryId]) {
 
-	            return myAssessments[orderId].report[categoryProductCode]["" + categoryId];
+	            return myAssessments[orderId].report[categoryProductCode][categoryId];
 	        }
 
 	        var reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
@@ -556,11 +573,16 @@
 
 	        return reportCategory;
 	    },
-	    resetCategory: function resetCategory(categoryId) {
+	    resetReportCategory: function resetReportCategory(categoryId) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
 	        var reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
 
 	        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+	    },
+	    updateReportCategory: function updateReportCategory(category) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(category.id);
+
+	        this._saveReportCategoryInLocalStorage(categoryProductCode, category.id, category);
 	    },
 	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
@@ -627,14 +649,6 @@
 
 	        return topCommentsForCategory;
 	    },
-
-
-	    /* TODO: remove?
-	     _listCommentsForCategoryContainingCommentId(id, categoryProductCode) {
-	     const listCommentsForCategory = this.listComments(categoryProductCode);
-	       return _.find(listCommentsForCategory, c => c.id === id) ? listCommentsForCategory : null;
-	     }, */
-
 	    _listCommentsFromLocalStorage: function _listCommentsFromLocalStorage() {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
@@ -655,13 +669,6 @@
 	        };
 	    },
 
-
-	    /* TODO: remove
-	     _getReportFromLocalStorage() {
-	     const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-	     const orderId = store.order.id;
-	       return myAssessments && myAssessments[orderId] ? myAssessments[orderId].report : null;
-	     }, */
 
 	    /*
 	     * Structure of the report object:
@@ -700,21 +707,21 @@
 
 	        myAssessments[orderId].report = myAssessments[orderId].report || {};
 	        myAssessments[orderId].report[categoryProductCode] = myAssessments[orderId].report[categoryProductCode] || {};
-	        myAssessments[orderId].report[categoryProductCode]["" + categoryId] = reportCategory;
+	        myAssessments[orderId].report[categoryProductCode][categoryId] = reportCategory;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
 	    _saveReportCommentInLocalStorage: function _saveReportCommentInLocalStorage(categoryProductCode, comment) {
 	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-	        var commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode]["" + comment.categoryId].comments, function (c) {
+	        var commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
 
 	        if (commentToUpdate) {
 	            Object.assign(commentToUpdate, comment);
 	        } else {
-	            myAssessments[orderId].report[categoryProductCode]["" + comment.categoryId].comments.push(comment);
+	            myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments.push(comment);
 	        }
 
 	        myAssessments[orderId].report.hasBeenEdited = true;
@@ -725,7 +732,7 @@
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 	        var orderId = _store2.default.order.id;
 
-	        _.remove(myAssessments[orderId].report[categoryProductCode]["" + comment.categoryId].comments, function (c) {
+	        _.remove(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
 
@@ -956,8 +963,12 @@
 	        _assessment2.default.updateListComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
-	    resetCategory: function resetCategory(categoryId) {
-	        _assessment2.default.resetCategory(categoryId);
+	    resetReportCategory: function resetReportCategory(categoryId) {
+	        _assessment2.default.resetReportCategory(categoryId);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateReportCategory: function updateReportCategory(category) {
+	        _assessment2.default.updateReportCategory(category);
 	        this.reactComponent.forceUpdate();
 	    },
 	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
@@ -1049,10 +1060,10 @@
 	        var urlMiddle = "cv";
 
 	        switch (productCode) {
-	            case _product2.default.codes.COVER_LETTER_REVIEW:
+	            case _product2.default.codes.coverLetter:
 	                urlMiddle = "cover-letter";
 	                break;
-	            case _product2.default.codes.LINKEDIN_PROFILE_REVIEW:
+	            case _product2.default.codes.linkedinProfile:
 	                urlMiddle = "linkedin-profile";
 	                break;
 	            default:
@@ -1440,11 +1451,13 @@
 
 	var Component = React.createClass({
 	    displayName: "Component",
+	    getInitialState: function getInitialState() {
+	        return {
+	            wellDoneComment: this.props.reportCategory.wellDoneComment || this._defaultWellDoneComment()
+	        };
+	    },
 	    render: function render() {
-	        var categoryProductCode = this.props.categoryProductCode;
-	        var categoryId = this.props.categoryId;
-
-	        this.reportCategory = _assessment2.default.reportCategory(categoryProductCode, categoryId);
+	        var reportCategory = this.props.reportCategory;
 
 	        return React.createElement(
 	            "li",
@@ -1452,14 +1465,14 @@
 	            React.createElement(
 	                "h3",
 	                null,
-	                _category2.default.titles[_store2.default.order.languageCode][categoryId]
+	                _category2.default.titles[_store2.default.order.languageCode][reportCategory.id]
 	            ),
 	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
 	            this._wellDoneComment(),
 	            React.createElement(
 	                "ul",
 	                { className: "styleless" },
-	                this.reportCategory.comments.map(function (comment) {
+	                reportCategory.comments.map(function (comment) {
 	                    return React.createElement(_reportComment2.default, { key: comment.id, comment: comment });
 	                })
 	            ),
@@ -1482,9 +1495,13 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
+	        this.$wellDoneCommentComposer = $rootEl.children(".well-done-comment-composer");
+	        this.$wellDoneCommentTextarea = this.$wellDoneCommentComposer.children("textarea");
+
 	        this.$commentList = $rootEl.children("ul");
-	        this.$composer = $rootEl.children(".comment-composer");
-	        this.$textarea = this.$composer.children("textarea");
+
+	        this.$addCommentComposer = $rootEl.children(".comment-composer");
+	        this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
 
 	        this._makeCommentsSortable();
 	    },
@@ -1495,35 +1512,36 @@
 	        new Sortable(this.$commentList.get(0), {
 	            animation: 150,
 	            onUpdate: function onUpdate(e) {
-	                return _store2.default.handleReportCommentsReorder(_this.props.categoryId, e.oldIndex, e.newIndex);
+	                return _store2.default.handleReportCommentsReorder(_this.props.reportCategory.id, e.oldIndex, e.newIndex);
 	            },
 	            handle: ".fa-bars"
 	        });
 	    },
 	    _wellDoneComment: function _wellDoneComment() {
-	        if (_assessment2.default.categoryScore(this.props.categoryId) < _assessment2.default.minScoreForWellDoneComment) {
+	        if (_assessment2.default.categoryScore(this.props.reportCategory.id) < _assessment2.default.minScoreForWellDoneComment) {
 	            return null;
 	        }
 
-	        var wellDoneCommentText = this.reportCategory.wellDoneComment || "Well done m8!";
-
 	        return React.createElement(
 	            "div",
-	            null,
+	            { className: "well-done-comment-composer" },
 	            React.createElement(
 	                "label",
 	                null,
 	                "Top comment"
 	            ),
-	            React.createElement("textarea", { className: "form-control", defaultValue: wellDoneCommentText })
+	            React.createElement("textarea", { className: "form-control", value: this.state.wellDoneComment, onChange: this._handleWellDoneCommentTextareaChange, onBlur: this._handleWellDoneCommentTextareaBlur })
 	        );
 	    },
+	    _defaultWellDoneComment: function _defaultWellDoneComment() {
+	        return _category2.default.wellDoneComments[_store2.default.order.languageCode][this.props.reportCategory.id];
+	    },
 	    _handleResetClick: function _handleResetClick() {
-	        _store2.default.resetCategory(this.props.categoryId);
+	        _store2.default.resetReportCategory(this.props.reportCategory.id);
 	    },
 	    _handleAddCommentClick: function _handleAddCommentClick() {
-	        this.$composer.show();
-	        this.$textarea.focus();
+	        this.$addCommentComposer.show();
+	        this.$addCommentTextarea.focus();
 	        this._adaptTextareaHeight();
 	    },
 	    _handleComposerKeyUp: function _handleComposerKeyUp(e) {
@@ -1534,22 +1552,34 @@
 
 	            _store2.default.addOrUpdateReportComment({
 	                id: _string2.default.uuid(),
-	                categoryId: this.props.categoryId,
-	                redText: this.$textarea.val()
+	                categoryId: this.props.reportCategory.id,
+	                redText: this.$addCommentTextarea.val()
 	            });
 
-	            this.$textarea.val(null);
+	            this.$addCommentTextarea.val(null);
 	        }
 	    },
+	    _handleWellDoneCommentTextareaChange: function _handleWellDoneCommentTextareaChange() {
+	        this.setState({
+	            wellDoneComment: this.$wellDoneCommentTextarea.val()
+	        });
+	    },
+	    _handleWellDoneCommentTextareaBlur: function _handleWellDoneCommentTextareaBlur() {
+	        var updatedReportCategory = this.props.reportCategory;
+
+	        updatedReportCategory.wellDoneComment = this.state.wellDoneComment;
+
+	        _store2.default.updateReportCategory(updatedReportCategory);
+	    },
 	    _adaptTextareaHeight: function _adaptTextareaHeight() {
-	        var ta = this.$textarea.get(0);
+	        var ta = this.$addCommentTextarea.get(0);
 
 	        if (ta.clientHeight < ta.scrollHeight) {
 	            ta.style.height = ta.scrollHeight + 2 + "px";
 	        }
 	    },
 	    _hideComposer: function _hideComposer() {
-	        this.$composer.hide();
+	        this.$addCommentComposer.hide();
 	    }
 	});
 

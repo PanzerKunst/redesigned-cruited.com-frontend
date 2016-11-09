@@ -19,8 +19,13 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    resetCategory(categoryId) {
-        Assessment.resetCategory(categoryId);
+    resetReportCategory(categoryId) {
+        Assessment.resetReportCategory(categoryId);
+        this.reactComponent.forceUpdate();
+    },
+
+    updateReportCategory(category) {
+        Assessment.updateReportCategory(category);
         this.reactComponent.forceUpdate();
     },
 

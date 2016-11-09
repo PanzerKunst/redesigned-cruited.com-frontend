@@ -18,10 +18,10 @@ const Order = {
         let urlMiddle = "cv";
 
         switch (productCode) {
-            case Product.codes.COVER_LETTER_REVIEW:
+            case Product.codes.coverLetter:
                 urlMiddle = "cover-letter";
                 break;
-            case Product.codes.LINKEDIN_PROFILE_REVIEW:
+            case Product.codes.linkedinProfile:
                 urlMiddle = "linkedin-profile";
                 break;
             default:

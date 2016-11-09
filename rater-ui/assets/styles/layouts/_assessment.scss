@@ -121,6 +121,12 @@ $white-section-padding: 2em 1em 1em;
     margin: 0 -1em $content-element-margin-bottom -1em;
   }
 
+  .well-done-comment-composer {
+    > textarea {
+      height: 4em;
+    }
+  }
+
   .comment-composer {
     display: none;
 

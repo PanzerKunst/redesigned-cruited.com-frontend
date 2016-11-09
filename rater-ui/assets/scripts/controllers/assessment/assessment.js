@@ -181,9 +181,13 @@ const controller = {
             if (store.categoryIds && Assessment.areAllListCommentsSelected(categoryProductCode)) {
                 return (
                     <ul className="styleless">
-                    {store.categoryIds[categoryProductCode].map(categoryId =>
-                        <ReportCategory key={categoryId} categoryProductCode={categoryProductCode} categoryId={categoryId} />
-                    )}
+                    {store.categoryIds[categoryProductCode].map(categoryId => {
+                        const reportCategory = Assessment.reportCategory(categoryProductCode, categoryId);
+
+                        reportCategory.id = categoryId;
+
+                        return <ReportCategory key={categoryId} reportCategory={reportCategory} />;
+                    })}
                     </ul>);
             }
 
