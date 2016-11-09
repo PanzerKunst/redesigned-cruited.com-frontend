@@ -1664,9 +1664,15 @@
 	    displayName: "Component",
 	    render: function render() {
 	        var c = this.props.comment;
+
 	        var liClasses = classNames({
 	            "from-list": c.isRedSelected,
 	            "well-done": c.isWellDone
+	        });
+
+	        var checkboxClasses = classNames({
+	            "report-comment-checkbox": true,
+	            checked: c.isChecked
 	        });
 
 	        return React.createElement(
@@ -1678,7 +1684,8 @@
 	                { className: "comment-paragraph", onBlur: this._handleParagraphBlur },
 	                c.redText
 	            ),
-	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick })
+	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick }),
+	            React.createElement("span", { className: checkboxClasses, onClick: this._handleCheckboxClick })
 	        );
 	    },
 	    componentDidMount: function componentDidMount() {
@@ -1698,6 +1705,13 @@
 	    },
 	    _handleRemoveClick: function _handleRemoveClick() {
 	        _store2.default.removeReportComment(this.props.comment);
+	    },
+	    _handleCheckboxClick: function _handleCheckboxClick() {
+	        var updatedComment = this.props.comment;
+
+	        updatedComment.isChecked = updatedComment.isChecked ? false : true;
+
+	        _store2.default.addOrUpdateReportComment(updatedComment);
 	    }
 	});
 

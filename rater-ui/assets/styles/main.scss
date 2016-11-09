@@ -3,10 +3,10 @@
 @import "vendor-overrides/pre-import/_fontAwesome";
 
 // Libs
-@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
-@import "../../node_modules/bourbon/app/assets/stylesheets/_bourbon.scss";
-@import "../../node_modules/js-breakpoints/breakpoints.scss";
-@import "../../node_modules/font-awesome/scss/font-awesome.scss";
+@import "../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "../../node_modules/bourbon/app/assets/stylesheets/_bourbon";
+@import "../../node_modules/js-breakpoints/breakpoints";
+@import "../../node_modules/font-awesome/scss/font-awesome";
 
 // Utils
 @import "common/_variables";

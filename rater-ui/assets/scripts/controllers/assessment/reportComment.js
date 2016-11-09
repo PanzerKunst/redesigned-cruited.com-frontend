@@ -3,9 +3,15 @@ import store from "./store";
 const Component = React.createClass({
     render() {
         const c = this.props.comment;
+
         const liClasses = classNames({
             "from-list": c.isRedSelected,
             "well-done": c.isWellDone
+        });
+
+        const checkboxClasses = classNames({
+            "report-comment-checkbox": true,
+            checked: c.isChecked
         });
 
         return (
@@ -13,6 +19,7 @@ const Component = React.createClass({
                 <span className="fa fa-bars"></span>
                 <p className="comment-paragraph" onBlur={this._handleParagraphBlur}>{c.redText}</p>
                 <button type="button" className="styleless fa fa-trash" onClick={this._handleRemoveClick} />
+                <span className={checkboxClasses} onClick={this._handleCheckboxClick}/>
             </li>);
     },
 
@@ -36,6 +43,14 @@ const Component = React.createClass({
 
     _handleRemoveClick() {
         store.removeReportComment(this.props.comment);
+    },
+
+    _handleCheckboxClick() {
+        const updatedComment = this.props.comment;
+
+        updatedComment.isChecked = updatedComment.isChecked ? false : true;
+
+        store.addOrUpdateReportComment(updatedComment);
     }
 });
 

@@ -121,6 +121,24 @@ $white-section-padding: 2em 1em 1em;
     margin: 0 -1em $content-element-margin-bottom -1em;
   }
 
+  .fa-bars {
+    cursor: pointer;
+  }
+
+  .report-comment-checkbox {
+    &::after {
+      cursor: pointer;
+
+      @include icon-font($fa-var-square-o);
+      color: $primary-btn-color;
+      font-size: 2em;
+    }
+
+    &.checked::after {
+      @include icon-font($fa-var-check-square-o);
+    }
+  }
+
   .well-done-comment-composer {
     > textarea {
       height: 4em;

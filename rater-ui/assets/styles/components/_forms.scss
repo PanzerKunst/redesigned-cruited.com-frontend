@@ -27,14 +27,13 @@ form {
     display: none;
   }
 
-  .for-required-field {
-    &::after {
-      @include icon-font($fa-var-asterisk);
-      font-size: $font-size-xs;
-      color: $state-danger-text;
-      vertical-align: super;
-      margin-left: 0.5em;
-    }
+  .for-required-field::after {
+    @include icon-font($fa-var-asterisk);
+    font-size: $font-size-xs;
+    color: $state-danger-text;
+
+    vertical-align: super;
+    margin-left: 0.5em;
   }
 
   .fg-file-upload {
