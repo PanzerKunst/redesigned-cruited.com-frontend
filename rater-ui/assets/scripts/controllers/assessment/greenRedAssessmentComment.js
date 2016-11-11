@@ -25,6 +25,8 @@ const Component = React.createClass({
                 </div>
                 <div className="red">
                     <p className={redParagraphClasses} onClick={this._handleRedParagraphClick} onBlur={this._handleRedParagraphBlur}>{c.redText}</p>
+                    <button type="button" className="styleless fa fa-plus-circle" onClick={this._handleAddClick} />
+                    <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
                 </div>
                 <div className="id-and-points">
                     <p>{c.id}</p>
@@ -79,7 +81,16 @@ const Component = React.createClass({
 
         c.redText = $(e.currentTarget).text();
 
-        store.updateListComment(c);
+        store.updateCommentInListAndReport(c);
+    },
+
+    _handleAddClick() {
+        this._handleRedParagraphClick();
+        store.addOrUpdateReportComment(this.props.comment);
+    },
+
+    _handleResetClick() {
+        store.resetCommentInListAndReport(this.props.comment);
     }
 });
 

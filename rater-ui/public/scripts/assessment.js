@@ -507,6 +507,16 @@
 	    nbReportComments: 3,
 	    minScoreForWellDoneComment: 80,
 
+	    listComments: function listComments(categoryProductCode) {
+	        var listComments = this._listCommentsFromLocalStorage();
+
+	        if (!listComments) {
+	            listComments = _.cloneDeep(_store2.default.allDefaultComments);
+	            this._saveListCommentsInLocalStorage(listComments);
+	        }
+
+	        return listComments[categoryProductCode];
+	    },
 	    updateListComment: function updateListComment(comment) {
 	        var listComments = this._listCommentsFromLocalStorage();
 	        var listCommentsToUpdate = listComments.cv;
@@ -530,15 +540,13 @@
 
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
-	    listComments: function listComments(categoryProductCode) {
-	        var listComments = this._listCommentsFromLocalStorage();
+	    resetListComment: function resetListComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var originalComment = _.find(_store2.default.allDefaultComments[categoryProductCode], function (c) {
+	            return c.id === comment.id;
+	        });
 
-	        if (!listComments) {
-	            listComments = _.cloneDeep(_store2.default.allDefaultComments);
-	            this._saveListCommentsInLocalStorage(listComments);
-	        }
-
-	        return listComments[categoryProductCode];
+	        this.updateListComment(originalComment);
 	    },
 	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
@@ -573,12 +581,6 @@
 
 	        return reportCategory;
 	    },
-	    resetReportCategory: function resetReportCategory(categoryId) {
-	        var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
-	        var reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
-
-	        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
-	    },
 	    updateReportCategory: function updateReportCategory(category) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(category.id);
 
@@ -589,10 +591,33 @@
 
 	        this._saveReportCommentInLocalStorage(categoryProductCode, comment);
 	    },
+	    updateReportCommentIfExists: function updateReportCommentIfExists(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var orderId = _store2.default.order.id;
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+
+	        if (myAssessments[orderId].report && myAssessments[orderId].report[categoryProductCode] && myAssessments[orderId].report[categoryProductCode][comment.categoryId]) {
+	            var commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, function (c) {
+	                return c.id === comment.id;
+	            });
+
+	            if (commentToUpdate) {
+	                this._saveReportCommentInLocalStorage(categoryProductCode, comment);
+	            }
+	        }
+	    },
 	    removeReportComment: function removeReportComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 
 	        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
+	    },
+	    resetReportComment: function resetReportComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var originalComment = _.find(_store2.default.allDefaultComments[categoryProductCode], function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        this.updateReportCommentIfExists(originalComment);
 	    },
 	    reorderReportComment: function reorderReportComment(categoryId, oldIndex, newIndex) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
@@ -724,8 +749,6 @@
 	            myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments.push(comment);
 	        }
 
-	        myAssessments[orderId].report.hasBeenEdited = true;
-
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
 	    _removeReportCommentFromLocalStorage: function _removeReportCommentFromLocalStorage(categoryProductCode, comment) {
@@ -735,8 +758,6 @@
 	        _.remove(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
-
-	        myAssessments[orderId].report.hasBeenEdited = true;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
@@ -959,12 +980,18 @@
 	    init: function init() {
 	        this._initCategories();
 	    },
-	    updateListComment: function updateListComment(comment) {
-	        _assessment2.default.updateListComment(comment);
+	    resetCommentInListAndReport: function resetCommentInListAndReport(comment) {
+	        _assessment2.default.resetListComment(comment);
+	        _assessment2.default.resetReportComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
-	    resetReportCategory: function resetReportCategory(categoryId) {
-	        _assessment2.default.resetReportCategory(categoryId);
+	    updateCommentInListAndReport: function updateCommentInListAndReport(comment) {
+	        _assessment2.default.updateListComment(comment);
+	        _assessment2.default.updateReportCommentIfExists(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateListComment: function updateListComment(comment) {
+	        _assessment2.default.updateListComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
 	    updateReportCategory: function updateReportCategory(category) {
@@ -973,6 +1000,10 @@
 	    },
 	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
 	        _assessment2.default.addOrUpdateReportComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateReportCommentIfExists: function updateReportCommentIfExists(comment) {
+	        _assessment2.default.updateReportCommentIfExists(comment);
 	        this.reactComponent.forceUpdate();
 	    },
 	    removeReportComment: function removeReportComment(comment) {
@@ -1346,7 +1377,9 @@
 	                    "p",
 	                    { className: redParagraphClasses, onClick: this._handleRedParagraphClick, onBlur: this._handleRedParagraphBlur },
 	                    c.redText
-	                )
+	                ),
+	                React.createElement("button", { type: "button", className: "styleless fa fa-plus-circle", onClick: this._handleAddClick }),
+	                React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick })
 	            ),
 	            React.createElement(
 	                "div",
@@ -1406,7 +1439,14 @@
 
 	        c.redText = $(e.currentTarget).text();
 
-	        _store2.default.updateListComment(c);
+	        _store2.default.updateCommentInListAndReport(c);
+	    },
+	    _handleAddClick: function _handleAddClick() {
+	        this._handleRedParagraphClick();
+	        _store2.default.addOrUpdateReportComment(this.props.comment);
+	    },
+	    _handleResetClick: function _handleResetClick() {
+	        _store2.default.resetCommentInListAndReport(this.props.comment);
 	    }
 	});
 
@@ -1467,7 +1507,6 @@
 	                null,
 	                _category2.default.titles[_store2.default.order.languageCode][reportCategory.id]
 	            ),
-	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
 	            this._wellDoneComment(),
 	            React.createElement(
 	                "ul",
@@ -1535,9 +1574,6 @@
 	    },
 	    _defaultWellDoneComment: function _defaultWellDoneComment() {
 	        return _category2.default.wellDoneComments[_store2.default.order.languageCode][this.props.reportCategory.id];
-	    },
-	    _handleResetClick: function _handleResetClick() {
-	        _store2.default.resetReportCategory(this.props.reportCategory.id);
 	    },
 	    _handleAddCommentClick: function _handleAddCommentClick() {
 	        this.$addCommentComposer.show();
@@ -1666,6 +1702,7 @@
 	        var c = this.props.comment;
 
 	        var liClasses = classNames({
+	            "report-comment": true,
 	            "from-list": c.isRedSelected,
 	            "well-done": c.isWellDone
 	        });
@@ -1678,14 +1715,15 @@
 	        return React.createElement(
 	            "li",
 	            { ref: "root", "data-comment-id": c.id, className: liClasses },
-	            React.createElement("span", { className: "fa fa-bars" }),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-bars" }),
 	            React.createElement(
 	                "p",
 	                { className: "comment-paragraph", onBlur: this._handleParagraphBlur },
 	                c.redText
 	            ),
-	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick }),
-	            React.createElement("span", { className: checkboxClasses, onClick: this._handleCheckboxClick })
+	            React.createElement("span", { className: checkboxClasses, onClick: this._handleCheckboxClick }),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick })
 	        );
 	    },
 	    componentDidMount: function componentDidMount() {
@@ -1701,7 +1739,10 @@
 
 	        c.redText = $(e.currentTarget).text();
 
-	        _store2.default.addOrUpdateReportComment(c);
+	        _store2.default.updateCommentInListAndReport(c);
+	    },
+	    _handleResetClick: function _handleResetClick() {
+	        _store2.default.resetCommentInListAndReport(this.props.comment);
 	    },
 	    _handleRemoveClick: function _handleRemoveClick() {
 	        _store2.default.removeReportComment(this.props.comment);
@@ -1711,7 +1752,7 @@
 
 	        updatedComment.isChecked = updatedComment.isChecked ? false : true;
 
-	        _store2.default.addOrUpdateReportComment(updatedComment);
+	        _store2.default.updateReportCommentIfExists(updatedComment);
 	    }
 	});
 

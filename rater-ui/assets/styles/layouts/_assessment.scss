@@ -57,10 +57,18 @@ $white-section-padding: 2em 1em 1em;
       cursor: pointer;
       position: relative;
 
-      > p {
+      > .comment-paragraph {
         height: 100%;
 
         @include transition(background-color $default-animation-duration/2 ease);
+      }
+    }
+
+    > .red {
+      position: relative;
+
+      > .comment-paragraph {
+        padding-bottom: 1.2em;
       }
     }
 
@@ -83,6 +91,20 @@ $white-section-padding: 2em 1em 1em;
       > .red {
         width: $red-comment-width;
       }
+    }
+
+    .fa {
+      position: absolute;
+      bottom: 0;
+      z-index: 1;
+    }
+
+    .fa-plus-circle {
+      right: 2em;
+    }
+
+    .fa-undo {
+      right: 0;
     }
   }
 
@@ -115,31 +137,64 @@ $white-section-padding: 2em 1em 1em;
     height: 6em;
   }
 
-  .report-form > ul > li {
+  .report-category {
     background-color: white;
     padding: $white-section-padding;
     margin: 0 -1em $content-element-margin-bottom -1em;
   }
 
-  .fa-bars {
-    cursor: pointer;
+  .report-comment {
+    position: relative;
+    margin-bottom: $content-element-margin-bottom;
+
+    > .comment-paragraph {
+      padding-right: 2.5em;
+      min-height: 8em;  // To have enough space for all buttons
+    }
+
+    > button,
+    > .report-comment-checkbox {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    > .fa-bars {
+      cursor: move;
+    }
+
+    > .report-comment-checkbox {
+      top: 2em;
+    }
+
+    > .fa-undo {
+      top: 4em;
+    }
+
+    > .fa-trash {
+      top: 6em;
+    }
   }
 
   .report-comment-checkbox {
-    &::after {
-      cursor: pointer;
+    display: inline-block;
+    padding: 0.3em 0.4em 0;
+    cursor: pointer;
 
-      @include icon-font($fa-var-square-o);
-      color: $primary-btn-color;
-      font-size: 2em;
+    &::after {
+      @include icon-font($fa-var-check-square-o);
+      font-size: 1.2em;
+      color: $well-border-color;
     }
 
     &.checked::after {
-      @include icon-font($fa-var-check-square-o);
+      color: $primary-btn-color;
     }
   }
 
   .well-done-comment-composer {
+    margin-bottom: $content-element-margin-bottom;
+
     > textarea {
       height: 4em;
     }

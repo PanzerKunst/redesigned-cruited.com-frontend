@@ -10,6 +10,17 @@ const Assessment = {
     nbReportComments: 3,
     minScoreForWellDoneComment: 80,
 
+    listComments(categoryProductCode) {
+        let listComments = this._listCommentsFromLocalStorage();
+
+        if (!listComments) {
+            listComments = _.cloneDeep(store.allDefaultComments);
+            this._saveListCommentsInLocalStorage(listComments);
+        }
+
+        return listComments[categoryProductCode];
+    },
+
     updateListComment(comment) {
         const listComments = this._listCommentsFromLocalStorage();
         let listCommentsToUpdate = listComments.cv;
@@ -28,15 +39,11 @@ const Assessment = {
         this._saveListCommentsInLocalStorage(listComments);
     },
 
-    listComments(categoryProductCode) {
-        let listComments = this._listCommentsFromLocalStorage();
+    resetListComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const originalComment = _.find(store.allDefaultComments[categoryProductCode], c => c.id === comment.id);
 
-        if (!listComments) {
-            listComments = _.cloneDeep(store.allDefaultComments);
-            this._saveListCommentsInLocalStorage(listComments);
-        }
-
-        return listComments[categoryProductCode];
+        this.updateListComment(originalComment);
     },
 
     areAllListCommentsSelected(categoryProductCode) {
@@ -76,13 +83,6 @@ const Assessment = {
         return reportCategory;
     },
 
-    resetReportCategory(categoryId) {
-        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
-        const reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
-
-        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
-    },
-
     updateReportCategory(category) {
         const categoryProductCode = Category.productCodeFromCategoryId(category.id);
 
@@ -95,10 +95,31 @@ const Assessment = {
         this._saveReportCommentInLocalStorage(categoryProductCode, comment);
     },
 
+    updateReportCommentIfExists(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const orderId = store.order.id;
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        if (myAssessments[orderId].report && myAssessments[orderId].report[categoryProductCode] && myAssessments[orderId].report[categoryProductCode][comment.categoryId]) {
+            const commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, c => c.id === comment.id);
+
+            if (commentToUpdate) {
+                this._saveReportCommentInLocalStorage(categoryProductCode, comment);
+            }
+        }
+    },
+
     removeReportComment(comment) {
         const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
 
         this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
+    },
+
+    resetReportComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const originalComment = _.find(store.allDefaultComments[categoryProductCode], c => c.id === comment.id);
+
+        this.updateReportCommentIfExists(originalComment);
     },
 
     reorderReportComment(categoryId, oldIndex, newIndex) {
@@ -228,8 +249,6 @@ const Assessment = {
             myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments.push(comment);
         }
 
-        myAssessments[orderId].report.hasBeenEdited = true;
-
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
@@ -238,8 +257,6 @@ const Assessment = {
         const orderId = store.order.id;
 
         _.remove(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, c => c.id === comment.id);
-
-        myAssessments[orderId].report.hasBeenEdited = true;
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },

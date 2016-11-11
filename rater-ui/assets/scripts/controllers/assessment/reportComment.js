@@ -5,6 +5,7 @@ const Component = React.createClass({
         const c = this.props.comment;
 
         const liClasses = classNames({
+            "report-comment": true,
             "from-list": c.isRedSelected,
             "well-done": c.isWellDone
         });
@@ -16,10 +17,11 @@ const Component = React.createClass({
 
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
-                <span className="fa fa-bars"></span>
+                <button type="button" className="styleless fa fa-bars" />
                 <p className="comment-paragraph" onBlur={this._handleParagraphBlur}>{c.redText}</p>
-                <button type="button" className="styleless fa fa-trash" onClick={this._handleRemoveClick} />
                 <span className={checkboxClasses} onClick={this._handleCheckboxClick}/>
+                <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
+                <button type="button" className="styleless fa fa-trash" onClick={this._handleRemoveClick} />
             </li>);
     },
 
@@ -38,7 +40,11 @@ const Component = React.createClass({
 
         c.redText = $(e.currentTarget).text();
 
-        store.addOrUpdateReportComment(c);
+        store.updateCommentInListAndReport(c);
+    },
+
+    _handleResetClick() {
+        store.resetCommentInListAndReport(this.props.comment);
     },
 
     _handleRemoveClick() {
@@ -50,7 +56,7 @@ const Component = React.createClass({
 
         updatedComment.isChecked = updatedComment.isChecked ? false : true;
 
-        store.addOrUpdateReportComment(updatedComment);
+        store.updateReportCommentIfExists(updatedComment);
     }
 });
 

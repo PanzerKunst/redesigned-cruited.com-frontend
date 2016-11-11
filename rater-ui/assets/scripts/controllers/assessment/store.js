@@ -14,13 +14,20 @@ const store = {
         this._initCategories();
     },
 
-    updateListComment(comment) {
-        Assessment.updateListComment(comment);
+    resetCommentInListAndReport(comment) {
+        Assessment.resetListComment(comment);
+        Assessment.resetReportComment(comment);
         this.reactComponent.forceUpdate();
     },
 
-    resetReportCategory(categoryId) {
-        Assessment.resetReportCategory(categoryId);
+    updateCommentInListAndReport(comment) {
+        Assessment.updateListComment(comment);
+        Assessment.updateReportCommentIfExists(comment);
+        this.reactComponent.forceUpdate();
+    },
+
+    updateListComment(comment) {
+        Assessment.updateListComment(comment);
         this.reactComponent.forceUpdate();
     },
 
@@ -31,6 +38,11 @@ const store = {
 
     addOrUpdateReportComment(comment) {
         Assessment.addOrUpdateReportComment(comment);
+        this.reactComponent.forceUpdate();
+    },
+
+    updateReportCommentIfExists(comment) {
+        Assessment.updateReportCommentIfExists(comment);
         this.reactComponent.forceUpdate();
     },
 

@@ -20,7 +20,6 @@ const Component = React.createClass({
         return (
             <li ref="root" className="report-category">
                 <h3>{Category.titles[store.order.languageCode][reportCategory.id]}</h3>
-                <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
                 {this._wellDoneComment()}
                 <ul className="styleless">
                 {reportCategory.comments.map(comment =>
@@ -77,10 +76,6 @@ const Component = React.createClass({
 
     _defaultWellDoneComment() {
         return Category.wellDoneComments[store.order.languageCode][this.props.reportCategory.id];
-    },
-
-    _handleResetClick() {
-        store.resetReportCategory(this.props.reportCategory.id);
     },
 
     _handleAddCommentClick() {
