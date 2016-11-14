@@ -20,6 +20,9 @@ import GreenRedAssessmentComment from "./greenRedAssessmentComment";
 // eslint-disable-next-line no-unused-vars
 import ReportCategory from "./reportCategory";
 
+// eslint-disable-next-line no-unused-vars
+import OrderStatusChangeBtn from "./orderStatusChangeBtn";
+
 const controller = {
     init() {
         store.reactComponent = ReactDOM.render(
@@ -62,7 +65,8 @@ const controller = {
                                 <p>{order.customer.emailAddress}</p>
                             </section>
                             <section>
-                                <div>{this._previewBtn(order.isReadOnlyBy(store.account.id))}</div>
+                                {this._previewBtn(order)}
+                                <OrderStatusChangeBtn />
                                 <TimeLeft order={order} />
                             </section>
                         </div>
@@ -77,8 +81,20 @@ const controller = {
                             {this._tabPane(Category.productCodes.coverLetter)}
                             {this._tabPane(Category.productCodes.linkedinProfile)}
                         </div>
+
+                        <div className="centered-contents">
+                            {this._previewBtn(order)}
+                        </div>
                     </div>
                 </div>);
+        },
+
+        componentDidUpdate() {
+            this._initElements();
+        },
+
+        _initElements() {
+            $(".overall-comment").prop("disabled", store.isOrderReadOnly());
         },
 
         _heading() {
@@ -111,11 +127,12 @@ const controller = {
             return <div style={style}></div>;
         },
 
-        _previewBtn(isReadOnly) {
-            if (isReadOnly) {
-                return null;
+        _previewBtn() {
+            if (store.areAllReportCommentsCheckedForAtLeastOneCategory()) {
+                return <button className="btn btn-primary">Preview assessment</button>;
             }
-            return <button className="btn btn-primary">Preview assessment</button>;
+
+            return null;
         },
 
         _tab(categoryProductCode, label, isActive = false) {

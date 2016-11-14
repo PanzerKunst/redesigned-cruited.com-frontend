@@ -32,7 +32,6 @@ const store = {
     _fetchTopOrders() {
         const type = "GET";
         const url = "/api/orders/top";
-
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = () => {
@@ -55,7 +54,6 @@ const store = {
     _fetchAllRaters() {
         const type = "GET";
         const url = "/api/accounts/raters";
-
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = () => {
@@ -132,7 +130,6 @@ const store = {
 
             const type = "PUT";
             const url = "/api/orders";
-
             const httpRequest = new XMLHttpRequest();
 
             httpRequest.onreadystatechange = () => {
@@ -156,7 +153,6 @@ const store = {
 
             const type = "DELETE";
             const url = `/api/orders/${orderId}`;
-
             const httpRequest = new XMLHttpRequest();
 
             httpRequest.onreadystatechange = () => {
@@ -183,7 +179,6 @@ const store = {
 
         const type = "POST";
         const url = "/api/orders/search";
-
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = () => {

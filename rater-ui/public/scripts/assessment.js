@@ -82,6 +82,10 @@
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
+	var _orderStatusChangeBtn = __webpack_require__(19);
+
+	var _orderStatusChangeBtn2 = _interopRequireDefault(_orderStatusChangeBtn);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// eslint-disable-next-line no-unused-vars
@@ -158,11 +162,8 @@
 	                        React.createElement(
 	                            "section",
 	                            null,
-	                            React.createElement(
-	                                "div",
-	                                null,
-	                                this._previewBtn(order.isReadOnlyBy(_store2.default.account.id))
-	                            ),
+	                            this._previewBtn(order),
+	                            React.createElement(_orderStatusChangeBtn2.default, null),
 	                            React.createElement(_timeLeft2.default, { order: order })
 	                        )
 	                    ),
@@ -179,9 +180,20 @@
 	                        this._tabPane(_category2.default.productCodes.cv, true),
 	                        this._tabPane(_category2.default.productCodes.coverLetter),
 	                        this._tabPane(_category2.default.productCodes.linkedinProfile)
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "centered-contents" },
+	                        this._previewBtn(order)
 	                    )
 	                )
 	            );
+	        },
+	        componentDidUpdate: function componentDidUpdate() {
+	            this._initElements();
+	        },
+	        _initElements: function _initElements() {
+	            $(".overall-comment").prop("disabled", _store2.default.isOrderReadOnly());
 	        },
 	        _heading: function _heading() {
 	            var text = "Assessment #" + _store2.default.order.id;
@@ -221,15 +233,16 @@
 
 	            return React.createElement("div", { style: style });
 	        },
-	        _previewBtn: function _previewBtn(isReadOnly) {
-	            if (isReadOnly) {
-	                return null;
+	        _previewBtn: function _previewBtn() {
+	            if (_store2.default.areAllReportCommentsCheckedForAtLeastOneCategory()) {
+	                return React.createElement(
+	                    "button",
+	                    { className: "btn btn-primary" },
+	                    "Preview assessment"
+	                );
 	            }
-	            return React.createElement(
-	                "button",
-	                { className: "btn btn-primary" },
-	                "Preview assessment"
-	            );
+
+	            return null;
 	        },
 	        _tab: function _tab(categoryProductCode, label) {
 	            var isActive = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -334,6 +347,9 @@
 	        }
 	    })
 	};
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 
@@ -626,6 +642,32 @@
 	        _array2.default.move(reportCategory.comments, oldIndex, newIndex);
 
 	        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+	    },
+	    areAllReportCommentsChecked: function areAllReportCommentsChecked(categoryProductCode) {
+	        var orderId = _store2.default.order.id;
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+
+	        if (!myAssessments || !myAssessments[orderId].report || _.isEmpty(myAssessments[orderId].report[categoryProductCode])) {
+
+	            return false;
+	        }
+
+	        var docReport = myAssessments[orderId].report[categoryProductCode];
+	        var categories = _.values(docReport);
+
+	        for (var i = 0; i < categories.length; i++) {
+	            var category = categories[i];
+
+	            for (var j = 0; j < category.comments.length; j++) {
+	                var comment = category.comments[j];
+
+	                if (!comment.isChecked) {
+	                    return false;
+	                }
+	            }
+	        }
+
+	        return true;
 	    },
 
 
@@ -955,6 +997,8 @@
 	});
 	exports.default = undefined;
 
+	var _global = __webpack_require__(3);
+
 	var _account = __webpack_require__(7);
 
 	var _account2 = _interopRequireDefault(_account);
@@ -966,6 +1010,10 @@
 	var _assessment = __webpack_require__(2);
 
 	var _assessment2 = _interopRequireDefault(_assessment);
+
+	var _category = __webpack_require__(1);
+
+	var _category2 = _interopRequireDefault(_category);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -979,6 +1027,31 @@
 
 	    init: function init() {
 	        this._initCategories();
+	    },
+	    isOrderReadOnly: function isOrderReadOnly() {
+	        return this.order.isReadOnlyBy(this.account.id);
+	    },
+	    updateOrderStatus: function updateOrderStatus(status) {
+	        var _this = this;
+
+	        this.order.status = status;
+
+	        var type = "PUT";
+	        var url = "/api/orders";
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    _this.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(this.order));
 	    },
 	    resetCommentInListAndReport: function resetCommentInListAndReport(comment) {
 	        _assessment2.default.resetListComment(comment);
@@ -1012,6 +1085,9 @@
 	    },
 	    handleReportCommentsReorder: function handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
 	        _assessment2.default.reorderReportComment(categoryId, oldIndex, newIndex);
+	    },
+	    areAllReportCommentsCheckedForAtLeastOneCategory: function areAllReportCommentsCheckedForAtLeastOneCategory() {
+	        return _assessment2.default.areAllReportCommentsChecked(_category2.default.productCodes.cv) || _assessment2.default.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || _assessment2.default.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile);
 	    },
 	    _initCategories: function _initCategories() {
 	        var predicate = function predicate(dc) {
@@ -1346,7 +1422,8 @@
 
 	        var listCommentClasses = classNames({
 	            "list-comment": true,
-	            grouped: c.isGrouped
+	            grouped: c.isGrouped,
+	            "read-only": _store2.default.isOrderReadOnly()
 	        });
 
 	        var greenParagraphClasses = classNames({
@@ -1409,30 +1486,36 @@
 	        this._addContentEditableToParagraphs();
 	    },
 	    _addContentEditableToParagraphs: function _addContentEditableToParagraphs() {
-	        _.forEach(this.$redParagraphs, function (p) {
-	            return $(p).attr("contenteditable", "true");
-	        });
+	        if (!_store2.default.isOrderReadOnly()) {
+	            _.forEach(this.$redParagraphs, function (p) {
+	                return $(p).attr("contenteditable", "true");
+	            });
+	        }
 	    },
 	    _handleGreenParagraphClick: function _handleGreenParagraphClick() {
-	        var c = this.props.comment;
+	        if (!_store2.default.isOrderReadOnly()) {
+	            var c = this.props.comment;
 
-	        c.isRedSelected = false;
+	            c.isRedSelected = false;
 
-	        // TODO: remove
-	        c.isGreenSelected = !c.isGreenSelected;
+	            // TODO: remove
+	            c.isGreenSelected = !c.isGreenSelected;
 
-	        /* TODO: uncomment when the above code is removed
-	         comment.isGreenSelected = true; */
+	            /* TODO: uncomment when the above code is removed
+	             comment.isGreenSelected = true; */
 
-	        _store2.default.updateListComment(c);
+	            _store2.default.updateListComment(c);
+	        }
 	    },
 	    _handleRedParagraphClick: function _handleRedParagraphClick() {
-	        var c = this.props.comment;
+	        if (!_store2.default.isOrderReadOnly()) {
+	            var c = this.props.comment;
 
-	        c.isGreenSelected = false;
-	        c.isRedSelected = true;
+	            c.isGreenSelected = false;
+	            c.isRedSelected = true;
 
-	        _store2.default.updateListComment(c);
+	            _store2.default.updateListComment(c);
+	        }
 	    },
 	    _handleRedParagraphBlur: function _handleRedParagraphBlur(e) {
 	        var c = this.props.comment;
@@ -1442,11 +1525,15 @@
 	        _store2.default.updateCommentInListAndReport(c);
 	    },
 	    _handleAddClick: function _handleAddClick() {
-	        this._handleRedParagraphClick();
-	        _store2.default.addOrUpdateReportComment(this.props.comment);
+	        if (!_store2.default.isOrderReadOnly()) {
+	            this._handleRedParagraphClick();
+	            _store2.default.addOrUpdateReportComment(this.props.comment);
+	        }
 	    },
 	    _handleResetClick: function _handleResetClick() {
-	        _store2.default.resetCommentInListAndReport(this.props.comment);
+	        if (!_store2.default.isOrderReadOnly()) {
+	            _store2.default.resetCommentInListAndReport(this.props.comment);
+	        }
 	    }
 	});
 
@@ -1499,9 +1586,14 @@
 	    render: function render() {
 	        var reportCategory = this.props.reportCategory;
 
+	        var liClasses = classNames({
+	            "report-category": true,
+	            "read-only": _store2.default.isOrderReadOnly()
+	        });
+
 	        return React.createElement(
 	            "li",
-	            { ref: "root", className: "report-category" },
+	            { ref: "root", className: liClasses },
 	            React.createElement(
 	                "h3",
 	                null,
@@ -1517,7 +1609,7 @@
 	            ),
 	            React.createElement(
 	                "div",
-	                { className: "comment-composer" },
+	                { className: "comment-composer hidden" },
 	                React.createElement("textarea", { className: "form-control", onKeyUp: this._handleComposerKeyUp }),
 	                React.createElement("button", { type: "button", className: "styleless fa fa-times", onClick: this._hideComposer })
 	            ),
@@ -1541,20 +1633,31 @@
 
 	        this.$addCommentComposer = $rootEl.children(".comment-composer");
 	        this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
+	        this.$addCommentLink = $rootEl.children("a");
 
+	        this._disableInputsIfRequired();
 	        this._makeCommentsSortable();
+	    },
+	    _disableInputsIfRequired: function _disableInputsIfRequired() {
+	        if (_store2.default.isOrderReadOnly()) {
+	            this.$wellDoneCommentTextarea.prop("disabled", true);
+	            this.$addCommentTextarea.prop("disabled", true);
+	        }
 	    },
 	    _makeCommentsSortable: function _makeCommentsSortable() {
 	        var _this = this;
 
-	        // eslint-disable-next-line no-new
-	        new Sortable(this.$commentList.get(0), {
-	            animation: 150,
-	            onUpdate: function onUpdate(e) {
-	                return _store2.default.handleReportCommentsReorder(_this.props.reportCategory.id, e.oldIndex, e.newIndex);
-	            },
-	            handle: ".fa-bars"
-	        });
+	        if (!_store2.default.isOrderReadOnly()) {
+
+	            // eslint-disable-next-line no-new
+	            new Sortable(this.$commentList.get(0), {
+	                animation: 150,
+	                onUpdate: function onUpdate(e) {
+	                    return _store2.default.handleReportCommentsReorder(_this.props.reportCategory.id, e.oldIndex, e.newIndex);
+	                },
+	                handle: ".fa-arrows"
+	            });
+	        }
 	    },
 	    _wellDoneComment: function _wellDoneComment() {
 	        if (_assessment2.default.categoryScore(this.props.reportCategory.id) < _assessment2.default.minScoreForWellDoneComment) {
@@ -1576,9 +1679,12 @@
 	        return _category2.default.wellDoneComments[_store2.default.order.languageCode][this.props.reportCategory.id];
 	    },
 	    _handleAddCommentClick: function _handleAddCommentClick() {
-	        this.$addCommentComposer.show();
-	        this.$addCommentTextarea.focus();
-	        this._adaptTextareaHeight();
+	        if (!_store2.default.isOrderReadOnly()) {
+	            this.$addCommentLink.hide();
+	            this.$addCommentComposer.removeClass("hidden");
+	            this.$addCommentTextarea.focus();
+	            this._adaptTextareaHeight();
+	        }
 	    },
 	    _handleComposerKeyUp: function _handleComposerKeyUp(e) {
 	        this._adaptTextareaHeight();
@@ -1615,7 +1721,8 @@
 	        }
 	    },
 	    _hideComposer: function _hideComposer() {
-	        this.$addCommentComposer.hide();
+	        this.$addCommentComposer.addClass("hidden");
+	        this.$addCommentLink.show();
 	    }
 	});
 
@@ -1715,15 +1822,15 @@
 	        return React.createElement(
 	            "li",
 	            { ref: "root", "data-comment-id": c.id, className: liClasses },
-	            React.createElement("button", { type: "button", className: "styleless fa fa-bars" }),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-arrows fa-fw" }),
 	            React.createElement(
 	                "p",
 	                { className: "comment-paragraph", onBlur: this._handleParagraphBlur },
 	                c.redText
 	            ),
 	            React.createElement("span", { className: checkboxClasses, onClick: this._handleCheckboxClick }),
-	            React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick }),
-	            React.createElement("button", { type: "button", className: "styleless fa fa-trash", onClick: this._handleRemoveClick })
+	            React.createElement("button", { type: "button", className: "styleless fa fa-undo fa-fw", onClick: this._handleResetClick }),
+	            React.createElement("button", { type: "button", className: "styleless fa fa-trash fa-fw", onClick: this._handleRemoveClick })
 	        );
 	    },
 	    componentDidMount: function componentDidMount() {
@@ -1732,7 +1839,9 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-	        $rootEl.children("p").attr("contenteditable", "true");
+	        if (!_store2.default.isOrderReadOnly()) {
+	            $rootEl.children("p").attr("contenteditable", "true");
+	        }
 	    },
 	    _handleParagraphBlur: function _handleParagraphBlur(e) {
 	        var c = this.props.comment;
@@ -1742,17 +1851,66 @@
 	        _store2.default.updateCommentInListAndReport(c);
 	    },
 	    _handleResetClick: function _handleResetClick() {
-	        _store2.default.resetCommentInListAndReport(this.props.comment);
+	        if (!_store2.default.isOrderReadOnly()) {
+	            _store2.default.resetCommentInListAndReport(this.props.comment);
+	        }
 	    },
 	    _handleRemoveClick: function _handleRemoveClick() {
-	        _store2.default.removeReportComment(this.props.comment);
+	        if (!_store2.default.isOrderReadOnly()) {
+	            _store2.default.removeReportComment(this.props.comment);
+	        }
 	    },
 	    _handleCheckboxClick: function _handleCheckboxClick() {
-	        var updatedComment = this.props.comment;
+	        if (!_store2.default.isOrderReadOnly()) {
+	            var updatedComment = this.props.comment;
 
-	        updatedComment.isChecked = updatedComment.isChecked ? false : true;
+	            updatedComment.isChecked = updatedComment.isChecked ? false : true;
 
-	        _store2.default.updateReportCommentIfExists(updatedComment);
+	            _store2.default.updateReportCommentIfExists(updatedComment);
+	        }
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _order = __webpack_require__(8);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	var _store = __webpack_require__(6);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var orderStatus = _store2.default.order.status;
+
+	        if (_store2.default.isOrderReadOnly() || orderStatus !== _order2.default.statuses.paid) {
+	            return null;
+	        }
+
+	        return React.createElement(
+	            "button",
+	            { className: "btn btn-primary", onClick: this._handleClick },
+	            "Start assessment"
+	        );
+	    },
+	    _handleClick: function _handleClick() {
+	        _store2.default.updateOrderStatus(_order2.default.statuses.inProgress);
 	    }
 	});
 

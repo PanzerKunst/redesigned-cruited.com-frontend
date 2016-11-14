@@ -6,7 +6,8 @@ const Component = React.createClass({
 
         const listCommentClasses = classNames({
             "list-comment": true,
-            grouped: c.isGrouped
+            grouped: c.isGrouped,
+            "read-only": store.isOrderReadOnly()
         });
 
         const greenParagraphClasses = classNames({
@@ -48,32 +49,38 @@ const Component = React.createClass({
     },
 
     _addContentEditableToParagraphs() {
-        _.forEach(this.$redParagraphs, p =>
-                $(p).attr("contenteditable", "true")
-        );
+        if (!store.isOrderReadOnly()) {
+            _.forEach(this.$redParagraphs, p =>
+                    $(p).attr("contenteditable", "true")
+            );
+        }
     },
 
     _handleGreenParagraphClick() {
-        const c = this.props.comment;
+        if (!store.isOrderReadOnly()) {
+            const c = this.props.comment;
 
-        c.isRedSelected = false;
+            c.isRedSelected = false;
 
-        // TODO: remove
-        c.isGreenSelected = !c.isGreenSelected;
+            // TODO: remove
+            c.isGreenSelected = !c.isGreenSelected;
 
-        /* TODO: uncomment when the above code is removed
-         comment.isGreenSelected = true; */
+            /* TODO: uncomment when the above code is removed
+             comment.isGreenSelected = true; */
 
-        store.updateListComment(c);
+            store.updateListComment(c);
+        }
     },
 
     _handleRedParagraphClick() {
-        const c = this.props.comment;
+        if (!store.isOrderReadOnly()) {
+            const c = this.props.comment;
 
-        c.isGreenSelected = false;
-        c.isRedSelected = true;
+            c.isGreenSelected = false;
+            c.isRedSelected = true;
 
-        store.updateListComment(c);
+            store.updateListComment(c);
+        }
     },
 
     _handleRedParagraphBlur(e) {
@@ -85,12 +92,16 @@ const Component = React.createClass({
     },
 
     _handleAddClick() {
-        this._handleRedParagraphClick();
-        store.addOrUpdateReportComment(this.props.comment);
+        if (!store.isOrderReadOnly()) {
+            this._handleRedParagraphClick();
+            store.addOrUpdateReportComment(this.props.comment);
+        }
     },
 
     _handleResetClick() {
-        store.resetCommentInListAndReport(this.props.comment);
+        if (!store.isOrderReadOnly()) {
+            store.resetCommentInListAndReport(this.props.comment);
+        }
     }
 });
 

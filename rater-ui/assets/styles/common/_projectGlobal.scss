@@ -17,10 +17,6 @@ button.styleless.fa {
   @include large-screen {
     padding: 0.5em 0.6em;
   }
-
-  &.fa-times {
-    margin-top: -0.5em;
-  }
 }
 
 a > i.fa {

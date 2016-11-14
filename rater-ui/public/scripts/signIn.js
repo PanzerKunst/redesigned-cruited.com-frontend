@@ -167,7 +167,6 @@
 
 	                    var type = "POST";
 	                    var url = "/api/auth";
-
 	                    var httpRequest = new XMLHttpRequest();
 
 	                    httpRequest.onreadystatechange = function () {

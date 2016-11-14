@@ -1,14 +1,11 @@
 button.styleless {
   @include styleless-btn;
   padding: 0;
+  cursor: pointer;
 
   &:focus {
     @include styleless-btn;
     outline: none;
-  }
-
-  &:hover {
-    cursor: pointer;
   }
 }
 

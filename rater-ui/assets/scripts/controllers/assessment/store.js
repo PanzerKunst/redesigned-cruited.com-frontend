@@ -1,6 +1,8 @@
+import {httpStatusCodes} from "../../global";
 import Account from "../../models/account";
 import Order from "../../models/order";
 import Assessment from "../../models/assessment";
+import Category from "../../models/category";
 
 const store = {
     reactComponent: null,
@@ -12,6 +14,31 @@ const store = {
 
     init() {
         this._initCategories();
+    },
+
+    isOrderReadOnly() {
+        return this.order.isReadOnlyBy(this.account.id);
+    },
+
+    updateOrderStatus(status) {
+        this.order.status = status;
+
+        const type = "PUT";
+        const url = "/api/orders";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    this.reactComponent.forceUpdate();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify(this.order));
     },
 
     resetCommentInListAndReport(comment) {
@@ -53,6 +80,12 @@ const store = {
 
     handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
         Assessment.reorderReportComment(categoryId, oldIndex, newIndex);
+    },
+
+    areAllReportCommentsCheckedForAtLeastOneCategory() {
+        return Assessment.areAllReportCommentsChecked(Category.productCodes.cv) ||
+            Assessment.areAllReportCommentsChecked(Category.productCodes.coverLetter) ||
+            Assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile);
     },
 
     _initCategories() {

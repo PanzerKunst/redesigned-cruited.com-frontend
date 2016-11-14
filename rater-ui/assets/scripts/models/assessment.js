@@ -131,6 +131,34 @@ const Assessment = {
         this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
     },
 
+    areAllReportCommentsChecked(categoryProductCode) {
+        const orderId = store.order.id;
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        if (!myAssessments || !myAssessments[orderId].report ||
+            _.isEmpty(myAssessments[orderId].report[categoryProductCode])) {
+
+            return false;
+        }
+
+        const docReport = myAssessments[orderId].report[categoryProductCode];
+        const categories = _.values(docReport);
+
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+
+            for (let j = 0; j < category.comments.length; j++) {
+                const comment = category.comments[j];
+
+                if (!comment.isChecked) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    },
+
     // (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100
     categoryScore(categoryId) {
         const categoryProductCode = Category.productCodeFromCategoryId(categoryId);

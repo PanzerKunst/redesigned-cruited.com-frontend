@@ -17,8 +17,13 @@ const Component = React.createClass({
     render() {
         const reportCategory = this.props.reportCategory;
 
+        const liClasses = classNames({
+            "report-category": true,
+            "read-only": store.isOrderReadOnly()
+        });
+
         return (
-            <li ref="root" className="report-category">
+            <li ref="root" className={liClasses}>
                 <h3>{Category.titles[store.order.languageCode][reportCategory.id]}</h3>
                 {this._wellDoneComment()}
                 <ul className="styleless">
@@ -26,7 +31,7 @@ const Component = React.createClass({
                         <ReportComment key={comment.id} comment={comment} />
                 )}
                 </ul>
-                <div className="comment-composer">
+                <div className="comment-composer hidden">
                     <textarea className="form-control" onKeyUp={this._handleComposerKeyUp} />
                     <button type="button" className="styleless fa fa-times" onClick={this._hideComposer} />
                 </div>
@@ -48,18 +53,29 @@ const Component = React.createClass({
 
         this.$addCommentComposer = $rootEl.children(".comment-composer");
         this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
+        this.$addCommentLink = $rootEl.children("a");
 
+        this._disableInputsIfRequired();
         this._makeCommentsSortable();
     },
 
-    _makeCommentsSortable() {
+    _disableInputsIfRequired() {
+        if (store.isOrderReadOnly()) {
+            this.$wellDoneCommentTextarea.prop("disabled", true);
+            this.$addCommentTextarea.prop("disabled", true);
+        }
+    },
 
-        // eslint-disable-next-line no-new
-        new Sortable(this.$commentList.get(0), {
-            animation: 150,
-            onUpdate: e => store.handleReportCommentsReorder(this.props.reportCategory.id, e.oldIndex, e.newIndex),
-            handle: ".fa-bars"
-        });
+    _makeCommentsSortable() {
+        if (!store.isOrderReadOnly()) {
+
+            // eslint-disable-next-line no-new
+            new Sortable(this.$commentList.get(0), {
+                animation: 150,
+                onUpdate: e => store.handleReportCommentsReorder(this.props.reportCategory.id, e.oldIndex, e.newIndex),
+                handle: ".fa-arrows"
+            });
+        }
     },
 
     _wellDoneComment() {
@@ -79,9 +95,12 @@ const Component = React.createClass({
     },
 
     _handleAddCommentClick() {
-        this.$addCommentComposer.show();
-        this.$addCommentTextarea.focus();
-        this._adaptTextareaHeight();
+        if (!store.isOrderReadOnly()) {
+            this.$addCommentLink.hide();
+            this.$addCommentComposer.removeClass("hidden");
+            this.$addCommentTextarea.focus();
+            this._adaptTextareaHeight();
+        }
     },
 
     _handleComposerKeyUp(e) {
@@ -123,7 +142,8 @@ const Component = React.createClass({
     },
 
     _hideComposer() {
-        this.$addCommentComposer.hide();
+        this.$addCommentComposer.addClass("hidden");
+        this.$addCommentLink.show();
     }
 });
 

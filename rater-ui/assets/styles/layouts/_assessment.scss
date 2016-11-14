@@ -23,6 +23,10 @@ $white-section-padding: 2em 1em 1em;
   #order-details {
     background-color: white;
     padding: 1.5em $spacer-unit-size;
+
+    @include medium-screen {
+      display: flex;
+    }
   }
 
   .tab-pane {
@@ -54,8 +58,8 @@ $white-section-padding: 2em 1em 1em;
 
     > .green,
     > .red {
-      cursor: pointer;
       position: relative;
+      cursor: pointer;
 
       > .comment-paragraph {
         height: 100%;
@@ -68,7 +72,7 @@ $white-section-padding: 2em 1em 1em;
       position: relative;
 
       > .comment-paragraph {
-        padding-bottom: 1.2em;
+        padding-bottom: 1.5em;
       }
     }
 
@@ -77,6 +81,15 @@ $white-section-padding: 2em 1em 1em;
     }
     > .red > .selected {
       background-color: $red-comment-bg;
+    }
+
+    &.read-only {
+      > .green,
+      > .red,
+      button,
+      .report-comment-checkbox {
+        cursor: default;
+      }
     }
 
     @include medium-screen {
@@ -141,6 +154,20 @@ $white-section-padding: 2em 1em 1em;
     background-color: white;
     padding: $white-section-padding;
     margin: 0 -1em $content-element-margin-bottom -1em;
+
+    &.read-only {
+      > a {
+        display: none;
+      }
+
+      button {
+        cursor: default;
+      }
+
+      .report-comment-checkbox {
+        cursor: default;
+      }
+    }
   }
 
   .report-comment {
@@ -149,17 +176,21 @@ $white-section-padding: 2em 1em 1em;
 
     > .comment-paragraph {
       padding-right: 2.5em;
-      min-height: 8em;  // To have enough space for all buttons
+      min-height: 8em; // To have enough space for all buttons
     }
 
-    > button,
+    > .fa,
     > .report-comment-checkbox {
       position: absolute;
       right: 0;
       top: 0;
     }
 
-    > .fa-bars {
+    > .fa-fw {
+      width: 2.2em;
+    }
+
+    > .fa-arrows {
       cursor: move;
     }
 
@@ -178,7 +209,7 @@ $white-section-padding: 2em 1em 1em;
 
   .report-comment-checkbox {
     display: inline-block;
-    padding: 0.3em 0.4em 0;
+    padding: 0.3em 0.5em 0;
     cursor: pointer;
 
     &::after {
@@ -201,22 +232,68 @@ $white-section-padding: 2em 1em 1em;
   }
 
   .comment-composer {
-    display: none;
+    display: flex;
 
     > textarea {
-      height: 2em;
+      height: 3em;
     }
   }
 }
 
 .no-flexbox {
-  #assessment .list-comment {
-    @include medium-screen {
+  #assessment {
+    #order-details {
+      @include medium-screen {
+        display: block;
+        @include clearfix;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > section {
+          float: left;
+
+          $first-section-width: 55%;
+          $second-section-width: 25%;
+          $third-section-width: 100% - $first-section-width - $second-section-width;
+
+          width: $second-section-width;
+
+          /* stylelint-disable-next-line max-nesting-depth */
+          &:first-child {
+            width: $first-section-width;
+          }
+
+          /* stylelint-disable-next-line max-nesting-depth */
+          &:last-child {
+            width: $third-section-width;
+          }
+        }
+      }
+    }
+
+    .list-comment {
+      @include medium-screen {
+        display: block;
+        @include clearfix;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > div {
+          float: left;
+        }
+      }
+    }
+
+    .comment-composer {
       display: block;
       @include clearfix;
 
-      > div {
+      > textarea {
         float: left;
+        width: 95%;
+      }
+
+      > button {
+        float: right;
+        margin-top: 0.4em;
       }
     }
   }

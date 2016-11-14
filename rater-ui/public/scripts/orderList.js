@@ -225,7 +225,6 @@
 
 	        var type = "GET";
 	        var url = "/api/orders/top";
-
 	        var httpRequest = new XMLHttpRequest();
 
 	        httpRequest.onreadystatechange = function () {
@@ -251,7 +250,6 @@
 
 	        var type = "GET";
 	        var url = "/api/accounts/raters";
-
 	        var httpRequest = new XMLHttpRequest();
 
 	        httpRequest.onreadystatechange = function () {
@@ -327,7 +325,6 @@
 
 	                var type = "PUT";
 	                var url = "/api/orders";
-
 	                var httpRequest = new XMLHttpRequest();
 
 	                httpRequest.onreadystatechange = function () {
@@ -354,7 +351,6 @@
 
 	                var type = "DELETE";
 	                var url = "/api/orders/" + orderId;
-
 	                var httpRequest = new XMLHttpRequest();
 
 	                httpRequest.onreadystatechange = function () {
@@ -385,7 +381,6 @@
 
 	        var type = "POST";
 	        var url = "/api/orders/search";
-
 	        var httpRequest = new XMLHttpRequest();
 
 	        httpRequest.onreadystatechange = function () {

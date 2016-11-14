@@ -77,7 +77,6 @@ const controller = {
 
                 const type = "POST";
                 const url = "/api/auth";
-
                 const httpRequest = new XMLHttpRequest();
 
                 httpRequest.onreadystatechange = () => {

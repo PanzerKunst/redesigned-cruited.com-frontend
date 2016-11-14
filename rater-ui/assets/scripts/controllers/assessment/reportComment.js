@@ -17,11 +17,11 @@ const Component = React.createClass({
 
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
-                <button type="button" className="styleless fa fa-bars" />
+                <button type="button" className="styleless fa fa-arrows fa-fw" />
                 <p className="comment-paragraph" onBlur={this._handleParagraphBlur}>{c.redText}</p>
                 <span className={checkboxClasses} onClick={this._handleCheckboxClick}/>
-                <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
-                <button type="button" className="styleless fa fa-trash" onClick={this._handleRemoveClick} />
+                <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />
+                <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
             </li>);
     },
 
@@ -32,7 +32,9 @@ const Component = React.createClass({
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-        $rootEl.children("p").attr("contenteditable", "true");
+        if (!store.isOrderReadOnly()) {
+            $rootEl.children("p").attr("contenteditable", "true");
+        }
     },
 
     _handleParagraphBlur(e) {
@@ -44,19 +46,25 @@ const Component = React.createClass({
     },
 
     _handleResetClick() {
-        store.resetCommentInListAndReport(this.props.comment);
+        if (!store.isOrderReadOnly()) {
+            store.resetCommentInListAndReport(this.props.comment);
+        }
     },
 
     _handleRemoveClick() {
-        store.removeReportComment(this.props.comment);
+        if (!store.isOrderReadOnly()) {
+            store.removeReportComment(this.props.comment);
+        }
     },
 
     _handleCheckboxClick() {
-        const updatedComment = this.props.comment;
+        if (!store.isOrderReadOnly()) {
+            const updatedComment = this.props.comment;
 
-        updatedComment.isChecked = updatedComment.isChecked ? false : true;
+            updatedComment.isChecked = updatedComment.isChecked ? false : true;
 
-        store.updateReportCommentIfExists(updatedComment);
+            store.updateReportCommentIfExists(updatedComment);
+        }
     }
 });
 
