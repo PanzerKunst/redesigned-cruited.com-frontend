@@ -1,0 +1,28 @@
+@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder, assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int, i18nMessages: Map[String, String])
+
+@main("Rater - Report preview", "report-preview") {
+<!--
+    Header
+-->
+@header(Some(account))
+
+} {
+<!--
+    Javascript
+-->
+<script type="text/javascript">
+    CR.ControllerData = {
+        account: @Html(play.api.libs.json.Json.toJson(account).toString()),
+        config: @Html(play.api.libs.json.Json.toJson(config.serialized).toString()),
+        order: @Html(play.api.libs.json.Json.toJson(order).toString()),
+        assessmentReport: @Html(play.api.libs.json.Json.toJson(assessmentReport).toString()),
+        assessmentReportScores: @Html(play.api.libs.json.Json.toJson(assessmentReportScores).toString()),
+        cvAverageScore: @Html(play.api.libs.json.Json.toJson(cvAverageScore).toString()),
+        coverLetterAverageScore: @Html(play.api.libs.json.Json.toJson(coverLetterAverageScore).toString()),
+        linkedinProfileAverageScore: @Html(play.api.libs.json.Json.toJson(linkedinProfileAverageScore).toString()),
+        i18nMessages: @Html(play.api.libs.json.Json.toJson(i18nMessages).toString())
+    };
+</script>
+
+<script type="text/javascript" src="@routes.Assets.versioned("scripts/reportPreview.js")"></script>
+}

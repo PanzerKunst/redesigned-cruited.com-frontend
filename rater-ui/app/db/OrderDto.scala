@@ -56,7 +56,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     }
   }
 
-  def get(id: Long): Option[FrontendOrder] = {
+  def getOfId(id: Long): Option[FrontendOrder] = {
     db.withConnection { implicit c =>
       val query = """
         select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
@@ -190,6 +190,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     ordersSentToTheCustomer = processQuery(query)
   }
 
+  /* Using JDBC here instead of Anorm due to issue https://github.com/playframework/anorm/issues/122 */
   private def processQuery(query: String): List[FrontendOrder] = {
     var orders = new ListBuffer[FrontendOrder]()
     val conn = db.getConnection()
@@ -270,7 +271,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
           idInBase64 = StringService.base64Encode(orderId.toString),
 
-          tags = List(rs.getString("edition")),
+          editionCode = rs.getString("edition"),
 
           containedProductCodes = Order.getContainedProductCodesFromTypesString(rs.getString("type")),
 

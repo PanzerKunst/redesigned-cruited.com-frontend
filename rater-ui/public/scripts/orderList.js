@@ -71,9 +71,6 @@
 
 	    reactComponent: React.createClass({
 	        displayName: "reactComponent",
-	        getInitialState: function getInitialState() {
-	            return _store2.default;
-	        },
 	        render: function render() {
 	            return React.createElement(
 	                "div",
@@ -739,6 +736,7 @@
 	            viewBtn = React.createElement("a", { href: href, target: "_blank", className: "fa fa-eye" });
 	        }
 
+	        // TODO: make the button available to everyone
 	        var deleteBtn = _store2.default.account.isAdmin() ? React.createElement("button", { className: "styleless fa fa-trash", onClick: this._handleDeleteClick }) : null;
 
 	        return React.createElement(
@@ -995,13 +993,11 @@
 	            "div",
 	            { ref: "root" },
 	            this._couponTag(order.coupon),
-	            order.tags.map(function (tag) {
-	                return React.createElement(
-	                    "span",
-	                    { key: order.id + "-" + tag, className: "order-tag tag" },
-	                    tag
-	                );
-	            }),
+	            React.createElement(
+	                "span",
+	                { className: "order-tag edition" },
+	                order.editionCode
+	            ),
 	            order.containedProductCodes.map(function (productCode) {
 	                return React.createElement(
 	                    "span",

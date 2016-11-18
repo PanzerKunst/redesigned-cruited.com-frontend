@@ -104,6 +104,7 @@ const Component = React.createClass({
             viewBtn = <a href={href} target="_blank" className="fa fa-eye" />;
         }
 
+        // TODO: make the button available to everyone
         const deleteBtn = store.account.isAdmin() ?
             <button className="styleless fa fa-trash" onClick={this._handleDeleteClick}></button> :
             null;

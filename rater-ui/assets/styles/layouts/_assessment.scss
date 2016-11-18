@@ -26,6 +26,24 @@ $white-section-padding: 2em 1em 1em;
 
     @include medium-screen {
       display: flex;
+
+      > section {
+        $first-section-width: 55%;
+        $second-section-width: 25%;
+        $third-section-width: 100% - $first-section-width - $second-section-width;
+
+        width: $second-section-width;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        &:first-child {
+          width: $first-section-width;
+        }
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        &:last-child {
+          width: $third-section-width;
+        }
+      }
     }
   }
 
@@ -250,22 +268,6 @@ $white-section-padding: 2em 1em 1em;
         /* stylelint-disable-next-line max-nesting-depth */
         > section {
           float: left;
-
-          $first-section-width: 55%;
-          $second-section-width: 25%;
-          $third-section-width: 100% - $first-section-width - $second-section-width;
-
-          width: $second-section-width;
-
-          /* stylelint-disable-next-line max-nesting-depth */
-          &:first-child {
-            width: $first-section-width;
-          }
-
-          /* stylelint-disable-next-line max-nesting-depth */
-          &:last-child {
-            width: $third-section-width;
-          }
         }
       }
     }

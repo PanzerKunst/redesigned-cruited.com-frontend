@@ -4,14 +4,14 @@ import javax.inject._
 
 import db.{AccountDto, OrderDto}
 import play.api.mvc._
-import services.{Scheduler, GlobalConfig, SessionService}
+import services.{GlobalConfig, Scheduler, SessionService}
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(config: GlobalConfig, scheduler: Scheduler, accountDto: AccountDto, orderDto: OrderDto) extends Controller {
+class HomeController @Inject()(accountDto: AccountDto, config: GlobalConfig, scheduler: Scheduler, orderDto: OrderDto) extends Controller {
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {

@@ -1,0 +1,62 @@
+# Global
+
+edition.name.PRO = Professional
+edition.name.YOUNG_PRO = Young Professional
+edition.name.EXEC = Executive
+edition.name.CONSULT = Consultant
+edition.name.ACADEMIA = Researcher
+
+
+# Category titles
+
+# CV
+category.title.12 = Present achievements and build credibility
+category.title.13 = Ensure completeness and correctness
+category.title.14 = Be relevant and targeted
+
+# Cover letter
+category.title.7 = Highlight your potential
+category.title.8 = Focus on the employer
+category.title.10 = Present achievements and build credibility
+category.title.11 = Active, brief and correct
+
+# Linkedin profile
+category.title.16 = Be relevant and targeted
+category.title.17 = Network and outreach
+category.title.18 = Complete and correct profile
+category.title.20 = Present achievements and build credibility
+
+
+# Well Done comments
+
+# CV
+wellDone.comment.12 = Very well done in this area!
+wellDone.comment.13 = Very well done in this area! You have a professional looking cv, that meets all the expected qualities.
+wellDone.comment.14 = Very well done in this area!
+
+# Cover letter
+wellDone.comment.7 = Very well done in this area!
+wellDone.comment.8 = Very well done in this area!
+wellDone.comment.10 = Very well done in this area!
+wellDone.comment.11 = Very well done in this area!
+
+# Linkedin profile
+wellDone.comment.16 = Very well done in this area!
+wellDone.comment.17 = Very well done in this area!
+wellDone.comment.18 = Very well done in this area!
+wellDone.comment.20 = Very well done in this area!
+
+
+# Report preview page
+
+report.title = Your Report
+report.subtitle = Assessment
+report.orderCreationDate.label = Created
+report.tabName.cv = CV Review
+report.tabName.coverLetter = Cover Letter Review
+report.tabName.linkedinProfile = LinkedIn Review
+report.tabNameSmallScreen.cv = CV
+report.tabNameSmallScreen.coverLetter = Cover letter
+report.tabNameSmallScreen.linkedinProfile = LinkedIn
+report.unorderedAssessment.text = You have not ordered this product. If you want to proceed, please place a new order.
+report.unorderedAssessment.orderBtn.text = Order a new assessment

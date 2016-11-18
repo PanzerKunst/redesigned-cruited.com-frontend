@@ -106,7 +106,8 @@ gulp.task("js-bundle", function() {
     runWebpack("common.js");
     runWebpack("signIn.js");
     runWebpack("orderList.js", "controllers/order-list/");
-    return runWebpack("assessment.js", "controllers/assessment/");
+    runWebpack("assessment.js", "controllers/assessment/");
+    return runWebpack("reportPreview.js", "controllers/report-preview/");
 });
 
 function runWebpack(entryFileName, srcSubDir) {

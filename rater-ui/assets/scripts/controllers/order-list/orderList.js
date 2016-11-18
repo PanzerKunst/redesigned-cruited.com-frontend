@@ -17,10 +17,6 @@ const controller = {
     },
 
     reactComponent: React.createClass({
-        getInitialState() {
-            return store;
-        },
-
         render() {
             return (
                 <div id="content">

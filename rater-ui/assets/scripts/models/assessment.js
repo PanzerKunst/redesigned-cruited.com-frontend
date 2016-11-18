@@ -65,15 +65,23 @@ const Assessment = {
         return true;
     },
 
+    overallComment(categoryProductCode) {
+        const orderId = store.order.id;
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        return _.get(myAssessments, [orderId, "report", categoryProductCode, "overallComment"]);
+    },
+
+    updateOverallComment(categoryProductCode, commentText) {
+        this._saveReportOverallCommentInLocalStorage(categoryProductCode, commentText);
+    },
+
     reportCategory(categoryProductCode, categoryId) {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
-        if (myAssessments[orderId].report &&
-            myAssessments[orderId].report[categoryProductCode] &&
-            myAssessments[orderId].report[categoryProductCode][categoryId]) {
-
-            return myAssessments[orderId].report[categoryProductCode][categoryId];
+        if (_.has(myAssessments, [orderId, "report", categoryProductCode, "categories", categoryId])) {
+            return myAssessments[orderId].report[categoryProductCode].categories[categoryId];
         }
 
         const reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
@@ -100,8 +108,8 @@ const Assessment = {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
-        if (myAssessments[orderId].report && myAssessments[orderId].report[categoryProductCode] && myAssessments[orderId].report[categoryProductCode][comment.categoryId]) {
-            const commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, c => c.id === comment.id);
+        if (_.has(myAssessments, [orderId, "report", categoryProductCode, "categories", comment.categoryId])) {
+            const commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
             if (commentToUpdate) {
                 this._saveReportCommentInLocalStorage(categoryProductCode, comment);
@@ -135,14 +143,13 @@ const Assessment = {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
-        if (!myAssessments || !myAssessments[orderId].report ||
-            _.isEmpty(myAssessments[orderId].report[categoryProductCode])) {
+        const docReportCategoriesMap = _.get(myAssessments, [orderId, "report", categoryProductCode, "categories"]);
 
+        if (!docReportCategoriesMap) {
             return false;
         }
 
-        const docReport = myAssessments[orderId].report[categoryProductCode];
-        const categories = _.values(docReport);
+        const categories = _.values(docReportCategoriesMap);
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
@@ -173,6 +180,7 @@ const Assessment = {
 
         let sumOfRedPoints = 0;
 
+        // TODO: calculate sumOfRedPoints from the red comments in the list, not in the report
         for (let i = 0; i < reportCategory.comments.length; i++) {
             sumOfRedPoints += reportCategory.comments[i].points;
         }
@@ -224,33 +232,51 @@ const Assessment = {
         };
     },
 
+    _saveReportOverallCommentInLocalStorage(categoryProductCode, commentText) {
+        const orderId = store.order.id;
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        myAssessments[orderId].report = myAssessments[orderId].report || {};
+        myAssessments[orderId].report[categoryProductCode] = myAssessments[orderId].report[categoryProductCode] || {};
+        myAssessments[orderId].report[categoryProductCode].overallComment = commentText;
+
+        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
+    },
+
     /*
      * Structure of the report object:
      * {
      *   cv: {
-     *     12: {
-     *       comments: [],
-     *       wellDoneComment: null
-     *     }
-     *     13: {
-     *       comments: [],
-     *       wellDoneComment: null
-     *     }
-     *     14: {
-     *       comments: [],
-     *       wellDoneComment: null
+     *     overallComment: "something",
+     *     categories: {
+     *       12: {
+     *         comments: [],
+     *         wellDoneComment: null
+     *       }
+     *       13: {
+     *         comments: [],
+     *         wellDoneComment: null
+     *       }
+     *       14: {
+     *         comments: [],
+     *         wellDoneComment: null
+     *       }
      *     }
      *   },
      *   coverLetter: {
-     *     7: {
-     *       comments: [],
-     *       wellDoneComment: null
+     *     categories: {
+     *       7: {
+     *         comments: [],
+     *         wellDoneComment: null
+     *       }
      *     }
      *   },
      *   linkedinProfile: {
-     *     16: {
-     *       comments: [],
-     *       wellDoneComment: null
+     *     categories : {
+     *       16: {
+     *         comments: [],
+     *         wellDoneComment: null
+     *       }
      *     }
      *   }
      * }
@@ -261,7 +287,8 @@ const Assessment = {
 
         myAssessments[orderId].report = myAssessments[orderId].report || {};
         myAssessments[orderId].report[categoryProductCode] = myAssessments[orderId].report[categoryProductCode] || {};
-        myAssessments[orderId].report[categoryProductCode][categoryId] = reportCategory;
+        myAssessments[orderId].report[categoryProductCode].categories = myAssessments[orderId].report[categoryProductCode].categories || {};
+        myAssessments[orderId].report[categoryProductCode].categories[categoryId] = reportCategory;
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
@@ -269,12 +296,12 @@ const Assessment = {
     _saveReportCommentInLocalStorage(categoryProductCode, comment) {
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-        const commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, c => c.id === comment.id);
+        const commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
         if (commentToUpdate) {
             Object.assign(commentToUpdate, comment);
         } else {
-            myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments.push(comment);
+            myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
         }
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
@@ -284,7 +311,7 @@ const Assessment = {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
         const orderId = store.order.id;
 
-        _.remove(myAssessments[orderId].report[categoryProductCode][comment.categoryId].comments, c => c.id === comment.id);
+        _.remove(myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },

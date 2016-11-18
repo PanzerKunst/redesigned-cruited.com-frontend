@@ -6,7 +6,7 @@ import play.api.libs.json.{Format, JsPath}
 
 case class FrontendOrder(id: Long,
                          idInBase64: String,
-                         tags: List[String],
+                         editionCode: String,
                          containedProductCodes: List[String],
                          coupon: Option[Coupon],
                          cvFileName: Option[String],
@@ -28,7 +28,7 @@ object FrontendOrder {
   implicit val format: Format[FrontendOrder] = (
     (JsPath \ "id").format[Long] and
       (JsPath \ "idInBase64").format[String] and
-      (JsPath \ "tags").format[List[String]] and
+      (JsPath \ "editionCode").format[String] and
       (JsPath \ "containedProductCodes").format[List[String]] and
       (JsPath \ "coupon").formatNullable[Coupon] and
       (JsPath \ "cvFileName").formatNullable[String] and

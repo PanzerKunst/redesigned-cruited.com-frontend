@@ -1,4 +1,3 @@
-import Category from "../../models/category";
 import Assessment from "../../models/assessment";
 import StringUtils from "../../services/string";
 import Keyboard from "../../services/keyboard";
@@ -24,7 +23,7 @@ const Component = React.createClass({
 
         return (
             <li ref="root" className={liClasses}>
-                <h3>{Category.titles[store.order.languageCode][reportCategory.id]}</h3>
+                <h3>{store.i18nMessages[`category.title.${reportCategory.id}`]}</h3>
                 {this._wellDoneComment()}
                 <ul className="styleless">
                 {reportCategory.comments.map(comment =>
@@ -83,15 +82,17 @@ const Component = React.createClass({
             return null;
         }
 
+        this._updateWellDoneComment(false);
+
         return (
             <div className="well-done-comment-composer">
                 <label>Top comment</label>
-                <textarea className="form-control" value={this.state.wellDoneComment} onChange={this._handleWellDoneCommentTextareaChange} onBlur={this._handleWellDoneCommentTextareaBlur}/>
+                <textarea className="form-control" value={this.state.wellDoneComment} onChange={this._handleWellDoneCommentChange} onBlur={this._handleWellDoneCommentBlur}/>
             </div>);
     },
 
     _defaultWellDoneComment() {
-        return Category.wellDoneComments[store.order.languageCode][this.props.reportCategory.id];
+        return store.i18nMessages[`wellDone.comment.${this.props.reportCategory.id}`];
     },
 
     _handleAddCommentClick() {
@@ -119,18 +120,14 @@ const Component = React.createClass({
         }
     },
 
-    _handleWellDoneCommentTextareaChange() {
+    _handleWellDoneCommentChange() {
         this.setState({
             wellDoneComment: this.$wellDoneCommentTextarea.val()
         });
     },
 
-    _handleWellDoneCommentTextareaBlur() {
-        const updatedReportCategory = this.props.reportCategory;
-
-        updatedReportCategory.wellDoneComment = this.state.wellDoneComment;
-
-        store.updateReportCategory(updatedReportCategory);
+    _handleWellDoneCommentBlur() {
+        this._updateWellDoneComment();
     },
 
     _adaptTextareaHeight() {
@@ -144,6 +141,14 @@ const Component = React.createClass({
     _hideComposer() {
         this.$addCommentComposer.addClass("hidden");
         this.$addCommentLink.show();
+    },
+
+    _updateWellDoneComment(isRefreshRequired = true) {
+        const updatedReportCategory = this.props.reportCategory;
+
+        updatedReportCategory.wellDoneComment = this.state.wellDoneComment;
+
+        store.updateReportCategory(updatedReportCategory, isRefreshRequired);
     }
 });
 

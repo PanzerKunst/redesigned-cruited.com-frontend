@@ -35,7 +35,13 @@ const controller = {
 
     reactComponent: React.createClass({
         getInitialState() {
-            return store;
+            return {
+                overallComments: {
+                    cv: Assessment.overallComment(Category.productCodes.cv),
+                    coverLetter: Assessment.overallComment(Category.productCodes.coverLetter),
+                    linkedinProfile: Assessment.overallComment(Category.productCodes.linkedinProfile)
+                }
+            };
         },
 
         render() {
@@ -45,7 +51,7 @@ const controller = {
                 <div id="content">
                     <header>
                         <div>
-                            {this._heading()}
+                            <h1>{`Assessment #${store.order.id}`}</h1>
                         </div>
                     </header>
                     <div className="with-circles">
@@ -97,12 +103,6 @@ const controller = {
             $(".overall-comment").prop("disabled", store.isOrderReadOnly());
         },
 
-        _heading() {
-            const text = `Assessment #${store.order.id}`;
-
-            return <h1>{text}</h1>;
-        },
-
         _customerComment(customerComment) {
             if (!customerComment) {
                 return null;
@@ -129,7 +129,7 @@ const controller = {
 
         _previewBtn() {
             if (store.areAllReportCommentsCheckedForAtLeastOneCategory()) {
-                return <button className="btn btn-primary">Preview assessment</button>;
+                return <button className="btn btn-primary" onClick={this._handlePreviewBtnClick}>Preview assessment</button>;
             }
 
             return null;
@@ -139,7 +139,7 @@ const controller = {
             const classes = classNames({
                 active: isActive
             });
-            const attr = `${categoryProductCode}-comments-selection-panel`;
+            const attr = this._tabAttr(categoryProductCode);
 
             return (
                 <li role="presentation" className={classes}>
@@ -152,13 +152,17 @@ const controller = {
                 "tab-pane fade in": true,
                 active: isActive
             });
-            const attr = `${categoryProductCode}-comments-selection-panel`;
+            const attr = this._tabAttr(categoryProductCode);
 
             return (
                 <div role="tabpanel" className={classes} id={attr} data-product-code={categoryProductCode}>
                     {this._listCategory(categoryProductCode)}
-                    {this._assessmentForm(categoryProductCode)}
+                    {this._reportForm(categoryProductCode)}
                 </div>);
+        },
+
+        _tabAttr(categoryProductCode) {
+            return `${categoryProductCode}-comments-selection-panel`;
         },
 
         _listCategory(categoryProductCode) {
@@ -169,7 +173,7 @@ const controller = {
 
                     return (
                         <section key={elId} id={elId}>
-                            <h3>{Category.titles[store.order.languageCode][categoryId]}</h3>
+                            <h3>{store.i18nMessages[`category.title.${categoryId}`]}</h3>
 
                             <ul className="styleless">
                             {listCommentsForThisCategory.map(ac =>
@@ -183,12 +187,12 @@ const controller = {
             return null;
         },
 
-        _assessmentForm(categoryProductCode) {
+        _reportForm(categoryProductCode) {
             return (
                 <form className="report-form single-column-panel">
                     <div className="form-group">
                         <label>Overall comment</label>
-                        <textarea className="form-control overall-comment" />
+                        <textarea className="form-control overall-comment" value={this.state.overallComments[categoryProductCode] || ""} onChange={this._handleOverallCommentChange} onBlur={this._handleOverallCommentBlur} />
                     </div>
                     {this._reportCategories(categoryProductCode)}
                 </form>);
@@ -214,6 +218,35 @@ const controller = {
         _handleTabClick(e) {
             e.preventDefault();
             $(e.currentTarget).tab("show");
+        },
+
+        _handleOverallCommentChange(e) {
+            const $textarea = $(e.currentTarget);
+            const categoryProductCode = this._categoryProductCodeFromOverallCommentTextarea($textarea);
+            const newState = this.state;
+
+            newState.overallComments[categoryProductCode] = $textarea.val();
+            this.setState(newState);
+        },
+
+        _handleOverallCommentBlur(e) {
+            const $textarea = $(e.currentTarget);
+            const categoryProductCode = this._categoryProductCodeFromOverallCommentTextarea($textarea);
+
+            const textareaValue = $textarea.val();
+            const overallComment = textareaValue === "" ? null : textareaValue;
+
+            store.updateOverallComment(categoryProductCode, overallComment);
+        },
+
+        _handlePreviewBtnClick() {
+
+            // eslint-disable-next-line no-return-assign
+            store.saveCurrentReport(() => location.href = `/report-preview/${store.order.id}`);
+        },
+
+        _categoryProductCodeFromOverallCommentTextarea($textarea) {
+            return $textarea.closest(".tab-pane").data("productCode");
         }
     })
 };

@@ -31,11 +31,29 @@ object CruitedProduct {
   val dbTypeCoverLetterReview = "letter"
   val dbTypeLinkedinProfileReview = "li"
 
-  def getCodeFromType(typeForDb: String): String = {
+  def codeFromType(typeForDb: String): String = {
     typeForDb match {
       case `dbTypeCvReview` => codeCvReview
       case `dbTypeCoverLetterReview` => codeCoverLetterReview
       case `dbTypeLinkedinProfileReview` => codeLinkedinProfileReview
+    }
+  }
+
+  def codeFromCategoryId(categoryId: Long): String = {
+    categoryId match {
+      case 12 => codeCvReview
+      case 13 => codeCvReview
+      case 14 => codeCvReview
+
+      case 7 => codeCoverLetterReview
+      case 8 => codeCoverLetterReview
+      case 10 => codeCoverLetterReview
+      case 11 => codeCoverLetterReview
+
+      case 16 => codeLinkedinProfileReview
+      case 17 => codeLinkedinProfileReview
+      case 18 => codeLinkedinProfileReview
+      case 10 => codeLinkedinProfileReview
     }
   }
 }

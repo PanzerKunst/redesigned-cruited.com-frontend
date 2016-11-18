@@ -7,9 +7,7 @@ const Component = React.createClass({
         return (
             <div ref="root">
                 {this._couponTag(order.coupon)}
-                {order.tags.map(tag =>
-                    <span key={`${order.id}-${tag}`} className="order-tag tag">{tag}</span>
-                )}
+                <span className="order-tag edition">{order.editionCode}</span>
                 {order.containedProductCodes.map(productCode =>
                     <span key={`${order.id}-${productCode}`} className="order-tag product-code">
                         <a href={order.documentUrl(this.props.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>

@@ -3,12 +3,14 @@ import Account from "../../models/account";
 import Order from "../../models/order";
 import Assessment from "../../models/assessment";
 import Category from "../../models/category";
+import Product from "../../models/product";
 
 const store = {
     reactComponent: null,
     account: Object.assign(Object.create(Account), CR.ControllerData.account),
     config: CR.ControllerData.config,
     order: Object.assign(Object.create(Order), CR.ControllerData.order),
+    i18nMessages: CR.ControllerData.i18nMessages,
     allDefaultComments: CR.ControllerData.allDefaultComments,
     allCommentVariations: CR.ControllerData.allCommentVariations,
 
@@ -58,9 +60,16 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    updateReportCategory(category) {
+    updateOverallComment(categoryProductCode, commentText) {
+        Assessment.updateOverallComment(categoryProductCode, commentText);
+    },
+
+    updateReportCategory(category, isRefreshRequired) {
         Assessment.updateReportCategory(category);
-        this.reactComponent.forceUpdate();
+
+        if (isRefreshRequired) {
+            this.reactComponent.forceUpdate();
+        }
     },
 
     addOrUpdateReportComment(comment) {
@@ -88,6 +97,48 @@ const store = {
             Assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile);
     },
 
+    saveCurrentReport(onAjaxRequestSuccess) {
+
+        /*
+         AssessmentReport(orderId: Long,
+         cvReport: Option[DocumentReport],
+         coverLetterReport: Option[DocumentReport],
+         linkedinProfileReport: Option[DocumentReport])
+         */
+        const assessmentReport = {
+            orderId: this.order.id
+        };
+
+        if (_.includes(this.order.containedProductCodes, Product.codes.cv)) {
+            assessmentReport.cvReport = this._docReportForBackend(Category.productCodes.cv);
+        }
+
+        if (_.includes(this.order.containedProductCodes, Product.codes.coverLetter)) {
+            assessmentReport.coverLetterReport = this._docReportForBackend(Category.productCodes.coverLetter);
+        }
+
+        if (_.includes(this.order.containedProductCodes, Product.codes.linkedinProfile)) {
+            assessmentReport.linkedinProfileReport = this._docReportForBackend(Category.productCodes.linkedinProfile);
+        }
+
+        const type = "POST";
+        const url = "/api/reports";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    onAjaxRequestSuccess();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify(assessmentReport));
+    },
+
     _initCategories() {
         const predicate = dc => dc.categoryId;
 
@@ -98,6 +149,56 @@ const store = {
         };
 
         this.reactComponent.forceUpdate();
+    },
+
+    _docReportForBackend(categoryProductCode) {
+
+        /*
+         DocumentReport(redComments: List[RedComment],
+         wellDoneComments: List[WellDoneComment],
+         overallComment: Option[String])
+         */
+        const docReport = {
+            redComments: [],
+            wellDoneComments: [],
+            overallComment: Assessment.overallComment(categoryProductCode)
+        };
+
+        this.categoryIds[categoryProductCode].forEach(categoryId => {
+            const reportCategory = Assessment.reportCategory(categoryProductCode, categoryId);
+
+            /*
+             RedComment(id: Option[Long], // None when custom comment coming from frontend
+             categoryId: Long,
+             text: String,
+             points: Option[Int])  // None when custom comment coming from frontend
+             */
+            reportCategory.comments.forEach(c => {
+                docReport.redComments.push({
+                    id: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
+                    categoryId,
+                    text: c.redText,
+                    points: c.points
+                });
+            });
+
+            /*
+             WellDoneComment(categoryId: Long,
+             text: String)
+             */
+            if (reportCategory.wellDoneComment) {
+                docReport.wellDoneComments.push({
+                    categoryId,
+                    text: reportCategory.wellDoneComment
+                });
+            }
+        });
+
+        if (docReport.redComments.length === 0 && docReport.wellDoneComments.length === 0) {
+            return null;
+        }
+
+        return docReport;
     }
 };
 

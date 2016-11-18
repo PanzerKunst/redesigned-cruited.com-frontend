@@ -3,7 +3,7 @@ package models
 import models.frontend.FrontendOrder
 
 case class Order(id: Long,
-                 tags: List[String],
+                 editionCode: String,
                  containedProductCodes: List[String],
                  couponId: Option[Long],
                  cvFileName: Option[String],
@@ -22,7 +22,7 @@ case class Order(id: Long,
 
   def this(frontendOrder: FrontendOrder) = this(
     id = frontendOrder.id,
-    tags = frontendOrder.tags,
+    editionCode = frontendOrder.editionCode,
     containedProductCodes = frontendOrder.containedProductCodes,
     couponId = frontendOrder.coupon match {
       case None => None
@@ -64,7 +64,7 @@ object Order {
   }
 
   def getContainedProductCodesFromTypesArray(docTypes: Array[String]): List[String] = {
-    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
+    docTypes.map { typeForDb => CruitedProduct.codeFromType(typeForDb)}
       .toList
   }
 

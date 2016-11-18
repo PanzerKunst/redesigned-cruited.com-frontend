@@ -40,7 +40,7 @@ class AssessmentDto @Inject()(db: Database) {
             }
           )
 
-          (defaultComment, CruitedProduct.getCodeFromType(dbDocType))
+          (defaultComment, CruitedProduct.codeFromType(dbDocType))
       }
 
       process(SQL(query).as(rowParser.*))
