@@ -394,7 +394,7 @@ object ReportDto {
         order by last_rate desc
         limit """ + n + """;"""
 
-      Logger.info("OrderDto.getIdsOfTheLastNReports():" + query)
+      Logger.info("ReportDto.getIdsOfTheLastNReports():" + query)
 
       val rowParser = long("id") map {
         case id => id

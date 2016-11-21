@@ -167,6 +167,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
             and that the account ID involved was '""" + accountId + """'.""")
+
           case Some(orderId) =>
             val orderWithUpdatedAccountId = OrderDto.getOfId(orderId).get.copy(
               accountId = Some(accountId)
@@ -180,45 +181,51 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
       case Some(accountId) =>
         val account = AccountDto.getOfId(accountId).get
-        val orderId = SessionService.getOrderId(request.session).get
+        SessionService.getOrderId(request.session) match {
+          case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
+            We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
+            Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this issue,
+            and that the account ID involved was '""" + accountId + """'.""")
 
-        if (!AccountService.isTemporary(accountId)) {
-          if (!orderService.isTemporary(orderId)) {
-            // The order is already finalised. The user is probably navigating back to this page. We load the default page
-            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
-              .withHeaders(doNotCachePage: _*)
-          } else {
-            // we finalize the order
-            val order = OrderDto.getOfId(orderId).get.copy(
-              accountId = Some(accountId)
-            )
-            val finalisedOrderId = orderService.finaliseOrder(order)
+          case Some(orderId) =>
+            if (!AccountService.isTemporary(accountId)) {
+              if (!orderService.isTemporary(orderId)) {
+                // The order is already finalised. The user is probably navigating back to this page. We load the default page
+                Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
+                  .withHeaders(doNotCachePage: _*)
+              } else {
+                // we finalize the order
+                val order = OrderDto.getOfId(orderId).get.copy(
+                  accountId = Some(accountId)
+                )
+                val finalisedOrderId = orderService.finaliseOrder(order)
 
-            // log the user in (if necessary) and then redirect to "/payment"
-            Redirect("/order/payment")
-              .withHeaders(doNotCachePage: _*)
-              .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
-              + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
-          }
-        } else {
-          // Temporary account
-          if (account.linkedinProfile == JsNull) {
-            // This means that the user was already on the page and hit "refresh". We load the default page
-            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
-              .withHeaders(doNotCachePage: _*)
-          } else {
-            // We arrive from a LI sign-in. We finalize the account
-            val finalisedAccountId = AccountService.finaliseAccount(account.emailAddress.get, account.firstName.get, account.password, account.linkedinProfile, request.session)
+                // log the user in (if necessary) and then redirect to "/payment"
+                Redirect("/order/payment")
+                  .withHeaders(doNotCachePage: _*)
+                  .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
+                  + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+              }
+            } else {
+              // Temporary account
+              if (account.linkedinProfile == JsNull) {
+                // This means that the user was already on the page and hit "refresh". We load the default page
+                Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(account), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
+                  .withHeaders(doNotCachePage: _*)
+              } else {
+                // We arrive from a LI sign-in. We finalize the account
+                val finalisedAccountId = AccountService.finaliseAccount(account.emailAddress.get, account.firstName.get, account.password, account.linkedinProfile, request.session)
 
-            // finalise the order. The accountId is already the finalised account ID
-            val finalisedOrderId = orderService.finaliseOrder(OrderDto.getOfId(orderId).get)
+                // finalise the order. The accountId is already the finalised account ID
+                val finalisedOrderId = orderService.finaliseOrder(OrderDto.getOfId(orderId).get)
 
-            // log the user in, then display the view. The JS controller should detect that the user is logged-in (= account final), and show the "You are now logged-in" view.
-            Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, AccountDto.getOfId(finalisedAccountId), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
-              .withHeaders(doNotCachePage: _*)
-              .withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
-              + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
-          }
+                // log the user in, then display the view. The JS controller should detect that the user is logged-in (= account final), and show the "You are now logged-in" view.
+                Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, AccountDto.getOfId(finalisedAccountId), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
+                  .withHeaders(doNotCachePage: _*)
+                  .withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
+                  + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+              }
+            }
         }
     }
   }
