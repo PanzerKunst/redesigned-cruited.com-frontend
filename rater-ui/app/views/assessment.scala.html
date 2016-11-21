@@ -1,4 +1,4 @@
-@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder, i18nMessages: Map[String, String], allDefaultComments: AllDefaultComments, allCommentVariations: List[frontend.FrontendCommentVariation])
+@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder, i18nMessages: Map[String, String], allDefaultComments: AllDefaultComments, allCommentVariations: List[frontend.FrontendCommentVariation], assessmentReportOpt: Option[AssessmentReport])
 
 @main("Rater - Assessment", "assessment") {
 <!--
@@ -17,7 +17,8 @@
         order: @Html(play.api.libs.json.Json.toJson(order).toString()),
         i18nMessages: @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         allDefaultComments: @Html(play.api.libs.json.Json.toJson(allDefaultComments).toString()),
-        allCommentVariations: @Html(play.api.libs.json.Json.toJson(allCommentVariations).toString())
+        allCommentVariations: @Html(play.api.libs.json.Json.toJson(allCommentVariations).toString()),
+        assessmentReport: @Html(play.api.libs.json.Json.toJson(assessmentReportOpt).toString())
     };
 </script>
 

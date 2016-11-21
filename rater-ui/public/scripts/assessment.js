@@ -612,12 +612,15 @@
 	        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
 	    },
 	    areAllReportCommentsChecked: function areAllReportCommentsChecked(categoryProductCode) {
+	        if (!this.areAllListCommentsSelected(categoryProductCode)) {
+	            return false;
+	        }
+
 	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-
 	        var docReportCategoriesMap = _.get(myAssessments, [orderId, "report", categoryProductCode, "categories"]);
 
-	        if (!docReportCategoriesMap) {
+	        if (_.isEmpty(docReportCategoriesMap)) {
 	            return false;
 	        }
 
@@ -661,6 +664,34 @@
 	        }
 
 	        return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
+	    },
+	    deleteAssessmentInfoFromLocalStorage: function deleteAssessmentInfoFromLocalStorage() {
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
+	        var orderId = _store2.default.order.id;
+
+	        myAssessments[orderId] = null;
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
+	    },
+	    isReportStarted: function isReportStarted(categoryIds) {
+	        var allCategoriesAsArray = [];
+
+	        _.values(categoryIds).forEach(function (categoryIdsForThatDoc) {
+	            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
+	        });
+
+	        for (var i = 0; i < allCategoriesAsArray[i]; i++) {
+	            var categoryId = allCategoriesAsArray[i];
+	            var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
+	            var reportCategory = this.reportCategory(categoryProductCode, categoryId);
+	            var defaultCategory = this._defaultReportCategory(categoryProductCode, categoryId);
+
+	            if (!_.isEqual(reportCategory.comments, defaultCategory.comments) || !_.isEqual(reportCategory.wellDoneComment, defaultCategory.wellDoneComment)) {
+	                return true;
+	            }
+	        }
+
+	        return false;
 	    },
 	    _calculateTopComments: function _calculateTopComments(categoryProductCode, categoryId) {
 	        var redCommentsForCategory = _.filter(this.listComments(categoryProductCode), function (ac) {
@@ -1016,9 +1047,19 @@
 	    i18nMessages: CR.ControllerData.i18nMessages,
 	    allDefaultComments: CR.ControllerData.allDefaultComments,
 	    allCommentVariations: CR.ControllerData.allCommentVariations,
+	    assessmentReport: CR.ControllerData.assessmentReport,
 
 	    init: function init() {
 	        this._initCategories();
+
+	        // TODO: remove
+	        console.log("isReportStarted: ", _assessment2.default.isReportStarted(this.categoryIds));
+
+	        if (!_assessment2.default.isReportStarted(this.categoryIds)) {
+
+	            // TODO
+	            console.log("TODO: initialize report in local storage with `this.assessmentReport`");
+	        }
 	    },
 	    isOrderReadOnly: function isOrderReadOnly() {
 	        return this.order.isReadOnlyBy(this.account.id);
@@ -1118,6 +1159,7 @@
 	        httpRequest.onreadystatechange = function () {
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    _assessment2.default.deleteAssessmentInfoFromLocalStorage();
 	                    onAjaxRequestSuccess();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -1266,11 +1308,26 @@
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
 	    },
+	    thumbnailUrl: function thumbnailUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
+	    },
 
 
 	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
 	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
 	    }
 	};
 

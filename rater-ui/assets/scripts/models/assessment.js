@@ -140,12 +140,15 @@ const Assessment = {
     },
 
     areAllReportCommentsChecked(categoryProductCode) {
+        if (!this.areAllListCommentsSelected(categoryProductCode)) {
+            return false;
+        }
+
         const orderId = store.order.id;
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-
         const docReportCategoriesMap = _.get(myAssessments, [orderId, "report", categoryProductCode, "categories"]);
 
-        if (!docReportCategoriesMap) {
+        if (_.isEmpty(docReportCategoriesMap)) {
             return false;
         }
 
@@ -186,6 +189,36 @@ const Assessment = {
         }
 
         return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
+    },
+
+    deleteAssessmentInfoFromLocalStorage() {
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments) || {};
+        const orderId = store.order.id;
+
+        myAssessments[orderId] = null;
+
+        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
+    },
+
+    isReportStarted(categoryIds) {
+        let allCategoriesAsArray = [];
+
+        _.values(categoryIds).forEach(categoryIdsForThatDoc => {
+            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
+        });
+
+        for (let i = 0; i < allCategoriesAsArray[i]; i++) {
+            const categoryId = allCategoriesAsArray[i];
+            const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+            const reportCategory = this.reportCategory(categoryProductCode, categoryId);
+            const defaultCategory = this._defaultReportCategory(categoryProductCode, categoryId);
+
+            if (!_.isEqual(reportCategory.comments, defaultCategory.comments) || !_.isEqual(reportCategory.wellDoneComment, defaultCategory.wellDoneComment)) {
+                return true;
+            }
+        }
+
+        return false;
     },
 
     _calculateTopComments(categoryProductCode, categoryId) {

@@ -1,4 +1,4 @@
-$sprite-url: "../images/sprite";
+$sprite-url: "./images/sprite";
 
 $action-color: rgb(28, 127, 168);  // #1C7FA8
 $light-grey: rgb(248, 249, 251); // #F8F9FB
@@ -10,8 +10,18 @@ $dark-grey: rgb(76, 83, 101);  // #4c5365
 $gradient-light-grey: rgb(241, 242, 245); // #F1F2F5
 $well-border-color: rgb(189, 205, 216); // #BDCDD8
 $sky-blue: rgb(38, 169, 224); // #26A9E0
+$light-grey-blue: rgb(98, 143, 187);   // #628FBB
+$pro-edition-color: $sky-blue;
+$young-pro-edition-color: rgb(51, 184, 176);  // #33B8B0
+$exec-edition-color: rgb(159, 39, 121); // #9F2779
+$consult-edition-color: rgb(219, 143, 37); // #DB8F25
+$academia-edition-color: rgb(162, 214, 40); // #A2D628
 $green-comment-bg: rgb(207, 248, 216);  // #CFF8D8
 $red-comment-bg: rgb(255, 190, 190);  // #FFBEBE
+$pdf-red: rgb(240, 90, 40); // #F05A28
+$weak-assessment-score-color: rgb(183, 90, 88); // #B75A58
+$good-assessment-score-color: rgb(207, 172, 71); // #CFAC47
+$excellent-assessment-score-color: rgb(49, 161, 100); // #31A164
 
 
 $line-height-project: 1.75em;

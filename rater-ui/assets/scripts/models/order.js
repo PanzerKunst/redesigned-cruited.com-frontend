@@ -30,9 +30,25 @@ const Order = {
         return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}?token=${this.idInBase64}`;
     },
 
+    thumbnailUrl(config, productCode) {
+        let urlMiddle = "cv";
+
+        switch (productCode) {
+            case Product.codes.coverLetter:
+                urlMiddle = "cover-letter";
+                break;
+            case Product.codes.linkedinProfile:
+                urlMiddle = "linkedin-profile";
+                break;
+            default:
+        }
+
+        return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}/thumbnail`;
+    },
+
     // Raters who are not assigned should still be able to check the assessment, even before it's completed
     isReadOnlyBy(raterId) {
-        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
     }
 };
 

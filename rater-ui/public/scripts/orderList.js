@@ -523,11 +523,26 @@
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
 	    },
+	    thumbnailUrl: function thumbnailUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
+	    },
 
 
 	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
 	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
 	    }
 	};
 

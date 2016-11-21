@@ -13,9 +13,19 @@ const store = {
     i18nMessages: CR.ControllerData.i18nMessages,
     allDefaultComments: CR.ControllerData.allDefaultComments,
     allCommentVariations: CR.ControllerData.allCommentVariations,
+    assessmentReport: CR.ControllerData.assessmentReport,
 
     init() {
         this._initCategories();
+
+        // TODO: remove
+        console.log("isReportStarted: ", Assessment.isReportStarted(this.categoryIds));
+
+        if (!Assessment.isReportStarted(this.categoryIds)) {
+
+            // TODO
+            console.log("TODO: initialize report in local storage with `this.assessmentReport`");
+        }
     },
 
     isOrderReadOnly() {
@@ -128,6 +138,7 @@ const store = {
         httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
+                    Assessment.deleteAssessmentInfoFromLocalStorage();
                     onAjaxRequestSuccess();
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);

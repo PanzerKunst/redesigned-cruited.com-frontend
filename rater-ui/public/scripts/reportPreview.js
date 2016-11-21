@@ -50,15 +50,19 @@
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _category = __webpack_require__(2);
+	var _string = __webpack_require__(2);
+
+	var _string2 = _interopRequireDefault(_string);
+
+	var _category = __webpack_require__(3);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(3);
+	var _product = __webpack_require__(4);
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _store = __webpack_require__(4);
+	var _store = __webpack_require__(5);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -98,7 +102,11 @@
 	                React.createElement(
 	                    "div",
 	                    { className: "with-circles" },
-	                    this._subTitle(),
+	                    React.createElement(
+	                        "span",
+	                        null,
+	                        this._subTitle()
+	                    ),
 	                    React.createElement(
 	                        "header",
 	                        null,
@@ -193,7 +201,14 @@
 	            return categoryProductCode + "-report-panel";
 	        },
 	        _documentReportSection: function _documentReportSection(categoryProductCode) {
-	            if (!_.find(_store2.default.order.containedProductCodes, _product2.default.codes[categoryProductCode])) {
+	            var productCode = _product2.default.codes[categoryProductCode];
+
+	            // TODO: remove
+	            console.log("productCode", productCode);
+	            console.log("store.order.containedProductCodes", _store2.default.order.containedProductCodes);
+	            console.log("_.includes(store.order.containedProductCodes, productCode)", _.includes(_store2.default.order.containedProductCodes, productCode));
+
+	            if (!_.includes(_store2.default.order.containedProductCodes, productCode)) {
 	                return React.createElement(
 	                    "div",
 	                    { className: "sheet-of-paper centered-contents" },
@@ -211,23 +226,35 @@
 	                );
 	            }
 
-	            var documentUrl = /* TODO this._getDocumentUrl(store.order.getId(), store.order.getIdInBase64(), productCode) */null;
-	            var thumbnailUrl = /* TODO this._getThumbnailUrl(store.order.getId(), productCode) */null;
+	            var documentUrl = _store2.default.order.documentUrl(_store2.default.config, productCode);
+	            var thumbnailUrl = _store2.default.order.thumbnailUrl(_store2.default.config, productCode);
 
-	            var docReport = this.state.cvReport;
-	            var docReportScores = this.state.cvReportScores;
+	            var docReport = _store2.default.assessmentReport.cvReport;
+	            var docReportScores = _store2.default.assessmentReportScores.cvReportScores;
 
-	            if (categoryProductCode === CR.Models.Product.codes.COVER_LETTER_REVIEW) {
-	                docReport = this.state.coverLetterReport;
-	                docReportScores = this.state.coverLetterReportScores;
-	            } else if (categoryProductCode === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
-	                docReport = this.state.linkedinProfileReport;
-	                docReportScores = this.state.linkedinProfileReportScores;
+	            if (categoryProductCode === _category2.default.productCodes.coverLetter) {
+	                docReport = _store2.default.assessmentReport.coverLetterReport;
+	                docReportScores = _store2.default.assessmentReportScores.coverLetterReportScores;
+	            } else if (categoryProductCode === _category2.default.productCodes.linkedinProfile) {
+	                docReport = _store2.default.assessmentReport.linkedinProfileReport;
+	                docReportScores = _store2.default.assessmentReportScores.linkedinProfileReportScores;
+	            }
+
+	            if (!docReport) {
+	                return React.createElement(
+	                    "div",
+	                    { className: "sheet-of-paper centered-contents" },
+	                    React.createElement(
+	                        "p",
+	                        null,
+	                        "Assessment incomplete"
+	                    )
+	                );
 	            }
 
 	            var reportAnalysisExplanationText = _store2.default.i18nMessages["report.analysis.explanation.text"];
 	            var docLabel = _store2.default.i18nMessages["report.analysis.explanation.docLabel." + categoryProductCode];
-	            var templatedExplanationText = CR.Services.String.template(reportAnalysisExplanationText, "docLabel", docLabel);
+	            var templatedExplanationText = _string2.default.template(reportAnalysisExplanationText, "docLabel", docLabel);
 
 	            var overallCommentParagraph = docReport.overallComment ? React.createElement(
 	                "p",
@@ -251,7 +278,7 @@
 	                        null,
 	                        React.createElement(
 	                            "div",
-	                            { className: "centered-contents" },
+	                            { className: "doc-preview centered-contents" },
 	                            React.createElement(
 	                                "a",
 	                                { href: documentUrl, target: "_blank" },
@@ -269,9 +296,9 @@
 	                        ),
 	                        React.createElement(
 	                            "div",
-	                            { className: "report-summary-text-wrapper" },
+	                            { className: "report-summary-text" },
 	                            overallCommentParagraph,
-	                            React.createElement("p", { className: "light-font", dangerouslySetInnerHTML: { __html: this._getSummary(categoryProductCode, docReportScores.globalScore) } })
+	                            React.createElement("p", { className: "light-font", dangerouslySetInnerHTML: { __html: this._summary(categoryProductCode, docReportScores.globalScore) } })
 	                        )
 	                    ),
 	                    React.createElement(
@@ -385,7 +412,7 @@
 	                                    ),
 	                                    React.createElement(
 	                                        "p",
-	                                        { className: "light-font" },
+	                                        { className: "score-explanation-text light-font" },
 	                                        _store2.default.i18nMessages["report.summary.understandYourScore.weak.text"]
 	                                    )
 	                                ),
@@ -418,7 +445,7 @@
 	                                    ),
 	                                    React.createElement(
 	                                        "p",
-	                                        { className: "light-font" },
+	                                        { className: "score-explanation-text light-font" },
 	                                        _store2.default.i18nMessages["report.summary.understandYourScore.good.text"]
 	                                    )
 	                                ),
@@ -451,7 +478,7 @@
 	                                    ),
 	                                    React.createElement(
 	                                        "p",
-	                                        { className: "light-font" },
+	                                        { className: "score-explanation-text light-font" },
 	                                        _store2.default.i18nMessages["report.summary.understandYourScore.excellent.text"]
 	                                    )
 	                                )
@@ -475,10 +502,7 @@
 	                    React.createElement(
 	                        "ul",
 	                        { className: "styleless" },
-	                        this._getCategoriesAndTheirComments(docReport).map(function (categoryAndItsComments) {
-	                            var categoryId = categoryAndItsComments.categoryId;
-	                            var categoryClasses = "category sheet-of-paper id-" + categoryId;
-
+	                        this._categoriesAndTheirComments(docReport).map(function (categoryAndItsComments) {
 	                            var topCommentParagraph = null;
 
 	                            if (categoryAndItsComments.topComment) {
@@ -496,10 +520,13 @@
 	                                    "ul",
 	                                    { className: "red-comments light-font" },
 	                                    categoryAndItsComments.redComments.map(function (comment) {
-	                                        return React.createElement("li", { key: comment.id, dangerouslySetInnerHTML: { __html: this._getCommentWithProcessedLinks(comment.text) } });
+	                                        return React.createElement("li", { key: comment.id, dangerouslySetInnerHTML: { __html: this._commentWithProcessedLinks(comment.text) } });
 	                                    }.bind(this))
 	                                );
 	                            }
+
+	                            var categoryId = categoryAndItsComments.categoryId;
+	                            var categoryClasses = "category sheet-of-paper id-" + categoryId;
 
 	                            return React.createElement(
 	                                "li",
@@ -509,11 +536,11 @@
 	                                    null,
 	                                    React.createElement(
 	                                        "div",
-	                                        null,
+	                                        { className: "category-title" },
 	                                        React.createElement(
 	                                            "h3",
 	                                            null,
-	                                            _store2.default.i18nMessages["category." + categoryProductCode + "." + categoryId + ".title"]
+	                                            _store2.default.i18nMessages["category." + categoryId + ".title"]
 	                                        ),
 	                                        React.createElement(
 	                                            "span",
@@ -523,8 +550,8 @@
 	                                    ),
 	                                    React.createElement(
 	                                        "p",
-	                                        null,
-	                                        _store2.default.i18nMessages["category." + categoryProductCode + "." + categoryId + ".shortDesc"]
+	                                        { className: "category-short-desc" },
+	                                        _store2.default.i18nMessages["category." + categoryId + ".shortDesc"]
 	                                    )
 	                                ),
 	                                topCommentParagraph,
@@ -534,6 +561,93 @@
 	                    )
 	                )
 	            );
+	        },
+	        _commentWithProcessedLinks: function _commentWithProcessedLinks(commentText) {
+	            return commentText.replace(/\{link:(.+)\}(.+)\{\/link\}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
+	        },
+	        _categoriesAndTheirComments: function _categoriesAndTheirComments(docReport) {
+	            var categoriesAndTheirComments = [];
+
+	            // For each red comment
+	            docReport.redComments.forEach(function (comment) {
+	                var categoryIndex = -1;
+
+	                for (var i = 0; i < categoriesAndTheirComments.length; i++) {
+	                    if (categoriesAndTheirComments[i].categoryId === comment.categoryId) {
+	                        categoryIndex = i;
+	                        break;
+	                    }
+	                }
+
+	                // If the comment's category is not in categoriesAndTheirComments
+	                if (categoryIndex === -1) {
+
+	                    // Add the category to categoriesAndTheirComments
+	                    categoriesAndTheirComments.push({
+	                        categoryId: comment.categoryId,
+	                        redComments: [comment]
+	                    });
+	                } else {
+	                    // If it's already in categoriesAndTheirComments
+	                    // Then add the comment to the list of comments for that category
+	                    categoriesAndTheirComments[categoryIndex].redComments.push(comment);
+	                }
+	            });
+
+	            docReport.wellDoneComments.forEach(function (comment) {
+	                var categoryIndex = -1;
+
+	                for (var i = 0; i < categoriesAndTheirComments.length; i++) {
+	                    if (categoriesAndTheirComments[i].categoryId === comment.categoryId) {
+	                        categoryIndex = i;
+	                        break;
+	                    }
+	                }
+
+	                if (categoryIndex === -1) {
+	                    categoriesAndTheirComments.push({
+	                        categoryId: comment.categoryId,
+	                        topComment: comment
+	                    });
+	                } else {
+	                    categoriesAndTheirComments[categoryIndex].topComment = comment;
+	                }
+	            });
+
+	            return categoriesAndTheirComments;
+	        },
+	        _summary: function _summary(categoryProductCode, globalScore) {
+	            var reportSummaryKey = this._correctReportSummaryKey(categoryProductCode, globalScore);
+
+	            return this._templatedSummary(categoryProductCode, globalScore, reportSummaryKey);
+	        },
+	        _correctReportSummaryKey: function _correctReportSummaryKey(categoryProductCode, globalScore) {
+	            return _.find(Object.keys(_store2.default.i18nMessages).sort().reverse(), function (key) {
+	                var keyPrefix = "report.summary." + categoryProductCode + ".";
+
+	                if (_.startsWith(key, keyPrefix)) {
+	                    var startIndex = keyPrefix.length;
+	                    var minScore = key.substring(startIndex);
+
+	                    return globalScore >= minScore;
+	                }
+
+	                return false;
+	            });
+	        },
+	        _templatedSummary: function _templatedSummary(categoryProductCode, globalScore, reportSummaryKey) {
+	            var summaryWithOneVariableReplaced = _string2.default.template(_store2.default.i18nMessages[reportSummaryKey], "score", globalScore);
+	            var summaryWithTwoVariablesReplaced = _string2.default.template(summaryWithOneVariableReplaced, "nbLastAssessmentsToTakeIntoAccount", _store2.default.config.nbLastAssessmentsToTakeIntoAccount);
+
+	            var thirdReplacementValue = _store2.default.cvAverageScore;
+
+	            if (categoryProductCode === _category2.default.productCodes.coverLetter) {
+	                thirdReplacementValue = _store2.default.coverLetterAverageScore;
+	            } else if (categoryProductCode === _category2.default.productCodes.linkedinProfile) {
+	                thirdReplacementValue = _store2.default.linkedinProfileAverageScore;
+	            }
+
+	            return _string2.default.template(summaryWithTwoVariablesReplaced, "averageScore", thirdReplacementValue);
 	        }
 	    })
 	};
@@ -664,6 +778,33 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	var StringUtils = {
+	    template: function template(text, key, value) {
+	        var regex = new RegExp("{" + key + "}", "g");
+
+	        return text.replace(regex, value);
+	    },
+	    uuid: function uuid() {
+	        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+	            var r = Math.random() * 16 | 0;
+	            var v = c === "x" ? r : r & 0x3 | 0x8;
+
+	            return v.toString(16);
+	        });
+	    }
+	};
+
+	exports.default = StringUtils;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var Category = {
 
 	    // Static
@@ -709,7 +850,7 @@
 	exports.default = Category;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -744,7 +885,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -754,11 +895,11 @@
 	});
 	exports.default = undefined;
 
-	var _account = __webpack_require__(5);
+	var _account = __webpack_require__(6);
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _order = __webpack_require__(6);
+	var _order = __webpack_require__(7);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -791,7 +932,7 @@
 	exports.default = store;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -817,7 +958,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -827,7 +968,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(3);
+	var _product = __webpack_require__(4);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -862,11 +1003,26 @@
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
 	    },
+	    thumbnailUrl: function thumbnailUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
+	    },
 
 
 	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
 	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
 	    }
 	};
 

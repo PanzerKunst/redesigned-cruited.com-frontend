@@ -13,7 +13,7 @@ import services.{ScoreAverageTasker, GlobalConfig, SessionService}
  * application's home page.
  */
 @Singleton
-class ReportPreviewController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, reportDto: ReportDto, messagesApi: MessagesApi, scoreAverageTasker: ScoreAverageTasker) extends Controller {
+class ReportPreviewController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, messagesApi: MessagesApi, reportDto: ReportDto, scoreAverageTasker: ScoreAverageTasker) extends Controller {
 
   // Run the ScoreAverageTasker task after 0ms, repeating every day
   new Timer().schedule(scoreAverageTasker, 0, 3600 * 24 * 1000)
@@ -30,7 +30,7 @@ class ReportPreviewController @Inject()(accountDto: AccountDto, config: GlobalCo
               val order = orderDto.getOfId(orderId).get
               val i18nMessages = SessionService.getI18nMessagesFromCode(order.languageCode, messagesApi)
 
-              Ok(views.html.reportPreview(account, config, order, assessmentReport, reportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, i18nMessages))
+              Ok(views.html.reportPreview(account, config, order, i18nMessages, assessmentReport, reportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore))
           }
       }
     }

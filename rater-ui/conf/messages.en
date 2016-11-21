@@ -11,20 +11,31 @@ edition.name.ACADEMIA = Researcher
 
 # CV
 category.title.12 = Present achievements and build credibility
+category.shortDesc.12 = The purpose of a resume is demonstrating your competence - hence the importance of show the results you achieved.
 category.title.13 = Ensure completeness and correctness
+category.shortDesc.13 = Your resume should give the employer a quick overview of your experience and qualifications. It should be correctly written, brief and concise. There are also a number of factors in language and the organization of the document that affects how you are perceived as a person.
 category.title.14 = Be relevant and targeted
+category.shortDesc.14 = An effective resume is relevant to the job it refers to in all its parts. This means that the resume has a red thread and that all parts point in the same direction.
 
 # Cover letter
 category.title.7 = Highlight your potential
+category.shortDesc.7 = Focus more on your potential and on what you can achieve than on what you've done in the past.
 category.title.8 = Focus on the employer
+category.shortDesc.8 = Explain why you have chosen this specific employer and job.
 category.title.10 = Present achievements and build credibility
+category.shortDesc.10 = Show in a credible way what value you can bring to the job.
 category.title.11 = Active, brief and correct
+category.shortDesc.11 = Meeting professional standards of correctness and neatness, language use, and professional behaviour (including online) is important. Meeting these standards demonstrates that you will be an employee who is respectful, pleasant, and detail-oriented.
 
 # Linkedin profile
 category.title.16 = Be relevant and targeted
+category.shortDesc.16 = The key to success among millions of profiles on LinkedIn is to be highlty targeted and relevant.
 category.title.17 = Network and outreach
+category.shortDesc.17 = Being on LinkedIn is essential when applying for a job or new clients. But to achieve success with LinkedIn, you need to be active. This category is all about how you manage to reach out with your profile.
 category.title.18 = Complete and correct profile
+category.shortDesc.18 = Your LinkedIn profile should be correctly written and easy to grasp. In order to be found by recruiters and others who want to reach you, it is also important that the profile is complete and that you entered the correct information at the right place.
 category.title.20 = Present achievements and build credibility
+category.shortDesc.20 = LinkedIn is the world's largest CV database. Telling in a good way about way about your experiences and education, is essential.
 
 
 # Well Done comments
@@ -60,3 +71,37 @@ report.tabNameSmallScreen.coverLetter = Cover letter
 report.tabNameSmallScreen.linkedinProfile = LinkedIn
 report.unorderedAssessment.text = You have not ordered this product. If you want to proceed, please place a new order.
 report.unorderedAssessment.orderBtn.text = Order a new assessment
+
+report.summary.title = Analysis of your document
+report.summary.documentLink.text = Original doc
+report.summary.score.label = Your C-Score
+report.summary.score.bar.label.weak = Weak
+report.summary.score.bar.label.good = Good
+report.summary.score.bar.label.excellent = Excellent
+report.summary.understandYourScore.title = Understand your score
+report.summary.understandYourScore.cScoreExplanation.text = C-Score is a measurement of how good your application is on a scale from 0 to 100. <a href = "https://www.cruited.com/var-metod" target = "_blank">Learn More</a>
+report.summary.understandYourScore.weak.text = Very low chances of getting a job interview
+report.summary.understandYourScore.good.text = Average changes of getting a job interview
+report.summary.understandYourScore.excellent.text = High chances of getting a job interview
+
+report.summary.cv.0 = You scored <strong>{score} out of 100</strong> in our assessment of your CV. The average for the {nbLastAssessmentsToTakeIntoAccount} latest CVs we've assessed is <strong>{averageScore}</strong>.<br /><br />You have some work to do before we can recommend you to submit this job application. Please read our recommendations below to make a more elaborate version of your cv. You can make huge improvements quite easily if you follow them!
+report.summary.cv.25 = You scored <strong>{score} out of 100</strong> in our assessment of your CV. The average for the {nbLastAssessmentsToTakeIntoAccount} latest CVs we've assessed is <strong>{averageScore}</strong>.<br /><br />You should try again, because you still have some work to do before you have a job application that you will be proud to send to your potential employer. Please follow our recommendations below to get your cv to reach the level we think you want it to have!
+report.summary.cv.51 = You scored <strong>{score} out of 100</strong> in our assessment of your CV. The average for the {nbLastAssessmentsToTakeIntoAccount} latest CVs we've assessed is <strong>{averageScore}</strong>.<br /><br />You've done a good job and the result is quite ok, but you should work a bit further with your cv. Please follow our recommendations below so your application can become excellent!
+report.summary.cv.74 = You scored <strong>{score} out of 100</strong> in our assessment of your CV. The average for the {nbLastAssessmentsToTakeIntoAccount} latest CVs we've assessed is <strong>{averageScore}</strong>.<br /><br />You should be very proud of your work! But there's still some room for improvement. Consider our advice below - you are not far from having an exceptional CV!
+report.summary.cv.92 = You scored <strong>{score} out of 100</strong> in our assessment of your CV. The average for the {nbLastAssessmentsToTakeIntoAccount} latest CVs we've assessed is<strong>{averageScore}</strong>.<br /><br />Very well done! Your CV is really really good! It can't hurt, though, to take a look at the advice below to see if there is anything you can improve further. But you should be really proud of your work!
+report.summary.coverLetter.0 = You scored <strong>{score} out of 100</strong> in our assessment of your Cover Letter.The average for the {nbLastAssessmentsToTakeIntoAccount} latest Cover Letters we've assessed is <strong>{averageScore}</strong>.<br /><br />You have some work to do before we can recommend you to submit this job application. Please read our recommendations below to make a more elaborate version of your cover letter. You can make huge improvements quite easily if you follow them!
+report.summary.coverLetter.25 = You scored <strong>{score} out of 100</strong> in our assessment of your Cover Letter. The average for the {nbLastAssessmentsToTakeIntoAccount} latest Cover Letters we've assessed is <strong>{averageScore}</strong>.<br /><br />You should try again, because you still have some work to do before you have a job application that you will be proud to send to your potential employer. Please follow our recommendations below to get your cover letter to reach the level we think you want it to have!
+report.summary.coverLetter.51 = You scored <strong>{score} out of 100</strong> in our assessment of your Cover Letter. The average for the {nbLastAssessmentsToTakeIntoAccount} latest Cover Letters we've assessed is <strong>{averageScore}</strong>.<br /><br />You've done a good job and the result is quite ok, but you should work a bit further with your cover letter. Please follow our recommendations below so your application can become excellent!
+report.summary.coverLetter.74 = You scored <strong>{score} out of 100</strong> in our assessment of your Cover Letter. The average for the {nbLastAssessmentsToTakeIntoAccount} latest Cover Letters we've assessed is <strong>{averageScore}</strong>.<br /><br />You should be very proud of your work! But there's still some room for improvement. Consider our advice below - you are not far from having an exceptional Cover Letter!
+report.summary.coverLetter.92 = You scored <strong>{score} out of 100</strong> in our assessment of your Cover Letter. The average for the {nbLastAssessmentsToTakeIntoAccount} latest Cover Letters we've assessed is <strong>{averageScore}</strong>.<br /><br />Very well done! Your Cover Letter is really really good! It can't hurt, though, to take a look at the advice below to see if there is anything you can improve further. But you should be really proud of your work!
+report.summary.linkedinProfile.0 = You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />You have some work to do to make your profile as good as it should be. Please read our recommendations below to make a more elaborate version of your LinkedIn Profile. You can make huge improvements quite easily if you follow them!
+report.summary.linkedinProfile.25 = You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />You should try again, because you still have some work to do before you have a LinkedIn profile to be of. Please follow our recommendations below to get your profile to reach the level we think you want it to have!
+report.summary.linkedinProfile.51 = You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />You've done a good job and the result is quite ok, but you should work a bit further with your LinkedIn Profile. Please follow our recommendations below so your application can become excellent!
+report.summary.linkedinProfile.74 = You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />You should be very proud of your work! But there's still some room for improvement. Consider our advice below - you are not far from having an exceptional LinkedIn Profile!
+report.summary.linkedinProfile.92 = You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />Very well done! Your LinkedIn Profile is really really good! It can't hurt, though, to take a look at the advice below to see if there is anything you can improve further. But you should be really proud of your work!
+
+report.analysis.title = Expert Advice
+report.analysis.explanation.text = Our experts have looked at your {docLabel} to give you the best and most relevant feedback. <strong>Please follow our recommendations below, so your application can be exemplary great!</strong>
+report.analysis.explanation.docLabel.cv = CV
+report.analysis.explanation.docLabel.coverLetter = cover letter
+report.analysis.explanation.docLabel.linkedinProfile = LinkedIn profile
