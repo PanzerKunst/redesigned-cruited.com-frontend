@@ -1,5 +1,5 @@
 import Assessment from "../../models/assessment";
-import StringUtils from "../../services/string";
+import String from "../../services/string";
 import Keyboard from "../../services/keyboard";
 import store from "./store";
 
@@ -78,7 +78,7 @@ const Component = React.createClass({
     },
 
     _wellDoneComment() {
-        if (Assessment.categoryScore(this.props.reportCategory.id) < Assessment.minScoreForWellDoneComment) {
+        if (store.assessment.categoryScore(this.props.reportCategory.id) < Assessment.minScoreForWellDoneComment) {
             return null;
         }
 
@@ -110,8 +110,8 @@ const Component = React.createClass({
         if (e.keyCode === Keyboard.keyCodes.enter) {
             this._hideComposer();
 
-            store.addOrUpdateReportComment({
-                id: StringUtils.uuid(),
+            store.addReportComment({
+                id: String.uuid(),
                 categoryId: this.props.reportCategory.id,
                 redText: this.$addCommentTextarea.val()
             });

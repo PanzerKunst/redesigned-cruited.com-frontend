@@ -50,35 +50,31 @@
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _assessment = __webpack_require__(2);
-
-	var _assessment2 = _interopRequireDefault(_assessment);
-
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _positionSought = __webpack_require__(10);
+	var _positionSought = __webpack_require__(11);
 
 	var _positionSought2 = _interopRequireDefault(_positionSought);
 
-	var _employerSought = __webpack_require__(11);
+	var _employerSought = __webpack_require__(12);
 
 	var _employerSought2 = _interopRequireDefault(_employerSought);
 
-	var _orderTags = __webpack_require__(12);
+	var _orderTags = __webpack_require__(13);
 
 	var _orderTags2 = _interopRequireDefault(_orderTags);
 
-	var _timeLeft = __webpack_require__(13);
+	var _timeLeft = __webpack_require__(14);
 
 	var _timeLeft2 = _interopRequireDefault(_timeLeft);
 
-	var _greenRedAssessmentComment = __webpack_require__(14);
+	var _greenRedAssessmentComment = __webpack_require__(15);
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _reportCategory = __webpack_require__(15);
+	var _reportCategory = __webpack_require__(16);
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
@@ -108,9 +104,9 @@
 	        getInitialState: function getInitialState() {
 	            return {
 	                overallComments: {
-	                    cv: _assessment2.default.overallComment(_category2.default.productCodes.cv),
-	                    coverLetter: _assessment2.default.overallComment(_category2.default.productCodes.coverLetter),
-	                    linkedinProfile: _assessment2.default.overallComment(_category2.default.productCodes.linkedinProfile)
+	                    cv: null,
+	                    coverLetter: null,
+	                    linkedinProfile: null
 	                }
 	            };
 	        },
@@ -200,7 +196,21 @@
 	            );
 	        },
 	        componentDidUpdate: function componentDidUpdate() {
+	            this._initState();
 	            this._initElements();
+	        },
+	        _initState: function _initState() {
+	            if (_store2.default.assessment && !this.isStateInitialised) {
+	                this.setState({
+	                    overallComments: {
+	                        cv: _store2.default.assessment.overallComment(_category2.default.productCodes.cv),
+	                        coverLetter: _store2.default.assessment.overallComment(_category2.default.productCodes.coverLetter),
+	                        linkedinProfile: _store2.default.assessment.overallComment(_category2.default.productCodes.linkedinProfile)
+	                    }
+	                });
+
+	                this.isStateInitialised = true;
+	            }
 	        },
 	        _initElements: function _initElements() {
 	            $(".overall-comment").prop("disabled", _store2.default.isOrderReadOnly());
@@ -283,10 +293,10 @@
 	            return categoryProductCode + "-comments-selection-panel";
 	        },
 	        _listCategory: function _listCategory(categoryProductCode) {
-	            if (_store2.default.categoryIds) {
-	                return _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
+	            if (_store2.default.assessment) {
+	                return _store2.default.assessment.categoryIds(categoryProductCode).map(function (categoryId) {
 	                    var elId = "list-category-" + categoryId;
-	                    var listCommentsForThisCategory = _.filter(_assessment2.default.listComments(categoryProductCode), function (ac) {
+	                    var listCommentsForThisCategory = _.filter(_store2.default.assessment.listComments(categoryProductCode), function (ac) {
 	                        return ac.categoryId === categoryId;
 	                    });
 
@@ -329,12 +339,12 @@
 	            );
 	        },
 	        _reportCategories: function _reportCategories(categoryProductCode) {
-	            if (_store2.default.categoryIds && _assessment2.default.areAllListCommentsSelected(categoryProductCode)) {
+	            if (_store2.default.assessment && _store2.default.assessment.areAllListCommentsSelected(categoryProductCode)) {
 	                return React.createElement(
 	                    "ul",
 	                    { className: "styleless" },
-	                    _store2.default.categoryIds[categoryProductCode].map(function (categoryId) {
-	                        var reportCategory = _assessment2.default.reportCategory(categoryProductCode, categoryId);
+	                    _store2.default.assessment.categoryIds(categoryProductCode).map(function (categoryId) {
+	                        var reportCategory = _store2.default.assessment.reportCategory(categoryProductCode, categoryId, true);
 
 	                        reportCategory.id = categoryId;
 
@@ -459,21 +469,505 @@
 
 	var _global = __webpack_require__(3);
 
+	var _string = __webpack_require__(4);
+
+	var _string2 = _interopRequireDefault(_string);
+
+	var _account = __webpack_require__(5);
+
+	var _account2 = _interopRequireDefault(_account);
+
+	var _order = __webpack_require__(6);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	var _assessment = __webpack_require__(8);
+
+	var _assessment2 = _interopRequireDefault(_assessment);
+
 	var _category = __webpack_require__(1);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _browser = __webpack_require__(4);
+	var _product = __webpack_require__(7);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var store = {
+	    reactComponent: null,
+	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
+	    config: CR.ControllerData.config,
+	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
+	    i18nMessages: CR.ControllerData.i18nMessages,
+	    allDefaultComments: CR.ControllerData.allDefaultComments,
+	    allCommentVariations: CR.ControllerData.allCommentVariations,
+	    assessmentReport: CR.ControllerData.assessmentReport,
+
+	    init: function init() {
+	        this.assessment = Object.assign(Object.create(_assessment2.default), {
+	            orderId: this.order.id,
+	            allDefaultComments: this.allDefaultComments
+	        });
+
+	        this.assessment.init();
+
+	        if (!this.assessment.isReportStarted() && this.assessmentReport) {
+	            this.assessment.initReport({
+	                cv: this._docReportFromBackend(this.assessmentReport.cvReport),
+	                coverLetter: this._docReportFromBackend(this.assessmentReport.coverLetterReport),
+	                linkedinProfile: this._docReportFromBackend(this.assessmentReport.linkedinProfileReport)
+	            });
+
+	            this.assessment.initListCommentsFromReport();
+	        }
+
+	        this.reactComponent.forceUpdate();
+	    },
+	    isOrderReadOnly: function isOrderReadOnly() {
+	        return this.order.isReadOnlyBy(this.account.id);
+	    },
+	    updateOrderStatus: function updateOrderStatus(status) {
+	        var _this = this;
+
+	        this.order.status = status;
+
+	        var type = "PUT";
+	        var url = "/api/orders";
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    _this.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(this.order));
+	    },
+	    resetCommentInListAndReport: function resetCommentInListAndReport(comment) {
+	        this.assessment.resetListComment(comment);
+	        this.assessment.resetReportComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateCommentInListAndReport: function updateCommentInListAndReport(comment) {
+	        this.assessment.updateListComment(comment);
+	        this.assessment.updateReportCommentIfExists(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateListComment: function updateListComment(comment) {
+	        this.assessment.updateListComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateOverallComment: function updateOverallComment(categoryProductCode, commentText) {
+	        this.assessment.updateOverallComment(categoryProductCode, commentText);
+	    },
+	    updateReportCategory: function updateReportCategory(category, isRefreshRequired) {
+	        this.assessment.updateReportCategory(category);
+
+	        if (isRefreshRequired) {
+	            this.reactComponent.forceUpdate();
+	        }
+	    },
+	    addReportComment: function addReportComment(comment) {
+	        this.assessment.addReportComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    updateReportCommentIfExists: function updateReportCommentIfExists(comment) {
+	        this.assessment.updateReportCommentIfExists(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    removeReportComment: function removeReportComment(comment) {
+	        this.assessment.removeReportComment(comment);
+	        this.reactComponent.forceUpdate();
+	    },
+	    handleReportCommentsReorder: function handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
+	        this.assessment.reorderReportComment(categoryId, oldIndex, newIndex);
+	    },
+	    areAllReportCommentsCheckedForAtLeastOneCategory: function areAllReportCommentsCheckedForAtLeastOneCategory() {
+	        return this.assessment && (this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.cv) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile));
+	    },
+	    saveCurrentReport: function saveCurrentReport(onAjaxRequestSuccess) {
+	        var _this2 = this;
+
+	        /*
+	         AssessmentReport(orderId: Long,
+	         cvReport: Option[DocumentReport],
+	         coverLetterReport: Option[DocumentReport],
+	         linkedinProfileReport: Option[DocumentReport])
+	         */
+	        var assessmentReport = {
+	            orderId: this.order.id
+	        };
+
+	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.cv)) {
+	            assessmentReport.cvReport = this._docReportForBackend(_category2.default.productCodes.cv);
+	        }
+
+	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.coverLetter)) {
+	            assessmentReport.coverLetterReport = this._docReportForBackend(_category2.default.productCodes.coverLetter);
+	        }
+
+	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.linkedinProfile)) {
+	            assessmentReport.linkedinProfileReport = this._docReportForBackend(_category2.default.productCodes.linkedinProfile);
+	        }
+
+	        var type = "POST";
+	        var url = "/api/reports";
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    _this2.assessment.deleteAssessmentInfoFromLocalStorage();
+	                    onAjaxRequestSuccess();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(assessmentReport));
+	    },
+	    _docReportForBackend: function _docReportForBackend(categoryProductCode) {
+	        var _this3 = this;
+
+	        /*
+	         DocumentReport(redComments: List[RedComment],
+	         wellDoneComments: List[WellDoneComment],
+	         overallComment: Option[String])
+	         */
+	        var docReport = {
+	            redComments: [],
+	            wellDoneComments: [],
+	            overallComment: this.assessment.overallComment(categoryProductCode)
+	        };
+
+	        this.assessment.categoryIds(categoryProductCode).forEach(function (categoryId) {
+	            var reportCategory = _this3.assessment.reportCategory(categoryProductCode, categoryId);
+
+	            /*
+	             RedComment(id: Option[Long], // None when custom comment coming from frontend
+	             categoryId: Long,
+	             text: String,
+	             points: Option[Int])  // None when custom comment coming from frontend
+	             */
+	            reportCategory.comments.forEach(function (c) {
+	                docReport.redComments.push({
+	                    defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
+	                    categoryId: categoryId,
+	                    text: c.redText,
+	                    points: c.points
+	                });
+	            });
+
+	            /*
+	             WellDoneComment(categoryId: Long,
+	             text: String)
+	             */
+	            if (reportCategory.wellDoneComment) {
+	                docReport.wellDoneComments.push({
+	                    categoryId: categoryId,
+	                    text: reportCategory.wellDoneComment
+	                });
+	            }
+	        });
+
+	        if (docReport.redComments.length === 0 && docReport.wellDoneComments.length === 0) {
+	            return null;
+	        }
+
+	        return docReport;
+	    },
+
+
+	    /* backendDocReport DocumentReport(redComments: List[RedComment],
+	     *   wellDoneComments: List[WellDoneComment],
+	     *   overallComment: Option[String])
+	     */
+	    _docReportFromBackend: function _docReportFromBackend(backendDocReport) {
+	        if (!backendDocReport) {
+	            return null;
+	        }
+
+	        /*
+	         * Frontend doc report:
+	         *   {
+	         *     overallComment: "something",
+	         *     categories: {
+	         *       12: {
+	         *         comments: [],
+	         *         wellDoneComment: null
+	         *       }
+	         *       13: {
+	         *         comments: [],
+	         *         wellDoneComment: null
+	         *       }
+	         *       14: {
+	         *         comments: [],
+	         *         wellDoneComment: null
+	         *       }
+	         *     }
+	         *   }
+	         */
+
+	        var docReport = {
+	            overallComment: backendDocReport.overallComment
+	        };
+
+	        var redCommentCategories = backendDocReport.redComments.map(function (c) {
+	            return c.categoryId;
+	        });
+	        var wellDoneCommentCategories = backendDocReport.wellDoneComments.map(function (c) {
+	            return c.categoryId;
+	        });
+	        var allDocCategoryIds = _.uniq(_.concat(redCommentCategories, wellDoneCommentCategories));
+
+	        if (allDocCategoryIds.length > 0) {
+	            docReport.categories = {};
+
+	            allDocCategoryIds.forEach(function (categoryId) {
+	                var comments = _.filter(backendDocReport.redComments, ["categoryId", categoryId]).map(function (c) {
+	                    var redComment = {
+	                        id: c.defaultCommentId || _string2.default.uuid(),
+	                        categoryId: c.categoryId,
+	                        redText: c.text,
+	                        isChecked: true
+	                    };
+
+	                    return redComment;
+	                });
+
+	                var wellDoneCommentFound = _.find(backendDocReport.wellDoneComments, ["categoryId", categoryId]);
+	                var wellDoneComment = wellDoneCommentFound ? wellDoneCommentFound.text : null;
+
+	                docReport.categories[categoryId] = {
+	                    comments: comments,
+	                    wellDoneComment: wellDoneComment
+	                };
+	            });
+	        }
+
+	        return docReport;
+	    }
+	};
+
+	exports.default = store;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+	var localStorageKeys = exports.localStorageKeys = {
+	    myAssessments: "myAssessments"
+	};
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var StringUtils = {
+	    template: function template(text, key, value) {
+	        var regex = new RegExp("{" + key + "}", "g");
+
+	        return text.replace(regex, value);
+	    },
+	    uuid: function uuid() {
+	        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+	            var r = Math.random() * 16 | 0;
+	            var v = c === "x" ? r : r & 0x3 | 0x8;
+
+	            return v.toString(16);
+	        });
+	    }
+	};
+
+	exports.default = StringUtils;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Account = {
+
+	    // Static
+	    types: {
+	        customer: 2,
+	        rater: 3,
+	        admin: 1
+	    },
+
+	    // Instance
+	    isAdmin: function isAdmin() {
+	        return this.type === this.types.admin;
+	    }
+	};
+
+	exports.default = Account;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _product = __webpack_require__(7);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Order = {
+
+	    // Static
+	    statuses: {
+	        notPaid: -1,
+	        paid: 0,
+	        inProgress: 1,
+	        awaitingFeedback: 4,
+	        scheduled: 3,
+	        completed: 2
+	    },
+	    fileNamePrefixSeparator: "-",
+
+	    // Instance
+	    documentUrl: function documentUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
+	    },
+	    thumbnailUrl: function thumbnailUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
+	    },
+
+
+	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
+	    isReadOnlyBy: function isReadOnlyBy(raterId) {
+	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	    }
+	};
+
+	exports.default = Order;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Product = {
+
+	    // Static
+	    codes: {
+	        cv: "CV_REVIEW",
+	        coverLetter: "COVER_LETTER_REVIEW",
+	        linkedinProfile: "LINKEDIN_PROFILE_REVIEW"
+	    },
+
+	    humanReadableCode: function humanReadableCode(dbCode) {
+	        switch (dbCode) {
+	            case this.codes.cv:
+	                return "CV";
+	            case this.codes.coverLetter:
+	                return "Cover letter";
+	            default:
+	                return "Linkedin";
+	        }
+	    }
+
+	    // Instance
+
+	};
+
+	exports.default = Product;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _global = __webpack_require__(3);
+
+	var _category = __webpack_require__(1);
+
+	var _category2 = _interopRequireDefault(_category);
+
+	var _browser = __webpack_require__(9);
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _array = __webpack_require__(5);
+	var _array = __webpack_require__(10);
 
 	var _array2 = _interopRequireDefault(_array);
-
-	var _store = __webpack_require__(6);
-
-	var _store2 = _interopRequireDefault(_store);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -483,11 +977,18 @@
 	    nbReportComments: 3,
 	    minScoreForWellDoneComment: 80,
 
+	    // Instance
+	    init: function init() {
+	        this._initCategoryIds();
+	    },
+	    categoryIds: function categoryIds(categoryProductCode) {
+	        return this._categoryIds[categoryProductCode];
+	    },
 	    listComments: function listComments(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
 
 	        if (!listComments) {
-	            listComments = _.cloneDeep(_store2.default.allDefaultComments);
+	            listComments = _.cloneDeep(this.allDefaultComments);
 	            this._saveListCommentsInLocalStorage(listComments);
 	        }
 
@@ -518,11 +1019,22 @@
 	    },
 	    resetListComment: function resetListComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var originalComment = _.find(_store2.default.allDefaultComments[categoryProductCode], function (c) {
+	        var originalComment = _.find(this.allDefaultComments[categoryProductCode], function (c) {
 	            return c.id === comment.id;
 	        });
 
 	        this.updateListComment(originalComment);
+	    },
+	    initListCommentsFromReport: function initListCommentsFromReport() {
+	        var _this = this;
+
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+
+	        if (_.has(myAssessments, [this.orderId, "report"])) {
+	            _.keys(myAssessments[this.orderId].report).forEach(function (categoryProductCode) {
+	                return _this._initListCommentsFromDocReport(categoryProductCode);
+	            });
+	        }
 	    },
 	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
@@ -543,25 +1055,27 @@
 	        return true;
 	    },
 	    overallComment: function overallComment(categoryProductCode) {
-	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        return _.get(myAssessments, [orderId, "report", categoryProductCode, "overallComment"]);
+	        return _.get(myAssessments, [this.orderId, "report", categoryProductCode, "overallComment"]);
 	    },
 	    updateOverallComment: function updateOverallComment(categoryProductCode, commentText) {
 	        this._saveReportOverallCommentInLocalStorage(categoryProductCode, commentText);
 	    },
 	    reportCategory: function reportCategory(categoryProductCode, categoryId) {
-	        var orderId = _store2.default.order.id;
+	        var isToSaveInLocalStorage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        if (_.has(myAssessments, [orderId, "report", categoryProductCode, "categories", categoryId])) {
-	            return myAssessments[orderId].report[categoryProductCode].categories[categoryId];
+	        if (_.has(myAssessments, [this.orderId, "report", categoryProductCode, "categories", categoryId])) {
+	            return myAssessments[this.orderId].report[categoryProductCode].categories[categoryId];
 	        }
 
 	        var reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
 
-	        this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+	        if (isToSaveInLocalStorage) {
+	            this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
+	        }
 
 	        return reportCategory;
 	    },
@@ -570,18 +1084,17 @@
 
 	        this._saveReportCategoryInLocalStorage(categoryProductCode, category.id, category);
 	    },
-	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
+	    addReportComment: function addReportComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 
 	        this._saveReportCommentInLocalStorage(categoryProductCode, comment);
 	    },
 	    updateReportCommentIfExists: function updateReportCommentIfExists(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        if (_.has(myAssessments, [orderId, "report", categoryProductCode, "categories", comment.categoryId])) {
-	            var commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
+	        if (_.has(myAssessments, [this.orderId, "report", categoryProductCode, "categories", comment.categoryId])) {
+	            var commentToUpdate = _.find(myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
 	                return c.id === comment.id;
 	            });
 
@@ -597,7 +1110,7 @@
 	    },
 	    resetReportComment: function resetReportComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var originalComment = _.find(_store2.default.allDefaultComments[categoryProductCode], function (c) {
+	        var originalComment = _.find(this.allDefaultComments[categoryProductCode], function (c) {
 	            return c.id === comment.id;
 	        });
 
@@ -616,9 +1129,8 @@
 	            return false;
 	        }
 
-	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-	        var docReportCategoriesMap = _.get(myAssessments, [orderId, "report", categoryProductCode, "categories"]);
+	        var docReportCategoriesMap = _.get(myAssessments, [this.orderId, "report", categoryProductCode, "categories"]);
 
 	        if (_.isEmpty(docReportCategoriesMap)) {
 	            return false;
@@ -665,18 +1177,25 @@
 
 	        return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
 	    },
-	    deleteAssessmentInfoFromLocalStorage: function deleteAssessmentInfoFromLocalStorage() {
+	    initReport: function initReport(report) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
-	        var orderId = _store2.default.order.id;
 
-	        myAssessments[orderId] = null;
+	        myAssessments[this.orderId] = myAssessments[this.orderId] || {};
+	        myAssessments[this.orderId].report = report;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
-	    isReportStarted: function isReportStarted(categoryIds) {
+	    deleteAssessmentInfoFromLocalStorage: function deleteAssessmentInfoFromLocalStorage() {
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
+
+	        myAssessments[this.orderId] = null;
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
+	    },
+	    isReportStarted: function isReportStarted() {
 	        var allCategoriesAsArray = [];
 
-	        _.values(categoryIds).forEach(function (categoryIdsForThatDoc) {
+	        _.values(this.categoryIds).forEach(function (categoryIdsForThatDoc) {
 	            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
 	        });
 
@@ -692,6 +1211,17 @@
 	        }
 
 	        return false;
+	    },
+	    _initCategoryIds: function _initCategoryIds() {
+	        var predicate = function predicate(dc) {
+	            return dc.categoryId;
+	        };
+
+	        this._categoryIds = {
+	            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
+	            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
+	            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
+	        };
 	    },
 	    _calculateTopComments: function _calculateTopComments(categoryProductCode, categoryId) {
 	        var redCommentsForCategory = _.filter(this.listComments(categoryProductCode), function (ac) {
@@ -719,14 +1249,13 @@
 	    _listCommentsFromLocalStorage: function _listCommentsFromLocalStorage() {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        return myAssessments && myAssessments[_store2.default.order.id] ? myAssessments[_store2.default.order.id].listComments : null;
+	        return myAssessments && myAssessments[this.orderId] ? myAssessments[this.orderId].listComments : null;
 	    },
 	    _saveListCommentsInLocalStorage: function _saveListCommentsInLocalStorage(comments) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
-	        var orderId = _store2.default.order.id;
 
-	        myAssessments[orderId] = myAssessments[orderId] || {};
-	        myAssessments[orderId].listComments = comments;
+	        myAssessments[this.orderId] = myAssessments[this.orderId] || {};
+	        myAssessments[this.orderId].listComments = comments;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
@@ -736,12 +1265,11 @@
 	        };
 	    },
 	    _saveReportOverallCommentInLocalStorage: function _saveReportOverallCommentInLocalStorage(categoryProductCode, commentText) {
-	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        myAssessments[orderId].report = myAssessments[orderId].report || {};
-	        myAssessments[orderId].report[categoryProductCode] = myAssessments[orderId].report[categoryProductCode] || {};
-	        myAssessments[orderId].report[categoryProductCode].overallComment = commentText;
+	        myAssessments[this.orderId].report = myAssessments[this.orderId].report || {};
+	        myAssessments[this.orderId].report[categoryProductCode] = myAssessments[this.orderId].report[categoryProductCode] || {};
+	        myAssessments[this.orderId].report[categoryProductCode].overallComment = commentText;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
@@ -786,36 +1314,33 @@
 	     * }
 	     */
 	    _saveReportCategoryInLocalStorage: function _saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory) {
-	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        myAssessments[orderId].report = myAssessments[orderId].report || {};
-	        myAssessments[orderId].report[categoryProductCode] = myAssessments[orderId].report[categoryProductCode] || {};
-	        myAssessments[orderId].report[categoryProductCode].categories = myAssessments[orderId].report[categoryProductCode].categories || {};
-	        myAssessments[orderId].report[categoryProductCode].categories[categoryId] = reportCategory;
+	        myAssessments[this.orderId].report = myAssessments[this.orderId].report || {};
+	        myAssessments[this.orderId].report[categoryProductCode] = myAssessments[this.orderId].report[categoryProductCode] || {};
+	        myAssessments[this.orderId].report[categoryProductCode].categories = myAssessments[this.orderId].report[categoryProductCode].categories || {};
+	        myAssessments[this.orderId].report[categoryProductCode].categories[categoryId] = reportCategory;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
 	    _saveReportCommentInLocalStorage: function _saveReportCommentInLocalStorage(categoryProductCode, comment) {
-	        var orderId = _store2.default.order.id;
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-	        var commentToUpdate = _.find(myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
+	        var commentToUpdate = _.find(myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
 
 	        if (commentToUpdate) {
 	            Object.assign(commentToUpdate, comment);
 	        } else {
-	            myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
+	            myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
 	        }
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
 	    _removeReportCommentFromLocalStorage: function _removeReportCommentFromLocalStorage(categoryProductCode, comment) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-	        var orderId = _store2.default.order.id;
 
-	        _.remove(myAssessments[orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
+	        _.remove(myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
 
@@ -839,41 +1364,35 @@
 	        });
 
 	        return commentWithMostPoints;
+	    },
+	    _initListCommentsFromDocReport: function _initListCommentsFromDocReport(categoryProductCode) {
+	        var _this2 = this;
+
+	        this.listComments(categoryProductCode).forEach(function (listComment) {
+	            var correspondingReportComment = _.find(_this2.reportCategory(categoryProductCode, listComment.categoryId).comments, function (rc) {
+	                return rc.id === listComment.id;
+	            });
+
+	            if (correspondingReportComment) {
+	                // We set it to redSelected, and update the text
+	                listComment.isGreenSelected = false;
+	                listComment.isRedSelected = true;
+	                listComment.redText = correspondingReportComment.redText;
+	            } else {
+	                // We set it to greenSelected
+	                listComment.isGreenSelected = true;
+	                listComment.isRedSelected = false;
+	            }
+
+	            _this2.updateListComment(listComment);
+	        });
 	    }
-
-	    // Instance
-
 	};
 
 	exports.default = Assessment;
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var animationDurations = exports.animationDurations = {
-	    short: 0.2,
-	    medium: 0.5
-	};
-
-	var httpStatusCodes = exports.httpStatusCodes = {
-	    ok: 200,
-	    created: 201,
-	    noContent: 204,
-	    signInIncorrectCredentials: 230
-	};
-
-	var localStorageKeys = exports.localStorageKeys = {
-	    myAssessments: "myAssessments"
-	};
-
-/***/ },
-/* 4 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -988,7 +1507,7 @@
 	exports.default = Browser;
 
 /***/ },
-/* 5 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1005,371 +1524,7 @@
 	exports.default = ArrayUtils;
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
-
-	var _global = __webpack_require__(3);
-
-	var _account = __webpack_require__(7);
-
-	var _account2 = _interopRequireDefault(_account);
-
-	var _order = __webpack_require__(8);
-
-	var _order2 = _interopRequireDefault(_order);
-
-	var _assessment = __webpack_require__(2);
-
-	var _assessment2 = _interopRequireDefault(_assessment);
-
-	var _category = __webpack_require__(1);
-
-	var _category2 = _interopRequireDefault(_category);
-
-	var _product = __webpack_require__(9);
-
-	var _product2 = _interopRequireDefault(_product);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var store = {
-	    reactComponent: null,
-	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
-	    config: CR.ControllerData.config,
-	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
-	    i18nMessages: CR.ControllerData.i18nMessages,
-	    allDefaultComments: CR.ControllerData.allDefaultComments,
-	    allCommentVariations: CR.ControllerData.allCommentVariations,
-	    assessmentReport: CR.ControllerData.assessmentReport,
-
-	    init: function init() {
-	        this._initCategories();
-
-	        // TODO: remove
-	        console.log("isReportStarted: ", _assessment2.default.isReportStarted(this.categoryIds));
-
-	        if (!_assessment2.default.isReportStarted(this.categoryIds)) {
-
-	            // TODO
-	            console.log("TODO: initialize report in local storage with `this.assessmentReport`");
-	        }
-	    },
-	    isOrderReadOnly: function isOrderReadOnly() {
-	        return this.order.isReadOnlyBy(this.account.id);
-	    },
-	    updateOrderStatus: function updateOrderStatus(status) {
-	        var _this = this;
-
-	        this.order.status = status;
-
-	        var type = "PUT";
-	        var url = "/api/orders";
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    _this.reactComponent.forceUpdate();
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.setRequestHeader("Content-Type", "application/json");
-	        httpRequest.send(JSON.stringify(this.order));
-	    },
-	    resetCommentInListAndReport: function resetCommentInListAndReport(comment) {
-	        _assessment2.default.resetListComment(comment);
-	        _assessment2.default.resetReportComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    updateCommentInListAndReport: function updateCommentInListAndReport(comment) {
-	        _assessment2.default.updateListComment(comment);
-	        _assessment2.default.updateReportCommentIfExists(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    updateListComment: function updateListComment(comment) {
-	        _assessment2.default.updateListComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    updateOverallComment: function updateOverallComment(categoryProductCode, commentText) {
-	        _assessment2.default.updateOverallComment(categoryProductCode, commentText);
-	    },
-	    updateReportCategory: function updateReportCategory(category, isRefreshRequired) {
-	        _assessment2.default.updateReportCategory(category);
-
-	        if (isRefreshRequired) {
-	            this.reactComponent.forceUpdate();
-	        }
-	    },
-	    addOrUpdateReportComment: function addOrUpdateReportComment(comment) {
-	        _assessment2.default.addOrUpdateReportComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    updateReportCommentIfExists: function updateReportCommentIfExists(comment) {
-	        _assessment2.default.updateReportCommentIfExists(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    removeReportComment: function removeReportComment(comment) {
-	        _assessment2.default.removeReportComment(comment);
-	        this.reactComponent.forceUpdate();
-	    },
-	    handleReportCommentsReorder: function handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
-	        _assessment2.default.reorderReportComment(categoryId, oldIndex, newIndex);
-	    },
-	    areAllReportCommentsCheckedForAtLeastOneCategory: function areAllReportCommentsCheckedForAtLeastOneCategory() {
-	        return _assessment2.default.areAllReportCommentsChecked(_category2.default.productCodes.cv) || _assessment2.default.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || _assessment2.default.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile);
-	    },
-	    saveCurrentReport: function saveCurrentReport(onAjaxRequestSuccess) {
-
-	        /*
-	         AssessmentReport(orderId: Long,
-	         cvReport: Option[DocumentReport],
-	         coverLetterReport: Option[DocumentReport],
-	         linkedinProfileReport: Option[DocumentReport])
-	         */
-	        var assessmentReport = {
-	            orderId: this.order.id
-	        };
-
-	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.cv)) {
-	            assessmentReport.cvReport = this._docReportForBackend(_category2.default.productCodes.cv);
-	        }
-
-	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.coverLetter)) {
-	            assessmentReport.coverLetterReport = this._docReportForBackend(_category2.default.productCodes.coverLetter);
-	        }
-
-	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.linkedinProfile)) {
-	            assessmentReport.linkedinProfileReport = this._docReportForBackend(_category2.default.productCodes.linkedinProfile);
-	        }
-
-	        var type = "POST";
-	        var url = "/api/reports";
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    _assessment2.default.deleteAssessmentInfoFromLocalStorage();
-	                    onAjaxRequestSuccess();
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.setRequestHeader("Content-Type", "application/json");
-	        httpRequest.send(JSON.stringify(assessmentReport));
-	    },
-	    _initCategories: function _initCategories() {
-	        var predicate = function predicate(dc) {
-	            return dc.categoryId;
-	        };
-
-	        this.categoryIds = {
-	            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
-	            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
-	            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
-	        };
-
-	        this.reactComponent.forceUpdate();
-	    },
-	    _docReportForBackend: function _docReportForBackend(categoryProductCode) {
-
-	        /*
-	         DocumentReport(redComments: List[RedComment],
-	         wellDoneComments: List[WellDoneComment],
-	         overallComment: Option[String])
-	         */
-	        var docReport = {
-	            redComments: [],
-	            wellDoneComments: [],
-	            overallComment: _assessment2.default.overallComment(categoryProductCode)
-	        };
-
-	        this.categoryIds[categoryProductCode].forEach(function (categoryId) {
-	            var reportCategory = _assessment2.default.reportCategory(categoryProductCode, categoryId);
-
-	            /*
-	             RedComment(id: Option[Long], // None when custom comment coming from frontend
-	             categoryId: Long,
-	             text: String,
-	             points: Option[Int])  // None when custom comment coming from frontend
-	             */
-	            reportCategory.comments.forEach(function (c) {
-	                docReport.redComments.push({
-	                    id: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
-	                    categoryId: categoryId,
-	                    text: c.redText,
-	                    points: c.points
-	                });
-	            });
-
-	            /*
-	             WellDoneComment(categoryId: Long,
-	             text: String)
-	             */
-	            if (reportCategory.wellDoneComment) {
-	                docReport.wellDoneComments.push({
-	                    categoryId: categoryId,
-	                    text: reportCategory.wellDoneComment
-	                });
-	            }
-	        });
-
-	        if (docReport.redComments.length === 0 && docReport.wellDoneComments.length === 0) {
-	            return null;
-	        }
-
-	        return docReport;
-	    }
-	};
-
-	exports.default = store;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Account = {
-
-	    // Static
-	    types: {
-	        customer: 2,
-	        rater: 3,
-	        admin: 1
-	    },
-
-	    // Instance
-	    isAdmin: function isAdmin() {
-	        return this.type === this.types.admin;
-	    }
-	};
-
-	exports.default = Account;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
-
-	var _product = __webpack_require__(9);
-
-	var _product2 = _interopRequireDefault(_product);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Order = {
-
-	    // Static
-	    statuses: {
-	        notPaid: -1,
-	        paid: 0,
-	        inProgress: 1,
-	        awaitingFeedback: 4,
-	        scheduled: 3,
-	        completed: 2
-	    },
-	    fileNamePrefixSeparator: "-",
-
-	    // Instance
-	    documentUrl: function documentUrl(config, productCode) {
-	        var urlMiddle = "cv";
-
-	        switch (productCode) {
-	            case _product2.default.codes.coverLetter:
-	                urlMiddle = "cover-letter";
-	                break;
-	            case _product2.default.codes.linkedinProfile:
-	                urlMiddle = "linkedin-profile";
-	                break;
-	            default:
-	        }
-
-	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
-	    },
-	    thumbnailUrl: function thumbnailUrl(config, productCode) {
-	        var urlMiddle = "cv";
-
-	        switch (productCode) {
-	            case _product2.default.codes.coverLetter:
-	                urlMiddle = "cover-letter";
-	                break;
-	            case _product2.default.codes.linkedinProfile:
-	                urlMiddle = "linkedin-profile";
-	                break;
-	            default:
-	        }
-
-	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
-	    },
-
-
-	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
-	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
-	    }
-	};
-
-	exports.default = Order;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Product = {
-
-	    // Static
-	    codes: {
-	        cv: "CV_REVIEW",
-	        coverLetter: "COVER_LETTER_REVIEW",
-	        linkedinProfile: "LINKEDIN_PROFILE_REVIEW"
-	    },
-
-	    humanReadableCode: function humanReadableCode(dbCode) {
-	        switch (dbCode) {
-	            case this.codes.cv:
-	                return "CV";
-	            case this.codes.coverLetter:
-	                return "Cover letter";
-	            default:
-	                return "Linkedin";
-	        }
-	    }
-
-	    // Instance
-
-	};
-
-	exports.default = Product;
-
-/***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1397,7 +1552,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1425,7 +1580,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1435,7 +1590,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(9);
+	var _product = __webpack_require__(7);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1500,7 +1655,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1510,7 +1665,7 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(8);
+	var _order = __webpack_require__(6);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -1542,7 +1697,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1552,7 +1707,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1670,7 +1825,7 @@
 	    _handleAddClick: function _handleAddClick() {
 	        if (!_store2.default.isOrderReadOnly()) {
 	            this._handleRedParagraphClick();
-	            _store2.default.addOrUpdateReportComment(this.props.comment);
+	            _store2.default.addReportComment(this.props.comment);
 	        }
 	    },
 	    _handleResetClick: function _handleResetClick() {
@@ -1683,7 +1838,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1693,11 +1848,11 @@
 	});
 	exports.default = undefined;
 
-	var _assessment = __webpack_require__(2);
+	var _assessment = __webpack_require__(8);
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _string = __webpack_require__(16);
+	var _string = __webpack_require__(4);
 
 	var _string2 = _interopRequireDefault(_string);
 
@@ -1705,7 +1860,7 @@
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1799,7 +1954,7 @@
 	        }
 	    },
 	    _wellDoneComment: function _wellDoneComment() {
-	        if (_assessment2.default.categoryScore(this.props.reportCategory.id) < _assessment2.default.minScoreForWellDoneComment) {
+	        if (_store2.default.assessment.categoryScore(this.props.reportCategory.id) < _assessment2.default.minScoreForWellDoneComment) {
 	            return null;
 	        }
 
@@ -1833,7 +1988,7 @@
 	        if (e.keyCode === _keyboard2.default.keyCodes.enter) {
 	            this._hideComposer();
 
-	            _store2.default.addOrUpdateReportComment({
+	            _store2.default.addReportComment({
 	                id: _string2.default.uuid(),
 	                categoryId: this.props.reportCategory.id,
 	                redText: this.$addCommentTextarea.val()
@@ -1876,33 +2031,6 @@
 	exports.default = Component;
 
 /***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var StringUtils = {
-	    template: function template(text, key, value) {
-	        var regex = new RegExp("{" + key + "}", "g");
-
-	        return text.replace(regex, value);
-	    },
-	    uuid: function uuid() {
-	        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-	            var r = Math.random() * 16 | 0;
-	            var v = c === "x" ? r : r & 0x3 | 0x8;
-
-	            return v.toString(16);
-	        });
-	    }
-	};
-
-	exports.default = StringUtils;
-
-/***/ },
 /* 17 */
 /***/ function(module, exports) {
 
@@ -1943,7 +2071,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2030,11 +2158,11 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(8);
+	var _order = __webpack_require__(6);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(2);
 
 	var _store2 = _interopRequireDefault(_store);
 

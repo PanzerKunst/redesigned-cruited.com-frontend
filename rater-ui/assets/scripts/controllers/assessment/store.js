@@ -1,4 +1,5 @@
 import {httpStatusCodes} from "../../global";
+import String from "../../services/string";
 import Account from "../../models/account";
 import Order from "../../models/order";
 import Assessment from "../../models/assessment";
@@ -16,16 +17,24 @@ const store = {
     assessmentReport: CR.ControllerData.assessmentReport,
 
     init() {
-        this._initCategories();
+        this.assessment = Object.assign(Object.create(Assessment), {
+            orderId: this.order.id,
+            allDefaultComments: this.allDefaultComments
+        });
 
-        // TODO: remove
-        console.log("isReportStarted: ", Assessment.isReportStarted(this.categoryIds));
+        this.assessment.init();
 
-        if (!Assessment.isReportStarted(this.categoryIds)) {
+        if (!this.assessment.isReportStarted() && this.assessmentReport) {
+            this.assessment.initReport({
+                cv: this._docReportFromBackend(this.assessmentReport.cvReport),
+                coverLetter: this._docReportFromBackend(this.assessmentReport.coverLetterReport),
+                linkedinProfile: this._docReportFromBackend(this.assessmentReport.linkedinProfileReport)
+            });
 
-            // TODO
-            console.log("TODO: initialize report in local storage with `this.assessmentReport`");
+            this.assessment.initListCommentsFromReport();
         }
+
+        this.reactComponent.forceUpdate();
     },
 
     isOrderReadOnly() {
@@ -54,57 +63,57 @@ const store = {
     },
 
     resetCommentInListAndReport(comment) {
-        Assessment.resetListComment(comment);
-        Assessment.resetReportComment(comment);
+        this.assessment.resetListComment(comment);
+        this.assessment.resetReportComment(comment);
         this.reactComponent.forceUpdate();
     },
 
     updateCommentInListAndReport(comment) {
-        Assessment.updateListComment(comment);
-        Assessment.updateReportCommentIfExists(comment);
+        this.assessment.updateListComment(comment);
+        this.assessment.updateReportCommentIfExists(comment);
         this.reactComponent.forceUpdate();
     },
 
     updateListComment(comment) {
-        Assessment.updateListComment(comment);
+        this.assessment.updateListComment(comment);
         this.reactComponent.forceUpdate();
     },
 
     updateOverallComment(categoryProductCode, commentText) {
-        Assessment.updateOverallComment(categoryProductCode, commentText);
+        this.assessment.updateOverallComment(categoryProductCode, commentText);
     },
 
     updateReportCategory(category, isRefreshRequired) {
-        Assessment.updateReportCategory(category);
+        this.assessment.updateReportCategory(category);
 
         if (isRefreshRequired) {
             this.reactComponent.forceUpdate();
         }
     },
 
-    addOrUpdateReportComment(comment) {
-        Assessment.addOrUpdateReportComment(comment);
+    addReportComment(comment) {
+        this.assessment.addReportComment(comment);
         this.reactComponent.forceUpdate();
     },
 
     updateReportCommentIfExists(comment) {
-        Assessment.updateReportCommentIfExists(comment);
+        this.assessment.updateReportCommentIfExists(comment);
         this.reactComponent.forceUpdate();
     },
 
     removeReportComment(comment) {
-        Assessment.removeReportComment(comment);
+        this.assessment.removeReportComment(comment);
         this.reactComponent.forceUpdate();
     },
 
     handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
-        Assessment.reorderReportComment(categoryId, oldIndex, newIndex);
+        this.assessment.reorderReportComment(categoryId, oldIndex, newIndex);
     },
 
     areAllReportCommentsCheckedForAtLeastOneCategory() {
-        return Assessment.areAllReportCommentsChecked(Category.productCodes.cv) ||
-            Assessment.areAllReportCommentsChecked(Category.productCodes.coverLetter) ||
-            Assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile);
+        return this.assessment && (this.assessment.areAllReportCommentsChecked(Category.productCodes.cv) ||
+            this.assessment.areAllReportCommentsChecked(Category.productCodes.coverLetter) ||
+            this.assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile));
     },
 
     saveCurrentReport(onAjaxRequestSuccess) {
@@ -138,7 +147,7 @@ const store = {
         httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    Assessment.deleteAssessmentInfoFromLocalStorage();
+                    this.assessment.deleteAssessmentInfoFromLocalStorage();
                     onAjaxRequestSuccess();
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);
@@ -148,18 +157,6 @@ const store = {
         httpRequest.open(type, url);
         httpRequest.setRequestHeader("Content-Type", "application/json");
         httpRequest.send(JSON.stringify(assessmentReport));
-    },
-
-    _initCategories() {
-        const predicate = dc => dc.categoryId;
-
-        this.categoryIds = {
-            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
-            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
-            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
-        };
-
-        this.reactComponent.forceUpdate();
     },
 
     _docReportForBackend(categoryProductCode) {
@@ -172,11 +169,11 @@ const store = {
         const docReport = {
             redComments: [],
             wellDoneComments: [],
-            overallComment: Assessment.overallComment(categoryProductCode)
+            overallComment: this.assessment.overallComment(categoryProductCode)
         };
 
-        this.categoryIds[categoryProductCode].forEach(categoryId => {
-            const reportCategory = Assessment.reportCategory(categoryProductCode, categoryId);
+        this.assessment.categoryIds(categoryProductCode).forEach(categoryId => {
+            const reportCategory = this.assessment.reportCategory(categoryProductCode, categoryId);
 
             /*
              RedComment(id: Option[Long], // None when custom comment coming from frontend
@@ -186,7 +183,7 @@ const store = {
              */
             reportCategory.comments.forEach(c => {
                 docReport.redComments.push({
-                    id: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
+                    defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
                     categoryId,
                     text: c.redText,
                     points: c.points
@@ -207,6 +204,72 @@ const store = {
 
         if (docReport.redComments.length === 0 && docReport.wellDoneComments.length === 0) {
             return null;
+        }
+
+        return docReport;
+    },
+
+    /* backendDocReport DocumentReport(redComments: List[RedComment],
+     *   wellDoneComments: List[WellDoneComment],
+     *   overallComment: Option[String])
+     */
+    _docReportFromBackend(backendDocReport) {
+        if (!backendDocReport) {
+            return null;
+        }
+
+        /*
+         * Frontend doc report:
+         *   {
+         *     overallComment: "something",
+         *     categories: {
+         *       12: {
+         *         comments: [],
+         *         wellDoneComment: null
+         *       }
+         *       13: {
+         *         comments: [],
+         *         wellDoneComment: null
+         *       }
+         *       14: {
+         *         comments: [],
+         *         wellDoneComment: null
+         *       }
+         *     }
+         *   }
+         */
+
+        const docReport = {
+            overallComment: backendDocReport.overallComment
+        };
+
+        const redCommentCategories = backendDocReport.redComments.map(c => c.categoryId);
+        const wellDoneCommentCategories = backendDocReport.wellDoneComments.map(c => c.categoryId);
+        const allDocCategoryIds = _.uniq(_.concat(redCommentCategories, wellDoneCommentCategories));
+
+        if (allDocCategoryIds.length > 0) {
+            docReport.categories = {};
+
+            allDocCategoryIds.forEach(categoryId => {
+                const comments = _.filter(backendDocReport.redComments, ["categoryId", categoryId]).map(c => {
+                    const redComment = {
+                        id: c.defaultCommentId || String.uuid(),
+                        categoryId: c.categoryId,
+                        redText: c.text,
+                        isChecked: true
+                    };
+
+                    return redComment;
+                });
+
+                const wellDoneCommentFound = _.find(backendDocReport.wellDoneComments, ["categoryId", categoryId]);
+                const wellDoneComment = wellDoneCommentFound ? wellDoneCommentFound.text : null;
+
+                docReport.categories[categoryId] = {
+                    comments,
+                    wellDoneComment
+                };
+            });
         }
 
         return docReport;

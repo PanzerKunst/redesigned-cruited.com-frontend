@@ -1,5 +1,4 @@
 import Category from "../../models/category";
-import Assessment from "../../models/assessment";
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
@@ -37,9 +36,9 @@ const controller = {
         getInitialState() {
             return {
                 overallComments: {
-                    cv: Assessment.overallComment(Category.productCodes.cv),
-                    coverLetter: Assessment.overallComment(Category.productCodes.coverLetter),
-                    linkedinProfile: Assessment.overallComment(Category.productCodes.linkedinProfile)
+                    cv: null,
+                    coverLetter: null,
+                    linkedinProfile: null
                 }
             };
         },
@@ -96,7 +95,22 @@ const controller = {
         },
 
         componentDidUpdate() {
+            this._initState();
             this._initElements();
+        },
+
+        _initState() {
+            if (store.assessment && !this.isStateInitialised) {
+                this.setState({
+                    overallComments: {
+                        cv: store.assessment.overallComment(Category.productCodes.cv),
+                        coverLetter: store.assessment.overallComment(Category.productCodes.coverLetter),
+                        linkedinProfile: store.assessment.overallComment(Category.productCodes.linkedinProfile)
+                    }
+                });
+
+                this.isStateInitialised = true;
+            }
         },
 
         _initElements() {
@@ -166,10 +180,10 @@ const controller = {
         },
 
         _listCategory(categoryProductCode) {
-            if (store.categoryIds) {
-                return store.categoryIds[categoryProductCode].map(categoryId => {
+            if (store.assessment) {
+                return store.assessment.categoryIds(categoryProductCode).map(categoryId => {
                     const elId = `list-category-${categoryId}`;
-                    const listCommentsForThisCategory = _.filter(Assessment.listComments(categoryProductCode), ac => ac.categoryId === categoryId);
+                    const listCommentsForThisCategory = _.filter(store.assessment.listComments(categoryProductCode), ac => ac.categoryId === categoryId);
 
                     return (
                         <section key={elId} id={elId}>
@@ -199,11 +213,11 @@ const controller = {
         },
 
         _reportCategories(categoryProductCode) {
-            if (store.categoryIds && Assessment.areAllListCommentsSelected(categoryProductCode)) {
+            if (store.assessment && store.assessment.areAllListCommentsSelected(categoryProductCode)) {
                 return (
                     <ul className="styleless">
-                    {store.categoryIds[categoryProductCode].map(categoryId => {
-                        const reportCategory = Assessment.reportCategory(categoryProductCode, categoryId);
+                    {store.assessment.categoryIds(categoryProductCode).map(categoryId => {
+                        const reportCategory = store.assessment.reportCategory(categoryProductCode, categoryId, true);
 
                         reportCategory.id = categoryId;
 

@@ -40,7 +40,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
     db.withConnection { implicit c =>
       val query = """
         select custom_comment_cv, custom_comment, custom_comment_li,
-          rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
+          rc.id_default, rc.comment as red_comment_text, rc.ordd, rc.points,
           cat.id as red_comment_cat_id, cat.type as red_comment_doc_type,
           tc.comment as top_comment_text,
           cat2.id as top_comment_cat_id, cat2.type as top_comment_doc_type
@@ -72,11 +72,11 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
             Some(redCommentCategoryId)
           }
 
-          val redCommentText = rs.getString("red_comment_text")
-          val redCommentTextOpt = if (rs.wasNull()) {
+          val defaultCommentId = rs.getLong("id_default")
+          val defaultCommentIdOpt = if (rs.wasNull()) {
             None
           } else {
-            Some(redCommentText)
+            Some(defaultCommentId)
           }
 
           val points = rs.getInt("points")
@@ -86,15 +86,14 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
             Some(points)
           }
 
-          val redCommentId = rs.getLong("red_comment_id")
-
+          val redCommentText = rs.getString("red_comment_text")
           val redCommentOpt = if (rs.wasNull()) {
             None
           } else {
             Some(RedComment(
-              id = Some(redCommentId),
+              defaultCommentId = defaultCommentIdOpt,
               categoryId = redCommentCategoryIdOpt.get,
-              text = redCommentTextOpt.get,
+              text = redCommentText,
               points = pointsOpt
             ))
           }
@@ -320,8 +319,9 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
         val redComment = redComments.apply(i)
 
         val query = """
-          insert into documents_comments(id_doc, category, comment, ordd, points, checked)
+          insert into documents_comments(id_doc, id_default, category, comment, ordd, points, checked)
           values(""" + orderId + """, """ +
+            redComment.defaultCommentId.getOrElse("NULL") + """, """ +
             redComment.categoryId + """, '""" +
             DbUtil.safetize(redComment.text) + """', """ +
             i+1 + """, """ +
@@ -371,7 +371,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
 
       for (defaultComment <- defaultCommentsForThisDoc) {
         val commentId = defaultComment.id
-        val isRed = redComments.exists(_.id.get == commentId)
+        val isRed = redComments.exists(_.defaultCommentId.get == commentId) // TODO: `defaultCommentId.get` isn't gonna fly here for custom comments...
 
         val isGreenValueForDb = if (isRed) {
           0
@@ -422,7 +422,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
 
           breakable {
             for (commentInList <- redComments) {
-              if (commentInList.categoryId == redComment.categoryId && commentInList.id == redComment.id) {
+              if (commentInList.categoryId == redComment.categoryId && commentInList.defaultCommentId == redComment.defaultCommentId) {
                 // Comments of different categories can have the same ID
                 isInListAlready = true
                 break()

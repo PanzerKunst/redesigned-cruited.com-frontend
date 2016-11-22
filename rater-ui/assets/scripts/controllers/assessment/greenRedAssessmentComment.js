@@ -94,7 +94,7 @@ const Component = React.createClass({
     _handleAddClick() {
         if (!store.isOrderReadOnly()) {
             this._handleRedParagraphClick();
-            store.addOrUpdateReportComment(this.props.comment);
+            store.addReportComment(this.props.comment);
         }
     },
 
