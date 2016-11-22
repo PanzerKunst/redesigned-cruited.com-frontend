@@ -15,7 +15,7 @@ const Assessment = {
     },
 
     categoryIds(categoryProductCode) {
-        return this._categoryIds[categoryProductCode];
+        return this.categoryIds_[categoryProductCode];
     },
 
     listComments(categoryProductCode) {
@@ -225,7 +225,7 @@ const Assessment = {
     isReportStarted() {
         let allCategoriesAsArray = [];
 
-        _.values(this.categoryIds).forEach(categoryIdsForThatDoc => {
+        _.values(this.categoryIds_).forEach(categoryIdsForThatDoc => {
             allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
         });
 
@@ -246,7 +246,7 @@ const Assessment = {
     _initCategoryIds() {
         const predicate = dc => dc.categoryId;
 
-        this._categoryIds = {
+        this.categoryIds_ = {
             cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
             coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
             linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
@@ -395,19 +395,24 @@ const Assessment = {
     },
 
     _initListCommentsFromDocReport(categoryProductCode) {
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
         this.listComments(categoryProductCode).forEach(listComment => {
-            const correspondingReportComment = _.find(this.reportCategory(categoryProductCode, listComment.categoryId).comments, rc => rc.id === listComment.id);
+            if (_.has(myAssessments, [this.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
+                const reportComments = myAssessments[this.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
+                const correspondingReportComment = _.find(reportComments, rc => rc.id === listComment.id);
 
-            if (correspondingReportComment) {   // We set it to redSelected, and update the text
-                listComment.isGreenSelected = false;
-                listComment.isRedSelected = true;
-                listComment.redText = correspondingReportComment.redText;
-            } else {    // We set it to greenSelected
-                listComment.isGreenSelected = true;
-                listComment.isRedSelected = false;
+                if (correspondingReportComment) {   // We set it to redSelected, and update the text
+                    listComment.isGreenSelected = false;
+                    listComment.isRedSelected = true;
+                    listComment.redText = correspondingReportComment.redText;
+                } else {    // We set it to greenSelected
+                    listComment.isGreenSelected = true;
+                    listComment.isRedSelected = false;
+                }
+
+                this.updateListComment(listComment);
             }
-
-            this.updateListComment(listComment);
         });
     }
 };

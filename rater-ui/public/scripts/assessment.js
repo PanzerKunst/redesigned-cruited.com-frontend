@@ -50,7 +50,11 @@
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _store = __webpack_require__(2);
+	var _product = __webpack_require__(2);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	var _store = __webpack_require__(3);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -125,7 +129,7 @@
 	                        React.createElement(
 	                            "h1",
 	                            null,
-	                            "Assessment #" + _store2.default.order.id
+	                            "Assessment #" + order.id
 	                        )
 	                    )
 	                ),
@@ -176,14 +180,14 @@
 	                    React.createElement(
 	                        "ul",
 	                        { className: "nav nav-tabs", role: "tablist" },
-	                        this._tab(_category2.default.productCodes.cv, "CV", true),
+	                        this._tab(_category2.default.productCodes.cv, "CV"),
 	                        this._tab(_category2.default.productCodes.coverLetter, "Cover Letter"),
 	                        this._tab(_category2.default.productCodes.linkedinProfile, "Linkedin Profile")
 	                    ),
 	                    React.createElement(
 	                        "div",
 	                        { className: "tab-content" },
-	                        this._tabPane(_category2.default.productCodes.cv, true),
+	                        this._tabPane(_category2.default.productCodes.cv),
 	                        this._tabPane(_category2.default.productCodes.coverLetter),
 	                        this._tabPane(_category2.default.productCodes.linkedinProfile)
 	                    ),
@@ -213,7 +217,19 @@
 	            }
 	        },
 	        _initElements: function _initElements() {
+	            var $withCircles = $(".with-circles");
+
+	            this.$firstTab = $($withCircles.children(".nav-tabs").children().get(0)).children();
+
 	            $(".overall-comment").prop("disabled", _store2.default.isOrderReadOnly());
+
+	            this._selectFirstTab();
+	        },
+	        _selectFirstTab: function _selectFirstTab() {
+	            if (!this.isFirstTabSelectionDone) {
+	                this.$firstTab.tab("show");
+	                this.isFirstTabSelectionDone = true;
+	            }
 	        },
 	        _customerComment: function _customerComment(customerComment) {
 	            if (!customerComment) {
@@ -256,16 +272,15 @@
 	            return null;
 	        },
 	        _tab: function _tab(categoryProductCode, label) {
-	            var isActive = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+	            if (!_.includes(_store2.default.order.containedProductCodes, _product2.default.codes[categoryProductCode])) {
+	                return null;
+	            }
 
-	            var classes = classNames({
-	                active: isActive
-	            });
 	            var attr = this._tabAttr(categoryProductCode);
 
 	            return React.createElement(
 	                "li",
-	                { role: "presentation", className: classes },
+	                { role: "presentation" },
 	                React.createElement(
 	                    "a",
 	                    { href: "#" + attr, "aria-controls": attr, role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
@@ -274,17 +289,15 @@
 	            );
 	        },
 	        _tabPane: function _tabPane(categoryProductCode) {
-	            var isActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	            if (!_.includes(_store2.default.order.containedProductCodes, _product2.default.codes[categoryProductCode])) {
+	                return null;
+	            }
 
-	            var classes = classNames({
-	                "tab-pane fade in": true,
-	                active: isActive
-	            });
 	            var attr = this._tabAttr(categoryProductCode);
 
 	            return React.createElement(
 	                "div",
-	                { role: "tabpanel", className: classes, id: attr, "data-product-code": categoryProductCode },
+	                { role: "tabpanel", className: "tab-pane fade in", id: attr, "data-product-code": categoryProductCode },
 	                this._listCategory(categoryProductCode),
 	                this._reportForm(categoryProductCode)
 	            );
@@ -458,6 +471,41 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Product = {
+
+	    // Static
+	    codes: {
+	        cv: "CV_REVIEW",
+	        coverLetter: "COVER_LETTER_REVIEW",
+	        linkedinProfile: "LINKEDIN_PROFILE_REVIEW"
+	    },
+
+	    humanReadableCode: function humanReadableCode(dbCode) {
+	        switch (dbCode) {
+	            case this.codes.cv:
+	                return "CV";
+	            case this.codes.coverLetter:
+	                return "Cover letter";
+	            default:
+	                return "Linkedin";
+	        }
+	    }
+
+	    // Instance
+
+	};
+
+	exports.default = Product;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -467,17 +515,17 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(3);
+	var _global = __webpack_require__(4);
 
-	var _string = __webpack_require__(4);
+	var _string = __webpack_require__(5);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _account = __webpack_require__(5);
+	var _account = __webpack_require__(6);
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _order = __webpack_require__(6);
+	var _order = __webpack_require__(7);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -489,7 +537,7 @@
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(7);
+	var _product = __webpack_require__(2);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -761,7 +809,7 @@
 	exports.default = store;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -786,7 +834,7 @@
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -813,7 +861,7 @@
 	exports.default = StringUtils;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -839,7 +887,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -849,7 +897,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(7);
+	var _product = __webpack_require__(2);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -910,41 +958,6 @@
 	exports.default = Order;
 
 /***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Product = {
-
-	    // Static
-	    codes: {
-	        cv: "CV_REVIEW",
-	        coverLetter: "COVER_LETTER_REVIEW",
-	        linkedinProfile: "LINKEDIN_PROFILE_REVIEW"
-	    },
-
-	    humanReadableCode: function humanReadableCode(dbCode) {
-	        switch (dbCode) {
-	            case this.codes.cv:
-	                return "CV";
-	            case this.codes.coverLetter:
-	                return "Cover letter";
-	            default:
-	                return "Linkedin";
-	        }
-	    }
-
-	    // Instance
-
-	};
-
-	exports.default = Product;
-
-/***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -955,7 +968,7 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(3);
+	var _global = __webpack_require__(4);
 
 	var _category = __webpack_require__(1);
 
@@ -982,7 +995,7 @@
 	        this._initCategoryIds();
 	    },
 	    categoryIds: function categoryIds(categoryProductCode) {
-	        return this._categoryIds[categoryProductCode];
+	        return this.categoryIds_[categoryProductCode];
 	    },
 	    listComments: function listComments(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
@@ -1195,7 +1208,7 @@
 	    isReportStarted: function isReportStarted() {
 	        var allCategoriesAsArray = [];
 
-	        _.values(this.categoryIds).forEach(function (categoryIdsForThatDoc) {
+	        _.values(this.categoryIds_).forEach(function (categoryIdsForThatDoc) {
 	            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
 	        });
 
@@ -1217,7 +1230,7 @@
 	            return dc.categoryId;
 	        };
 
-	        this._categoryIds = {
+	        this.categoryIds_ = {
 	            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
 	            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
 	            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
@@ -1368,23 +1381,28 @@
 	    _initListCommentsFromDocReport: function _initListCommentsFromDocReport(categoryProductCode) {
 	        var _this2 = this;
 
+	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
+
 	        this.listComments(categoryProductCode).forEach(function (listComment) {
-	            var correspondingReportComment = _.find(_this2.reportCategory(categoryProductCode, listComment.categoryId).comments, function (rc) {
-	                return rc.id === listComment.id;
-	            });
+	            if (_.has(myAssessments, [_this2.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
+	                var reportComments = myAssessments[_this2.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
+	                var correspondingReportComment = _.find(reportComments, function (rc) {
+	                    return rc.id === listComment.id;
+	                });
 
-	            if (correspondingReportComment) {
-	                // We set it to redSelected, and update the text
-	                listComment.isGreenSelected = false;
-	                listComment.isRedSelected = true;
-	                listComment.redText = correspondingReportComment.redText;
-	            } else {
-	                // We set it to greenSelected
-	                listComment.isGreenSelected = true;
-	                listComment.isRedSelected = false;
+	                if (correspondingReportComment) {
+	                    // We set it to redSelected, and update the text
+	                    listComment.isGreenSelected = false;
+	                    listComment.isRedSelected = true;
+	                    listComment.redText = correspondingReportComment.redText;
+	                } else {
+	                    // We set it to greenSelected
+	                    listComment.isGreenSelected = true;
+	                    listComment.isRedSelected = false;
+	                }
+
+	                _this2.updateListComment(listComment);
 	            }
-
-	            _this2.updateListComment(listComment);
 	        });
 	    }
 	};
@@ -1590,7 +1608,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(7);
+	var _product = __webpack_require__(2);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1665,7 +1683,7 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(6);
+	var _order = __webpack_require__(7);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -1707,7 +1725,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(3);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1852,7 +1870,7 @@
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _string = __webpack_require__(4);
+	var _string = __webpack_require__(5);
 
 	var _string2 = _interopRequireDefault(_string);
 
@@ -1860,7 +1878,7 @@
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(3);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2071,7 +2089,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(3);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2158,11 +2176,11 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(6);
+	var _order = __webpack_require__(7);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _store = __webpack_require__(2);
+	var _store = __webpack_require__(3);
 
 	var _store2 = _interopRequireDefault(_store);
 

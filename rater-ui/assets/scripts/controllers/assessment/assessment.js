@@ -1,4 +1,5 @@
 import Category from "../../models/category";
+import Product from "../../models/product";
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
@@ -50,7 +51,7 @@ const controller = {
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{`Assessment #${store.order.id}`}</h1>
+                            <h1>{`Assessment #${order.id}`}</h1>
                         </div>
                     </header>
                     <div className="with-circles">
@@ -77,12 +78,12 @@ const controller = {
                         </div>
 
                         <ul className="nav nav-tabs" role="tablist">
-                            {this._tab(Category.productCodes.cv, "CV", true)}
+                            {this._tab(Category.productCodes.cv, "CV")}
                             {this._tab(Category.productCodes.coverLetter, "Cover Letter")}
                             {this._tab(Category.productCodes.linkedinProfile, "Linkedin Profile")}
                         </ul>
                         <div className="tab-content">
-                            {this._tabPane(Category.productCodes.cv, true)}
+                            {this._tabPane(Category.productCodes.cv)}
                             {this._tabPane(Category.productCodes.coverLetter)}
                             {this._tabPane(Category.productCodes.linkedinProfile)}
                         </div>
@@ -114,7 +115,20 @@ const controller = {
         },
 
         _initElements() {
+            const $withCircles = $(".with-circles");
+
+            this.$firstTab = $($withCircles.children(".nav-tabs").children().get(0)).children();
+
             $(".overall-comment").prop("disabled", store.isOrderReadOnly());
+
+            this._selectFirstTab();
+        },
+
+        _selectFirstTab() {
+            if (!this.isFirstTabSelectionDone) {
+                this.$firstTab.tab("show");
+                this.isFirstTabSelectionDone = true;
+            }
         },
 
         _customerComment(customerComment) {
@@ -149,27 +163,28 @@ const controller = {
             return null;
         },
 
-        _tab(categoryProductCode, label, isActive = false) {
-            const classes = classNames({
-                active: isActive
-            });
+        _tab(categoryProductCode, label) {
+            if (!_.includes(store.order.containedProductCodes, Product.codes[categoryProductCode])) {
+                return null;
+            }
+
             const attr = this._tabAttr(categoryProductCode);
 
             return (
-                <li role="presentation" className={classes}>
+                <li role="presentation">
                     <a href={`#${attr}`} aria-controls={attr} role="tab" data-toggle="tab" onClick={this._handleTabClick}>{label}</a>
                 </li>);
         },
 
-        _tabPane(categoryProductCode, isActive = false) {
-            const classes = classNames({
-                "tab-pane fade in": true,
-                active: isActive
-            });
+        _tabPane(categoryProductCode) {
+            if (!_.includes(store.order.containedProductCodes, Product.codes[categoryProductCode])) {
+                return null;
+            }
+
             const attr = this._tabAttr(categoryProductCode);
 
             return (
-                <div role="tabpanel" className={classes} id={attr} data-product-code={categoryProductCode}>
+                <div role="tabpanel" className="tab-pane fade in" id={attr} data-product-code={categoryProductCode}>
                     {this._listCategory(categoryProductCode)}
                     {this._reportForm(categoryProductCode)}
                 </div>);
