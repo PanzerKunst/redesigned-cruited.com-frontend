@@ -19,7 +19,6 @@ const controller = {
         render() {
             const order = store.order;
             const editionCode = order.editionCode;
-            const editionClasses = `edition ${editionCode}`;
 
             return (
                 <div id="content">
@@ -34,7 +33,7 @@ const controller = {
                             <p>
                                 <span className="assessment-label light-font">{store.i18nMessages["report.orderCreationDate.label"]}:</span>{moment(order.creationTimestamp).format("lll")}
                             </p>
-                            <span className={editionClasses}>{store.i18nMessages[`edition.name.${editionCode}`]}</span>
+                            <span className={`edition ${editionCode}`}>{store.i18nMessages[`edition.name.${editionCode}`]}</span>
                         </header>
                         <section>
                             <ul className="nav nav-pills" role="tablist">
@@ -53,7 +52,7 @@ const controller = {
                 </div>);
         },
 
-        componentDidUpdate() {
+        componentDidMount() {
             this._initElements();
 
             this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
@@ -98,18 +97,16 @@ const controller = {
 
         _placeScoreCursors() {
             const cvReportScores = store.cvReportScores;
+            const coverLetterReportScores = store.coverLetterReportScores;
+            const linkedinProfileReportScores = store.linkedinProfileReportScores;
 
             if (cvReportScores) {
                 this._animateScoreCursor(this.$cvScoreCursor, cvReportScores.globalScore);
             }
 
-            const coverLetterReportScores = store.coverLetterReportScores;
-
             if (coverLetterReportScores) {
                 this._animateScoreCursor(this.$coverLetterScoreCursor, coverLetterReportScores.globalScore);
             }
-
-            const linkedinProfileReportScores = store.linkedinProfileReportScores;
 
             if (linkedinProfileReportScores) {
                 this._animateScoreCursor(this.$linkedinProfileScoreCursor, linkedinProfileReportScores.globalScore);
@@ -164,7 +161,8 @@ const controller = {
                 return (
                     <div className="sheet-of-paper centered-contents">
                         <p>{store.i18nMessages["report.unorderedAssessment.text"]}</p>
-                        <a className="btn btn-danger new-assessment" href="/order">{store.i18nMessages["report.unorderedAssessment.orderBtn.text"]}
+                        <a className="btn btn-danger new-assessment" href="/order">
+                            <span>{store.i18nMessages["report.unorderedAssessment.orderBtn.text"]}</span>
                             <i className="fa fa-plus"></i>
                         </a>
                     </div>);
@@ -291,18 +289,9 @@ const controller = {
                                 let redCommentList = null;
 
                                 if (!_.isEmpty(categoryAndItsComments.redComments)) {
-
-                                    // TODO orig = `key={comment.id}`
-
                                     redCommentList = (
                                         <ul className="red-comments light-font">
-                                            {categoryAndItsComments.redComments.map(comment => {
-
-                                                // TODO: remove
-                                                console.log("comment.defaultCommentId", comment.defaultCommentId);
-
-                                                return <li key={comment.defaultCommentId || String.uuid()} dangerouslySetInnerHTML={{__html: this._commentWithProcessedLinks(comment.text)}} />;
-                                            })}
+                                            {categoryAndItsComments.redComments.map(comment => <li key={comment.defaultCommentId || String.uuid()} dangerouslySetInnerHTML={{__html: this._commentWithProcessedLinks(comment.text)}} />)}
                                         </ul>
                                     );
                                 }

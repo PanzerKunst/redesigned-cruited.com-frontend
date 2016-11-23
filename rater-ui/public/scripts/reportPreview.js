@@ -83,7 +83,6 @@
 	        render: function render() {
 	            var order = _store2.default.order;
 	            var editionCode = order.editionCode;
-	            var editionClasses = "edition " + editionCode;
 
 	            return React.createElement(
 	                "div",
@@ -125,7 +124,7 @@
 	                        ),
 	                        React.createElement(
 	                            "span",
-	                            { className: editionClasses },
+	                            { className: "edition " + editionCode },
 	                            _store2.default.i18nMessages["edition.name." + editionCode]
 	                        )
 	                    ),
@@ -150,7 +149,7 @@
 	                )
 	            );
 	        },
-	        componentDidUpdate: function componentDidUpdate() {
+	        componentDidMount: function componentDidMount() {
 	            this._initElements();
 
 	            this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
@@ -192,18 +191,16 @@
 	        },
 	        _placeScoreCursors: function _placeScoreCursors() {
 	            var cvReportScores = _store2.default.cvReportScores;
+	            var coverLetterReportScores = _store2.default.coverLetterReportScores;
+	            var linkedinProfileReportScores = _store2.default.linkedinProfileReportScores;
 
 	            if (cvReportScores) {
 	                this._animateScoreCursor(this.$cvScoreCursor, cvReportScores.globalScore);
 	            }
 
-	            var coverLetterReportScores = _store2.default.coverLetterReportScores;
-
 	            if (coverLetterReportScores) {
 	                this._animateScoreCursor(this.$coverLetterScoreCursor, coverLetterReportScores.globalScore);
 	            }
-
-	            var linkedinProfileReportScores = _store2.default.linkedinProfileReportScores;
 
 	            if (linkedinProfileReportScores) {
 	                this._animateScoreCursor(this.$linkedinProfileScoreCursor, linkedinProfileReportScores.globalScore);
@@ -274,7 +271,11 @@
 	                    React.createElement(
 	                        "a",
 	                        { className: "btn btn-danger new-assessment", href: "/order" },
-	                        _store2.default.i18nMessages["report.unorderedAssessment.orderBtn.text"],
+	                        React.createElement(
+	                            "span",
+	                            null,
+	                            _store2.default.i18nMessages["report.unorderedAssessment.orderBtn.text"]
+	                        ),
 	                        React.createElement("i", { className: "fa fa-plus" })
 	                    )
 	                );
@@ -570,17 +571,10 @@
 	                            var redCommentList = null;
 
 	                            if (!_.isEmpty(categoryAndItsComments.redComments)) {
-
-	                                // TODO orig = `key={comment.id}`
-
 	                                redCommentList = React.createElement(
 	                                    "ul",
 	                                    { className: "red-comments light-font" },
 	                                    categoryAndItsComments.redComments.map(function (comment) {
-
-	                                        // TODO: remove
-	                                        console.log("comment.defaultCommentId", comment.defaultCommentId);
-
 	                                        return React.createElement("li", { key: comment.defaultCommentId || _string2.default.uuid(), dangerouslySetInnerHTML: { __html: _this._commentWithProcessedLinks(comment.text) } });
 	                                    })
 	                                );
@@ -871,7 +865,7 @@
 	var _global = __webpack_require__(4);
 
 	function makeExpandable($panels) {
-	    $panels.each(function (panel) {
+	    _.forEach($panels, function (panel) {
 	        var $el = $(panel);
 	        var $allExpandablePanels = $el.parent().children(".expandable-panel");
 	        var $allExpandablePanelBodies = $allExpandablePanels.children("div");
@@ -1053,14 +1047,7 @@
 
 	    i18nMessages: CR.ControllerData.i18nMessages,
 
-	    init: function init() {
-
-	        // TODO: remove
-	        console.log("order", this.order);
-	        console.log("cvAverageScore", this.cvAverageScore);
-	        console.log("coverLetterAverageScore", this.coverLetterAverageScore);
-	        console.log("linkedinProfileAverageScore", this.linkedinProfileAverageScore);
-	    }
+	    init: function init() {}
 	};
 
 	exports.default = store;

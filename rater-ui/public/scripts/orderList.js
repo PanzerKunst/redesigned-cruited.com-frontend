@@ -217,108 +217,19 @@
 	            this._fetchOrdersSentToTheCustomerThisMonth();
 	        }, 10 * 1000); */
 	    },
-	    _fetchTopOrders: function _fetchTopOrders() {
-	        var _this = this;
-
-	        var type = "GET";
-	        var url = "/api/orders/top";
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    var topOrdersJson = JSON.parse(httpRequest.responseText);
-
-	                    _this.topOrders = topOrdersJson.map(function (o) {
-	                        return Object.assign(Object.create(_order2.default), o);
-	                    });
-	                    _this.areTopOrdersFetched = true;
-	                    _this.reactComponent.forceUpdate();
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.send();
-	    },
-	    _fetchAllRaters: function _fetchAllRaters() {
-	        var _this2 = this;
-
-	        var type = "GET";
-	        var url = "/api/accounts/raters";
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    var allRatersJson = JSON.parse(httpRequest.responseText);
-
-	                    _this2.allRaters = allRatersJson.map(function (o) {
-	                        return Object.assign(Object.create(_account2.default), o);
-	                    });
-	                    _this2.reactComponent.forceUpdate();
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.send();
-	    },
-
-
-	    /* TODO: uncomment when work resumes on the stats panel
-	    _fetchDueOrders() {
-	        const type = "GET";
-	        const url = "/api/orders/due";
-	          const httpRequest = new XMLHttpRequest();
-	          httpRequest.onreadystatechange = () => {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === httpStatusCodes.ok) {
-	                    const dueOrdersJson = JSON.parse(httpRequest.responseText);
-	                      this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
-	                    this.reactComponent.forceUpdate();
-	                } else {
-	                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.send();
-	    },
-	      _fetchOrdersSentToTheCustomerThisMonth() {
-	        const type = "GET";
-	        const url = "/api/orders/sent";
-	          const httpRequest = new XMLHttpRequest();
-	          httpRequest.onreadystatechange = () => {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === httpStatusCodes.ok) {
-	                    const sentOrdersJson = JSON.parse(httpRequest.responseText);
-	                      this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
-	                    this.reactComponent.forceUpdate();
-	                } else {
-	                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.send();
-	    }, */
-
 	    assignOrderTo: function assignOrderTo(account) {
-	        var _this3 = this;
+	        var _this = this;
 
 	        if (!this.currentOrder) {
 	            alert("Error: `this.currentOrder` must exist, this is a bug!");
 	        } else {
 	            (function () {
-	                var predicate = ["id", _this3.currentOrder.id];
-	                var order = _.find(_this3.topOrders, predicate) || _.find(_this3.moreOrders, predicate);
+	                var predicate = ["id", _this.currentOrder.id];
+	                var order = _.find(_this.topOrders, predicate) || _.find(_this.moreOrders, predicate);
 
 	                order.rater = account;
 
-	                _this3.reactComponent.forceUpdate();
+	                _this.reactComponent.forceUpdate();
 
 	                var type = "PUT";
 	                var url = "/api/orders";
@@ -338,13 +249,13 @@
 	        }
 	    },
 	    deleteCurrentOrder: function deleteCurrentOrder() {
-	        var _this4 = this;
+	        var _this2 = this;
 
 	        if (!this.currentOrder) {
 	            alert("Error: `this.currentOrder` must exist, this is a bug!");
 	        } else {
 	            (function () {
-	                var orderId = _this4.currentOrder.id;
+	                var orderId = _this2.currentOrder.id;
 
 	                var type = "DELETE";
 	                var url = "/api/orders/" + orderId;
@@ -357,10 +268,10 @@
 	                                return o.id === orderId;
 	                            };
 
-	                            _.remove(_this4.topOrders, predicate);
-	                            _.remove(_this4.moreOrders, predicate);
+	                            _.remove(_this2.topOrders, predicate);
+	                            _.remove(_this2.moreOrders, predicate);
 
-	                            _this4.reactComponent.forceUpdate();
+	                            _this2.reactComponent.forceUpdate();
 	                        } else {
 	                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                        }
@@ -372,7 +283,7 @@
 	        }
 	    },
 	    searchMore: function searchMore(onAjaxRequestDone) {
-	        var _this5 = this;
+	        var _this3 = this;
 
 	        this._updateSearchCriteria();
 
@@ -390,8 +301,8 @@
 	                        return Object.assign(Object.create(_order2.default), o);
 	                    });
 
-	                    _this5.moreOrders = _.concat(_this5.moreOrders, moreOrders);
-	                    _this5.reactComponent.forceUpdate();
+	                    _this3.moreOrders = _.concat(_this3.moreOrders, moreOrders);
+	                    _this3.reactComponent.forceUpdate();
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                }
@@ -405,6 +316,95 @@
 	            excludedOrderIds: this.searchCriteria.excludedOrderIds
 	        }));
 	    },
+	    _fetchTopOrders: function _fetchTopOrders() {
+	        var _this4 = this;
+
+	        var type = "GET";
+	        var url = "/api/orders/top";
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    var topOrdersJson = JSON.parse(httpRequest.responseText);
+
+	                    _this4.topOrders = topOrdersJson.map(function (o) {
+	                        return Object.assign(Object.create(_order2.default), o);
+	                    });
+	                    _this4.areTopOrdersFetched = true;
+	                    _this4.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.send();
+	    },
+	    _fetchAllRaters: function _fetchAllRaters() {
+	        var _this5 = this;
+
+	        var type = "GET";
+	        var url = "/api/accounts/raters";
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    var allRatersJson = JSON.parse(httpRequest.responseText);
+
+	                    _this5.allRaters = allRatersJson.map(function (o) {
+	                        return Object.assign(Object.create(_account2.default), o);
+	                    });
+	                    _this5.reactComponent.forceUpdate();
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.send();
+	    },
+
+
+	    /* TODO: uncomment when work resumes on the stats panel
+	     _fetchDueOrders() {
+	     const type = "GET";
+	     const url = "/api/orders/due";
+	       const httpRequest = new XMLHttpRequest();
+	       httpRequest.onreadystatechange = () => {
+	     if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	     if (httpRequest.status === httpStatusCodes.ok) {
+	     const dueOrdersJson = JSON.parse(httpRequest.responseText);
+	       this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
+	     this.reactComponent.forceUpdate();
+	     } else {
+	     alert(`AJAX failure doing a ${type} request to "${url}"`);
+	     }
+	     }
+	     };
+	     httpRequest.open(type, url);
+	     httpRequest.send();
+	     },
+	       _fetchOrdersSentToTheCustomerThisMonth() {
+	     const type = "GET";
+	     const url = "/api/orders/sent";
+	       const httpRequest = new XMLHttpRequest();
+	       httpRequest.onreadystatechange = () => {
+	     if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	     if (httpRequest.status === httpStatusCodes.ok) {
+	     const sentOrdersJson = JSON.parse(httpRequest.responseText);
+	       this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
+	     this.reactComponent.forceUpdate();
+	     } else {
+	     alert(`AJAX failure doing a ${type} request to "${url}"`);
+	     }
+	     }
+	     };
+	     httpRequest.open(type, url);
+	     httpRequest.send();
+	     }, */
+
 	    _updateSearchCriteria: function _updateSearchCriteria() {
 	        if (!this.searchCriteria) {
 	            this.searchNbDays = 7;
@@ -1162,9 +1162,6 @@
 
 	var Component = React.createClass({
 	    displayName: "Component",
-	    getInitialState: function getInitialState() {
-	        return _store2.default;
-	    },
 	    render: function render() {
 	        var _this = this;
 

@@ -1,7 +1,7 @@
 import {animationDurations} from "../global";
 
 export function makeExpandable($panels) {
-    $panels.each(panel => {
+    _.forEach($panels, panel => {
         const $el = $(panel);
         const $allExpandablePanels = $el.parent().children(".expandable-panel");
         const $allExpandablePanelBodies = $allExpandablePanels.children("div");

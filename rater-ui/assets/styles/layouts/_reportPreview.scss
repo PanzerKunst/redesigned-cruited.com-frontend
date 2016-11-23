@@ -15,6 +15,30 @@
   // TODO
   @include new-assessment-btn-in-header-top-margin;
 
+  .btn.new-assessment {
+    font-size: $font-size-sm;
+    border-radius: 1.3em;
+
+    padding: 0.5em 0.6em 0.4em 0.7em;
+
+    line-height: 1em;
+    > span {
+      line-height: 1em;
+    }
+
+    @include medium-screen {
+      padding: 0.45em 1em 0.55em;
+
+      > span {
+        margin-right: 1em;
+      }
+    }
+
+    > .fa-plus {
+      margin-right: 1px;
+    }
+  }
+
   .highlighted-number {
     padding: 0.4em 0.6em;
     line-height: 1em;

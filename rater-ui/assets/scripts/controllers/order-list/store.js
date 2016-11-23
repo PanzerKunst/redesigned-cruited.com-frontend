@@ -29,94 +29,6 @@ const store = {
         }, 10 * 1000); */
     },
 
-    _fetchTopOrders() {
-        const type = "GET";
-        const url = "/api/orders/top";
-        const httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = () => {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    const topOrdersJson = JSON.parse(httpRequest.responseText);
-
-                    this.topOrders = topOrdersJson.map(o => Object.assign(Object.create(Order), o));
-                    this.areTopOrdersFetched = true;
-                    this.reactComponent.forceUpdate();
-                } else {
-                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-                }
-            }
-        };
-        httpRequest.open(type, url);
-        httpRequest.send();
-    },
-
-    _fetchAllRaters() {
-        const type = "GET";
-        const url = "/api/accounts/raters";
-        const httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = () => {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    const allRatersJson = JSON.parse(httpRequest.responseText);
-
-                    this.allRaters = allRatersJson.map(o => Object.assign(Object.create(Account), o));
-                    this.reactComponent.forceUpdate();
-                } else {
-                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-                }
-            }
-        };
-        httpRequest.open(type, url);
-        httpRequest.send();
-    },
-
-    /* TODO: uncomment when work resumes on the stats panel
-    _fetchDueOrders() {
-        const type = "GET";
-        const url = "/api/orders/due";
-
-        const httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = () => {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    const dueOrdersJson = JSON.parse(httpRequest.responseText);
-
-                    this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
-                    this.reactComponent.forceUpdate();
-                } else {
-                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-                }
-            }
-        };
-        httpRequest.open(type, url);
-        httpRequest.send();
-    },
-
-    _fetchOrdersSentToTheCustomerThisMonth() {
-        const type = "GET";
-        const url = "/api/orders/sent";
-
-        const httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = () => {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    const sentOrdersJson = JSON.parse(httpRequest.responseText);
-
-                    this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
-                    this.reactComponent.forceUpdate();
-                } else {
-                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-                }
-            }
-        };
-        httpRequest.open(type, url);
-        httpRequest.send();
-    }, */
-
     assignOrderTo(account) {
         if (!this.currentOrder) {
             alert("Error: `this.currentOrder` must exist, this is a bug!");
@@ -204,6 +116,94 @@ const store = {
             excludedOrderIds: this.searchCriteria.excludedOrderIds
         }));
     },
+
+    _fetchTopOrders() {
+        const type = "GET";
+        const url = "/api/orders/top";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    const topOrdersJson = JSON.parse(httpRequest.responseText);
+
+                    this.topOrders = topOrdersJson.map(o => Object.assign(Object.create(Order), o));
+                    this.areTopOrdersFetched = true;
+                    this.reactComponent.forceUpdate();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.send();
+    },
+
+    _fetchAllRaters() {
+        const type = "GET";
+        const url = "/api/accounts/raters";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    const allRatersJson = JSON.parse(httpRequest.responseText);
+
+                    this.allRaters = allRatersJson.map(o => Object.assign(Object.create(Account), o));
+                    this.reactComponent.forceUpdate();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.send();
+    },
+
+    /* TODO: uncomment when work resumes on the stats panel
+     _fetchDueOrders() {
+     const type = "GET";
+     const url = "/api/orders/due";
+
+     const httpRequest = new XMLHttpRequest();
+
+     httpRequest.onreadystatechange = () => {
+     if (httpRequest.readyState === XMLHttpRequest.DONE) {
+     if (httpRequest.status === httpStatusCodes.ok) {
+     const dueOrdersJson = JSON.parse(httpRequest.responseText);
+
+     this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
+     this.reactComponent.forceUpdate();
+     } else {
+     alert(`AJAX failure doing a ${type} request to "${url}"`);
+     }
+     }
+     };
+     httpRequest.open(type, url);
+     httpRequest.send();
+     },
+
+     _fetchOrdersSentToTheCustomerThisMonth() {
+     const type = "GET";
+     const url = "/api/orders/sent";
+
+     const httpRequest = new XMLHttpRequest();
+
+     httpRequest.onreadystatechange = () => {
+     if (httpRequest.readyState === XMLHttpRequest.DONE) {
+     if (httpRequest.status === httpStatusCodes.ok) {
+     const sentOrdersJson = JSON.parse(httpRequest.responseText);
+
+     this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
+     this.reactComponent.forceUpdate();
+     } else {
+     alert(`AJAX failure doing a ${type} request to "${url}"`);
+     }
+     }
+     };
+     httpRequest.open(type, url);
+     httpRequest.send();
+     }, */
 
     _updateSearchCriteria() {
         if (!this.searchCriteria) {

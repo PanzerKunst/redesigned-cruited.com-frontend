@@ -4,10 +4,6 @@ import store from "./store";
 import RaterProfile from "./raterProfile";
 
 const Component = React.createClass({
-    getInitialState() {
-        return store;
-    },
-
     render() {
         return (
             <div id="assign-modal" className="modal fade" tabIndex="-1" role="dialog">

@@ -22,12 +22,6 @@ const store = {
     i18nMessages: CR.ControllerData.i18nMessages,
 
     init() {
-
-        // TODO: remove
-        console.log("order", this.order);
-        console.log("cvAverageScore", this.cvAverageScore);
-        console.log("coverLetterAverageScore", this.coverLetterAverageScore);
-        console.log("linkedinProfileAverageScore", this.linkedinProfileAverageScore);
     }
 };
 
