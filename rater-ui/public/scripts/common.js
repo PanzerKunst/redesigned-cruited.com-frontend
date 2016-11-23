@@ -84,12 +84,14 @@
 	        this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
 	    },
 	    _toggleMenu: function _toggleMenu() {
+	        var _this = this;
+
 	        if (this.$siteHeader.hasClass("menu-open")) {
 	            TweenLite.to(this.$menu, _global.animationDurations.short, {
 	                opacity: 0,
-	                onComplete: function () {
-	                    this.$menu.css({ display: "none" });
-	                }.bind(this)
+	                onComplete: function onComplete() {
+	                    _this.$menu.css({ display: "none" });
+	                }
 	            });
 
 	            this.$siteHeader.removeClass("menu-open");

@@ -9,9 +9,9 @@ const Component = React.createClass({
                 {this._couponTag(order.coupon)}
                 <span className="order-tag edition">{order.editionCode}</span>
                 {order.containedProductCodes.map(productCode =>
-                    <span key={`${order.id}-${productCode}`} className="order-tag product-code">
-                        <a href={order.documentUrl(this.props.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
-                    </span>
+                        <span key={`${order.id}-${productCode}`} className="order-tag product-code">
+                            <a href={order.documentUrl(this.props.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
+                        </span>
                 )}
                 <span className="order-tag lang">{order.languageCode}</span>
             </div>);
@@ -19,13 +19,13 @@ const Component = React.createClass({
 
     componentDidMount() {
         this._initElements();
+        this.$tooltips.tooltip();
     },
 
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
-        const $tooltips = $rootEl.find("[data-toggle=tooltip]");
 
-        $tooltips.tooltip();
+        this.$tooltips = $rootEl.find("[data-toggle=tooltip]");
     },
 
     _couponTag(coupon) {

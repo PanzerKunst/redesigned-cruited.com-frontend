@@ -226,7 +226,7 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -237,9 +237,12 @@
 	exports.fadeOut = fadeOut;
 	exports.enableLoading = enableLoading;
 	exports.disableLoading = disableLoading;
+
+	var _global = __webpack_require__(1);
+
 	function fadeIn($el, params) {
 	    if (!$el.is(":visible")) {
-	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.default;
 	        var alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
 
 	        TweenLite.set($el, { display: "block", alpha: 0 });
@@ -256,7 +259,7 @@
 
 	function fadeOut($el, params) {
 	    if ($el.is(":visible")) {
-	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : CR.animationDurations.default;
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.default;
 
 	        TweenLite.to($el, animationDuration, {
 	            alpha: 0,
@@ -616,14 +619,18 @@
 	        return $field.attr("type") === "file";
 	    },
 	    _addBlurEvent: function _addBlurEvent($field) {
+	        var _this3 = this;
+
 	        $field.blur(function () {
-	            this._validateField($field, true);
-	        }.bind(this));
+	            _this3._validateField($field, true);
+	        });
 	    },
 	    _addValueChangedEvent: function _addValueChangedEvent($field) {
+	        var _this4 = this;
+
 	        $field.change(function () {
-	            this._validateField($field);
-	        }.bind(this));
+	            _this4._validateField($field);
+	        });
 	    }
 	};
 

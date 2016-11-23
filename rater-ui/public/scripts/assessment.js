@@ -202,6 +202,9 @@
 	        componentDidUpdate: function componentDidUpdate() {
 	            this._initState();
 	            this._initElements();
+
+	            $(".overall-comment").prop("disabled", _store2.default.isOrderReadOnly());
+	            this._selectFirstTab();
 	        },
 	        _initState: function _initState() {
 	            if (_store2.default.assessment && !this.isStateInitialised) {
@@ -217,13 +220,7 @@
 	            }
 	        },
 	        _initElements: function _initElements() {
-	            var $withCircles = $(".with-circles");
-
-	            this.$firstTab = $($withCircles.children(".nav-tabs").children().get(0)).children();
-
-	            $(".overall-comment").prop("disabled", _store2.default.isOrderReadOnly());
-
-	            this._selectFirstTab();
+	            this.$firstTab = $(".with-circles").children(".nav-tabs").children().first().children();
 	        },
 	        _selectFirstTab: function _selectFirstTab() {
 	            if (!this.isFirstTabSelectionDone) {
@@ -390,11 +387,7 @@
 	            _store2.default.updateOverallComment(categoryProductCode, overallComment);
 	        },
 	        _handlePreviewBtnClick: function _handlePreviewBtnClick() {
-
-	            // eslint-disable-next-line no-return-assign
-	            _store2.default.saveCurrentReport(function () {
-	                return location.href = "/report-preview/" + _store2.default.order.id;
-	            });
+	            _store2.default.saveCurrentReport();
 	        },
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
 	            return $textarea.closest(".tab-pane").data("productCode");
@@ -640,7 +633,7 @@
 	    areAllReportCommentsCheckedForAtLeastOneCategory: function areAllReportCommentsCheckedForAtLeastOneCategory() {
 	        return this.assessment && (this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.cv) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile));
 	    },
-	    saveCurrentReport: function saveCurrentReport(onAjaxRequestSuccess) {
+	    saveCurrentReport: function saveCurrentReport() {
 	        var _this2 = this;
 
 	        /*
@@ -673,7 +666,7 @@
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
 	                    _this2.assessment.deleteAssessmentInfoFromLocalStorage();
-	                    onAjaxRequestSuccess();
+	                    location.href = "/report-preview/" + store.order.id;
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
 	                }
@@ -1237,17 +1230,19 @@
 	        };
 	    },
 	    _calculateTopComments: function _calculateTopComments(categoryProductCode, categoryId) {
+	        var _this2 = this;
+
 	        var redCommentsForCategory = _.filter(this.listComments(categoryProductCode), function (ac) {
 	            return ac.categoryId === categoryId && ac.isRedSelected === true;
 	        });
 	        var topCommentsForCategory = [];
 
-	        var loopCondition = function () {
-	            if (redCommentsForCategory.length < this.nbReportComments) {
+	        var loopCondition = function loopCondition() {
+	            if (redCommentsForCategory.length < _this2.nbReportComments) {
 	                return topCommentsForCategory.length < redCommentsForCategory.length;
 	            }
-	            return topCommentsForCategory.length < this.nbReportComments;
-	        }.bind(this);
+	            return topCommentsForCategory.length < _this2.nbReportComments;
+	        };
 
 	        while (loopCondition()) {
 	            var topComment = this._findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory);
@@ -1379,13 +1374,13 @@
 	        return commentWithMostPoints;
 	    },
 	    _initListCommentsFromDocReport: function _initListCommentsFromDocReport(categoryProductCode) {
-	        var _this2 = this;
+	        var _this3 = this;
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
 	        this.listComments(categoryProductCode).forEach(function (listComment) {
-	            if (_.has(myAssessments, [_this2.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
-	                var reportComments = myAssessments[_this2.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
+	            if (_.has(myAssessments, [_this3.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
+	                var reportComments = myAssessments[_this3.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
 	                var correspondingReportComment = _.find(reportComments, function (rc) {
 	                    return rc.id === listComment.id;
 	                });
@@ -1401,7 +1396,7 @@
 	                    listComment.isRedSelected = false;
 	                }
 
-	                _this2.updateListComment(listComment);
+	                _this3.updateListComment(listComment);
 	            }
 	        });
 	    }
@@ -1650,12 +1645,12 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
+	        this.$tooltips.tooltip();
 	    },
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
-	        var $tooltips = $rootEl.find("[data-toggle=tooltip]");
 
-	        $tooltips.tooltip();
+	        this.$tooltips = $rootEl.find("[data-toggle=tooltip]");
 	    },
 	    _couponTag: function _couponTag(coupon) {
 	        if (!coupon) {
@@ -1793,13 +1788,12 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
+	        this._addContentEditableToParagraphs();
 	    },
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
 	        this.$redParagraphs = $rootEl.children(".red").children("p");
-
-	        this._addContentEditableToParagraphs();
 	    },
 	    _addContentEditableToParagraphs: function _addContentEditableToParagraphs() {
 	        if (!_store2.default.isOrderReadOnly()) {
@@ -1934,6 +1928,8 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
+	        this._disableInputsIfRequired();
+	        this._makeCommentsSortable();
 	    },
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
@@ -1946,9 +1942,6 @@
 	        this.$addCommentComposer = $rootEl.children(".comment-composer");
 	        this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
 	        this.$addCommentLink = $rootEl.children("a");
-
-	        this._disableInputsIfRequired();
-	        this._makeCommentsSortable();
 	    },
 	    _disableInputsIfRequired: function _disableInputsIfRequired() {
 	        if (_store2.default.isOrderReadOnly()) {
@@ -2127,13 +2120,15 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
+
+	        if (!_store2.default.isOrderReadOnly()) {
+	            this.$commentParagraph.attr("contenteditable", "true");
+	        }
 	    },
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-	        if (!_store2.default.isOrderReadOnly()) {
-	            $rootEl.children("p").attr("contenteditable", "true");
-	        }
+	        this.$commentParagraph = $rootEl.children(".comment-paragraph");
 	    },
 	    _handleParagraphBlur: function _handleParagraphBlur(e) {
 	        var c = this.props.comment;

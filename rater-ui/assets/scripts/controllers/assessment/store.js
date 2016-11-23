@@ -116,7 +116,7 @@ const store = {
             this.assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile));
     },
 
-    saveCurrentReport(onAjaxRequestSuccess) {
+    saveCurrentReport() {
 
         /*
          AssessmentReport(orderId: Long,
@@ -148,7 +148,7 @@ const store = {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     this.assessment.deleteAssessmentInfoFromLocalStorage();
-                    onAjaxRequestSuccess();
+                    location.href = `/report-preview/${store.order.id}`;
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }

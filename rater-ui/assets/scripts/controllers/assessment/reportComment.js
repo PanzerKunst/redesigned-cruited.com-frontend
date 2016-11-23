@@ -27,14 +27,16 @@ const Component = React.createClass({
 
     componentDidMount() {
         this._initElements();
+
+        if (!store.isOrderReadOnly()) {
+            this.$commentParagraph.attr("contenteditable", "true");
+        }
     },
 
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-        if (!store.isOrderReadOnly()) {
-            $rootEl.children("p").attr("contenteditable", "true");
-        }
+        this.$commentParagraph = $rootEl.children(".comment-paragraph");
     },
 
     _handleParagraphBlur(e) {

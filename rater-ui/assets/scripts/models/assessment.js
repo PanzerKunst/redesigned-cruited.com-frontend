@@ -257,12 +257,12 @@ const Assessment = {
         const redCommentsForCategory = _.filter(this.listComments(categoryProductCode), ac => ac.categoryId === categoryId && ac.isRedSelected === true);
         const topCommentsForCategory = [];
 
-        const loopCondition = function() {
+        const loopCondition = () => {
             if (redCommentsForCategory.length < this.nbReportComments) {
                 return topCommentsForCategory.length < redCommentsForCategory.length;
             }
             return topCommentsForCategory.length < this.nbReportComments;
-        }.bind(this);
+        };
 
         while (loopCondition()) {
             const topComment = this._findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory);

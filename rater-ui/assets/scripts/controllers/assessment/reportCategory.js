@@ -40,6 +40,8 @@ const Component = React.createClass({
 
     componentDidMount() {
         this._initElements();
+        this._disableInputsIfRequired();
+        this._makeCommentsSortable();
     },
 
     _initElements() {
@@ -53,9 +55,6 @@ const Component = React.createClass({
         this.$addCommentComposer = $rootEl.children(".comment-composer");
         this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
         this.$addCommentLink = $rootEl.children("a");
-
-        this._disableInputsIfRequired();
-        this._makeCommentsSortable();
     },
 
     _disableInputsIfRequired() {

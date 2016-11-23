@@ -54,15 +54,17 @@
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _category = __webpack_require__(3);
+	var _expandablePanel = __webpack_require__(3);
+
+	var _category = __webpack_require__(5);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(4);
+	var _product = __webpack_require__(6);
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _store = __webpack_require__(5);
+	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -148,6 +150,31 @@
 	                )
 	            );
 	        },
+	        componentDidUpdate: function componentDidUpdate() {
+	            this._initElements();
+
+	            this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
+	            (0, _expandablePanel.makeExpandable)(this.$expandablePanels);
+
+	            // TODO this._selectTabForSelectedProduct();
+	        },
+	        _initElements: function _initElements() {
+	            this.$tabList = $("#content").find("ul[role=tablist]");
+	            this.$tabs = this.$tabList.find("a");
+
+	            var $docPanels = $(".tab-pane");
+
+	            this.$cvPanel = $docPanels.filter("#" + _category2.default.productCodes.cv + "-report-panel");
+	            this.$cvScoreCursor = this.$cvPanel.find("#score-bar").children("span");
+
+	            this.$coverLetterPanel = $docPanels.filter("#" + _category2.default.productCodes.coverLetter + "-report-panel");
+	            this.$coverLetterScoreCursor = this.$coverLetterPanel.find("#score-bar").children("span");
+
+	            this.$linkedinProfilePanel = $docPanels.filter("#" + _category2.default.productCodes.linkedinProfile + "-report-panel");
+	            this.$linkedinProfileScoreCursor = this.$linkedinProfilePanel.find("#score-bar").children("span");
+
+	            this.$expandablePanels = $docPanels.find(".expandable-panel");
+	        },
 	        _subTitle: function _subTitle() {
 	            var order = _store2.default.order;
 
@@ -162,6 +189,36 @@
 	            }
 
 	            return _store2.default.i18nMessages["report.subtitle"];
+	        },
+	        _placeScoreCursors: function _placeScoreCursors() {
+	            var cvReportScores = _store2.default.cvReportScores;
+
+	            if (cvReportScores) {
+	                this._animateScoreCursor(this.$cvScoreCursor, cvReportScores.globalScore);
+	            }
+
+	            var coverLetterReportScores = _store2.default.coverLetterReportScores;
+
+	            if (coverLetterReportScores) {
+	                this._animateScoreCursor(this.$coverLetterScoreCursor, coverLetterReportScores.globalScore);
+	            }
+
+	            var linkedinProfileReportScores = _store2.default.linkedinProfileReportScores;
+
+	            if (linkedinProfileReportScores) {
+	                this._animateScoreCursor(this.$linkedinProfileScoreCursor, linkedinProfileReportScores.globalScore);
+	            }
+	        },
+	        _animateScoreCursor: function _animateScoreCursor($cursor, score) {
+	            $cursor.css("left", 0);
+	            TweenLite.to($cursor, 1, { left: score + "%", ease: Power4.easeInOut });
+	        },
+
+
+	        // TODO
+	        _selectTabForSelectedProduct: function _selectTabForSelectedProduct() {
+
+	            // this.$tabs.filter(`[aria-controls=${this.state.selectedProductCode}-report-panel]`).tab("show");
 	        },
 	        _tab: function _tab(categoryProductCode) {
 	            var isActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -201,12 +258,9 @@
 	            return categoryProductCode + "-report-panel";
 	        },
 	        _documentReportSection: function _documentReportSection(categoryProductCode) {
-	            var productCode = _product2.default.codes[categoryProductCode];
+	            var _this = this;
 
-	            // TODO: remove
-	            console.log("productCode", productCode);
-	            console.log("store.order.containedProductCodes", _store2.default.order.containedProductCodes);
-	            console.log("_.includes(store.order.containedProductCodes, productCode)", _.includes(_store2.default.order.containedProductCodes, productCode));
+	            var productCode = _product2.default.codes[categoryProductCode];
 
 	            if (!_.includes(_store2.default.order.containedProductCodes, productCode)) {
 	                return React.createElement(
@@ -229,15 +283,15 @@
 	            var documentUrl = _store2.default.order.documentUrl(_store2.default.config, productCode);
 	            var thumbnailUrl = _store2.default.order.thumbnailUrl(_store2.default.config, productCode);
 
-	            var docReport = _store2.default.assessmentReport.cvReport;
-	            var docReportScores = _store2.default.assessmentReportScores.cvReportScores;
+	            var docReport = _store2.default.cvReport;
+	            var docReportScores = _store2.default.cvReportScores;
 
 	            if (categoryProductCode === _category2.default.productCodes.coverLetter) {
-	                docReport = _store2.default.assessmentReport.coverLetterReport;
-	                docReportScores = _store2.default.assessmentReportScores.coverLetterReportScores;
+	                docReport = _store2.default.coverLetterReport;
+	                docReportScores = _store2.default.coverLetterReportScores;
 	            } else if (categoryProductCode === _category2.default.productCodes.linkedinProfile) {
-	                docReport = _store2.default.assessmentReport.linkedinProfileReport;
-	                docReportScores = _store2.default.assessmentReportScores.linkedinProfileReportScores;
+	                docReport = _store2.default.linkedinProfileReport;
+	                docReportScores = _store2.default.linkedinProfileReportScores;
 	            }
 
 	            if (!docReport) {
@@ -516,12 +570,19 @@
 	                            var redCommentList = null;
 
 	                            if (!_.isEmpty(categoryAndItsComments.redComments)) {
+
+	                                // TODO orig = `key={comment.id}`
+
 	                                redCommentList = React.createElement(
 	                                    "ul",
 	                                    { className: "red-comments light-font" },
 	                                    categoryAndItsComments.redComments.map(function (comment) {
-	                                        return React.createElement("li", { key: comment.id, dangerouslySetInnerHTML: { __html: this._commentWithProcessedLinks(comment.text) } });
-	                                    }.bind(this))
+
+	                                        // TODO: remove
+	                                        console.log("comment.defaultCommentId", comment.defaultCommentId);
+
+	                                        return React.createElement("li", { key: comment.defaultCommentId || _string2.default.uuid(), dangerouslySetInnerHTML: { __html: _this._commentWithProcessedLinks(comment.text) } });
+	                                    })
 	                                );
 	                            }
 
@@ -540,7 +601,7 @@
 	                                        React.createElement(
 	                                            "h3",
 	                                            null,
-	                                            _store2.default.i18nMessages["category." + categoryId + ".title"]
+	                                            _store2.default.i18nMessages["category.title." + categoryId]
 	                                        ),
 	                                        React.createElement(
 	                                            "span",
@@ -551,13 +612,13 @@
 	                                    React.createElement(
 	                                        "p",
 	                                        { className: "category-short-desc" },
-	                                        _store2.default.i18nMessages["category." + categoryId + ".shortDesc"]
+	                                        _store2.default.i18nMessages["category.shortDesc." + categoryId]
 	                                    )
 	                                ),
 	                                topCommentParagraph,
 	                                redCommentList
 	                            );
-	                        }.bind(this))
+	                        })
 	                    )
 	                )
 	            );
@@ -798,6 +859,73 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.makeExpandable = makeExpandable;
+
+	var _global = __webpack_require__(4);
+
+	function makeExpandable($panels) {
+	    $panels.each(function (panel) {
+	        var $el = $(panel);
+	        var $allExpandablePanels = $el.parent().children(".expandable-panel");
+	        var $allExpandablePanelBodies = $allExpandablePanels.children("div");
+
+	        var _expandBody = function _expandBody($body) {
+	            $body.css({ display: "block", opacity: 0 });
+	            TweenLite.to($body, _global.animationDurations.default, { opacity: 1 });
+	        };
+
+	        var _toggleBody = function _toggleBody(e) {
+	            var $panel = $(e.currentTarget).parent();
+	            var isOpen = $panel.hasClass("expanded");
+
+	            // We close all open
+	            $allExpandablePanels.removeClass("expanded");
+	            $allExpandablePanelBodies.css({ display: "none" });
+
+	            if (!isOpen) {
+	                _expandBody($panel.children("div"));
+	                $panel.addClass("expanded");
+	            }
+	        };
+
+	        $el.children("header").click(_toggleBody);
+	    });
+	}
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+	var localStorageKeys = exports.localStorageKeys = {
+	    myAssessments: "myAssessments"
+	};
+
+/***/ },
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -850,7 +978,7 @@
 	exports.default = Category;
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -885,7 +1013,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -895,11 +1023,11 @@
 	});
 	exports.default = undefined;
 
-	var _account = __webpack_require__(6);
+	var _account = __webpack_require__(8);
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _order = __webpack_require__(7);
+	var _order = __webpack_require__(9);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -910,19 +1038,25 @@
 	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
 	    config: CR.ControllerData.config,
 	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
-	    assessmentReport: CR.ControllerData.assessmentReport,
-	    assessmentReportScores: CR.ControllerData.assessmentReportScores,
+
+	    cvReport: CR.ControllerData.assessmentReport.cvReport,
+	    coverLetterReport: CR.ControllerData.assessmentReport.coverLetterReport,
+	    linkedinProfileReport: CR.ControllerData.assessmentReport.linkedinProfileReport,
+
+	    cvReportScores: CR.ControllerData.assessmentReportScores.cvReportScores,
+	    coverLetterReportScores: CR.ControllerData.assessmentReportScores.coverLetterReportScores,
+	    linkedinProfileReportScores: CR.ControllerData.assessmentReportScores.linkedinProfileReportScores,
+
 	    cvAverageScore: CR.ControllerData.cvAverageScore,
 	    coverLetterAverageScore: CR.ControllerData.coverLetterAverageScore,
 	    linkedinProfileAverageScore: CR.ControllerData.linkedinProfileAverageScore,
+
 	    i18nMessages: CR.ControllerData.i18nMessages,
 
 	    init: function init() {
 
 	        // TODO: remove
 	        console.log("order", this.order);
-	        console.log("assessmentReport", this.assessmentReport);
-	        console.log("assessmentReportScores", this.assessmentReportScores);
 	        console.log("cvAverageScore", this.cvAverageScore);
 	        console.log("coverLetterAverageScore", this.coverLetterAverageScore);
 	        console.log("linkedinProfileAverageScore", this.linkedinProfileAverageScore);
@@ -932,7 +1066,7 @@
 	exports.default = store;
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -958,7 +1092,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -968,7 +1102,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(4);
+	var _product = __webpack_require__(6);
 
 	var _product2 = _interopRequireDefault(_product);
 

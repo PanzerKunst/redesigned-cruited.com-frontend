@@ -148,6 +148,7 @@ globals:
     ReactDOM: true
     classNames: true
     TweenLite: true
+    Power4: true
     moment: true
     Sortable: true
     Modernizr: true

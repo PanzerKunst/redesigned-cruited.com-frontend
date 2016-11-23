@@ -349,15 +349,15 @@ const validator = {
     },
 
     _addBlurEvent($field) {
-        $field.blur(function() {
+        $field.blur(() => {
             this._validateField($field, true);
-        }.bind(this));
+        });
     },
 
     _addValueChangedEvent($field) {
-        $field.change(function() {
+        $field.change(() => {
             this._validateField($field);
-        }.bind(this));
+        });
     }
 };
 

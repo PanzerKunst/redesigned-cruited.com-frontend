@@ -53,7 +53,7 @@ object CruitedProduct {
       case 16 => codeLinkedinProfileReview
       case 17 => codeLinkedinProfileReview
       case 18 => codeLinkedinProfileReview
-      case 10 => codeLinkedinProfileReview
+      case 20 => codeLinkedinProfileReview
     }
   }
 }

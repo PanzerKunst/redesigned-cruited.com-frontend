@@ -98,6 +98,9 @@ const controller = {
         componentDidUpdate() {
             this._initState();
             this._initElements();
+
+            $(".overall-comment").prop("disabled", store.isOrderReadOnly());
+            this._selectFirstTab();
         },
 
         _initState() {
@@ -115,13 +118,7 @@ const controller = {
         },
 
         _initElements() {
-            const $withCircles = $(".with-circles");
-
-            this.$firstTab = $($withCircles.children(".nav-tabs").children().get(0)).children();
-
-            $(".overall-comment").prop("disabled", store.isOrderReadOnly());
-
-            this._selectFirstTab();
+            this.$firstTab = $(".with-circles").children(".nav-tabs").children().first().children();
         },
 
         _selectFirstTab() {
@@ -269,9 +266,7 @@ const controller = {
         },
 
         _handlePreviewBtnClick() {
-
-            // eslint-disable-next-line no-return-assign
-            store.saveCurrentReport(() => location.href = `/report-preview/${store.order.id}`);
+            store.saveCurrentReport();
         },
 
         _categoryProductCodeFromOverallCommentTextarea($textarea) {

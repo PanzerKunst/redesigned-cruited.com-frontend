@@ -371,7 +371,20 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
 
       for (defaultComment <- defaultCommentsForThisDoc) {
         val commentId = defaultComment.id
-        val isRed = redComments.exists(_.defaultCommentId.get == commentId) // TODO: `defaultCommentId.get` isn't gonna fly here for custom comments...
+        var isRed = false
+
+        breakable {
+          for (redComment <- redComments) {
+            redComment.defaultCommentId match {
+              case None =>
+              case Some(defaultCommentId) =>
+                if (defaultCommentId == commentId) {
+                  isRed = true
+                  break()
+                }
+            }
+          }
+        }
 
         val isGreenValueForDb = if (isRed) {
           0

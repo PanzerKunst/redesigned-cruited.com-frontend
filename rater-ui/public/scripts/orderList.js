@@ -1033,12 +1033,12 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
+	        this.$tooltips.tooltip();
 	    },
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
-	        var $tooltips = $rootEl.find("[data-toggle=tooltip]");
 
-	        $tooltips.tooltip();
+	        this.$tooltips = $rootEl.find("[data-toggle=tooltip]");
 	    },
 	    _couponTag: function _couponTag(coupon) {
 	        if (!coupon) {

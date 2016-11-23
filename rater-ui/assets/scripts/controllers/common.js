@@ -39,9 +39,9 @@ const CommonController = {
         if (this.$siteHeader.hasClass("menu-open")) {
             TweenLite.to(this.$menu, animationDurations.short, {
                 opacity: 0,
-                onComplete: function() {
+                onComplete: () => {
                     this.$menu.css({display: "none"});
-                }.bind(this)
+                }
             });
 
             this.$siteHeader.removeClass("menu-open");

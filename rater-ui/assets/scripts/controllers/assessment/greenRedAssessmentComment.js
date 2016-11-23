@@ -38,14 +38,13 @@ const Component = React.createClass({
 
     componentDidMount() {
         this._initElements();
+        this._addContentEditableToParagraphs();
     },
 
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
         this.$redParagraphs = $rootEl.children(".red").children("p");
-
-        this._addContentEditableToParagraphs();
     },
 
     _addContentEditableToParagraphs() {

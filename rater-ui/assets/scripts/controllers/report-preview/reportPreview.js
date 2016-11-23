@@ -1,5 +1,6 @@
 import Browser from "../../services/browser";
 import String from "../../services/string";
+import {makeExpandable} from "../../services/expandablePanel";
 import Category from "../../models/category";
 import Product from "../../models/product";
 import store from "./store";
@@ -52,6 +53,33 @@ const controller = {
                 </div>);
         },
 
+        componentDidUpdate() {
+            this._initElements();
+
+            this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
+            makeExpandable(this.$expandablePanels);
+
+            // TODO this._selectTabForSelectedProduct();
+        },
+
+        _initElements() {
+            this.$tabList = $("#content").find("ul[role=tablist]");
+            this.$tabs = this.$tabList.find("a");
+
+            const $docPanels = $(".tab-pane");
+
+            this.$cvPanel = $docPanels.filter(`#${Category.productCodes.cv}-report-panel`);
+            this.$cvScoreCursor = this.$cvPanel.find("#score-bar").children("span");
+
+            this.$coverLetterPanel = $docPanels.filter(`#${Category.productCodes.coverLetter}-report-panel`);
+            this.$coverLetterScoreCursor = this.$coverLetterPanel.find("#score-bar").children("span");
+
+            this.$linkedinProfilePanel = $docPanels.filter(`#${Category.productCodes.linkedinProfile}-report-panel`);
+            this.$linkedinProfileScoreCursor = this.$linkedinProfilePanel.find("#score-bar").children("span");
+
+            this.$expandablePanels = $docPanels.find(".expandable-panel");
+        },
+
         _subTitle() {
             const order = store.order;
 
@@ -66,6 +94,37 @@ const controller = {
             }
 
             return store.i18nMessages["report.subtitle"];
+        },
+
+        _placeScoreCursors() {
+            const cvReportScores = store.cvReportScores;
+
+            if (cvReportScores) {
+                this._animateScoreCursor(this.$cvScoreCursor, cvReportScores.globalScore);
+            }
+
+            const coverLetterReportScores = store.coverLetterReportScores;
+
+            if (coverLetterReportScores) {
+                this._animateScoreCursor(this.$coverLetterScoreCursor, coverLetterReportScores.globalScore);
+            }
+
+            const linkedinProfileReportScores = store.linkedinProfileReportScores;
+
+            if (linkedinProfileReportScores) {
+                this._animateScoreCursor(this.$linkedinProfileScoreCursor, linkedinProfileReportScores.globalScore);
+            }
+        },
+
+        _animateScoreCursor($cursor, score) {
+            $cursor.css("left", 0);
+            TweenLite.to($cursor, 1, {left: `${score}%`, ease: Power4.easeInOut});
+        },
+
+        // TODO
+        _selectTabForSelectedProduct() {
+
+            // this.$tabs.filter(`[aria-controls=${this.state.selectedProductCode}-report-panel]`).tab("show");
         },
 
         _tab(categoryProductCode, isActive = false) {
@@ -101,11 +160,6 @@ const controller = {
         _documentReportSection(categoryProductCode) {
             const productCode = Product.codes[categoryProductCode];
 
-            // TODO: remove
-            console.log("productCode", productCode);
-            console.log("store.order.containedProductCodes", store.order.containedProductCodes);
-            console.log("_.includes(store.order.containedProductCodes, productCode)", _.includes(store.order.containedProductCodes, productCode));
-
             if (!_.includes(store.order.containedProductCodes, productCode)) {
                 return (
                     <div className="sheet-of-paper centered-contents">
@@ -119,15 +173,15 @@ const controller = {
             const documentUrl = store.order.documentUrl(store.config, productCode);
             const thumbnailUrl = store.order.thumbnailUrl(store.config, productCode);
 
-            let docReport = store.assessmentReport.cvReport;
-            let docReportScores = store.assessmentReportScores.cvReportScores;
+            let docReport = store.cvReport;
+            let docReportScores = store.cvReportScores;
 
             if (categoryProductCode === Category.productCodes.coverLetter) {
-                docReport = store.assessmentReport.coverLetterReport;
-                docReportScores = store.assessmentReportScores.coverLetterReportScores;
+                docReport = store.coverLetterReport;
+                docReportScores = store.coverLetterReportScores;
             } else if (categoryProductCode === Category.productCodes.linkedinProfile) {
-                docReport = store.assessmentReport.linkedinProfileReport;
-                docReportScores = store.assessmentReportScores.linkedinProfileReportScores;
+                docReport = store.linkedinProfileReport;
+                docReportScores = store.linkedinProfileReportScores;
             }
 
             if (!docReport) {
@@ -227,7 +281,7 @@ const controller = {
                             <p className="light-font" dangerouslySetInnerHTML={{__html: templatedExplanationText}} />
                         </header>
                         <ul className="styleless">
-                            {this._categoriesAndTheirComments(docReport).map(function(categoryAndItsComments) {
+                            {this._categoriesAndTheirComments(docReport).map(categoryAndItsComments => {
                                 let topCommentParagraph = null;
 
                                 if (categoryAndItsComments.topComment) {
@@ -237,11 +291,18 @@ const controller = {
                                 let redCommentList = null;
 
                                 if (!_.isEmpty(categoryAndItsComments.redComments)) {
+
+                                    // TODO orig = `key={comment.id}`
+
                                     redCommentList = (
                                         <ul className="red-comments light-font">
-                                            {categoryAndItsComments.redComments.map(function(comment) {
-                                                return <li key={comment.id} dangerouslySetInnerHTML={{__html: this._commentWithProcessedLinks(comment.text)}} />;
-                                            }.bind(this))}
+                                            {categoryAndItsComments.redComments.map(comment => {
+
+                                                // TODO: remove
+                                                console.log("comment.defaultCommentId", comment.defaultCommentId);
+
+                                                return <li key={comment.defaultCommentId || String.uuid()} dangerouslySetInnerHTML={{__html: this._commentWithProcessedLinks(comment.text)}} />;
+                                            })}
                                         </ul>
                                     );
                                 }
@@ -253,16 +314,16 @@ const controller = {
                                     <li key={categoryId} className={categoryClasses}>
                                         <header>
                                             <div className="category-title">
-                                                <h3>{store.i18nMessages[`category.${categoryId}.title`]}</h3>
+                                                <h3>{store.i18nMessages[`category.title.${categoryId}`]}</h3>
                                                 <span className="highlighted-number">{docReportScores.categoryScores[categoryId]}</span>
                                             </div>
-                                            <p className="category-short-desc">{store.i18nMessages[`category.${categoryId}.shortDesc`]}</p>
+                                            <p className="category-short-desc">{store.i18nMessages[`category.shortDesc.${categoryId}`]}</p>
                                         </header>
                                         {topCommentParagraph}
                                         {redCommentList}
                                     </li>
                                 );
-                            }.bind(this))}
+                            })}
                         </ul>
                     </section>
                 </div>);
@@ -300,7 +361,7 @@ const controller = {
                 }
             });
 
-            docReport.wellDoneComments.forEach(function(comment) {
+            docReport.wellDoneComments.forEach(comment => {
                 let categoryIndex = -1;
 
                 for (let i = 0; i < categoriesAndTheirComments.length; i++) {
