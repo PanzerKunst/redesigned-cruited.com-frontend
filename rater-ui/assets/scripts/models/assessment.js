@@ -199,7 +199,11 @@ const Assessment = {
 
         // TODO: calculate sumOfRedPoints from the red comments in the list, not in the report
         for (let i = 0; i < reportCategory.comments.length; i++) {
-            sumOfRedPoints += reportCategory.comments[i].points;
+            const commentPoints = reportCategory.comments[i].points;
+
+            if (commentPoints) {
+                sumOfRedPoints += commentPoints;
+            }
         }
 
         return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;

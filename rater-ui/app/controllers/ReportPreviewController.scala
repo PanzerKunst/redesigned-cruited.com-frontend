@@ -8,12 +8,8 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.{ScoreAverageTasker, GlobalConfig, SessionService}
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
 @Singleton
-class ReportPreviewController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, messagesApi: MessagesApi, reportDto: ReportDto, scoreAverageTasker: ScoreAverageTasker) extends Controller {
+class ReportPreviewController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, messagesApi: MessagesApi, reportDto: ReportDto, scoreAverageTasker: ScoreAverageTasker) extends BaseController {
 
   // Run the ScoreAverageTasker task after 0ms, repeating every day
   new Timer().schedule(scoreAverageTasker, 0, 3600 * 24 * 1000)

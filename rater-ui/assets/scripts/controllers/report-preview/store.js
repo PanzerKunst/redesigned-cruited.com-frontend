@@ -22,6 +22,10 @@ const store = {
     i18nMessages: CR.ControllerData.i18nMessages,
 
     init() {
+    },
+
+    updateOrderStatus(status) {
+        this.order.updateStatus(status, () => history.back());
     }
 };
 

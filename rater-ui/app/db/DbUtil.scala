@@ -7,7 +7,8 @@ object DbUtil {
   val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
   def safetize(string: String): String = {
-    string.replaceAll("'", "''").replaceAll("\\n", "\\\\n")
+    string.replaceAll("'", "''")
+      .replaceAll("\\n", "\\\\n")
   }
 
   def parseToList[T](string: String): List[T] = {

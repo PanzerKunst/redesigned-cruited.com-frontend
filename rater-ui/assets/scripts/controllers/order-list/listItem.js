@@ -81,7 +81,7 @@ const Component = React.createClass({
     },
 
     _actionBtn(order) {
-        const text = order.isReadOnlyBy(store.account.id) ? "Check" : "Assess";
+        const text = store.isOrderReadOnly(order) ? "Check" : "Assess";
 
         return (
             <div>

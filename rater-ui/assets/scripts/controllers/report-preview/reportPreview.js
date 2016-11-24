@@ -3,6 +3,7 @@ import String from "../../services/string";
 import {makeExpandable} from "../../services/expandablePanel";
 import Category from "../../models/category";
 import Product from "../../models/product";
+import Order from "../../models/order";
 import store from "./store";
 
 const controller = {
@@ -25,10 +26,11 @@ const controller = {
                     <header>
                         <div>
                             <h1>{store.i18nMessages["report.title"]}</h1>
+                            {this._headerButtons()}
                         </div>
                     </header>
                     <div className="with-circles">
-                        <span>{this._subTitle()}</span>
+                        {this._subTitle()}
                         <header>
                             <p>
                                 <span className="assessment-label light-font">{store.i18nMessages["report.orderCreationDate.label"]}:</span>{moment(order.creationTimestamp).format("lll")}
@@ -55,6 +57,8 @@ const controller = {
         componentDidMount() {
             this._initElements();
 
+            this._disableHeaderButtonsIfRequired();
+            this._placeScoreCursors();
             this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
             makeExpandable(this.$expandablePanels);
 
@@ -62,7 +66,13 @@ const controller = {
         },
 
         _initElements() {
-            this.$tabList = $("#content").find("ul[role=tablist]");
+            const $content = $("#content");
+
+            const $headerButtons = $content.find(".header-buttons").children();
+
+            this.$headerActionButtons = $headerButtons.filter(".btn-primary");
+
+            this.$tabList = $content.find("ul[role=tablist]");
             this.$tabs = this.$tabList.find("a");
 
             const $docPanels = $(".tab-pane");
@@ -79,20 +89,52 @@ const controller = {
             this.$expandablePanels = $docPanels.find(".expandable-panel");
         },
 
+        _headerButtons() {
+            let forFeedbackBtn = null;
+            let scheduleBtn = null;
+
+            if (store.order.status === Order.statuses.paid || store.order.status === Order.statuses.inProgress) {
+                forFeedbackBtn = <button className="btn btn-primary" onClick={this._handleForFeedbackBtnClick}>Mark for feedback</button>;
+            }
+
+            if (store.order.status === Order.statuses.paid || store.order.status === Order.statuses.inProgress || store.order.status === Order.statuses.awaitingFeedback) {
+                scheduleBtn = <button className="btn btn-primary" onClick={this._handleScheduleBtnClick}>Schedule</button>;
+            }
+
+            return (
+                <div className="header-buttons">
+                    <button className="btn secondary" onClick={this._handleBackLinkClick}>Go back</button>
+                    {forFeedbackBtn}
+                    {scheduleBtn}
+                </div>);
+        },
+
         _subTitle() {
             const order = store.order;
 
             if (order.positionSought && order.employerSought) {
-                return `${order.positionSought}-${order.employerSought}`;
+                return <span>`${order.positionSought}-${order.employerSought}`</span>;
             }
             if (order.positionSought) {
-                return order.positionSought;
+                return <span>order.positionSought</span>;
             }
             if (order.employerSought) {
-                return order.employerSought;
+                return <span>order.employerSought</span>;
             }
 
-            return store.i18nMessages["report.subtitle"];
+            return null;
+        },
+
+        _disableHeaderButtonsIfRequired() {
+            if (this._isOneOfTheReportsMissing()) {
+                this.$headerActionButtons.prop("disabled", true);
+            }
+        },
+
+        _isOneOfTheReportsMissing() {
+            return (_.includes(store.order.containedProductCodes, Product.codes.cv) && !store.cvReport) ||
+                (_.includes(store.order.containedProductCodes, Product.codes.coverLetter) && !store.coverLetterReport) ||
+                (_.includes(store.order.containedProductCodes, Product.codes.linkedinProfile) && !store.linkedinProfileReport);
         },
 
         _placeScoreCursors() {
@@ -407,6 +449,18 @@ const controller = {
             }
 
             return String.template(summaryWithTwoVariablesReplaced, "averageScore", thirdReplacementValue);
+        },
+
+        _handleBackLinkClick() {
+            history.back();
+        },
+
+        _handleScheduleBtnClick() {
+            store.updateOrderStatus(Order.statuses.scheduled);
+        },
+
+        _handleForFeedbackBtnClick() {
+            store.updateOrderStatus(Order.statuses.awaitingFeedback);
         }
     })
 };

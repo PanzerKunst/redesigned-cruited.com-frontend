@@ -20,13 +20,13 @@ const store = {
         this._fetchAllRaters();
 
         /* TODO: uncomment when work resumes on the stats panel
-        this._fetchDueOrders();
-        this._fetchOrdersSentToTheCustomerThisMonth();
+         this._fetchDueOrders();
+         this._fetchOrdersSentToTheCustomerThisMonth();
 
-        setInterval(() => {
-            this._fetchDueOrders();
-            this._fetchOrdersSentToTheCustomerThisMonth();
-        }, 10 * 1000); */
+         setInterval(() => {
+         this._fetchDueOrders();
+         this._fetchOrdersSentToTheCustomerThisMonth();
+         }, 10 * 1000); */
     },
 
     assignOrderTo(account) {
@@ -115,6 +115,11 @@ const store = {
             to: this.searchCriteria.toMoment.valueOf(),
             excludedOrderIds: this.searchCriteria.excludedOrderIds
         }));
+    },
+
+    isOrderReadOnly(order) {
+        return !order.rater || order.rater.id !== this.account.id ||
+            order.status === Order.statuses.scheduled || order.status === Order.statuses.completed;
     },
 
     _fetchTopOrders() {

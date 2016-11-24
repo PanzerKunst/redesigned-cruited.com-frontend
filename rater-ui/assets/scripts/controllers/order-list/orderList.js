@@ -37,7 +37,7 @@ const controller = {
                                 <i className="fa fa-spinner fa-pulse"/>
                             </div>
                             <div id="load-more-link-panel">
-                                <a onClick={this._handleLoadMoreClick}>Load more</a>
+                                <button className="btn btn-info" onClick={this._handleLoadMoreClick}>Load more</button>
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,6 @@ import play.api.Logger
 import play.api.db.Database
 import services.GlobalConfig
 
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.util.control.Breaks._
 
@@ -303,8 +302,8 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
       val query = """
         update documents
         set """ + clauseOverallCommentCv + """, """ +
-          clauseOverallCommentCoverLetter + """, """ +
-          clauseOverallCommentLinkedinProfile + """
+        clauseOverallCommentCoverLetter + """, """ +
+        clauseOverallCommentLinkedinProfile + """
         where id = """ + assessmentReport.orderId + """;"""
 
       Logger.info("ReportDto.createOverallComments():" + query)
@@ -315,22 +314,36 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
 
   private def createRedComments(redComments: List[RedComment], orderId: Long) {
     db.withConnection { implicit c =>
-      for (i <- 0 to redComments.length-1) {
-        val redComment = redComments.apply(i)
 
-        val query = """
-          insert into documents_comments(id_doc, id_default, category, comment, ordd, points, checked)
-          values(""" + orderId + """, """ +
+      // TODO: remove once curly-braces problem is solved
+      val conn = db.getConnection()
+      try {
+
+        for (i <- 0 to redComments.length - 1) {
+          val redComment = redComments.apply(i)
+
+          val query = """
+            insert into documents_comments(id_doc, id_default, category, comment, ordd, points, checked)
+            values(""" + orderId + """, """ +
             redComment.defaultCommentId.getOrElse("NULL") + """, """ +
             redComment.categoryId + """, '""" +
             DbUtil.safetize(redComment.text) + """', """ +
-            i+1 + """, """ +
+            i + 1 + """, """ +
             redComment.points.getOrElse(0) + """,
             1)"""
 
-        Logger.info("ReportDto.createRedComments():" + query)
+          Logger.info("ReportDto.createRedComments():" + query)
 
-        SQL(query).executeInsert()
+          /* TODO: re-enable once curly-braces problem is solved
+          SQL(query).executeInsert() */
+
+          // TODO: remove once curly-braces problem is solved
+          conn.createStatement.executeUpdate(query)
+        }
+
+      // TODO: remove once curly-braces problem is solved
+      } finally {
+        conn.close()
       }
     }
   }
@@ -357,7 +370,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
       /* For each default comment
       if `redComments` contains it, then insert into documents_scores with `score` = 0
       else, we insert into documents_scores with `score` = 1
-       */
+      */
 
       val allDefaultComments = assessmentDto.allDefaultComments
 
@@ -393,8 +406,8 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
         }
 
         val query = """
-            insert into documents_scores(id_doc, `type`, id_category, id_default, criteria_score, score)
-            values(""" + orderId + """, '""" +
+          insert into documents_scores(id_doc, `type`, id_category, id_default, criteria_score, score)
+          values(""" + orderId + """, '""" +
           productTypeDb + """', """ +
           defaultComment.categoryId + """, """ +
           commentId + """, """ +

@@ -6,12 +6,8 @@ import db.{AccountDto, OrderDto}
 import play.api.mvc._
 import services.{GlobalConfig, Scheduler, SessionService}
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
 @Singleton
-class HomeController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, scheduler: Scheduler) extends Controller {
+class HomeController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, scheduler: Scheduler) extends BaseController {
 
   def index = Action { request =>
     SessionService.getAccountId(request.session) match {
@@ -19,6 +15,7 @@ class HomeController @Inject()(accountDto: AccountDto, config: GlobalConfig, ord
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) => Ok(views.html.orderList(account, config))
+          .withHeaders(doNotCachePage: _*)  // We want to avoid retrieving a cached page when navigating back
       }
     }
   }

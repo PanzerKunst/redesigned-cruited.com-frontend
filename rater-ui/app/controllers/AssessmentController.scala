@@ -7,13 +7,8 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.{GlobalConfig, SessionService}
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
 @Singleton
-class AssessmentController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, messagesApi: MessagesApi, reportDto: ReportDto, assessmentDto: AssessmentDto) extends Controller {
-
+class AssessmentController @Inject()(accountDto: AccountDto, config: GlobalConfig, orderDto: OrderDto, messagesApi: MessagesApi, reportDto: ReportDto, assessmentDto: AssessmentDto) extends BaseController {
   def index(orderId: Long) = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Redirect("/login")
@@ -27,6 +22,7 @@ class AssessmentController @Inject()(accountDto: AccountDto, config: GlobalConfi
           val assessmentReportOpt = reportDto.getOfOrderId(orderId)
 
           Ok(views.html.assessment(account, config, order, i18nMessages, allDefaultComments, allCommentVariations, assessmentReportOpt))
+            .withHeaders(doNotCachePage: _*)  // We want to avoid retrieving a cached page when navigating back
       }
     }
   }

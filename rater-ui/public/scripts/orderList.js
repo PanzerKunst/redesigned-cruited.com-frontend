@@ -111,8 +111,8 @@
 	                            "div",
 	                            { id: "load-more-link-panel" },
 	                            React.createElement(
-	                                "a",
-	                                { onClick: this._handleLoadMoreClick },
+	                                "button",
+	                                { className: "btn btn-info", onClick: this._handleLoadMoreClick },
 	                                "Load more"
 	                            )
 	                        )
@@ -210,12 +210,12 @@
 	        this._fetchAllRaters();
 
 	        /* TODO: uncomment when work resumes on the stats panel
-	        this._fetchDueOrders();
-	        this._fetchOrdersSentToTheCustomerThisMonth();
-	          setInterval(() => {
-	            this._fetchDueOrders();
-	            this._fetchOrdersSentToTheCustomerThisMonth();
-	        }, 10 * 1000); */
+	         this._fetchDueOrders();
+	         this._fetchOrdersSentToTheCustomerThisMonth();
+	           setInterval(() => {
+	         this._fetchDueOrders();
+	         this._fetchOrdersSentToTheCustomerThisMonth();
+	         }, 10 * 1000); */
 	    },
 	    assignOrderTo: function assignOrderTo(account) {
 	        var _this = this;
@@ -315,6 +315,9 @@
 	            to: this.searchCriteria.toMoment.valueOf(),
 	            excludedOrderIds: this.searchCriteria.excludedOrderIds
 	        }));
+	    },
+	    isOrderReadOnly: function isOrderReadOnly(order) {
+	        return !order.rater || order.rater.id !== this.account.id || order.status === _order2.default.statuses.scheduled || order.status === _order2.default.statuses.completed;
 	    },
 	    _fetchTopOrders: function _fetchTopOrders() {
 	        var _this4 = this;
@@ -488,6 +491,8 @@
 	});
 	exports.default = undefined;
 
+	var _global = __webpack_require__(2);
+
 	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
@@ -538,11 +543,27 @@
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
 	    },
+	    updateStatus: function updateStatus(status, onAjaxRequestSuccess) {
+	        this.status = status;
 
+	        var type = "PUT";
+	        var url = "/api/orders";
+	        var httpRequest = new XMLHttpRequest();
 
-	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
-	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    if (onAjaxRequestSuccess) {
+	                        onAjaxRequestSuccess();
+	                    }
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(this));
 	    }
 	};
 
@@ -724,7 +745,7 @@
 	        );
 	    },
 	    _actionBtn: function _actionBtn(order) {
-	        var text = order.isReadOnlyBy(_store2.default.account.id) ? "Check" : "Assess";
+	        var text = _store2.default.isOrderReadOnly(order) ? "Check" : "Assess";
 
 	        return React.createElement(
 	            "div",

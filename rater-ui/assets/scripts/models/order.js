@@ -1,3 +1,4 @@
+import {httpStatusCodes} from "../global";
 import Product from "./product";
 
 const Order = {
@@ -46,9 +47,27 @@ const Order = {
         return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}/thumbnail`;
     },
 
-    // Raters who are not assigned should still be able to check the assessment, even before it's completed
-    isReadOnlyBy(raterId) {
-        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+    updateStatus(status, onAjaxRequestSuccess) {
+        this.status = status;
+
+        const type = "PUT";
+        const url = "/api/orders";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    if (onAjaxRequestSuccess) {
+                        onAjaxRequestSuccess();
+                    }
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify(this));
     }
 };
 

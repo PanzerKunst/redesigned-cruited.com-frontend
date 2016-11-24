@@ -3,9 +3,7 @@ import store from "./store";
 
 const Component = React.createClass({
     render() {
-        const orderStatus = store.order.status;
-
-        if (store.isOrderReadOnly() || orderStatus !== Order.statuses.paid) {
+        if (!store.isOrderStartable()) {
             return null;
         }
 

@@ -1,19 +1,28 @@
-@mixin new-assessment-btn-in-header-top-margin {
-  #header-with-new-assessment-btn .btn.new-assessment {
-    margin-top: 4.6em;
+#report-preview {
+  #content > header > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .header-buttons {
+    margin-top: 47px;
+
     @include medium-screen {
-      margin-top: 3.65em;
+      margin-top: 48px;
     }
     @include large-screen {
-      margin-top: 4.3em;
+      margin-top: 70px;
+    }
+
+    > .btn {
+      font-size: $font-size-sm;
+    }
+
+    > .btn-primary {
+      margin-left: $spacer-unit-size / 2;
     }
   }
-}
-
-#report-preview {
-
-  // TODO
-  @include new-assessment-btn-in-header-top-margin;
 
   .btn.new-assessment {
     font-size: $font-size-sm;
@@ -635,7 +644,20 @@
 }
 
 .no-flexbox {
-  #report {
+  #report-preview {
+    #content > header > div {
+      display: block;
+      @include clearfix;
+
+      > h1 {
+        float: left;
+      }
+
+      > .header-buttons {
+        float: right;
+      }
+    }
+
     .summary {
       > section {
         /* stylelint-disable-next-line max-nesting-depth */

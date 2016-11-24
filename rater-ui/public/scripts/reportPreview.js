@@ -64,7 +64,11 @@
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _store = __webpack_require__(7);
+	var _order = __webpack_require__(7);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	var _store = __webpack_require__(8);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -97,17 +101,14 @@
 	                            "h1",
 	                            null,
 	                            _store2.default.i18nMessages["report.title"]
-	                        )
+	                        ),
+	                        this._headerButtons()
 	                    )
 	                ),
 	                React.createElement(
 	                    "div",
 	                    { className: "with-circles" },
-	                    React.createElement(
-	                        "span",
-	                        null,
-	                        this._subTitle()
-	                    ),
+	                    this._subTitle(),
 	                    React.createElement(
 	                        "header",
 	                        null,
@@ -152,13 +153,21 @@
 	        componentDidMount: function componentDidMount() {
 	            this._initElements();
 
+	            this._disableHeaderButtonsIfRequired();
+	            this._placeScoreCursors();
 	            this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
 	            (0, _expandablePanel.makeExpandable)(this.$expandablePanels);
 
 	            // TODO this._selectTabForSelectedProduct();
 	        },
 	        _initElements: function _initElements() {
-	            this.$tabList = $("#content").find("ul[role=tablist]");
+	            var $content = $("#content");
+
+	            var $headerButtons = $content.find(".header-buttons").children();
+
+	            this.$headerActionButtons = $headerButtons.filter(".btn-primary");
+
+	            this.$tabList = $content.find("ul[role=tablist]");
 	            this.$tabs = this.$tabList.find("a");
 
 	            var $docPanels = $(".tab-pane");
@@ -174,20 +183,76 @@
 
 	            this.$expandablePanels = $docPanels.find(".expandable-panel");
 	        },
+	        _headerButtons: function _headerButtons() {
+	            var forFeedbackBtn = null;
+	            var scheduleBtn = null;
+
+	            if (_store2.default.order.status === _order2.default.statuses.paid || _store2.default.order.status === _order2.default.statuses.inProgress) {
+	                forFeedbackBtn = React.createElement(
+	                    "button",
+	                    { className: "btn btn-primary", onClick: this._handleForFeedbackBtnClick },
+	                    "Mark for feedback"
+	                );
+	            }
+
+	            if (_store2.default.order.status === _order2.default.statuses.paid || _store2.default.order.status === _order2.default.statuses.inProgress || _store2.default.order.status === _order2.default.statuses.awaitingFeedback) {
+	                scheduleBtn = React.createElement(
+	                    "button",
+	                    { className: "btn btn-primary", onClick: this._handleScheduleBtnClick },
+	                    "Schedule"
+	                );
+	            }
+
+	            return React.createElement(
+	                "div",
+	                { className: "header-buttons" },
+	                React.createElement(
+	                    "button",
+	                    { className: "btn secondary", onClick: this._handleBackLinkClick },
+	                    "Go back"
+	                ),
+	                forFeedbackBtn,
+	                scheduleBtn
+	            );
+	        },
 	        _subTitle: function _subTitle() {
 	            var order = _store2.default.order;
 
 	            if (order.positionSought && order.employerSought) {
-	                return order.positionSought + "-" + order.employerSought;
+	                return React.createElement(
+	                    "span",
+	                    null,
+	                    "`$",
+	                    order.positionSought,
+	                    "-$",
+	                    order.employerSought,
+	                    "`"
+	                );
 	            }
 	            if (order.positionSought) {
-	                return order.positionSought;
+	                return React.createElement(
+	                    "span",
+	                    null,
+	                    "order.positionSought"
+	                );
 	            }
 	            if (order.employerSought) {
-	                return order.employerSought;
+	                return React.createElement(
+	                    "span",
+	                    null,
+	                    "order.employerSought"
+	                );
 	            }
 
-	            return _store2.default.i18nMessages["report.subtitle"];
+	            return null;
+	        },
+	        _disableHeaderButtonsIfRequired: function _disableHeaderButtonsIfRequired() {
+	            if (this._isOneOfTheReportsMissing()) {
+	                this.$headerActionButtons.prop("disabled", true);
+	            }
+	        },
+	        _isOneOfTheReportsMissing: function _isOneOfTheReportsMissing() {
+	            return _.includes(_store2.default.order.containedProductCodes, _product2.default.codes.cv) && !_store2.default.cvReport || _.includes(_store2.default.order.containedProductCodes, _product2.default.codes.coverLetter) && !_store2.default.coverLetterReport || _.includes(_store2.default.order.containedProductCodes, _product2.default.codes.linkedinProfile) && !_store2.default.linkedinProfileReport;
 	        },
 	        _placeScoreCursors: function _placeScoreCursors() {
 	            var cvReportScores = _store2.default.cvReportScores;
@@ -703,6 +768,15 @@
 	            }
 
 	            return _string2.default.template(summaryWithTwoVariablesReplaced, "averageScore", thirdReplacementValue);
+	        },
+	        _handleBackLinkClick: function _handleBackLinkClick() {
+	            history.back();
+	        },
+	        _handleScheduleBtnClick: function _handleScheduleBtnClick() {
+	            _store2.default.updateOrderStatus(_order2.default.statuses.scheduled);
+	        },
+	        _handleForFeedbackBtnClick: function _handleForFeedbackBtnClick() {
+	            _store2.default.updateOrderStatus(_order2.default.statuses.awaitingFeedback);
 	        }
 	    })
 	};
@@ -1017,77 +1091,7 @@
 	});
 	exports.default = undefined;
 
-	var _account = __webpack_require__(8);
-
-	var _account2 = _interopRequireDefault(_account);
-
-	var _order = __webpack_require__(9);
-
-	var _order2 = _interopRequireDefault(_order);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var store = {
-	    reactComponent: null,
-	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
-	    config: CR.ControllerData.config,
-	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
-
-	    cvReport: CR.ControllerData.assessmentReport.cvReport,
-	    coverLetterReport: CR.ControllerData.assessmentReport.coverLetterReport,
-	    linkedinProfileReport: CR.ControllerData.assessmentReport.linkedinProfileReport,
-
-	    cvReportScores: CR.ControllerData.assessmentReportScores.cvReportScores,
-	    coverLetterReportScores: CR.ControllerData.assessmentReportScores.coverLetterReportScores,
-	    linkedinProfileReportScores: CR.ControllerData.assessmentReportScores.linkedinProfileReportScores,
-
-	    cvAverageScore: CR.ControllerData.cvAverageScore,
-	    coverLetterAverageScore: CR.ControllerData.coverLetterAverageScore,
-	    linkedinProfileAverageScore: CR.ControllerData.linkedinProfileAverageScore,
-
-	    i18nMessages: CR.ControllerData.i18nMessages,
-
-	    init: function init() {}
-	};
-
-	exports.default = store;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Account = {
-
-	    // Static
-	    types: {
-	        customer: 2,
-	        rater: 3,
-	        admin: 1
-	    },
-
-	    // Instance
-	    isAdmin: function isAdmin() {
-	        return this.type === this.types.admin;
-	    }
-	};
-
-	exports.default = Account;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
+	var _global = __webpack_require__(4);
 
 	var _product = __webpack_require__(6);
 
@@ -1139,15 +1143,108 @@
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
 	    },
+	    updateStatus: function updateStatus(status, onAjaxRequestSuccess) {
+	        this.status = status;
 
+	        var type = "PUT";
+	        var url = "/api/orders";
+	        var httpRequest = new XMLHttpRequest();
 
-	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
-	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    if (onAjaxRequestSuccess) {
+	                        onAjaxRequestSuccess();
+	                    }
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(this));
 	    }
 	};
 
 	exports.default = Order;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _account = __webpack_require__(9);
+
+	var _account2 = _interopRequireDefault(_account);
+
+	var _order = __webpack_require__(7);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var store = {
+	    reactComponent: null,
+	    account: Object.assign(Object.create(_account2.default), CR.ControllerData.account),
+	    config: CR.ControllerData.config,
+	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
+
+	    cvReport: CR.ControllerData.assessmentReport.cvReport,
+	    coverLetterReport: CR.ControllerData.assessmentReport.coverLetterReport,
+	    linkedinProfileReport: CR.ControllerData.assessmentReport.linkedinProfileReport,
+
+	    cvReportScores: CR.ControllerData.assessmentReportScores.cvReportScores,
+	    coverLetterReportScores: CR.ControllerData.assessmentReportScores.coverLetterReportScores,
+	    linkedinProfileReportScores: CR.ControllerData.assessmentReportScores.linkedinProfileReportScores,
+
+	    cvAverageScore: CR.ControllerData.cvAverageScore,
+	    coverLetterAverageScore: CR.ControllerData.coverLetterAverageScore,
+	    linkedinProfileAverageScore: CR.ControllerData.linkedinProfileAverageScore,
+
+	    i18nMessages: CR.ControllerData.i18nMessages,
+
+	    init: function init() {},
+	    updateOrderStatus: function updateOrderStatus(status) {
+	        this.order.updateStatus(status, function () {
+	            return history.back();
+	        });
+	    }
+	};
+
+	exports.default = store;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Account = {
+
+	    // Static
+	    types: {
+	        customer: 2,
+	        rater: 3,
+	        admin: 1
+	    },
+
+	    // Instance
+	    isAdmin: function isAdmin() {
+	        return this.type === this.types.admin;
+	    }
+	};
+
+	exports.default = Account;
 
 /***/ }
 /******/ ]);

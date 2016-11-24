@@ -24,7 +24,14 @@ const store = {
 
         this.assessment.init();
 
+        // TODO: remove
+        console.log("assessment store init()");
+
         if (!this.assessment.isReportStarted() && this.assessmentReport) {
+
+            // TODO: remove
+            console.log("!this.assessment.isReportStarted() && this.assessmentReport", this.assessmentReport);
+
             this.assessment.initReport({
                 cv: this._docReportFromBackend(this.assessmentReport.cvReport),
                 coverLetter: this._docReportFromBackend(this.assessmentReport.coverLetterReport),
@@ -38,28 +45,17 @@ const store = {
     },
 
     isOrderReadOnly() {
-        return this.order.isReadOnlyBy(this.account.id);
+        return (this.order.rater.id !== this.account.id && this.order.status !== Order.statuses.awaitingFeedback) ||
+            this.order.status < Order.statuses.inProgress;
+    },
+
+    isOrderStartable() {
+        return this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
     },
 
     updateOrderStatus(status) {
-        this.order.status = status;
-
-        const type = "PUT";
-        const url = "/api/orders";
-        const httpRequest = new XMLHttpRequest();
-
-        httpRequest.onreadystatechange = () => {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === httpStatusCodes.ok) {
-                    this.reactComponent.forceUpdate();
-                } else {
-                    alert(`AJAX failure doing a ${type} request to "${url}"`);
-                }
-            }
-        };
-        httpRequest.open(type, url);
-        httpRequest.setRequestHeader("Content-Type", "application/json");
-        httpRequest.send(JSON.stringify(this.order));
+        this.order.updateStatus(status);
+        this.reactComponent.forceUpdate();
     },
 
     resetCommentInListAndReport(comment) {
@@ -256,6 +252,7 @@ const store = {
                         id: c.defaultCommentId || String.uuid(),
                         categoryId: c.categoryId,
                         redText: c.text,
+                        points: c.points,
                         isChecked: true
                     };
 

@@ -387,6 +387,9 @@
 	            _store2.default.updateOverallComment(categoryProductCode, overallComment);
 	        },
 	        _handlePreviewBtnClick: function _handlePreviewBtnClick() {
+
+	            // TODO: first, check that all report comments are checked in all tabs
+
 	            _store2.default.saveCurrentReport();
 	        },
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
@@ -554,7 +557,14 @@
 
 	        this.assessment.init();
 
+	        // TODO: remove
+	        console.log("assessment store init()");
+
 	        if (!this.assessment.isReportStarted() && this.assessmentReport) {
+
+	            // TODO: remove
+	            console.log("!this.assessment.isReportStarted() && this.assessmentReport", this.assessmentReport);
+
 	            this.assessment.initReport({
 	                cv: this._docReportFromBackend(this.assessmentReport.cvReport),
 	                coverLetter: this._docReportFromBackend(this.assessmentReport.coverLetterReport),
@@ -567,29 +577,14 @@
 	        this.reactComponent.forceUpdate();
 	    },
 	    isOrderReadOnly: function isOrderReadOnly() {
-	        return this.order.isReadOnlyBy(this.account.id);
+	        return this.order.rater.id !== this.account.id && this.order.status !== _order2.default.statuses.awaitingFeedback || this.order.status < _order2.default.statuses.inProgress;
+	    },
+	    isOrderStartable: function isOrderStartable() {
+	        return this.order.rater.id === this.account.id && this.order.status === _order2.default.statuses.paid;
 	    },
 	    updateOrderStatus: function updateOrderStatus(status) {
-	        var _this = this;
-
-	        this.order.status = status;
-
-	        var type = "PUT";
-	        var url = "/api/orders";
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    _this.reactComponent.forceUpdate();
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.setRequestHeader("Content-Type", "application/json");
-	        httpRequest.send(JSON.stringify(this.order));
+	        this.order.updateStatus(status);
+	        this.reactComponent.forceUpdate();
 	    },
 	    resetCommentInListAndReport: function resetCommentInListAndReport(comment) {
 	        this.assessment.resetListComment(comment);
@@ -634,7 +629,7 @@
 	        return this.assessment && (this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.cv) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile));
 	    },
 	    saveCurrentReport: function saveCurrentReport() {
-	        var _this2 = this;
+	        var _this = this;
 
 	        /*
 	         AssessmentReport(orderId: Long,
@@ -665,7 +660,7 @@
 	        httpRequest.onreadystatechange = function () {
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    _this2.assessment.deleteAssessmentInfoFromLocalStorage();
+	                    _this.assessment.deleteAssessmentInfoFromLocalStorage();
 	                    location.href = "/report-preview/" + store.order.id;
 	                } else {
 	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -677,7 +672,7 @@
 	        httpRequest.send(JSON.stringify(assessmentReport));
 	    },
 	    _docReportForBackend: function _docReportForBackend(categoryProductCode) {
-	        var _this3 = this;
+	        var _this2 = this;
 
 	        /*
 	         DocumentReport(redComments: List[RedComment],
@@ -691,7 +686,7 @@
 	        };
 
 	        this.assessment.categoryIds(categoryProductCode).forEach(function (categoryId) {
-	            var reportCategory = _this3.assessment.reportCategory(categoryProductCode, categoryId);
+	            var reportCategory = _this2.assessment.reportCategory(categoryProductCode, categoryId);
 
 	            /*
 	             RedComment(id: Option[Long], // None when custom comment coming from frontend
@@ -779,6 +774,7 @@
 	                        id: c.defaultCommentId || _string2.default.uuid(),
 	                        categoryId: c.categoryId,
 	                        redText: c.text,
+	                        points: c.points,
 	                        isChecked: true
 	                    };
 
@@ -890,6 +886,8 @@
 	});
 	exports.default = undefined;
 
+	var _global = __webpack_require__(4);
+
 	var _product = __webpack_require__(2);
 
 	var _product2 = _interopRequireDefault(_product);
@@ -940,11 +938,27 @@
 
 	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
 	    },
+	    updateStatus: function updateStatus(status, onAjaxRequestSuccess) {
+	        this.status = status;
 
+	        var type = "PUT";
+	        var url = "/api/orders";
+	        var httpRequest = new XMLHttpRequest();
 
-	    // Raters who are not assigned should still be able to check the assessment, even before it's completed
-	    isReadOnlyBy: function isReadOnlyBy(raterId) {
-	        return this.status < Order.statuses.inProgress || this.status === Order.statuses.completed || this.status === Order.statuses.scheduled || !this.rater || this.rater.id !== raterId;
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    if (onAjaxRequestSuccess) {
+	                        onAjaxRequestSuccess();
+	                    }
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(this));
 	    }
 	};
 
@@ -1178,7 +1192,11 @@
 
 	        // TODO: calculate sumOfRedPoints from the red comments in the list, not in the report
 	        for (var _i = 0; _i < reportCategory.comments.length; _i++) {
-	            sumOfRedPoints += reportCategory.comments[_i].points;
+	            var commentPoints = reportCategory.comments[_i].points;
+
+	            if (commentPoints) {
+	                sumOfRedPoints += commentPoints;
+	            }
 	        }
 
 	        return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
@@ -1807,12 +1825,7 @@
 	            var c = this.props.comment;
 
 	            c.isRedSelected = false;
-
-	            // TODO: remove
-	            c.isGreenSelected = !c.isGreenSelected;
-
-	            /* TODO: uncomment when the above code is removed
-	             comment.isGreenSelected = true; */
+	            c.isGreenSelected = true;
 
 	            _store2.default.updateListComment(c);
 	        }
@@ -2184,9 +2197,7 @@
 	var Component = React.createClass({
 	    displayName: "Component",
 	    render: function render() {
-	        var orderStatus = _store2.default.order.status;
-
-	        if (_store2.default.isOrderReadOnly() || orderStatus !== _order2.default.statuses.paid) {
+	        if (!_store2.default.isOrderStartable()) {
 	            return null;
 	        }
 

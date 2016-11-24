@@ -266,6 +266,9 @@ const controller = {
         },
 
         _handlePreviewBtnClick() {
+
+            // TODO: first, check that all report comments are checked in all tabs
+
             store.saveCurrentReport();
         },
 
