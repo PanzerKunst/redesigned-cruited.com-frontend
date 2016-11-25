@@ -48,7 +48,7 @@
 
 	var _global = __webpack_require__(1);
 
-	var _jqueryAnimator = __webpack_require__(2);
+	var _animator = __webpack_require__(2);
 
 	var _validator = __webpack_require__(3);
 
@@ -163,7 +163,7 @@
 
 	            if (this.validator.isValid()) {
 	                (function () {
-	                    (0, _jqueryAnimator.enableLoading)(_this.$submitBtn);
+	                    (0, _animator.enableLoading)(_this.$submitBtn);
 
 	                    var type = "POST";
 	                    var url = "/api/auth";
@@ -175,7 +175,7 @@
 	                                CR.loggedInAccount = JSON.parse(httpRequest.responseText);
 	                                location.href = "/";
 	                            } else {
-	                                (0, _jqueryAnimator.disableLoading)(_this.$submitBtn);
+	                                (0, _animator.disableLoading)(_this.$submitBtn);
 
 	                                if (httpRequest.status === _global.httpStatusCodes.signInIncorrectCredentials) {
 	                                    _this.validator.showErrorMessage(_this.$incorrectCredentialsError);
@@ -242,7 +242,7 @@
 
 	function fadeIn($el, params) {
 	    if (!$el.is(":visible")) {
-	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.default;
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.medium;
 	        var alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
 
 	        TweenLite.set($el, { display: "block", alpha: 0 });
@@ -259,7 +259,7 @@
 
 	function fadeOut($el, params) {
 	    if ($el.is(":visible")) {
-	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.default;
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.medium;
 
 	        TweenLite.to($el, animationDuration, {
 	            alpha: 0,
@@ -275,7 +275,7 @@
 
 	function enableLoading($el, text) {
 	    if ($el.prop("tagName") === "BUTTON") {
-	        var btn = $el[0];
+	        var btn = $el.get(0);
 	        var defaultText = btn.innerHTML;
 	        var loadingText = text || defaultText;
 

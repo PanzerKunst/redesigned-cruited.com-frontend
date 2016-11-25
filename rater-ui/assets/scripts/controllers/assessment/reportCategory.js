@@ -34,7 +34,7 @@ const Component = React.createClass({
                     <textarea className="form-control" onKeyUp={this._handleComposerKeyUp} />
                     <button type="button" className="styleless fa fa-times" onClick={this._hideComposer} />
                 </div>
-                <a onClick={this._handleAddCommentClick}>Add comment</a>
+                <button type="button" className="btn secondary" onClick={this._handleAddCommentClick}>Add comment</button>
             </li>);
     },
 
@@ -54,7 +54,7 @@ const Component = React.createClass({
 
         this.$addCommentComposer = $rootEl.children(".comment-composer");
         this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
-        this.$addCommentLink = $rootEl.children("a");
+        this.$addCommentBtn = $rootEl.children(".btn");
     },
 
     _disableInputsIfRequired() {
@@ -96,7 +96,7 @@ const Component = React.createClass({
 
     _handleAddCommentClick() {
         if (!store.isOrderReadOnly()) {
-            this.$addCommentLink.hide();
+            this.$addCommentBtn.hide();
             this.$addCommentComposer.removeClass("hidden");
             this.$addCommentTextarea.focus();
             this._adaptTextareaHeight();
@@ -139,7 +139,7 @@ const Component = React.createClass({
 
     _hideComposer() {
         this.$addCommentComposer.addClass("hidden");
-        this.$addCommentLink.show();
+        this.$addCommentBtn.show();
     },
 
     _updateWellDoneComment(isRefreshRequired = true) {

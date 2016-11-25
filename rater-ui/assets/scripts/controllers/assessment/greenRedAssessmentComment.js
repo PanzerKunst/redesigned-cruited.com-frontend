@@ -44,7 +44,7 @@ const Component = React.createClass({
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-        this.$redParagraphs = $rootEl.children(".red").children("p");
+        this.$redParagraphs = $rootEl.children(".red").children(".comment-paragraph");
     },
 
     _addContentEditableToParagraphs() {

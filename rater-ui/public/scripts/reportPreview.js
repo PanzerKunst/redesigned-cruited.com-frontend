@@ -946,7 +946,7 @@
 
 	        var _expandBody = function _expandBody($body) {
 	            $body.css({ display: "block", opacity: 0 });
-	            TweenLite.to($body, _global.animationDurations.default, { opacity: 1 });
+	            TweenLite.to($body, _global.animationDurations.medium, { opacity: 1 });
 	        };
 
 	        var _toggleBody = function _toggleBody(e) {
@@ -1113,6 +1113,9 @@
 	    fileNamePrefixSeparator: "-",
 
 	    // Instance
+	    reportUrl: function reportUrl(config) {
+	        return config.customerAppRootUrl + "reports/" + this.id;
+	    },
 	    documentUrl: function documentUrl(config, productCode) {
 	        var urlMiddle = "cv";
 
@@ -1153,7 +1156,7 @@
 	        httpRequest.onreadystatechange = function () {
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    if (onAjaxRequestSuccess) {
+	                    if (_.isFunction(onAjaxRequestSuccess)) {
 	                        onAjaxRequestSuccess();
 	                    }
 	                } else {

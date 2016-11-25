@@ -1,5 +1,5 @@
 import {httpStatusCodes} from "../global";
-import {enableLoading, disableLoading} from "../services/jqueryAnimator";
+import {enableLoading, disableLoading} from "../services/animator";
 import Validator from "../services/validator";
 
 const controller = {

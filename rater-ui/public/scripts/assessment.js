@@ -46,43 +46,49 @@
 
 	"use strict";
 
-	var _category = __webpack_require__(1);
+	var _animator = __webpack_require__(1);
+
+	var _category = __webpack_require__(3);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(2);
+	var _product = __webpack_require__(4);
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _store = __webpack_require__(3);
+	var _order = __webpack_require__(5);
+
+	var _order2 = _interopRequireDefault(_order);
+
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _positionSought = __webpack_require__(11);
+	var _positionSought = __webpack_require__(12);
 
 	var _positionSought2 = _interopRequireDefault(_positionSought);
 
-	var _employerSought = __webpack_require__(12);
+	var _employerSought = __webpack_require__(13);
 
 	var _employerSought2 = _interopRequireDefault(_employerSought);
 
-	var _orderTags = __webpack_require__(13);
+	var _orderTags = __webpack_require__(14);
 
 	var _orderTags2 = _interopRequireDefault(_orderTags);
 
-	var _timeLeft = __webpack_require__(14);
+	var _timeLeft = __webpack_require__(15);
 
 	var _timeLeft2 = _interopRequireDefault(_timeLeft);
 
-	var _greenRedAssessmentComment = __webpack_require__(15);
+	var _greenRedAssessmentComment = __webpack_require__(16);
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _reportCategory = __webpack_require__(16);
+	var _reportCategory = __webpack_require__(17);
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
-	var _orderStatusChangeBtn = __webpack_require__(19);
+	var _orderStatusChangeBtn = __webpack_require__(20);
 
 	var _orderStatusChangeBtn2 = _interopRequireDefault(_orderStatusChangeBtn);
 
@@ -172,7 +178,7 @@
 	                        React.createElement(
 	                            "section",
 	                            null,
-	                            this._previewBtn(order),
+	                            this._previewOrViewBtn(order),
 	                            React.createElement(_orderStatusChangeBtn2.default, null),
 	                            React.createElement(_timeLeft2.default, { order: order })
 	                        )
@@ -194,7 +200,7 @@
 	                    React.createElement(
 	                        "div",
 	                        { className: "centered-contents" },
-	                        this._previewBtn(order)
+	                        this._previewOrViewBtn(order)
 	                    )
 	                )
 	            );
@@ -257,12 +263,20 @@
 
 	            return React.createElement("div", { style: style });
 	        },
-	        _previewBtn: function _previewBtn() {
+	        _previewOrViewBtn: function _previewOrViewBtn() {
+	            if (_store2.default.order.status === _order2.default.statuses.scheduled || _store2.default.order.status === _order2.default.statuses.completed) {
+	                return React.createElement(
+	                    "a",
+	                    { className: "btn btn-primary", href: _store2.default.order.reportUrl(_store2.default.config) },
+	                    "View report"
+	                );
+	            }
+
 	            if (_store2.default.areAllReportCommentsCheckedForAtLeastOneCategory()) {
 	                return React.createElement(
 	                    "button",
 	                    { className: "btn btn-primary", onClick: this._handlePreviewBtnClick },
-	                    "Preview assessment"
+	                    "Preview report"
 	                );
 	            }
 
@@ -386,10 +400,14 @@
 
 	            _store2.default.updateOverallComment(categoryProductCode, overallComment);
 	        },
-	        _handlePreviewBtnClick: function _handlePreviewBtnClick() {
+	        _handlePreviewBtnClick: function _handlePreviewBtnClick(e) {
+	            var $btn = $(e.currentTarget);
 
-	            // TODO: first, check that all report comments are checked in all tabs
+	            // TODO: before submitting:
+	            // - check that all report comments are checked in all tabs
+	            // - check that there are no brackets left
 
+	            (0, _animator.enableLoading)($btn, "Saving");
 	            _store2.default.saveCurrentReport();
 	        },
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
@@ -414,6 +432,100 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.fadeIn = fadeIn;
+	exports.fadeOut = fadeOut;
+	exports.enableLoading = enableLoading;
+	exports.disableLoading = disableLoading;
+
+	var _global = __webpack_require__(2);
+
+	function fadeIn($el, params) {
+	    if (!$el.is(":visible")) {
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.medium;
+	        var alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
+
+	        TweenLite.set($el, { display: "block", alpha: 0 });
+	        TweenLite.to($el, animationDuration, {
+	            alpha: alpha,
+	            onComplete: function onComplete() {
+	                if (params && _.isFunction(params.onComplete)) {
+	                    params.onComplete();
+	                }
+	            }
+	        });
+	    }
+	}
+
+	function fadeOut($el, params) {
+	    if ($el.is(":visible")) {
+	        var animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : _global.animationDurations.medium;
+
+	        TweenLite.to($el, animationDuration, {
+	            alpha: 0,
+	            onComplete: function onComplete() {
+	                $el.hide().css("opacity", 1);
+	                if (params && _.isFunction(params.onComplete)) {
+	                    params.onComplete();
+	                }
+	            }
+	        });
+	    }
+	}
+
+	function enableLoading($el, text) {
+	    if ($el.prop("tagName") === "BUTTON") {
+	        var btn = $el.get(0);
+	        var defaultText = btn.innerHTML;
+	        var loadingText = text || defaultText;
+
+	        $el.data("defaultText", defaultText);
+	        $el.prop("disabled", true);
+
+	        btn.innerHTML = "<i class=\"fa fa-spinner fa-pulse\"></i>" + loadingText;
+	    }
+	}
+
+	function disableLoading($el) {
+	    if ($el.prop("tagName") === "BUTTON") {
+	        $el.html($el.data("defaultText"));
+	        $el.prop("disabled", false);
+	    }
+	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+	var localStorageKeys = exports.localStorageKeys = {
+	    myAssessments: "myAssessments"
+	};
+
+/***/ },
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -466,7 +578,7 @@
 	exports.default = Category;
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -501,7 +613,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -511,29 +623,121 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(4);
+	var _global = __webpack_require__(2);
 
-	var _string = __webpack_require__(5);
+	var _product = __webpack_require__(4);
+
+	var _product2 = _interopRequireDefault(_product);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Order = {
+
+	    // Static
+	    statuses: {
+	        notPaid: -1,
+	        paid: 0,
+	        inProgress: 1,
+	        awaitingFeedback: 4,
+	        scheduled: 3,
+	        completed: 2
+	    },
+	    fileNamePrefixSeparator: "-",
+
+	    // Instance
+	    reportUrl: function reportUrl(config) {
+	        return config.customerAppRootUrl + "reports/" + this.id;
+	    },
+	    documentUrl: function documentUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
+	    },
+	    thumbnailUrl: function thumbnailUrl(config, productCode) {
+	        var urlMiddle = "cv";
+
+	        switch (productCode) {
+	            case _product2.default.codes.coverLetter:
+	                urlMiddle = "cover-letter";
+	                break;
+	            case _product2.default.codes.linkedinProfile:
+	                urlMiddle = "linkedin-profile";
+	                break;
+	            default:
+	        }
+
+	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
+	    },
+	    updateStatus: function updateStatus(status, onAjaxRequestSuccess) {
+	        this.status = status;
+
+	        var type = "PUT";
+	        var url = "/api/orders";
+	        var httpRequest = new XMLHttpRequest();
+
+	        httpRequest.onreadystatechange = function () {
+	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+	                if (httpRequest.status === _global.httpStatusCodes.ok) {
+	                    if (_.isFunction(onAjaxRequestSuccess)) {
+	                        onAjaxRequestSuccess();
+	                    }
+	                } else {
+	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+	                }
+	            }
+	        };
+	        httpRequest.open(type, url);
+	        httpRequest.setRequestHeader("Content-Type", "application/json");
+	        httpRequest.send(JSON.stringify(this));
+	    }
+	};
+
+	exports.default = Order;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _global = __webpack_require__(2);
+
+	var _string = __webpack_require__(7);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _account = __webpack_require__(6);
+	var _account = __webpack_require__(8);
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _order = __webpack_require__(7);
+	var _order = __webpack_require__(5);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _assessment = __webpack_require__(8);
+	var _assessment = __webpack_require__(9);
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _category = __webpack_require__(1);
+	var _category = __webpack_require__(3);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(2);
+	var _product = __webpack_require__(4);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -575,12 +779,6 @@
 	        }
 
 	        this.reactComponent.forceUpdate();
-	    },
-	    isOrderReadOnly: function isOrderReadOnly() {
-	        return this.order.rater.id !== this.account.id && this.order.status !== _order2.default.statuses.awaitingFeedback || this.order.status < _order2.default.statuses.inProgress;
-	    },
-	    isOrderStartable: function isOrderStartable() {
-	        return this.order.rater.id === this.account.id && this.order.status === _order2.default.statuses.paid;
 	    },
 	    updateOrderStatus: function updateOrderStatus(status) {
 	        this.order.updateStatus(status);
@@ -624,6 +822,12 @@
 	    },
 	    handleReportCommentsReorder: function handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
 	        this.assessment.reorderReportComment(categoryId, oldIndex, newIndex);
+	    },
+	    isOrderReadOnly: function isOrderReadOnly() {
+	        return this.order.rater.id !== this.account.id && this.order.status !== _order2.default.statuses.awaitingFeedback || this.order.status < _order2.default.statuses.inProgress || this.order.status === _order2.default.statuses.scheduled || this.order.status === _order2.default.statuses.completed;
+	    },
+	    isOrderStartable: function isOrderStartable() {
+	        return this.order.rater.id === this.account.id && this.order.status === _order2.default.statuses.paid;
 	    },
 	    areAllReportCommentsCheckedForAtLeastOneCategory: function areAllReportCommentsCheckedForAtLeastOneCategory() {
 	        return this.assessment && (this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.cv) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile));
@@ -798,32 +1002,7 @@
 	exports.default = store;
 
 /***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var animationDurations = exports.animationDurations = {
-	    short: 0.2,
-	    medium: 0.5
-	};
-
-	var httpStatusCodes = exports.httpStatusCodes = {
-	    ok: 200,
-	    created: 201,
-	    noContent: 204,
-	    signInIncorrectCredentials: 230
-	};
-
-	var localStorageKeys = exports.localStorageKeys = {
-	    myAssessments: "myAssessments"
-	};
-
-/***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -850,7 +1029,7 @@
 	exports.default = StringUtils;
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -876,7 +1055,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -886,106 +1065,17 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(4);
+	var _global = __webpack_require__(2);
 
-	var _product = __webpack_require__(2);
-
-	var _product2 = _interopRequireDefault(_product);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var Order = {
-
-	    // Static
-	    statuses: {
-	        notPaid: -1,
-	        paid: 0,
-	        inProgress: 1,
-	        awaitingFeedback: 4,
-	        scheduled: 3,
-	        completed: 2
-	    },
-	    fileNamePrefixSeparator: "-",
-
-	    // Instance
-	    documentUrl: function documentUrl(config, productCode) {
-	        var urlMiddle = "cv";
-
-	        switch (productCode) {
-	            case _product2.default.codes.coverLetter:
-	                urlMiddle = "cover-letter";
-	                break;
-	            case _product2.default.codes.linkedinProfile:
-	                urlMiddle = "linkedin-profile";
-	                break;
-	            default:
-	        }
-
-	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "?token=" + this.idInBase64;
-	    },
-	    thumbnailUrl: function thumbnailUrl(config, productCode) {
-	        var urlMiddle = "cv";
-
-	        switch (productCode) {
-	            case _product2.default.codes.coverLetter:
-	                urlMiddle = "cover-letter";
-	                break;
-	            case _product2.default.codes.linkedinProfile:
-	                urlMiddle = "linkedin-profile";
-	                break;
-	            default:
-	        }
-
-	        return config.dwsRootUrl + "docs/" + this.id + "/" + urlMiddle + "/thumbnail";
-	    },
-	    updateStatus: function updateStatus(status, onAjaxRequestSuccess) {
-	        this.status = status;
-
-	        var type = "PUT";
-	        var url = "/api/orders";
-	        var httpRequest = new XMLHttpRequest();
-
-	        httpRequest.onreadystatechange = function () {
-	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    if (onAjaxRequestSuccess) {
-	                        onAjaxRequestSuccess();
-	                    }
-	                } else {
-	                    alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-	                }
-	            }
-	        };
-	        httpRequest.open(type, url);
-	        httpRequest.setRequestHeader("Content-Type", "application/json");
-	        httpRequest.send(JSON.stringify(this));
-	    }
-	};
-
-	exports.default = Order;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.default = undefined;
-
-	var _global = __webpack_require__(4);
-
-	var _category = __webpack_require__(1);
+	var _category = __webpack_require__(3);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _browser = __webpack_require__(9);
+	var _browser = __webpack_require__(10);
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _array = __webpack_require__(10);
+	var _array = __webpack_require__(11);
 
 	var _array2 = _interopRequireDefault(_array);
 
@@ -1423,7 +1513,7 @@
 	exports.default = Assessment;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1538,7 +1628,7 @@
 	exports.default = Browser;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1555,7 +1645,7 @@
 	exports.default = ArrayUtils;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1583,7 +1673,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1611,7 +1701,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1621,7 +1711,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(2);
+	var _product = __webpack_require__(4);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1686,7 +1776,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1696,7 +1786,7 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(7);
+	var _order = __webpack_require__(5);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -1728,7 +1818,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1738,7 +1828,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(3);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -1811,7 +1901,7 @@
 	    _initElements: function _initElements() {
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-	        this.$redParagraphs = $rootEl.children(".red").children("p");
+	        this.$redParagraphs = $rootEl.children(".red").children(".comment-paragraph");
 	    },
 	    _addContentEditableToParagraphs: function _addContentEditableToParagraphs() {
 	        if (!_store2.default.isOrderReadOnly()) {
@@ -1863,7 +1953,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1873,23 +1963,23 @@
 	});
 	exports.default = undefined;
 
-	var _assessment = __webpack_require__(8);
+	var _assessment = __webpack_require__(9);
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _string = __webpack_require__(5);
+	var _string = __webpack_require__(7);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _keyboard = __webpack_require__(17);
+	var _keyboard = __webpack_require__(18);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _store = __webpack_require__(3);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _reportComment = __webpack_require__(18);
+	var _reportComment = __webpack_require__(19);
 
 	var _reportComment2 = _interopRequireDefault(_reportComment);
 
@@ -1933,8 +2023,8 @@
 	                React.createElement("button", { type: "button", className: "styleless fa fa-times", onClick: this._hideComposer })
 	            ),
 	            React.createElement(
-	                "a",
-	                { onClick: this._handleAddCommentClick },
+	                "button",
+	                { type: "button", className: "btn secondary", onClick: this._handleAddCommentClick },
 	                "Add comment"
 	            )
 	        );
@@ -1954,7 +2044,7 @@
 
 	        this.$addCommentComposer = $rootEl.children(".comment-composer");
 	        this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
-	        this.$addCommentLink = $rootEl.children("a");
+	        this.$addCommentBtn = $rootEl.children(".btn");
 	    },
 	    _disableInputsIfRequired: function _disableInputsIfRequired() {
 	        if (_store2.default.isOrderReadOnly()) {
@@ -2000,7 +2090,7 @@
 	    },
 	    _handleAddCommentClick: function _handleAddCommentClick() {
 	        if (!_store2.default.isOrderReadOnly()) {
-	            this.$addCommentLink.hide();
+	            this.$addCommentBtn.hide();
 	            this.$addCommentComposer.removeClass("hidden");
 	            this.$addCommentTextarea.focus();
 	            this._adaptTextareaHeight();
@@ -2038,7 +2128,7 @@
 	    },
 	    _hideComposer: function _hideComposer() {
 	        this.$addCommentComposer.addClass("hidden");
-	        this.$addCommentLink.show();
+	        this.$addCommentBtn.show();
 	    },
 	    _updateWellDoneComment: function _updateWellDoneComment() {
 	        var isRefreshRequired = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
@@ -2055,7 +2145,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2085,7 +2175,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2095,7 +2185,11 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(3);
+	var _global = __webpack_require__(2);
+
+	var _animator = __webpack_require__(1);
+
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2139,9 +2233,8 @@
 	        }
 	    },
 	    _initElements: function _initElements() {
-	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
-
-	        this.$commentParagraph = $rootEl.children(".comment-paragraph");
+	        this.$li = $(ReactDOM.findDOMNode(this.refs.root));
+	        this.$commentParagraph = this.$li.children(".comment-paragraph");
 	    },
 	    _handleParagraphBlur: function _handleParagraphBlur(e) {
 	        var c = this.props.comment;
@@ -2156,8 +2249,15 @@
 	        }
 	    },
 	    _handleRemoveClick: function _handleRemoveClick() {
+	        var _this = this;
+
 	        if (!_store2.default.isOrderReadOnly()) {
-	            _store2.default.removeReportComment(this.props.comment);
+	            (0, _animator.fadeOut)(this.$li, {
+	                animationDuration: _global.animationDurations.short,
+	                onComplete: function onComplete() {
+	                    return _store2.default.removeReportComment(_this.props.comment);
+	                }
+	            });
 	        }
 	    },
 	    _handleCheckboxClick: function _handleCheckboxClick() {
@@ -2174,7 +2274,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2184,11 +2284,11 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(7);
+	var _order = __webpack_require__(5);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _store = __webpack_require__(3);
+	var _store = __webpack_require__(6);
 
 	var _store2 = _interopRequireDefault(_store);
 

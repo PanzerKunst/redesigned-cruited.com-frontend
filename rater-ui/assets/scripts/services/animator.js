@@ -2,7 +2,7 @@ import {animationDurations} from "../global";
 
 export function fadeIn($el, params) {
     if (!$el.is(":visible")) {
-        const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : animationDurations.default;
+        const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : animationDurations.medium;
         const alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
 
         TweenLite.set($el, {display: "block", alpha: 0});
@@ -19,7 +19,7 @@ export function fadeIn($el, params) {
 
 export function fadeOut($el, params) {
     if ($el.is(":visible")) {
-        const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : animationDurations.default;
+        const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : animationDurations.medium;
 
         TweenLite.to($el, animationDuration, {
             alpha: 0,
@@ -35,7 +35,7 @@ export function fadeOut($el, params) {
 
 export function enableLoading($el, text) {
     if ($el.prop("tagName") === "BUTTON") {
-        const btn = $el[0];
+        const btn = $el.get(0);
         const defaultText = btn.innerHTML;
         const loadingText = text || defaultText;
 

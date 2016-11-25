@@ -1,5 +1,7 @@
+import {enableLoading} from "../../services/animator";
 import Category from "../../models/category";
 import Product from "../../models/product";
+import Order from "../../models/order";
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
@@ -71,7 +73,7 @@ const controller = {
                                 <p>{order.customer.emailAddress}</p>
                             </section>
                             <section>
-                                {this._previewBtn(order)}
+                                {this._previewOrViewBtn(order)}
                                 <OrderStatusChangeBtn />
                                 <TimeLeft order={order} />
                             </section>
@@ -89,7 +91,7 @@ const controller = {
                         </div>
 
                         <div className="centered-contents">
-                            {this._previewBtn(order)}
+                            {this._previewOrViewBtn(order)}
                         </div>
                     </div>
                 </div>);
@@ -152,9 +154,13 @@ const controller = {
             return <div style={style}></div>;
         },
 
-        _previewBtn() {
+        _previewOrViewBtn() {
+            if (store.order.status === Order.statuses.scheduled || store.order.status === Order.statuses.completed) {
+                return <a className="btn btn-primary" href={store.order.reportUrl(store.config)}>View report</a>;
+            }
+
             if (store.areAllReportCommentsCheckedForAtLeastOneCategory()) {
-                return <button className="btn btn-primary" onClick={this._handlePreviewBtnClick}>Preview assessment</button>;
+                return <button className="btn btn-primary" onClick={this._handlePreviewBtnClick}>Preview report</button>;
             }
 
             return null;
@@ -265,10 +271,14 @@ const controller = {
             store.updateOverallComment(categoryProductCode, overallComment);
         },
 
-        _handlePreviewBtnClick() {
+        _handlePreviewBtnClick(e) {
+            const $btn = $(e.currentTarget);
 
-            // TODO: first, check that all report comments are checked in all tabs
+            // TODO: before submitting:
+            // - check that all report comments are checked in all tabs
+            // - check that there are no brackets left
 
+            enableLoading($btn, "Saving");
             store.saveCurrentReport();
         },
 

@@ -99,9 +99,7 @@ const Component = React.createClass({
         let viewBtn = null;
 
         if (order.status === Order.statuses.completed || order.status === Order.statuses.scheduled) {
-            const href = store.config.customerAppRootUrl + "reports/" + order.id;
-
-            viewBtn = <a href={href} target="_blank" className="fa fa-eye" />;
+            viewBtn = <a href={order.reportUrl(store.config)} target="_blank" className="fa fa-eye" />;
         }
 
         // TODO: make the button available to everyone

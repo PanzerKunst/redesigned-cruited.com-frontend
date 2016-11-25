@@ -1,3 +1,5 @@
+import {animationDurations} from "../../global";
+import {fadeOut} from "../../services/animator";
 import store from "./store";
 
 const Component = React.createClass({
@@ -34,9 +36,8 @@ const Component = React.createClass({
     },
 
     _initElements() {
-        const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
-
-        this.$commentParagraph = $rootEl.children(".comment-paragraph");
+        this.$li = $(ReactDOM.findDOMNode(this.refs.root));
+        this.$commentParagraph = this.$li.children(".comment-paragraph");
     },
 
     _handleParagraphBlur(e) {
@@ -55,7 +56,10 @@ const Component = React.createClass({
 
     _handleRemoveClick() {
         if (!store.isOrderReadOnly()) {
-            store.removeReportComment(this.props.comment);
+            fadeOut(this.$li, {
+                animationDuration: animationDurations.short,
+                onComplete: () => store.removeReportComment(this.props.comment)
+            });
         }
     },
 

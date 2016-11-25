@@ -44,15 +44,6 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    isOrderReadOnly() {
-        return (this.order.rater.id !== this.account.id && this.order.status !== Order.statuses.awaitingFeedback) ||
-            this.order.status < Order.statuses.inProgress;
-    },
-
-    isOrderStartable() {
-        return this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
-    },
-
     updateOrderStatus(status) {
         this.order.updateStatus(status);
         this.reactComponent.forceUpdate();
@@ -104,6 +95,17 @@ const store = {
 
     handleReportCommentsReorder(categoryId, oldIndex, newIndex) {
         this.assessment.reorderReportComment(categoryId, oldIndex, newIndex);
+    },
+
+    isOrderReadOnly() {
+        return (this.order.rater.id !== this.account.id && this.order.status !== Order.statuses.awaitingFeedback) ||
+            this.order.status < Order.statuses.inProgress ||
+            this.order.status === Order.statuses.scheduled ||
+            this.order.status === Order.statuses.completed;
+    },
+
+    isOrderStartable() {
+        return this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
     },
 
     areAllReportCommentsCheckedForAtLeastOneCategory() {

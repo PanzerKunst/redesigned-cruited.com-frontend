@@ -513,6 +513,9 @@
 	    fileNamePrefixSeparator: "-",
 
 	    // Instance
+	    reportUrl: function reportUrl(config) {
+	        return config.customerAppRootUrl + "reports/" + this.id;
+	    },
 	    documentUrl: function documentUrl(config, productCode) {
 	        var urlMiddle = "cv";
 
@@ -553,7 +556,7 @@
 	        httpRequest.onreadystatechange = function () {
 	            if (httpRequest.readyState === XMLHttpRequest.DONE) {
 	                if (httpRequest.status === _global.httpStatusCodes.ok) {
-	                    if (onAjaxRequestSuccess) {
+	                    if (_.isFunction(onAjaxRequestSuccess)) {
 	                        onAjaxRequestSuccess();
 	                    }
 	                } else {
@@ -767,9 +770,7 @@
 	        var viewBtn = null;
 
 	        if (order.status === _order2.default.statuses.completed || order.status === _order2.default.statuses.scheduled) {
-	            var href = _store2.default.config.customerAppRootUrl + "reports/" + order.id;
-
-	            viewBtn = React.createElement("a", { href: href, target: "_blank", className: "fa fa-eye" });
+	            viewBtn = React.createElement("a", { href: order.reportUrl(_store2.default.config), target: "_blank", className: "fa fa-eye" });
 	        }
 
 	        // TODO: make the button available to everyone

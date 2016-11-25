@@ -8,7 +8,7 @@ export function makeExpandable($panels) {
 
         const _expandBody = $body => {
             $body.css({display: "block", opacity: 0});
-            TweenLite.to($body, animationDurations.default, {opacity: 1});
+            TweenLite.to($body, animationDurations.medium, {opacity: 1});
         };
 
         const _toggleBody = e => {

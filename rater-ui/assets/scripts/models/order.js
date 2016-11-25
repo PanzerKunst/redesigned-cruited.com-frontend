@@ -15,6 +15,10 @@ const Order = {
     fileNamePrefixSeparator: "-",
 
     // Instance
+    reportUrl(config) {
+        return `${config.customerAppRootUrl}reports/${this.id}`;
+    },
+
     documentUrl(config, productCode) {
         let urlMiddle = "cv";
 
@@ -57,7 +61,7 @@ const Order = {
         httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    if (onAjaxRequestSuccess) {
+                    if (_.isFunction(onAjaxRequestSuccess)) {
                         onAjaxRequestSuccess();
                     }
                 } else {
