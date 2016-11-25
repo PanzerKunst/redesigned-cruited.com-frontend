@@ -751,7 +751,7 @@
 	    i18nMessages: CR.ControllerData.i18nMessages,
 	    allDefaultComments: CR.ControllerData.allDefaultComments,
 	    allCommentVariations: CR.ControllerData.allCommentVariations,
-	    assessmentReport: CR.ControllerData.assessmentReport,
+	    backendAssessment: CR.ControllerData.assessment,
 
 	    init: function init() {
 	        this.assessment = Object.assign(Object.create(_assessment2.default), {
@@ -764,18 +764,20 @@
 	        // TODO: remove
 	        console.log("assessment store init()");
 
-	        if (!this.assessment.isReportStarted() && this.assessmentReport) {
+	        if (!this.assessment.isReportStarted() && this.backendAssessment) {
 
 	            // TODO: remove
-	            console.log("!this.assessment.isReportStarted() && this.assessmentReport", this.assessmentReport);
+	            console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
 
-	            this.assessment.initReport({
-	                cv: this._docReportFromBackend(this.assessmentReport.cvReport),
-	                coverLetter: this._docReportFromBackend(this.assessmentReport.coverLetterReport),
-	                linkedinProfile: this._docReportFromBackend(this.assessmentReport.linkedinProfileReport)
+	            this.assessment.initListCommentsAndReport({
+	                cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
+	                coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
+	                linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
+
+	                cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
+	                coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
+	                linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
 	            });
-
-	            this.assessment.initListCommentsFromReport();
 	        }
 
 	        this.reactComponent.forceUpdate();
@@ -836,25 +838,34 @@
 	        var _this = this;
 
 	        /*
-	         AssessmentReport(orderId: Long,
-	         cvReport: Option[DocumentReport],
+	         Assessment(orderId: Long,
+	           cvCommentList: List[AssessmentComment(defaultComment: DefaultComment,
+	         isGreenSelected: Boolean,
+	         redText: Option[String])],
+	         coverLetterCommentList: List[AssessmentComment],
+	         linkedinProfileCommentList: List[AssessmentComment],
+	           cvReport: Option[DocumentReport],
 	         coverLetterReport: Option[DocumentReport],
 	         linkedinProfileReport: Option[DocumentReport])
 	         */
-	        var assessmentReport = {
-	            orderId: this.order.id
+	        var assessment = {
+	            orderId: this.order.id,
+
+	            cvCommentList: this._docCommentListForBackend(_category2.default.productCodes.cv),
+	            coverLetterCommentList: this._docCommentListForBackend(_category2.default.productCodes.coverLetter),
+	            linkedinProfileCommentList: this._docCommentListForBackend(_category2.default.productCodes.linkedinProfile)
 	        };
 
 	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.cv)) {
-	            assessmentReport.cvReport = this._docReportForBackend(_category2.default.productCodes.cv);
+	            assessment.cvReport = this._docReportForBackend(_category2.default.productCodes.cv);
 	        }
 
 	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.coverLetter)) {
-	            assessmentReport.coverLetterReport = this._docReportForBackend(_category2.default.productCodes.coverLetter);
+	            assessment.coverLetterReport = this._docReportForBackend(_category2.default.productCodes.coverLetter);
 	        }
 
 	        if (_.includes(this.order.containedProductCodes, _product2.default.codes.linkedinProfile)) {
-	            assessmentReport.linkedinProfileReport = this._docReportForBackend(_category2.default.productCodes.linkedinProfile);
+	            assessment.linkedinProfileReport = this._docReportForBackend(_category2.default.productCodes.linkedinProfile);
 	        }
 
 	        var type = "POST";
@@ -873,10 +884,27 @@
 	        };
 	        httpRequest.open(type, url);
 	        httpRequest.setRequestHeader("Content-Type", "application/json");
-	        httpRequest.send(JSON.stringify(assessmentReport));
+	        httpRequest.send(JSON.stringify(assessment));
+	    },
+	    _docCommentListForBackend: function _docCommentListForBackend(categoryProductCode) {
+	        var _this2 = this;
+
+	        /* List[AssessmentComment(defaultComment: DefaultComment,
+	         * isGreenSelected: Boolean,
+	         * redText: Option[String])]
+	         */
+	        return this.assessment.listComments(categoryProductCode).map(function (c) {
+	            var defaultComment = _.find(_this2.allDefaultComments[categoryProductCode], ["id", c.id]);
+
+	            return {
+	                defaultComment: defaultComment,
+	                isGreenSelected: c.isGreenSelected || false,
+	                redText: c.redText === defaultComment.redText ? null : c.redText
+	            };
+	        });
 	    },
 	    _docReportForBackend: function _docReportForBackend(categoryProductCode) {
-	        var _this2 = this;
+	        var _this3 = this;
 
 	        /*
 	         DocumentReport(redComments: List[RedComment],
@@ -890,7 +918,7 @@
 	        };
 
 	        this.assessment.categoryIds(categoryProductCode).forEach(function (categoryId) {
-	            var reportCategory = _this2.assessment.reportCategory(categoryProductCode, categoryId);
+	            var reportCategory = _this3.assessment.reportCategory(categoryProductCode, categoryId);
 
 	            /*
 	             RedComment(id: Option[Long], // None when custom comment coming from frontend
@@ -924,6 +952,42 @@
 	        }
 
 	        return docReport;
+	    },
+
+
+	    /* backendListCommentsForDoc List[
+	     * defaultComment: [
+	     *   id: Long,
+	     *   categoryId: Long,
+	     *   greenText: String,
+	     *   redText: String,
+	     *   points: Int,
+	     *   isGrouped: Boolean],
+	     * isGreenSelected: Boolean,
+	     * redText: Option[String]
+	     * ]
+	     */
+	    _listCommentFromBackend: function _listCommentFromBackend(backendListCommentsForDoc) {
+
+	        /* Frontend list comment:
+	         * {
+	         *   id: 1,
+	         *   categoryId: 13,
+	         *   greenText: "string",
+	         *   redText: "string",
+	         *   points: 5,
+	         *   isGrouped: false,
+	         *   isGreenSelected: true,
+	         *   isRedSelected: false
+	         * }
+	         */
+	        return backendListCommentsForDoc.map(function (c) {
+	            return Object.assign(c.defaultComment, {
+	                redText: c.redText || c.defaultComment.redText,
+	                isGreenSelected: c.isGreenSelected,
+	                isRedSelected: !c.isGreenSelected
+	            });
+	        });
 	    },
 
 
@@ -1135,16 +1199,34 @@
 
 	        this.updateListComment(originalComment);
 	    },
-	    initListCommentsFromReport: function initListCommentsFromReport() {
-	        var _this = this;
+
+
+	    /*
+	     * @param listCommentsAndReport {
+	     * cvListComments: [...],
+	     * coverLetterListComments: [...],
+	     * linkedinProfileListComments: [...],
+	     * cvReport: {...},
+	     * coverLetterReport: {...},
+	     * linkedinProfileReport: {...}
+	     * }
+	     */
+	    initListCommentsAndReport: function initListCommentsAndReport(listCommentsAndReport) {
+	        this._saveListCommentsInLocalStorage({
+	            cv: listCommentsAndReport.cvListComments,
+	            coverLetter: listCommentsAndReport.coverLetterListComments,
+	            linkedinProfile: listCommentsAndReport.linkedinProfileListComments
+	        });
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        if (_.has(myAssessments, [this.orderId, "report"])) {
-	            _.keys(myAssessments[this.orderId].report).forEach(function (categoryProductCode) {
-	                return _this._initListCommentsFromDocReport(categoryProductCode);
-	            });
-	        }
+	        myAssessments[this.orderId].report = {
+	            cv: listCommentsAndReport.cvReport,
+	            coverLetter: listCommentsAndReport.coverLetterReport,
+	            linkedinProfile: listCommentsAndReport.linkedinProfileReport
+	        };
+
+	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
 	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
@@ -1291,14 +1373,6 @@
 
 	        return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
 	    },
-	    initReport: function initReport(report) {
-	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
-
-	        myAssessments[this.orderId] = myAssessments[this.orderId] || {};
-	        myAssessments[this.orderId].report = report;
-
-	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
-	    },
 	    deleteAssessmentInfoFromLocalStorage: function deleteAssessmentInfoFromLocalStorage() {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
 
@@ -1338,7 +1412,7 @@
 	        };
 	    },
 	    _calculateTopComments: function _calculateTopComments(categoryProductCode, categoryId) {
-	        var _this2 = this;
+	        var _this = this;
 
 	        var redCommentsForCategory = _.filter(this.listComments(categoryProductCode), function (ac) {
 	            return ac.categoryId === categoryId && ac.isRedSelected === true;
@@ -1346,10 +1420,10 @@
 	        var topCommentsForCategory = [];
 
 	        var loopCondition = function loopCondition() {
-	            if (redCommentsForCategory.length < _this2.nbReportComments) {
+	            if (redCommentsForCategory.length < _this.nbReportComments) {
 	                return topCommentsForCategory.length < redCommentsForCategory.length;
 	            }
-	            return topCommentsForCategory.length < _this2.nbReportComments;
+	            return topCommentsForCategory.length < _this.nbReportComments;
 	        };
 
 	        while (loopCondition()) {
@@ -1367,6 +1441,27 @@
 
 	        return myAssessments && myAssessments[this.orderId] ? myAssessments[this.orderId].listComments : null;
 	    },
+
+
+	    /*
+	     * Structure of the listComments object:
+	     * {
+	     *   cv: [{
+	     *     id: 1,
+	     *     categoryId: 13,
+	     *     greenText: "string",
+	     *     redText: "string",
+	     *     points: 5,
+	     *     isGrouped: false,
+	     *     isGreenSelected: true,
+	     *     isRedSelected: false
+	     *   },
+	     *   {...}
+	     *   ],
+	     *   coverLetter: [],
+	     *   linkedinProfile: []
+	     * }
+	     */
 	    _saveListCommentsInLocalStorage: function _saveListCommentsInLocalStorage(comments) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
 
@@ -1482,13 +1577,13 @@
 	        return commentWithMostPoints;
 	    },
 	    _initListCommentsFromDocReport: function _initListCommentsFromDocReport(categoryProductCode) {
-	        var _this3 = this;
+	        var _this2 = this;
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
 	        this.listComments(categoryProductCode).forEach(function (listComment) {
-	            if (_.has(myAssessments, [_this3.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
-	                var reportComments = myAssessments[_this3.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
+	            if (_.has(myAssessments, [_this2.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
+	                var reportComments = myAssessments[_this2.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
 	                var correspondingReportComment = _.find(reportComments, function (rc) {
 	                    return rc.id === listComment.id;
 	                });
@@ -1504,7 +1599,7 @@
 	                    listComment.isRedSelected = false;
 	                }
 
-	                _this3.updateListComment(listComment);
+	                _this2.updateListComment(listComment);
 	            }
 	        });
 	    }
@@ -1896,6 +1991,8 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
+	    },
+	    componentDidUpdate: function componentDidUpdate() {
 	        this._addContentEditableToParagraphs();
 	    },
 	    _initElements: function _initElements() {

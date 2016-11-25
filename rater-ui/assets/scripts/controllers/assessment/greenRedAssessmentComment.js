@@ -38,6 +38,9 @@ const Component = React.createClass({
 
     componentDidMount() {
         this._initElements();
+    },
+
+    componentDidUpdate() {
         this._addContentEditableToParagraphs();
     },
 

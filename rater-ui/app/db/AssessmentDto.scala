@@ -16,7 +16,7 @@ class AssessmentDto @Inject()(db: Database) {
   def allDefaultComments: AllDefaultComments = {
     db.withConnection { implicit c =>
       val query = """
-      select dc.id, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, dc.type as doc_type, score, grouped
+      select category as category_id, dc.id, trim(name_good) as green_text, trim(name_bad) as red_text, score, grouped
       from defaults dc
         inner join default_categories c on c.id = dc.category
       where dc.shw = 1
@@ -25,8 +25,8 @@ class AssessmentDto @Inject()(db: Database) {
 
       Logger.info("AssessmentDto.getAllDefaultComments():" + query)
 
-      val rowParser = long("id") ~ long("category_id") ~ str("name_good") ~ str("name_bad") ~ str("doc_type") ~ int("score") ~ int("grouped") map {
-        case id ~ categoryId ~ greenText ~ redText ~ dbDocType ~ points ~ grouped =>
+      val rowParser = long("category_id") ~ long("id") ~ str("green_text") ~ str("red_text") ~ int("score") ~ int("grouped") map {
+        case categoryId ~ id ~ greenText ~ redText ~ points ~ grouped =>
 
           val defaultComment = DefaultComment(
             id = id,
@@ -40,7 +40,7 @@ class AssessmentDto @Inject()(db: Database) {
             }
           )
 
-          (defaultComment, CruitedProduct.codeFromType(dbDocType))
+          (defaultComment, CruitedProduct.codeFromCategoryId(categoryId))
       }
 
       process(SQL(query).as(rowParser.*))

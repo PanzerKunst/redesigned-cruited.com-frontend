@@ -1,4 +1,4 @@
-@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder, i18nMessages: Map[String, String], assessmentReport: AssessmentReport, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int)
+@(account: Account, config: services.GlobalConfig, order: frontend.FrontendOrder, i18nMessages: Map[String, String], assessment: Assessment, assessmentReportScores: AssessmentReportScores, cvAverageScore: Int, coverLetterAverageScore: Int, linkedinProfileAverageScore: Int)
 
 @main("Rater - Report preview", "report-preview") {
 <!--
@@ -15,7 +15,7 @@
         account: @Html(play.api.libs.json.Json.toJson(account).toString()),
         config: @Html(play.api.libs.json.Json.toJson(config.serialized).toString()),
         order: @Html(play.api.libs.json.Json.toJson(order).toString()),
-        assessmentReport: @Html(play.api.libs.json.Json.toJson(assessmentReport).toString()),
+        assessment: @Html(play.api.libs.json.Json.toJson(assessment).toString()),
         assessmentReportScores: @Html(play.api.libs.json.Json.toJson(assessmentReportScores).toString()),
         cvAverageScore: @Html(play.api.libs.json.Json.toJson(cvAverageScore).toString()),
         coverLetterAverageScore: @Html(play.api.libs.json.Json.toJson(coverLetterAverageScore).toString()),

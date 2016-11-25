@@ -39,6 +39,14 @@ object CruitedProduct {
     }
   }
 
+  def typeFromCode(typeForDb: String): String = {
+    typeForDb match {
+      case `codeCvReview` => dbTypeCvReview
+      case `codeCoverLetterReview` => dbTypeCoverLetterReview
+      case `codeLinkedinProfileReview` => dbTypeLinkedinProfileReview
+    }
+  }
+
   def codeFromCategoryId(categoryId: Long): String = {
     categoryId match {
       case 12 => codeCvReview

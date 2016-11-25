@@ -34,8 +34,112 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
     }
   }
 
-  /* Using JDBC here instead of Anorm due to issue https://github.com/playframework/anorm/issues/122 */
-  def getOfOrderId(orderId: Long): Option[AssessmentReport] = {
+  def getOfOrderId(orderId: Long): Option[Assessment] = {
+    val (cvReportOpt, coverLetterReportOpt, linkedinProfileReportOpt) = getDocumentReportsOfOrderId(orderId)
+
+    if (cvReportOpt.isEmpty && coverLetterReportOpt.isEmpty && linkedinProfileReportOpt.isEmpty) {
+      None
+    } else {
+      val (cvCommentList, coverLetterCommentList, linkedinProfileCommentList) = getCommentListsOfOrderId(orderId)
+
+      Some(Assessment(
+        orderId = orderId,
+
+        cvCommentList = cvCommentList,
+        coverLetterCommentList = coverLetterCommentList,
+        linkedinProfileCommentList = linkedinProfileCommentList,
+
+        cvReport = cvReportOpt,
+        coverLetterReport = coverLetterReportOpt,
+        linkedinProfileReport = linkedinProfileReportOpt
+      ))
+    }
+  }
+
+  def deleteOfOrderId(id: Long) {
+    deleteScoresOfOrderId(id)
+    deleteWellDoneCommentsOfOrderId(id)
+    deleteRedCommentsOfOrderId(id)
+    deleteOverallCommentsOfOrderId(id)
+  }
+
+  def createAssessment(assessment: Assessment) {
+    createOverallComments(assessment)
+
+    val orderId = assessment.orderId
+
+    assessment.cvReport match {
+      case None =>
+      case Some(docReport) =>
+        createRedComments(docReport.redComments, orderId)
+        createWellDoneComments(docReport.wellDoneComments, orderId)
+        createScores(CruitedProduct.dbTypeCvReview, assessment.cvCommentList, orderId)
+    }
+
+    assessment.coverLetterReport match {
+      case None =>
+      case Some(docReport) =>
+        createRedComments(docReport.redComments, orderId)
+        createWellDoneComments(docReport.wellDoneComments, orderId)
+        createScores(CruitedProduct.dbTypeCoverLetterReview, assessment.coverLetterCommentList, orderId)
+    }
+
+    assessment.linkedinProfileReport match {
+      case None =>
+      case Some(docReport) =>
+        createRedComments(docReport.redComments, orderId)
+        createWellDoneComments(docReport.wellDoneComments, orderId)
+        createScores(CruitedProduct.dbTypeLinkedinProfileReview, assessment.linkedinProfileCommentList, orderId)
+    }
+  }
+
+  def getScoresOfOrderId(orderId: Long): AssessmentReportScores = {
+    db.withConnection { implicit c =>
+      val query = """
+        select `type`, id_category, id_default, criteria_score, score
+        from documents_scores
+        where id_doc = """ + orderId + """
+        order by `type`, id_category, id_default;"""
+
+      // Commented out because spams too much when average scores are calculated
+      // Logger.info("ReportDto.getScoresOfOrderId():" + query)
+
+      val rowParser = str("type") ~ long("id_category") ~ long("id_default") ~ int("criteria_score") ~ int("score") map {
+        case docType ~ categoryId ~ defaultCommentId ~ score ~ isGreen => (docType, categoryId, defaultCommentId, score, isGreen)
+      }
+
+      normaliseScores(SQL(query).as(rowParser.*))
+    }
+  }
+
+  private def getCommentListsOfOrderId(orderId: Long): (List[AssessmentComment], List[AssessmentComment], List[AssessmentComment]) = {
+    db.withConnection { implicit c =>
+      val query = """
+        select s.score as is_green,
+          dc.category as category_id, dc.id as default_comment_id, trim(name_good) as green_text, trim(name_bad) as red_text, dc.score, grouped,
+          rc.comment as red_comment_text
+        from documents_scores s
+          inner join defaults dc on dc.id = s.id_default
+          left join documents_comments rc on rc.id_doc = s.id_doc and rc.id_default = s.id_default
+        where s.id_doc = """ + orderId + """
+        order by category_id, dc.ordd;"""
+
+      Logger.info("ReportDto.getCommentListsOfOrderId():" + query)
+
+      val rowParser = int("is_green") ~
+        long("category_id") ~ long("default_comment_id") ~ str("green_text") ~ str("red_text") ~ int("score") ~ int("grouped") ~
+        (str("red_comment_text") ?) map {
+        case isGreen ~
+          categoryId ~ defaultCommentId ~ defaultCommentGreenText ~ defaultCommentRedText ~ points ~ grouped ~
+          redCommentTextOpt => (isGreen, categoryId, defaultCommentId, defaultCommentGreenText, defaultCommentRedText, points, grouped, redCommentTextOpt)
+      }
+
+      normaliseCommentLists(SQL(query).as(rowParser.*))
+    }
+  }
+
+  // Using JDBC here instead of Anorm due to issue https://github.com/playframework/anorm/issues/122
+  private def getDocumentReportsOfOrderId(orderId: Long): (Option[DocumentReport], Option[DocumentReport], Option[DocumentReport]) = {
     db.withConnection { implicit c =>
       val query = """
         select custom_comment_cv, custom_comment, custom_comment_li,
@@ -52,9 +156,9 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
           and d.status > """ + Order.statusIdPaid + """
         order by red_comment_doc_type, red_comment_cat_id, ordd, top_comment_doc_type, top_comment_cat_id;"""
 
-      Logger.info("ReportDto.getOfOrderId():" + query)
+      Logger.info("ReportDto.getDocumentReportsOfOrderId():" + query)
 
-      var denormalisedAssessmentReports = new ListBuffer[(Long, Option[RedComment], Option[WellDoneComment], Option[String], Option[String], Option[String])]()
+      var denormalisedDocumentReports = new ListBuffer[(Option[RedComment], Option[WellDoneComment], Option[String], Option[String], Option[String])]()
       val conn = db.getConnection()
 
       try {
@@ -141,70 +245,14 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
             case otherString => Some(otherString)
           }
 
-          val denormalisedAssessmentReport = (orderId, redCommentOpt, wellDoneCommentOpt, cvOverallCommentOpt, coverLetterOverallCommentOpt, linkedinProfileOverallCommentOpt)
-          denormalisedAssessmentReports += denormalisedAssessmentReport
+          val denormalisedDocumentReport = (redCommentOpt, wellDoneCommentOpt, cvOverallCommentOpt, coverLetterOverallCommentOpt, linkedinProfileOverallCommentOpt)
+          denormalisedDocumentReports += denormalisedDocumentReport
         }
 
-        normaliseAssessmentReport(denormalisedAssessmentReports.toList)
+        normaliseDocumentReports(denormalisedDocumentReports.toList)
       } finally {
         conn.close()
       }
-    }
-  }
-
-  def deleteOfOrderId(id: Long) {
-    deleteScoresOfOrderId(id)
-    deleteWellDoneCommentsOfOrderId(id)
-    deleteRedCommentsOfOrderId(id)
-    deleteOverallCommentsOfOrderId(id)
-  }
-
-  def create(assessmentReport: AssessmentReport) {
-    createOverallComments(assessmentReport)
-
-    val orderId = assessmentReport.orderId
-
-    assessmentReport.cvReport match {
-      case None =>
-      case Some(docReport) =>
-        createRedComments(docReport.redComments, orderId)
-        createWellDoneComments(docReport.wellDoneComments, orderId)
-        createScores(CruitedProduct.dbTypeCvReview, docReport.redComments, orderId)
-    }
-
-    assessmentReport.coverLetterReport match {
-      case None =>
-      case Some(docReport) =>
-        createRedComments(docReport.redComments, orderId)
-        createWellDoneComments(docReport.wellDoneComments, orderId)
-        createScores(CruitedProduct.dbTypeCoverLetterReview, docReport.redComments, orderId)
-    }
-
-    assessmentReport.linkedinProfileReport match {
-      case None =>
-      case Some(docReport) =>
-        createRedComments(docReport.redComments, orderId)
-        createWellDoneComments(docReport.wellDoneComments, orderId)
-        createScores(CruitedProduct.dbTypeLinkedinProfileReview, docReport.redComments, orderId)
-    }
-  }
-
-  def getScoresOfOrderId(orderId: Long): AssessmentReportScores = {
-    db.withConnection { implicit c =>
-      val query = """
-        select `type`, id_category, id_default, criteria_score, score
-        from documents_scores
-        where id_doc = """ + orderId + """
-        order by `type`, id_category, id_default;"""
-
-      // Commented out because spams too much when average scores are calculated
-      // Logger.info("ReportDto.getScoresOfOrderId():" + query)
-
-      val rowParser = str("type") ~ long("id_category") ~ long("id_default") ~ int("criteria_score") ~ int("score") map {
-        case docType ~ categoryId ~ defaultCommentId ~ score ~ isGreen => (docType, categoryId, defaultCommentId, score, isGreen)
-      }
-
-      normaliseScores(SQL(query).as(rowParser.*))
     }
   }
 
@@ -259,12 +307,12 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
     }
   }
 
-  private def createOverallComments(assessmentReport: AssessmentReport) {
+  private def createOverallComments(assessment: Assessment) {
     db.withConnection { implicit c =>
       val noOverallCommentClauseCv = """
         custom_comment_cv = ''"""
 
-      val clauseOverallCommentCv = assessmentReport.cvReport match {
+      val clauseOverallCommentCv = assessment.cvReport match {
         case None => noOverallCommentClauseCv
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseCv
@@ -277,7 +325,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
       val noOverallCommentClauseCoverLetter = """
         custom_comment = ''"""
 
-      val clauseOverallCommentCoverLetter = assessmentReport.coverLetterReport match {
+      val clauseOverallCommentCoverLetter = assessment.coverLetterReport match {
         case None => noOverallCommentClauseCoverLetter
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseCoverLetter
@@ -290,7 +338,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
       val noOverallCommentClauseLinkedinProfile = """
         custom_comment_li = ''"""
 
-      val clauseOverallCommentLinkedinProfile = assessmentReport.coverLetterReport match {
+      val clauseOverallCommentLinkedinProfile = assessment.coverLetterReport match {
         case None => noOverallCommentClauseLinkedinProfile
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseLinkedinProfile
@@ -304,7 +352,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
         set """ + clauseOverallCommentCv + """, """ +
         clauseOverallCommentCoverLetter + """, """ +
         clauseOverallCommentLinkedinProfile + """
-        where id = """ + assessmentReport.orderId + """;"""
+        where id = """ + assessment.orderId + """;"""
 
       Logger.info("ReportDto.createOverallComments():" + query)
 
@@ -312,13 +360,11 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
     }
   }
 
+  // Using JDBC here instead of Anorm due to issue https://github.com/playframework/anorm/issues/136
   private def createRedComments(redComments: List[RedComment], orderId: Long) {
     db.withConnection { implicit c =>
-
-      // TODO: remove once curly-braces problem is solved
       val conn = db.getConnection()
       try {
-
         for (i <- 0 to redComments.length - 1) {
           val redComment = redComments.apply(i)
 
@@ -334,14 +380,8 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
 
           Logger.info("ReportDto.createRedComments():" + query)
 
-          /* TODO: re-enable once curly-braces problem is solved
-          SQL(query).executeInsert() */
-
-          // TODO: remove once curly-braces problem is solved
           conn.createStatement.executeUpdate(query)
         }
-
-      // TODO: remove once curly-braces problem is solved
       } finally {
         conn.close()
       }
@@ -364,54 +404,27 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
     }
   }
 
-  private def createScores(productTypeDb: String, redComments: List[RedComment], orderId: Long) {
+  private def createScores(productTypeDb: String, listComments: List[AssessmentComment], orderId: Long) {
     db.withConnection { implicit c =>
+      for (listComment <- listComments) {
+        val categoryId = listComment.defaultComment.categoryId
+        val productTypeDb = CruitedProduct.typeFromCode(CruitedProduct.codeFromCategoryId(categoryId))
+        val commentId = listComment.defaultComment.id
+        val points = listComment.defaultComment.points
 
-      /* For each default comment
-      if `redComments` contains it, then insert into documents_scores with `score` = 0
-      else, we insert into documents_scores with `score` = 1
-      */
-
-      val allDefaultComments = assessmentDto.allDefaultComments
-
-      val defaultCommentsForThisDoc = if (productTypeDb == CruitedProduct.dbTypeCvReview) {
-        allDefaultComments.cv
-      } else if (productTypeDb == CruitedProduct.dbTypeCoverLetterReview) {
-        allDefaultComments.coverLetter
-      } else {
-        allDefaultComments.linkedinProfile
-      }
-
-      for (defaultComment <- defaultCommentsForThisDoc) {
-        val commentId = defaultComment.id
-        var isRed = false
-
-        breakable {
-          for (redComment <- redComments) {
-            redComment.defaultCommentId match {
-              case None =>
-              case Some(defaultCommentId) =>
-                if (defaultCommentId == commentId) {
-                  isRed = true
-                  break()
-                }
-            }
-          }
-        }
-
-        val isGreenValueForDb = if (isRed) {
-          0
-        } else {
+        val isGreenValueForDb = if (listComment.isGreenSelected) {
           1
+        } else {
+          0
         }
 
         val query = """
           insert into documents_scores(id_doc, `type`, id_category, id_default, criteria_score, score)
           values(""" + orderId + """, '""" +
           productTypeDb + """', """ +
-          defaultComment.categoryId + """, """ +
+          categoryId + """, """ +
           commentId + """, """ +
-          defaultComment.points + """, """ +
+          points + """, """ +
           isGreenValueForDb + """)"""
 
         Logger.info("ReportDto.createScores():" + query)
@@ -423,27 +436,26 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
 
   /**
    *
-   * @param denormalisedAssessmentReport List[(orderId, redCommentOpt, wellDoneCommentOpt, cvOverallCommentOpt, coverLetterOverallCommentOpt, linkedinProfileOverallCommentOpt)]
-   * @return
+   * @param rows List[(redCommentOpt, wellDoneCommentOpt, cvOverallCommentOpt, coverLetterOverallCommentOpt, linkedinProfileOverallCommentOpt)]
+   * @return (cvReportOpt, coverLetterReportOpt, linkedinProfileReportOpt)
    */
-  private def normaliseAssessmentReport(denormalisedAssessmentReport: List[(Long, Option[RedComment], Option[WellDoneComment], Option[String], Option[String], Option[String])]): Option[AssessmentReport] = {
-    if (denormalisedAssessmentReport.isEmpty)
-      None
+  private def normaliseDocumentReports(rows: List[(Option[RedComment], Option[WellDoneComment], Option[String], Option[String], Option[String])]): (Option[DocumentReport], Option[DocumentReport], Option[DocumentReport]) = {
+    if (rows.isEmpty)
+      (None, None, None)
     else {
-      val firstRow = denormalisedAssessmentReport.head
+      val firstRow = rows.head
 
-      val orderId = firstRow._1
-      val cvOverallCommentOpt = firstRow._4
-      val coverLetterOverallCommentOpt = firstRow._5
-      val linkedinProfileOverallCommentOpt = firstRow._6
+      val cvOverallCommentOpt = firstRow._3
+      val coverLetterOverallCommentOpt = firstRow._4
+      val linkedinProfileOverallCommentOpt = firstRow._5
 
       var redComments: List[RedComment] = List()
       var wellDoneComments: List[WellDoneComment] = List()
 
-      for (row <- denormalisedAssessmentReport) {
+      for (row <- rows) {
         // Red comment
-        if (row._2.isDefined) {
-          val redComment = row._2.get
+        if (row._1.isDefined) {
+          val redComment = row._1.get
           var isInListAlready = false
 
           breakable {
@@ -462,8 +474,8 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
         }
 
         // Well Done comment
-        if (row._3.isDefined) {
-          val wellDoneComment = row._3.get
+        if (row._2.isDefined) {
+          val wellDoneComment = row._2.get
           var isInListAlready = false
 
           breakable {
@@ -520,12 +532,7 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
         ))
       }
 
-      Some(AssessmentReport(
-        orderId = orderId,
-        cvReport = cvReportOpt,
-        coverLetterReport = coverLetterReportOpt,
-        linkedinProfileReport = linkedinProfileReportOpt
-      ))
+      (cvReportOpt, coverLetterReportOpt, linkedinProfileReportOpt)
     }
   }
 
@@ -615,5 +622,46 @@ class ReportDto @Inject()(db: Database, accountDto: AccountDto, assessmentDto: A
         categoryScores = pointsPerCategory
       ))
     }
+  }
+
+  /**
+   *
+   * @param rows List[(isGreen, categoryId, defaultCommentId, defaultCommentGreenText, defaultCommentRedText, points, grouped, redCommentTextOpt)]
+   * @return (cvCommentList, coverLetterCommentList, linkedinProfileCommentList)
+   */
+  private def normaliseCommentLists(rows: List[(Int, Long, Long, String, String, Int, Int, Option[String])]): (List[AssessmentComment], List[AssessmentComment], List[AssessmentComment]) = {
+    val cvCommentList = new ListBuffer[AssessmentComment]()
+    val coverLetterCommentList = new ListBuffer[AssessmentComment]()
+    val linkedinProfileCommentList = new ListBuffer[AssessmentComment]()
+
+    if (rows.nonEmpty) {
+      for (row <- rows) {
+        val categoryId = row._2
+        val productCode = CruitedProduct.codeFromCategoryId(categoryId)
+
+        val assessmentComment = AssessmentComment(
+          defaultComment = DefaultComment(
+            id = row._3,
+            categoryId = categoryId,
+            greenText = row._4,
+            redText = row._5,
+            points = row._6,
+            isGrouped = row._7 == 1
+          ),
+          isGreenSelected = row._1 == 1,
+          redText = row._8
+        )
+
+        if (productCode == CruitedProduct.codeCvReview) {
+          cvCommentList += assessmentComment
+        } else if (productCode == CruitedProduct.codeCoverLetterReview) {
+          coverLetterCommentList += assessmentComment
+        } else {
+          linkedinProfileCommentList += assessmentComment
+        }
+      }
+    }
+
+    (cvCommentList.toList, coverLetterCommentList.toList, linkedinProfileCommentList.toList)
   }
 }

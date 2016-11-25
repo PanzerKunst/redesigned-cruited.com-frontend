@@ -14,7 +14,7 @@ const store = {
     i18nMessages: CR.ControllerData.i18nMessages,
     allDefaultComments: CR.ControllerData.allDefaultComments,
     allCommentVariations: CR.ControllerData.allCommentVariations,
-    assessmentReport: CR.ControllerData.assessmentReport,
+    backendAssessment: CR.ControllerData.assessment,
 
     init() {
         this.assessment = Object.assign(Object.create(Assessment), {
@@ -27,18 +27,20 @@ const store = {
         // TODO: remove
         console.log("assessment store init()");
 
-        if (!this.assessment.isReportStarted() && this.assessmentReport) {
+        if (!this.assessment.isReportStarted() && this.backendAssessment) {
 
             // TODO: remove
-            console.log("!this.assessment.isReportStarted() && this.assessmentReport", this.assessmentReport);
+            console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
 
-            this.assessment.initReport({
-                cv: this._docReportFromBackend(this.assessmentReport.cvReport),
-                coverLetter: this._docReportFromBackend(this.assessmentReport.coverLetterReport),
-                linkedinProfile: this._docReportFromBackend(this.assessmentReport.linkedinProfileReport)
+            this.assessment.initListCommentsAndReport({
+                cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
+                coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
+                linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
+
+                cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
+                coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
+                linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
             });
-
-            this.assessment.initListCommentsFromReport();
         }
 
         this.reactComponent.forceUpdate();
@@ -117,25 +119,36 @@ const store = {
     saveCurrentReport() {
 
         /*
-         AssessmentReport(orderId: Long,
+         Assessment(orderId: Long,
+
+         cvCommentList: List[AssessmentComment(defaultComment: DefaultComment,
+         isGreenSelected: Boolean,
+         redText: Option[String])],
+         coverLetterCommentList: List[AssessmentComment],
+         linkedinProfileCommentList: List[AssessmentComment],
+
          cvReport: Option[DocumentReport],
          coverLetterReport: Option[DocumentReport],
          linkedinProfileReport: Option[DocumentReport])
          */
-        const assessmentReport = {
-            orderId: this.order.id
+        const assessment = {
+            orderId: this.order.id,
+
+            cvCommentList: this._docCommentListForBackend(Category.productCodes.cv),
+            coverLetterCommentList: this._docCommentListForBackend(Category.productCodes.coverLetter),
+            linkedinProfileCommentList: this._docCommentListForBackend(Category.productCodes.linkedinProfile)
         };
 
         if (_.includes(this.order.containedProductCodes, Product.codes.cv)) {
-            assessmentReport.cvReport = this._docReportForBackend(Category.productCodes.cv);
+            assessment.cvReport = this._docReportForBackend(Category.productCodes.cv);
         }
 
         if (_.includes(this.order.containedProductCodes, Product.codes.coverLetter)) {
-            assessmentReport.coverLetterReport = this._docReportForBackend(Category.productCodes.coverLetter);
+            assessment.coverLetterReport = this._docReportForBackend(Category.productCodes.coverLetter);
         }
 
         if (_.includes(this.order.containedProductCodes, Product.codes.linkedinProfile)) {
-            assessmentReport.linkedinProfileReport = this._docReportForBackend(Category.productCodes.linkedinProfile);
+            assessment.linkedinProfileReport = this._docReportForBackend(Category.productCodes.linkedinProfile);
         }
 
         const type = "POST";
@@ -154,7 +167,24 @@ const store = {
         };
         httpRequest.open(type, url);
         httpRequest.setRequestHeader("Content-Type", "application/json");
-        httpRequest.send(JSON.stringify(assessmentReport));
+        httpRequest.send(JSON.stringify(assessment));
+    },
+
+    _docCommentListForBackend(categoryProductCode) {
+
+        /* List[AssessmentComment(defaultComment: DefaultComment,
+         * isGreenSelected: Boolean,
+         * redText: Option[String])]
+         */
+        return this.assessment.listComments(categoryProductCode).map(c => {
+            const defaultComment = _.find(this.allDefaultComments[categoryProductCode], ["id", c.id]);
+
+            return {
+                defaultComment,
+                isGreenSelected: c.isGreenSelected || false,
+                redText: c.redText === defaultComment.redText ? null : c.redText
+            };
+        });
     },
 
     _docReportForBackend(categoryProductCode) {
@@ -205,6 +235,39 @@ const store = {
         }
 
         return docReport;
+    },
+
+    /* backendListCommentsForDoc List[
+     * defaultComment: [
+     *   id: Long,
+     *   categoryId: Long,
+     *   greenText: String,
+     *   redText: String,
+     *   points: Int,
+     *   isGrouped: Boolean],
+     * isGreenSelected: Boolean,
+     * redText: Option[String]
+     * ]
+     */
+    _listCommentFromBackend(backendListCommentsForDoc) {
+
+        /* Frontend list comment:
+         * {
+         *   id: 1,
+         *   categoryId: 13,
+         *   greenText: "string",
+         *   redText: "string",
+         *   points: 5,
+         *   isGrouped: false,
+         *   isGreenSelected: true,
+         *   isRedSelected: false
+         * }
+         */
+        return backendListCommentsForDoc.map(c => Object.assign(c.defaultComment, {
+            redText: c.redText || c.defaultComment.redText,
+            isGreenSelected: c.isGreenSelected,
+            isRedSelected: !c.isGreenSelected
+        }));
     },
 
     /* backendDocReport DocumentReport(redComments: List[RedComment],

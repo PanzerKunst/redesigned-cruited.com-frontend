@@ -19,9 +19,9 @@ class AssessmentController @Inject()(accountDto: AccountDto, config: GlobalConfi
           val i18nMessages = SessionService.getI18nMessagesFromCode(order.languageCode, messagesApi)
           val allDefaultComments = assessmentDto.allDefaultComments
           val allCommentVariations = assessmentDto.allCommentVariations
-          val assessmentReportOpt = reportDto.getOfOrderId(orderId)
+          val assessmentOpt = reportDto.getOfOrderId(orderId)
 
-          Ok(views.html.assessment(account, config, order, i18nMessages, allDefaultComments, allCommentVariations, assessmentReportOpt))
+          Ok(views.html.assessment(account, config, order, i18nMessages, allDefaultComments, allCommentVariations, assessmentOpt))
             .withHeaders(doNotCachePage: _*)  // We want to avoid retrieving a cached page when navigating back
       }
     }

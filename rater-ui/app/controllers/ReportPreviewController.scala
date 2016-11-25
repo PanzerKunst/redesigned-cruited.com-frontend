@@ -22,11 +22,11 @@ class ReportPreviewController @Inject()(accountDto: AccountDto, config: GlobalCo
         case Some(account) =>
           reportDto.getOfOrderId(orderId) match {
             case None => BadRequest("No report available for order ID " + orderId)
-            case Some(assessmentReport) =>
+            case Some(assessment) =>
               val order = orderDto.getOfId(orderId).get
               val i18nMessages = SessionService.getI18nMessagesFromCode(order.languageCode, messagesApi)
 
-              Ok(views.html.reportPreview(account, config, order, i18nMessages, assessmentReport, reportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore))
+              Ok(views.html.reportPreview(account, config, order, i18nMessages, assessment, reportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore))
           }
       }
     }

@@ -54,12 +54,32 @@ const Assessment = {
         this.updateListComment(originalComment);
     },
 
-    initListCommentsFromReport() {
+    /*
+     * @param listCommentsAndReport {
+     * cvListComments: [...],
+     * coverLetterListComments: [...],
+     * linkedinProfileListComments: [...],
+     * cvReport: {...},
+     * coverLetterReport: {...},
+     * linkedinProfileReport: {...}
+     * }
+     */
+    initListCommentsAndReport(listCommentsAndReport) {
+        this._saveListCommentsInLocalStorage({
+            cv: listCommentsAndReport.cvListComments,
+            coverLetter: listCommentsAndReport.coverLetterListComments,
+            linkedinProfile: listCommentsAndReport.linkedinProfileListComments
+        });
+
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
-        if (_.has(myAssessments, [this.orderId, "report"])) {
-            _.keys(myAssessments[this.orderId].report).forEach(categoryProductCode => this._initListCommentsFromDocReport(categoryProductCode));
-        }
+        myAssessments[this.orderId].report = {
+            cv: listCommentsAndReport.cvReport,
+            coverLetter: listCommentsAndReport.coverLetterReport,
+            linkedinProfile: listCommentsAndReport.linkedinProfileReport
+        };
+
+        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
     },
 
     areAllListCommentsSelected(categoryProductCode) {
@@ -209,15 +229,6 @@ const Assessment = {
         return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
     },
 
-    initReport(report) {
-        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments) || {};
-
-        myAssessments[this.orderId] = myAssessments[this.orderId] || {};
-        myAssessments[this.orderId].report = report;
-
-        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
-    },
-
     deleteAssessmentInfoFromLocalStorage() {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments) || {};
 
@@ -285,6 +296,25 @@ const Assessment = {
         return myAssessments && myAssessments[this.orderId] ? myAssessments[this.orderId].listComments : null;
     },
 
+    /*
+     * Structure of the listComments object:
+     * {
+     *   cv: [{
+     *     id: 1,
+     *     categoryId: 13,
+     *     greenText: "string",
+     *     redText: "string",
+     *     points: 5,
+     *     isGrouped: false,
+     *     isGreenSelected: true,
+     *     isRedSelected: false
+     *   },
+     *   {...}
+     *   ],
+     *   coverLetter: [],
+     *   linkedinProfile: []
+     * }
+     */
     _saveListCommentsInLocalStorage(comments) {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments) || {};
 
