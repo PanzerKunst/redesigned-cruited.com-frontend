@@ -48,19 +48,23 @@
 
 	var _animator = __webpack_require__(1);
 
-	var _category = __webpack_require__(3);
+	var _browser = __webpack_require__(3);
+
+	var _browser2 = _interopRequireDefault(_browser);
+
+	var _category = __webpack_require__(4);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(4);
+	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _order = __webpack_require__(5);
+	var _order = __webpack_require__(6);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -92,7 +96,14 @@
 
 	var _orderStatusChangeBtn2 = _interopRequireDefault(_orderStatusChangeBtn);
 
+	var _docAssessmentNav = __webpack_require__(21);
+
+	var _docAssessmentNav2 = _interopRequireDefault(_docAssessmentNav);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 
@@ -111,6 +122,9 @@
 
 	    reactComponent: React.createClass({
 	        displayName: "reactComponent",
+
+	        largeScreenWidthPx: 960,
+
 	        getInitialState: function getInitialState() {
 	            return {
 	                overallComments: {
@@ -184,11 +198,16 @@
 	                        )
 	                    ),
 	                    React.createElement(
-	                        "ul",
-	                        { className: "nav nav-tabs", role: "tablist" },
-	                        this._tab(_category2.default.productCodes.cv, "CV"),
-	                        this._tab(_category2.default.productCodes.coverLetter, "Cover Letter"),
-	                        this._tab(_category2.default.productCodes.linkedinProfile, "Linkedin Profile")
+	                        "div",
+	                        { className: "nav-panel" },
+	                        React.createElement(
+	                            "ul",
+	                            { className: "nav nav-tabs", role: "tablist" },
+	                            this._tab(_category2.default.productCodes.cv, "CV"),
+	                            this._tab(_category2.default.productCodes.coverLetter, "Cover Letter"),
+	                            this._tab(_category2.default.productCodes.linkedinProfile, "Linkedin Profile")
+	                        ),
+	                        React.createElement(_docAssessmentNav2.default, null)
 	                    ),
 	                    React.createElement(
 	                        "div",
@@ -208,7 +227,9 @@
 	        componentDidUpdate: function componentDidUpdate() {
 	            this._initState();
 	            this._initElements();
+	            this._initEvents();
 
+	            this._setNavPanelLocation();
 	            $(".overall-comment").prop("disabled", _store2.default.isOrderReadOnly());
 	            this._selectFirstTab();
 	        },
@@ -226,7 +247,44 @@
 	            }
 	        },
 	        _initElements: function _initElements() {
-	            this.$firstTab = $(".with-circles").children(".nav-tabs").children().first().children();
+	            this.$window = $(window);
+	            var $withCircles = $(".with-circles");
+
+	            this.$navPanel = $withCircles.children(".nav-panel");
+
+	            var $tabListItems = this.$navPanel.children(".nav-tabs").children();
+
+	            this.$tabLinks = $tabListItems.children();
+	            this.$firstTab = $tabListItems.first().children();
+
+	            this.$assessmentNavPanels = $withCircles.find(".nav.assessment");
+	        },
+	        _initEvents: function _initEvents() {
+	            var _this = this;
+
+	            this._showCorrectAssessmentNavPanels();
+	            this.$window.resize(function () {
+	                return _this._setNavPanelLocation();
+	            });
+	        },
+	        _setNavPanelLocation: function _setNavPanelLocation() {
+	            if (_browser2.default.isXlScreen()) {
+	                var locationX = this.largeScreenWidthPx + (window.innerWidth - this.largeScreenWidthPx) / 2;
+
+	                this.$navPanel.css("left", locationX);
+	            }
+	        },
+	        _showCorrectAssessmentNavPanels: function _showCorrectAssessmentNavPanels() {
+	            var _this2 = this;
+
+	            this.$tabLinks.on("shown.bs.tab", function (e) {
+	                var $target = $(e.target);
+	                var hash = $target.attr("href");
+	                var categoryProductCode = hash.substring(1, hash.indexOf("-"));
+
+	                _this2.$assessmentNavPanels.hide();
+	                _this2.$assessmentNavPanels.filter("." + categoryProductCode).show();
+	            });
 	        },
 	        _selectFirstTab: function _selectFirstTab() {
 	            if (!this.isFirstTabSelectionDone) {
@@ -348,7 +406,7 @@
 	        _reportForm: function _reportForm(categoryProductCode) {
 	            return React.createElement(
 	                "form",
-	                { className: "report-form single-column-panel" },
+	                { id: categoryProductCode + "-report-form", className: "report-form single-column-panel" },
 	                React.createElement(
 	                    "div",
 	                    { className: "form-group" },
@@ -443,6 +501,7 @@
 	exports.fadeOut = fadeOut;
 	exports.enableLoading = enableLoading;
 	exports.disableLoading = disableLoading;
+	exports.scrollTo = scrollTo;
 
 	var _global = __webpack_require__(2);
 
@@ -499,6 +558,19 @@
 	    }
 	}
 
+	function scrollTo(e, offsetCorrection) {
+	    e.preventDefault();
+
+	    var $target = $(e.currentTarget);
+	    var hash = $target.attr("href");
+	    var sectionId = hash.substring(1);
+	    var $section = $(document.getElementById(sectionId));
+
+	    var scrollYPos = $section.offset().top - offsetCorrection;
+
+	    TweenLite.to(window, 1, { scrollTo: scrollYPos, ease: Power4.easeOut });
+	}
+
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
@@ -526,6 +598,126 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Browser = {
+	    regexOfUserAgentsNotSupportingFlexbox: ["OS 8_", "OS 7_", "OS 6_", "OS 5_", "OS 4_"],
+
+	    cssRules: function cssRules() {
+	        var _this = this;
+
+	        if (this.allCssRules) {
+	            return this.allCssRules;
+	        }
+
+	        this.allCssRules = {};
+
+	        var styleSheets = document.styleSheets;
+
+	        styleSheets.forEach(function (styleSheet) {
+	            var styleSheetRules = styleSheet.cssRules || styleSheet.rules; // .rules for IE, .cssRules for other browsers
+
+	            if (styleSheetRules) {
+	                for (var j = 0; j < styleSheetRules.length; j++) {
+	                    var rule = styleSheetRules[j];
+
+	                    _this.allCssRules[rule.selectorText] = rule.style;
+	                }
+	            }
+	        });
+
+	        return this.allCssRules;
+	    },
+	    getCssRule: function getCssRule(selector, property) {
+	        return this.cssRules()[selector].getPropertyValue(property);
+	    },
+	    getUrlQueryStrings: function getUrlQueryStrings() {
+	        var queryDict = {};
+
+	        location.search.substr(1).split("&").forEach(function (item) {
+	            queryDict[item.split("=")[0]] = item.split("=")[1];
+	        });
+	        return queryDict;
+	    },
+	    addUserAgentAttributeToHtmlTag: function addUserAgentAttributeToHtmlTag() {
+	        document.documentElement.setAttribute("data-useragent", navigator.userAgent);
+	    },
+	    isMediumScreen: function isMediumScreen() {
+	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
+
+	        // In some browsers like Firefox, "content" is wrapped by double-quotes, that's why doing "return content === "GLOBAL_MEDIUM_SCREEN_BREAKPOINT" would be false.
+	        return content.indexOf("GLOBAL_MEDIUM_SCREEN_BREAKPOINT") >= 0;
+	    },
+	    isLargeScreen: function isLargeScreen() {
+	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
+
+	        return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
+	    },
+	    isXlScreen: function isXlScreen() {
+	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
+
+	        return content.indexOf("GLOBAL_XL_SCREEN_BREAKPOINT") >= 0;
+	    },
+	    isSmallScreen: function isSmallScreen() {
+	        return !this.isMediumScreen() && !this.isLargeScreen() && !this.isXlScreen();
+	    },
+	    saveInLocalStorage: function saveInLocalStorage(key, value) {
+	        if (Modernizr.localstorage && value) {
+	            localStorage.setItem(key, JSON.stringify(value));
+	        }
+	    },
+	    getFromLocalStorage: function getFromLocalStorage(key) {
+	        if (Modernizr.localstorage) {
+	            return JSON.parse(localStorage.getItem(key));
+	        }
+	        return null;
+	    },
+	    removeFromLocalStorage: function removeFromLocalStorage(key) {
+	        if (Modernizr.localstorage) {
+	            localStorage.removeItem(key);
+	        }
+	    },
+	    clearLocalStorage: function clearLocalStorage() {
+	        if (Modernizr.localstorage) {
+	            localStorage.clear();
+	        }
+	    },
+	    isIOS: function isIOS() {
+	        return (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)
+	        );
+	    },
+	    isWindows: function isWindows() {
+	        return navigator.platform === "Win32" || navigator.platform === "Win64";
+	    },
+	    fixFlexboxIndicatorClass: function fixFlexboxIndicatorClass() {
+	        var $html = $("html");
+	        var isFound = false;
+
+	        for (var i = 0; i < this.regexOfUserAgentsNotSupportingFlexbox.length; i++) {
+	            var userAgent = $html.data("useragent");
+
+	            if (new RegExp(this.regexOfUserAgentsNotSupportingFlexbox[i]).test(userAgent)) {
+	                isFound = true;
+	                break;
+	            }
+	        }
+
+	        if (isFound) {
+	            $html.removeClass("flexbox");
+	            $html.addClass("no-flexbox");
+	        }
+	    }
+	};
+
+	exports.default = Browser;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -578,7 +770,7 @@
 	exports.default = Category;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -613,7 +805,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -625,7 +817,7 @@
 
 	var _global = __webpack_require__(2);
 
-	var _product = __webpack_require__(4);
+	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -705,7 +897,7 @@
 	exports.default = Order;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -717,27 +909,27 @@
 
 	var _global = __webpack_require__(2);
 
-	var _string = __webpack_require__(7);
+	var _string = __webpack_require__(8);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _account = __webpack_require__(8);
+	var _account = __webpack_require__(9);
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _order = __webpack_require__(5);
+	var _order = __webpack_require__(6);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _assessment = __webpack_require__(9);
+	var _assessment = __webpack_require__(10);
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _category = __webpack_require__(3);
+	var _category = __webpack_require__(4);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _product = __webpack_require__(4);
+	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1063,7 +1255,7 @@
 	exports.default = store;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1090,7 +1282,7 @@
 	exports.default = StringUtils;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1116,7 +1308,7 @@
 	exports.default = Account;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1128,11 +1320,11 @@
 
 	var _global = __webpack_require__(2);
 
-	var _category = __webpack_require__(3);
+	var _category = __webpack_require__(4);
 
 	var _category2 = _interopRequireDefault(_category);
 
-	var _browser = __webpack_require__(10);
+	var _browser = __webpack_require__(3);
 
 	var _browser2 = _interopRequireDefault(_browser);
 
@@ -1605,121 +1797,6 @@
 	exports.default = Assessment;
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var Browser = {
-	    regexOfUserAgentsNotSupportingFlexbox: ["OS 8_", "OS 7_", "OS 6_", "OS 5_", "OS 4_"],
-
-	    cssRules: function cssRules() {
-	        var _this = this;
-
-	        if (this.allCssRules) {
-	            return this.allCssRules;
-	        }
-
-	        this.allCssRules = {};
-
-	        var styleSheets = document.styleSheets;
-
-	        styleSheets.forEach(function (styleSheet) {
-	            var styleSheetRules = styleSheet.cssRules || styleSheet.rules; // .rules for IE, .cssRules for other browsers
-
-	            if (styleSheetRules) {
-	                for (var j = 0; j < styleSheetRules.length; j++) {
-	                    var rule = styleSheetRules[j];
-
-	                    _this.allCssRules[rule.selectorText] = rule.style;
-	                }
-	            }
-	        });
-
-	        return this.allCssRules;
-	    },
-	    getCssRule: function getCssRule(selector, property) {
-	        return this.cssRules()[selector].getPropertyValue(property);
-	    },
-	    getUrlQueryStrings: function getUrlQueryStrings() {
-	        var queryDict = {};
-
-	        location.search.substr(1).split("&").forEach(function (item) {
-	            queryDict[item.split("=")[0]] = item.split("=")[1];
-	        });
-	        return queryDict;
-	    },
-	    addUserAgentAttributeToHtmlTag: function addUserAgentAttributeToHtmlTag() {
-	        document.documentElement.setAttribute("data-useragent", navigator.userAgent);
-	    },
-	    isMediumScreen: function isMediumScreen() {
-	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
-
-	        // In some browsers like Firefox, "content" is wrapped by double-quotes, that's why doing "return content === "GLOBAL_MEDIUM_SCREEN_BREAKPOINT" would be false.
-	        return content.indexOf("GLOBAL_MEDIUM_SCREEN_BREAKPOINT") >= 0;
-	    },
-	    isLargeScreen: function isLargeScreen() {
-	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
-
-	        return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
-	    },
-	    isSmallScreen: function isSmallScreen() {
-	        return !this.isMediumScreen() && !this.isLargeScreen();
-	    },
-	    saveInLocalStorage: function saveInLocalStorage(key, value) {
-	        if (Modernizr.localstorage && value) {
-	            localStorage.setItem(key, JSON.stringify(value));
-	        }
-	    },
-	    getFromLocalStorage: function getFromLocalStorage(key) {
-	        if (Modernizr.localstorage) {
-	            return JSON.parse(localStorage.getItem(key));
-	        }
-	        return null;
-	    },
-	    removeFromLocalStorage: function removeFromLocalStorage(key) {
-	        if (Modernizr.localstorage) {
-	            localStorage.removeItem(key);
-	        }
-	    },
-	    clearLocalStorage: function clearLocalStorage() {
-	        if (Modernizr.localstorage) {
-	            localStorage.clear();
-	        }
-	    },
-	    isIOS: function isIOS() {
-	        return (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)
-	        );
-	    },
-	    isWindows: function isWindows() {
-	        return navigator.platform === "Win32" || navigator.platform === "Win64";
-	    },
-	    fixFlexboxIndicatorClass: function fixFlexboxIndicatorClass() {
-	        var $html = $("html");
-	        var isFound = false;
-
-	        for (var i = 0; i < this.regexOfUserAgentsNotSupportingFlexbox.length; i++) {
-	            var userAgent = $html.data("useragent");
-
-	            if (new RegExp(this.regexOfUserAgentsNotSupportingFlexbox[i]).test(userAgent)) {
-	                isFound = true;
-	                break;
-	            }
-	        }
-
-	        if (isFound) {
-	            $html.removeClass("flexbox");
-	            $html.addClass("no-flexbox");
-	        }
-	    }
-	};
-
-	exports.default = Browser;
-
-/***/ },
 /* 11 */
 /***/ function(module, exports) {
 
@@ -1803,7 +1880,7 @@
 	});
 	exports.default = undefined;
 
-	var _product = __webpack_require__(4);
+	var _product = __webpack_require__(5);
 
 	var _product2 = _interopRequireDefault(_product);
 
@@ -1878,7 +1955,7 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(5);
+	var _order = __webpack_require__(6);
 
 	var _order2 = _interopRequireDefault(_order);
 
@@ -1920,7 +1997,7 @@
 	});
 	exports.default = undefined;
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2087,11 +2164,11 @@
 	});
 	exports.default = undefined;
 
-	var _assessment = __webpack_require__(9);
+	var _assessment = __webpack_require__(10);
 
 	var _assessment2 = _interopRequireDefault(_assessment);
 
-	var _string = __webpack_require__(7);
+	var _string = __webpack_require__(8);
 
 	var _string2 = _interopRequireDefault(_string);
 
@@ -2099,7 +2176,7 @@
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2314,7 +2391,7 @@
 
 	var _animator = __webpack_require__(1);
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2409,11 +2486,11 @@
 	});
 	exports.default = undefined;
 
-	var _order = __webpack_require__(5);
+	var _order = __webpack_require__(6);
 
 	var _order2 = _interopRequireDefault(_order);
 
-	var _store = __webpack_require__(6);
+	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
 
@@ -2434,6 +2511,91 @@
 	    },
 	    _handleClick: function _handleClick() {
 	        _store2.default.updateOrderStatus(_order2.default.statuses.inProgress);
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _animator = __webpack_require__(1);
+
+	var _category = __webpack_require__(4);
+
+	var _category2 = _interopRequireDefault(_category);
+
+	var _store = __webpack_require__(7);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var _this = this;
+
+	        if (!_store2.default.assessment) {
+	            return null;
+	        }
+
+	        return React.createElement(
+	            "section",
+	            null,
+	            _.values(_category2.default.productCodes).map(function (categoryProductCode) {
+	                return React.createElement(
+	                    "div",
+	                    { key: categoryProductCode, className: "nav assessment " + categoryProductCode },
+	                    React.createElement(
+	                        "ul",
+	                        { className: "styleless" },
+	                        _this._categoryLinks(categoryProductCode)
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        null,
+	                        React.createElement(
+	                            "a",
+	                            { href: "#" + categoryProductCode + "-report-form", onClick: _this._handleScrollToLinkClick },
+	                            "Report form"
+	                        )
+	                    )
+	                );
+	            })
+	        );
+	    },
+	    componentDidUpdate: function componentDidUpdate() {
+	        this._initElements();
+	    },
+	    _initElements: function _initElements() {
+	        this.$siteHeader = $("#container").children("header");
+	    },
+	    _categoryLinks: function _categoryLinks(categoryProductCode) {
+	        var _this2 = this;
+
+	        return _store2.default.assessment.categoryIds(categoryProductCode).map(function (categoryId) {
+	            return React.createElement(
+	                "li",
+	                { key: categoryId },
+	                React.createElement(
+	                    "a",
+	                    { href: "#list-category-" + categoryId, onClick: _this2._handleScrollToLinkClick },
+	                    _store2.default.i18nMessages["category.title." + categoryId]
+	                )
+	            );
+	        });
+	    },
+	    _handleScrollToLinkClick: function _handleScrollToLinkClick(e) {
+	        (0, _animator.scrollTo)(e, this.$siteHeader.height());
 	    }
 	});
 

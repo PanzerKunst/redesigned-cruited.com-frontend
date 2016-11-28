@@ -10,6 +10,12 @@
   }
 }
 
+@mixin xl-screen {
+  @media screen and (min-width: $xl-content-width) {
+    @content;
+  }
+}
+
 @mixin ellipsis($white-space: nowrap) {
   white-space: $white-space;
   overflow: hidden;

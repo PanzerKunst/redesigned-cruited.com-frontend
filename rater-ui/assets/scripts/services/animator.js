@@ -52,3 +52,16 @@ export function disableLoading($el) {
         $el.prop("disabled", false);
     }
 }
+
+export function scrollTo(e, offsetCorrection) {
+    e.preventDefault();
+
+    const $target = $(e.currentTarget);
+    const hash = $target.attr("href");
+    const sectionId = hash.substring(1);
+    const $section = $(document.getElementById(sectionId));
+
+    const scrollYPos = $section.offset().top - offsetCorrection;
+
+    TweenLite.to(window, 1, {scrollTo: scrollYPos, ease: Power4.easeOut});
+}

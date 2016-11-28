@@ -20,6 +20,9 @@ body {
 
     @include defineBreakpoint("GLOBAL_LARGE_SCREEN_BREAKPOINT");
   }
+  @include xl-screen {
+    @include defineBreakpoint("GLOBAL_XL_SCREEN_BREAKPOINT");
+  }
 }
 
 // To avoid these elements to bleed through the parent

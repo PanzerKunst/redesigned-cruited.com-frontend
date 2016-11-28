@@ -1,4 +1,5 @@
 import {enableLoading} from "../../services/animator";
+import Browser from "../../services/browser";
 import Category from "../../models/category";
 import Product from "../../models/product";
 import Order from "../../models/order";
@@ -25,6 +26,9 @@ import ReportCategory from "./reportCategory";
 // eslint-disable-next-line no-unused-vars
 import OrderStatusChangeBtn from "./orderStatusChangeBtn";
 
+// eslint-disable-next-line no-unused-vars
+import DocAssessmentNav from "./docAssessmentNav";
+
 const controller = {
     init() {
         store.reactComponent = ReactDOM.render(
@@ -36,6 +40,8 @@ const controller = {
     },
 
     reactComponent: React.createClass({
+        largeScreenWidthPx: 960,
+
         getInitialState() {
             return {
                 overallComments: {
@@ -79,11 +85,14 @@ const controller = {
                             </section>
                         </div>
 
-                        <ul className="nav nav-tabs" role="tablist">
-                            {this._tab(Category.productCodes.cv, "CV")}
-                            {this._tab(Category.productCodes.coverLetter, "Cover Letter")}
-                            {this._tab(Category.productCodes.linkedinProfile, "Linkedin Profile")}
-                        </ul>
+                        <div className="nav-panel">
+                            <ul className="nav nav-tabs" role="tablist">
+                                {this._tab(Category.productCodes.cv, "CV")}
+                                {this._tab(Category.productCodes.coverLetter, "Cover Letter")}
+                                {this._tab(Category.productCodes.linkedinProfile, "Linkedin Profile")}
+                            </ul>
+                            <DocAssessmentNav />
+                        </div>
                         <div className="tab-content">
                             {this._tabPane(Category.productCodes.cv)}
                             {this._tabPane(Category.productCodes.coverLetter)}
@@ -100,7 +109,9 @@ const controller = {
         componentDidUpdate() {
             this._initState();
             this._initElements();
+            this._initEvents();
 
+            this._setNavPanelLocation();
             $(".overall-comment").prop("disabled", store.isOrderReadOnly());
             this._selectFirstTab();
         },
@@ -120,7 +131,41 @@ const controller = {
         },
 
         _initElements() {
-            this.$firstTab = $(".with-circles").children(".nav-tabs").children().first().children();
+            this.$window = $(window);
+            const $withCircles = $(".with-circles");
+
+            this.$navPanel = $withCircles.children(".nav-panel");
+
+            const $tabListItems = this.$navPanel.children(".nav-tabs").children();
+
+            this.$tabLinks = $tabListItems.children();
+            this.$firstTab = $tabListItems.first().children();
+
+            this.$assessmentNavPanels = $withCircles.find(".nav.assessment");
+        },
+
+        _initEvents() {
+            this._showCorrectAssessmentNavPanels();
+            this.$window.resize(() => this._setNavPanelLocation());
+        },
+
+        _setNavPanelLocation() {
+            if (Browser.isXlScreen()) {
+                const locationX = this.largeScreenWidthPx + (window.innerWidth - this.largeScreenWidthPx) / 2;
+
+                this.$navPanel.css("left", locationX);
+            }
+        },
+
+        _showCorrectAssessmentNavPanels() {
+            this.$tabLinks.on("shown.bs.tab", e => {
+                const $target = $(e.target);
+                const hash = $target.attr("href");
+                const categoryProductCode = hash.substring(1, hash.indexOf("-"));
+
+                this.$assessmentNavPanels.hide();
+                this.$assessmentNavPanels.filter(`.${categoryProductCode}`).show();
+            });
         },
 
         _selectFirstTab() {
@@ -221,7 +266,7 @@ const controller = {
 
         _reportForm(categoryProductCode) {
             return (
-                <form className="report-form single-column-panel">
+                <form id={`${categoryProductCode}-report-form`} className="report-form single-column-panel">
                     <div className="form-group">
                         <label>Overall comment</label>
                         <textarea className="form-control overall-comment" value={this.state.overallComments[categoryProductCode] || ""} onChange={this._handleOverallCommentChange} onBlur={this._handleOverallCommentBlur} />

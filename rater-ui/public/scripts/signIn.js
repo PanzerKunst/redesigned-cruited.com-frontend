@@ -237,6 +237,7 @@
 	exports.fadeOut = fadeOut;
 	exports.enableLoading = enableLoading;
 	exports.disableLoading = disableLoading;
+	exports.scrollTo = scrollTo;
 
 	var _global = __webpack_require__(1);
 
@@ -291,6 +292,19 @@
 	        $el.html($el.data("defaultText"));
 	        $el.prop("disabled", false);
 	    }
+	}
+
+	function scrollTo(e, offsetCorrection) {
+	    e.preventDefault();
+
+	    var $target = $(e.currentTarget);
+	    var hash = $target.attr("href");
+	    var sectionId = hash.substring(1);
+	    var $section = $(document.getElementById(sectionId));
+
+	    var scrollYPos = $section.offset().top - offsetCorrection;
+
+	    TweenLite.to(window, 1, { scrollTo: scrollYPos, ease: Power4.easeOut });
 	}
 
 /***/ },

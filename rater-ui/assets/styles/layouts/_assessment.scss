@@ -23,6 +23,7 @@ $white-section-padding: 2em 1em 1em;
   #order-details {
     background-color: white;
     padding: 1.5em $spacer-unit-size;
+    margin-bottom: 3em;
 
     @include medium-screen {
       display: flex;
@@ -42,6 +43,30 @@ $white-section-padding: 2em 1em 1em;
         /* stylelint-disable-next-line max-nesting-depth */
         &:last-child {
           width: $third-section-width;
+        }
+      }
+    }
+  }
+
+  @include xl-screen {
+    .nav-panel {
+      position: fixed;
+    }
+
+    .nav-tabs {
+      border: none;
+
+      > li {
+        float: none;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > a {
+          margin: 0;
+
+          border: none;
+          border-radius: 0;
+
+          width: 100%;
         }
       }
     }

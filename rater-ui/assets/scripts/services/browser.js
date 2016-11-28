@@ -65,8 +65,16 @@ const Browser = {
         return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
     },
 
+    isXlScreen() {
+        const content = window.getComputedStyle(
+            document.querySelector("body"), ":after"
+        ).getPropertyValue("content");
+
+        return content.indexOf("GLOBAL_XL_SCREEN_BREAKPOINT") >= 0;
+    },
+
     isSmallScreen() {
-        return !this.isMediumScreen() && !this.isLargeScreen();
+        return !this.isMediumScreen() && !this.isLargeScreen() && !this.isXlScreen();
     },
 
     saveInLocalStorage(key, value) {

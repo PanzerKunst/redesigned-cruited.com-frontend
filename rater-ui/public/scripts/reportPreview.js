@@ -845,8 +845,13 @@
 
 	        return content.indexOf("GLOBAL_LARGE_SCREEN_BREAKPOINT") >= 0;
 	    },
+	    isXlScreen: function isXlScreen() {
+	        var content = window.getComputedStyle(document.querySelector("body"), ":after").getPropertyValue("content");
+
+	        return content.indexOf("GLOBAL_XL_SCREEN_BREAKPOINT") >= 0;
+	    },
 	    isSmallScreen: function isSmallScreen() {
-	        return !this.isMediumScreen() && !this.isLargeScreen();
+	        return !this.isMediumScreen() && !this.isLargeScreen() && !this.isXlScreen();
 	    },
 	    saveInLocalStorage: function saveInLocalStorage(key, value) {
 	        if (Modernizr.localstorage && value) {
