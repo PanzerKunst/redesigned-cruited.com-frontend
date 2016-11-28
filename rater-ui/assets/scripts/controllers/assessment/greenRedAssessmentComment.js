@@ -20,7 +20,7 @@ const Component = React.createClass({
         });
 
         return (
-            <li ref="root" className={listCommentClasses}>
+            <li ref="root" className={listCommentClasses} data-comment-id={c.id}>
                 <div className="green">
                     <p className={greenParagraphClasses} onClick={this._handleGreenParagraphClick}>{c.greenText}</p>
                 </div>
@@ -77,6 +77,35 @@ const Component = React.createClass({
             c.isRedSelected = true;
 
             store.updateListComment(c);
+
+            this._selectNextCommentAsRedIfGrouped();
+        }
+    },
+
+    _selectNextCommentAsRedIfGrouped() {
+        let categoryProductCode = null;
+        let indexOfNextCommentInList = -1;
+
+        _.keys(store.allDefaultComments).forEach(categoryProductCd => {
+            const docDefaultComments = store.allDefaultComments[categoryProductCd];
+
+            for (let i = 0; i < docDefaultComments.length; i++) {
+                if (docDefaultComments[i].id === this.props.comment.id) {
+                    categoryProductCode = categoryProductCd;
+                    indexOfNextCommentInList = i + 1;
+                    break;
+                }
+            }
+        });
+
+        const nextComment = indexOfNextCommentInList > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
+
+        // eslint-disable-next-line no-undefined
+        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
+            nextComment.isGreenSelected = false;
+            nextComment.isRedSelected = true;
+
+            store.updateListComment(nextComment);
         }
     },
 

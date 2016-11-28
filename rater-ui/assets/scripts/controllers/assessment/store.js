@@ -24,9 +24,6 @@ const store = {
 
         this.assessment.init();
 
-        // TODO: remove
-        console.log("assessment store init()");
-
         if (!this.assessment.isReportStarted() && this.backendAssessment) {
 
             // TODO: remove

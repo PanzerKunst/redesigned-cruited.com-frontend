@@ -40,7 +40,7 @@ const Component = React.createClass({
 
     componentDidMount() {
         this._initElements();
-        this._disableInputsIfRequired();
+        this._disableActionableElementsIfRequired();
         this._makeCommentsSortable();
     },
 
@@ -57,9 +57,10 @@ const Component = React.createClass({
         this.$addCommentBtn = $rootEl.children(".btn");
     },
 
-    _disableInputsIfRequired() {
+    _disableActionableElementsIfRequired() {
         if (store.isOrderReadOnly()) {
             this.$wellDoneCommentTextarea.prop("disabled", true);
+            this.$addCommentBtn.prop("disabled", true);
             this.$addCommentTextarea.prop("disabled", true);
         }
     },

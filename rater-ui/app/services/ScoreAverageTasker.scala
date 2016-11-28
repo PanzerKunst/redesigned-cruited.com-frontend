@@ -3,13 +3,12 @@ package services
 import java.util.TimerTask
 import javax.inject.{Inject, Singleton}
 
-import db.ReportDto
+import db.AssessmentDto
 import models.CruitedProduct
-import play.api.Play.current
-import play.api.{Logger, Play}
+import play.api.Logger
 
 @Singleton
-class ScoreAverageTasker @Inject()(reportDto: ReportDto, config: GlobalConfig) extends TimerTask {
+class ScoreAverageTasker @Inject()(assessmentDto: AssessmentDto, config: GlobalConfig) extends TimerTask {
   var isRunning = false
 
   var cvAverageScore = 0
@@ -20,9 +19,9 @@ class ScoreAverageTasker @Inject()(reportDto: ReportDto, config: GlobalConfig) e
     if (!isRunning) {
       isRunning = true
 
-      val idOfTheLastNCvReports = reportDto.getIdsOfTheLastNReports(config.nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeCvReview)
-      val idOfTheLastNCoverLetterReports = reportDto.getIdsOfTheLastNReports(config.nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeCoverLetterReview)
-      val idOfTheLastNLinkedinProfileReports = reportDto.getIdsOfTheLastNReports(config.nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeLinkedinProfileReview)
+      val idOfTheLastNCvReports = assessmentDto.getIdsOfTheLastNReports(config.nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeCvReview)
+      val idOfTheLastNCoverLetterReports = assessmentDto.getIdsOfTheLastNReports(config.nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeCoverLetterReview)
+      val idOfTheLastNLinkedinProfileReports = assessmentDto.getIdsOfTheLastNReports(config.nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeLinkedinProfileReview)
 
       // Merge these 3 lists of IDs, without duplicates
       val reportIds = (idOfTheLastNCvReports ++ idOfTheLastNCoverLetterReports ++ idOfTheLastNLinkedinProfileReports).toSet
@@ -33,7 +32,7 @@ class ScoreAverageTasker @Inject()(reportDto: ReportDto, config: GlobalConfig) e
       var allLinkedinProfileScores: List[Int] = List()
 
       for (id <- reportIds) {
-        val assessmentScores = reportDto.getScoresOfOrderId(id)
+        val assessmentScores = assessmentDto.getScoresOfOrderId(id)
 
         assessmentScores.cvReportScores match {
           case None =>

@@ -15,7 +15,7 @@ const Assessment = {
     },
 
     categoryIds(categoryProductCode) {
-        return this.categoryIds_[categoryProductCode];
+        return this._categoryIds[categoryProductCode];
     },
 
     listComments(categoryProductCode) {
@@ -240,7 +240,7 @@ const Assessment = {
     isReportStarted() {
         let allCategoriesAsArray = [];
 
-        _.values(this.categoryIds_).forEach(categoryIdsForThatDoc => {
+        _.values(this._categoryIds).forEach(categoryIdsForThatDoc => {
             allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
         });
 
@@ -261,7 +261,7 @@ const Assessment = {
     _initCategoryIds() {
         const predicate = dc => dc.categoryId;
 
-        this.categoryIds_ = {
+        this._categoryIds = {
             cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
             coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
             linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))

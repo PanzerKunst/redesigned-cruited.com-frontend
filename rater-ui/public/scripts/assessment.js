@@ -761,9 +761,6 @@
 
 	        this.assessment.init();
 
-	        // TODO: remove
-	        console.log("assessment store init()");
-
 	        if (!this.assessment.isReportStarted() && this.backendAssessment) {
 
 	            // TODO: remove
@@ -1156,7 +1153,7 @@
 	        this._initCategoryIds();
 	    },
 	    categoryIds: function categoryIds(categoryProductCode) {
-	        return this.categoryIds_[categoryProductCode];
+	        return this._categoryIds[categoryProductCode];
 	    },
 	    listComments: function listComments(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
@@ -1383,7 +1380,7 @@
 	    isReportStarted: function isReportStarted() {
 	        var allCategoriesAsArray = [];
 
-	        _.values(this.categoryIds_).forEach(function (categoryIdsForThatDoc) {
+	        _.values(this._categoryIds).forEach(function (categoryIdsForThatDoc) {
 	            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
 	        });
 
@@ -1405,7 +1402,7 @@
 	            return dc.categoryId;
 	        };
 
-	        this.categoryIds_ = {
+	        this._categoryIds = {
 	            cv: _.uniq(this.allDefaultComments.cv.map(predicate)),
 	            coverLetter: _.uniq(this.allDefaultComments.coverLetter.map(predicate)),
 	            linkedinProfile: _.uniq(this.allDefaultComments.linkedinProfile.map(predicate))
@@ -1951,7 +1948,7 @@
 
 	        return React.createElement(
 	            "li",
-	            { ref: "root", className: listCommentClasses },
+	            { ref: "root", className: listCommentClasses, "data-comment-id": c.id },
 	            React.createElement(
 	                "div",
 	                { className: "green" },
@@ -2025,6 +2022,36 @@
 	            c.isRedSelected = true;
 
 	            _store2.default.updateListComment(c);
+
+	            this._selectNextCommentAsRedIfGrouped();
+	        }
+	    },
+	    _selectNextCommentAsRedIfGrouped: function _selectNextCommentAsRedIfGrouped() {
+	        var _this = this;
+
+	        var categoryProductCode = null;
+	        var indexOfNextCommentInList = -1;
+
+	        _.keys(_store2.default.allDefaultComments).forEach(function (categoryProductCd) {
+	            var docDefaultComments = _store2.default.allDefaultComments[categoryProductCd];
+
+	            for (var i = 0; i < docDefaultComments.length; i++) {
+	                if (docDefaultComments[i].id === _this.props.comment.id) {
+	                    categoryProductCode = categoryProductCd;
+	                    indexOfNextCommentInList = i + 1;
+	                    break;
+	                }
+	            }
+	        });
+
+	        var nextComment = indexOfNextCommentInList > -1 ? _store2.default.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
+
+	        // eslint-disable-next-line no-undefined
+	        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
+	            nextComment.isGreenSelected = false;
+	            nextComment.isRedSelected = true;
+
+	            _store2.default.updateListComment(nextComment);
 	        }
 	    },
 	    _handleRedParagraphBlur: function _handleRedParagraphBlur(e) {
@@ -2128,7 +2155,7 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this._initElements();
-	        this._disableInputsIfRequired();
+	        this._disableActionableElementsIfRequired();
 	        this._makeCommentsSortable();
 	    },
 	    _initElements: function _initElements() {
@@ -2143,9 +2170,10 @@
 	        this.$addCommentTextarea = this.$addCommentComposer.children("textarea");
 	        this.$addCommentBtn = $rootEl.children(".btn");
 	    },
-	    _disableInputsIfRequired: function _disableInputsIfRequired() {
+	    _disableActionableElementsIfRequired: function _disableActionableElementsIfRequired() {
 	        if (_store2.default.isOrderReadOnly()) {
 	            this.$wellDoneCommentTextarea.prop("disabled", true);
+	            this.$addCommentBtn.prop("disabled", true);
 	            this.$addCommentTextarea.prop("disabled", true);
 	        }
 	    },

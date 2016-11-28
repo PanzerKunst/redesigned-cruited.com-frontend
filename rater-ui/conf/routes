@@ -25,4 +25,4 @@ GET           /api/orders/due                 controllers.api.OrderApi.due
 GET           /api/orders/sent                controllers.api.OrderApi.sentToTheCustomerThisMonth
 DELETE        /api/orders/:id                 controllers.api.OrderApi.delete(id: Long)
 GET           /api/accounts/raters            controllers.api.AccountApi.allRaters
-POST          /api/reports                    controllers.api.ReportApi.saveReport
+POST          /api/assessments                controllers.api.AssessmentApi.save
