@@ -149,7 +149,7 @@ const store = {
         }
 
         const type = "POST";
-        const url = "/api/reports";
+        const url = "/api/assessments";
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = () => {

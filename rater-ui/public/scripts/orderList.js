@@ -666,11 +666,11 @@
 	            { ref: "li", className: this._cssClassForStatus(order.status) },
 	            React.createElement(
 	                "section",
-	                null,
+	                { className: "order-section first" },
 	                React.createElement(_raterProfile2.default, { account: order.rater }),
 	                React.createElement(
 	                    "p",
-	                    null,
+	                    { className: "order-id" },
 	                    "#",
 	                    order.id
 	                ),
@@ -683,7 +683,7 @@
 	            ),
 	            React.createElement(
 	                "section",
-	                null,
+	                { className: "order-section second" },
 	                React.createElement(
 	                    "div",
 	                    null,
@@ -707,7 +707,7 @@
 	            ),
 	            React.createElement(
 	                "section",
-	                null,
+	                { className: "order-section third" },
 	                React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
 	                this._actionBtn(order),
 	                this._secondaryButtons(order)
@@ -752,10 +752,10 @@
 
 	        return React.createElement(
 	            "div",
-	            null,
+	            { className: "action-btn" },
 	            React.createElement(
 	                "a",
-	                { href: this._assessmentUrl(order.id), className: "btn btn-default" },
+	                { href: this._assessmentUrl(order.id), className: "btn btn-primary" },
 	                text
 	            )
 	        );
@@ -965,7 +965,7 @@
 	        }
 
 	        return React.createElement(
-	            "span",
+	            "p",
 	            { className: "position-sought" },
 	            position
 	        );
@@ -993,7 +993,7 @@
 	        }
 
 	        return React.createElement(
-	            "span",
+	            "p",
 	            { className: "employer-sought" },
 	            employer
 	        );
@@ -1028,28 +1028,36 @@
 
 	        return React.createElement(
 	            "div",
-	            { ref: "root" },
-	            this._couponTag(order.coupon),
+	            { ref: "root", className: "order-tags" },
 	            React.createElement(
-	                "span",
-	                { className: "order-tag edition" },
-	                order.editionCode
-	            ),
-	            order.containedProductCodes.map(function (productCode) {
-	                return React.createElement(
+	                "section",
+	                null,
+	                this._couponTag(order.coupon),
+	                React.createElement(
 	                    "span",
-	                    { key: order.id + "-" + productCode, className: "order-tag product-code" },
-	                    React.createElement(
-	                        "a",
-	                        { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },
-	                        _product2.default.humanReadableCode(productCode)
-	                    )
-	                );
-	            }),
+	                    { className: "order-tag edition " + order.editionCode },
+	                    order.editionCode
+	                )
+	            ),
 	            React.createElement(
-	                "span",
-	                { className: "order-tag lang" },
-	                order.languageCode
+	                "section",
+	                null,
+	                order.containedProductCodes.map(function (productCode) {
+	                    return React.createElement(
+	                        "span",
+	                        { key: order.id + "-" + productCode, className: "order-tag product-code" },
+	                        React.createElement(
+	                            "a",
+	                            { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },
+	                            _product2.default.humanReadableCode(productCode)
+	                        )
+	                    );
+	                }),
+	                React.createElement(
+	                    "span",
+	                    { className: "order-tag lang" },
+	                    order.languageCode
+	                )
 	            )
 	        );
 	    },
@@ -1150,7 +1158,7 @@
 
 	        return React.createElement(
 	            "p",
-	            null,
+	            { className: "time-left" },
 	            timeLeft.hours(),
 	            "h",
 	            timeLeft.minutes(),

@@ -64,7 +64,7 @@ const controller = {
                     </header>
                     <div className="with-circles">
                         <div id="order-details">
-                            <section>
+                            <section className="order-details-section first">
                                 <div>
                                     <PositionSought position={order.positionSought} />
                                     <EmployerSought employer={order.employerSought} />
@@ -72,13 +72,13 @@ const controller = {
                                 {this._customerComment(order.customerComment)}
                                 {this._jobAdUrl(order.jobAdUrl)}
                             </section>
-                            <section>
+                            <section className="order-details-section second">
                                 <OrderTags order={order} config={store.config} />
                                 {this._linkedinProfilePic(order.customer.linkedinProfile)}
                                 <p>{order.customer.firstName} {order.customer.lastName}</p>
                                 <p>{order.customer.emailAddress}</p>
                             </section>
-                            <section>
+                            <section className="order-details-section third">
                                 {this._previewOrViewBtn(order)}
                                 <OrderStatusChangeBtn />
                                 <TimeLeft order={order} />
@@ -159,12 +159,15 @@ const controller = {
 
         _showCorrectAssessmentNavPanels() {
             this.$tabLinks.on("shown.bs.tab", e => {
-                const $target = $(e.target);
-                const hash = $target.attr("href");
-                const categoryProductCode = hash.substring(1, hash.indexOf("-"));
-
                 this.$assessmentNavPanels.hide();
-                this.$assessmentNavPanels.filter(`.${categoryProductCode}`).show();
+
+                if (Browser.isXlScreen()) {
+                    const $target = $(e.target);
+                    const hash = $target.attr("href");
+                    const categoryProductCode = hash.substring(1, hash.indexOf("-"));
+
+                    this.$assessmentNavPanels.filter(`.${categoryProductCode}`).show();
+                }
             });
         },
 
@@ -179,7 +182,7 @@ const controller = {
             if (!customerComment) {
                 return null;
             }
-            return <p>{customerComment}</p>;
+            return <p className="customer-comment">{customerComment}</p>;
         },
 
         _jobAdUrl(jobAdUrl) {

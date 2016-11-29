@@ -6,7 +6,7 @@ const Component = React.createClass({
             return null;
         }
 
-        return <span className="position-sought" >{position}</span>;
+        return <p className="position-sought" >{position}</p>;
     }
 });
 

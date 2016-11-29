@@ -5,15 +5,20 @@ const Component = React.createClass({
         const order = this.props.order;
 
         return (
-            <div ref="root">
-                {this._couponTag(order.coupon)}
-                <span className="order-tag edition">{order.editionCode}</span>
-                {order.containedProductCodes.map(productCode =>
-                        <span key={`${order.id}-${productCode}`} className="order-tag product-code">
-                            <a href={order.documentUrl(this.props.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
-                        </span>
-                )}
-                <span className="order-tag lang">{order.languageCode}</span>
+            <div ref="root" className="order-tags">
+                <section>
+                    {this._couponTag(order.coupon)}
+                    <span className={`order-tag edition ${order.editionCode}`}>{order.editionCode}</span>
+                </section>
+
+                <section>
+                    {order.containedProductCodes.map(productCode =>
+                            <span key={`${order.id}-${productCode}`} className="order-tag product-code">
+                                <a href={order.documentUrl(this.props.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
+                            </span>
+                    )}
+                    <span className="order-tag lang">{order.languageCode}</span>
+                </section>
             </div>);
     },
 

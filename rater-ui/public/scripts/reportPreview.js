@@ -360,6 +360,10 @@
 	                docReportScores = _store2.default.linkedinProfileReportScores;
 	            }
 
+	            // TODO: remove
+	            console.log("docReport", docReport);
+	            console.log("docReportScores", docReportScores);
+
 	            if (!docReport) {
 	                return React.createElement(
 	                    "div",
@@ -1204,9 +1208,9 @@
 	    config: CR.ControllerData.config,
 	    order: Object.assign(Object.create(_order2.default), CR.ControllerData.order),
 
-	    cvReport: CR.ControllerData.assessmentReport.cvReport,
-	    coverLetterReport: CR.ControllerData.assessmentReport.coverLetterReport,
-	    linkedinProfileReport: CR.ControllerData.assessmentReport.linkedinProfileReport,
+	    cvReport: CR.ControllerData.assessment.cvReport,
+	    coverLetterReport: CR.ControllerData.assessment.coverLetterReport,
+	    linkedinProfileReport: CR.ControllerData.assessment.linkedinProfileReport,
 
 	    cvReportScores: CR.ControllerData.assessmentReportScores.cvReportScores,
 	    coverLetterReportScores: CR.ControllerData.assessmentReportScores.coverLetterReportScores,

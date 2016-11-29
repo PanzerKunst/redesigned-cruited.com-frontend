@@ -23,13 +23,13 @@ const Component = React.createClass({
 
         return (
             <li ref="li" className={this._cssClassForStatus(order.status)}>
-                <section>
+                <section className="order-section first">
                     <RaterProfile account={order.rater} />
-                    <p>#{order.id}</p>
+                    <p className="order-id">#{order.id}</p>
                     <TimeLeft order={order} />
                     <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
                 </section>
-                <section>
+                <section className="order-section second">
                     <div>
                         <PositionSought position={order.positionSought} />
                         <EmployerSought employer={order.employerSought} />
@@ -39,7 +39,7 @@ const Component = React.createClass({
                         <p>{order.customer.emailAddress}</p>
                     </div>
                 </section>
-                <section>
+                <section className="order-section third">
                     <OrderTags order={order} config={store.config} />
                     {this._actionBtn(order)}
                     {this._secondaryButtons(order)}
@@ -84,8 +84,8 @@ const Component = React.createClass({
         const text = store.isOrderReadOnly(order) ? "Check" : "Assess";
 
         return (
-            <div>
-                <a href={this._assessmentUrl(order.id)} className="btn btn-default">{text}</a>
+            <div className="action-btn">
+                <a href={this._assessmentUrl(order.id)} className="btn btn-primary">{text}</a>
             </div>);
     },
 

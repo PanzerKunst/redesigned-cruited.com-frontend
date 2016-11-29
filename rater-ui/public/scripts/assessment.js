@@ -161,7 +161,7 @@
 	                        { id: "order-details" },
 	                        React.createElement(
 	                            "section",
-	                            null,
+	                            { className: "order-details-section first" },
 	                            React.createElement(
 	                                "div",
 	                                null,
@@ -173,7 +173,7 @@
 	                        ),
 	                        React.createElement(
 	                            "section",
-	                            null,
+	                            { className: "order-details-section second" },
 	                            React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
 	                            this._linkedinProfilePic(order.customer.linkedinProfile),
 	                            React.createElement(
@@ -191,7 +191,7 @@
 	                        ),
 	                        React.createElement(
 	                            "section",
-	                            null,
+	                            { className: "order-details-section third" },
 	                            this._previewOrViewBtn(order),
 	                            React.createElement(_orderStatusChangeBtn2.default, null),
 	                            React.createElement(_timeLeft2.default, { order: order })
@@ -278,12 +278,15 @@
 	            var _this2 = this;
 
 	            this.$tabLinks.on("shown.bs.tab", function (e) {
-	                var $target = $(e.target);
-	                var hash = $target.attr("href");
-	                var categoryProductCode = hash.substring(1, hash.indexOf("-"));
-
 	                _this2.$assessmentNavPanels.hide();
-	                _this2.$assessmentNavPanels.filter("." + categoryProductCode).show();
+
+	                if (_browser2.default.isXlScreen()) {
+	                    var $target = $(e.target);
+	                    var hash = $target.attr("href");
+	                    var categoryProductCode = hash.substring(1, hash.indexOf("-"));
+
+	                    _this2.$assessmentNavPanels.filter("." + categoryProductCode).show();
+	                }
 	            });
 	        },
 	        _selectFirstTab: function _selectFirstTab() {
@@ -298,7 +301,7 @@
 	            }
 	            return React.createElement(
 	                "p",
-	                null,
+	                { className: "customer-comment" },
 	                customerComment
 	            );
 	        },
@@ -1058,7 +1061,7 @@
 	        }
 
 	        var type = "POST";
-	        var url = "/api/reports";
+	        var url = "/api/assessments";
 	        var httpRequest = new XMLHttpRequest();
 
 	        httpRequest.onreadystatechange = function () {
@@ -1401,11 +1404,21 @@
 	     * }
 	     */
 	    initListCommentsAndReport: function initListCommentsAndReport(listCommentsAndReport) {
-	        this._saveListCommentsInLocalStorage({
-	            cv: listCommentsAndReport.cvListComments,
-	            coverLetter: listCommentsAndReport.coverLetterListComments,
-	            linkedinProfile: listCommentsAndReport.linkedinProfileListComments
-	        });
+	        var listComments = _.cloneDeep(this.allDefaultComments);
+
+	        if (!_.isEmpty(listCommentsAndReport.cvListComments)) {
+	            listComments.cv = listCommentsAndReport.cvListComments;
+	        }
+
+	        if (!_.isEmpty(listCommentsAndReport.coverLetterListComments)) {
+	            listComments.coverLetter = listCommentsAndReport.coverLetterListComments;
+	        }
+
+	        if (!_.isEmpty(listCommentsAndReport.linkedinProfileListComments)) {
+	            listComments.linkedinProfile = listCommentsAndReport.linkedinProfileListComments;
+	        }
+
+	        this._saveListCommentsInLocalStorage(listComments);
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
@@ -1832,7 +1845,7 @@
 	        }
 
 	        return React.createElement(
-	            "span",
+	            "p",
 	            { className: "position-sought" },
 	            position
 	        );
@@ -1860,7 +1873,7 @@
 	        }
 
 	        return React.createElement(
-	            "span",
+	            "p",
 	            { className: "employer-sought" },
 	            employer
 	        );
@@ -1895,28 +1908,36 @@
 
 	        return React.createElement(
 	            "div",
-	            { ref: "root" },
-	            this._couponTag(order.coupon),
+	            { ref: "root", className: "order-tags" },
 	            React.createElement(
-	                "span",
-	                { className: "order-tag edition" },
-	                order.editionCode
-	            ),
-	            order.containedProductCodes.map(function (productCode) {
-	                return React.createElement(
+	                "section",
+	                null,
+	                this._couponTag(order.coupon),
+	                React.createElement(
 	                    "span",
-	                    { key: order.id + "-" + productCode, className: "order-tag product-code" },
-	                    React.createElement(
-	                        "a",
-	                        { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },
-	                        _product2.default.humanReadableCode(productCode)
-	                    )
-	                );
-	            }),
+	                    { className: "order-tag edition " + order.editionCode },
+	                    order.editionCode
+	                )
+	            ),
 	            React.createElement(
-	                "span",
-	                { className: "order-tag lang" },
-	                order.languageCode
+	                "section",
+	                null,
+	                order.containedProductCodes.map(function (productCode) {
+	                    return React.createElement(
+	                        "span",
+	                        { key: order.id + "-" + productCode, className: "order-tag product-code" },
+	                        React.createElement(
+	                            "a",
+	                            { href: order.documentUrl(_this.props.config, productCode), target: "_blank" },
+	                            _product2.default.humanReadableCode(productCode)
+	                        )
+	                    );
+	                }),
+	                React.createElement(
+	                    "span",
+	                    { className: "order-tag lang" },
+	                    order.languageCode
+	                )
 	            )
 	        );
 	    },
@@ -1975,7 +1996,7 @@
 
 	        return React.createElement(
 	            "p",
-	            null,
+	            { className: "time-left" },
 	            timeLeft.hours(),
 	            "h",
 	            timeLeft.minutes(),

@@ -11,7 +11,7 @@ const Component = React.createClass({
         const dueMoment = moment(order.dueTimestamp);
         const timeLeft = moment.duration(dueMoment.valueOf() - moment().valueOf());
 
-        return <p>{timeLeft.hours()}h{timeLeft.minutes()}m left</p>;
+        return <p className="time-left">{timeLeft.hours()}h{timeLeft.minutes()}m left</p>;
     }
 });
 

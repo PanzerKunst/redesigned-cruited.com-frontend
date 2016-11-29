@@ -65,11 +65,21 @@ const Assessment = {
      * }
      */
     initListCommentsAndReport(listCommentsAndReport) {
-        this._saveListCommentsInLocalStorage({
-            cv: listCommentsAndReport.cvListComments,
-            coverLetter: listCommentsAndReport.coverLetterListComments,
-            linkedinProfile: listCommentsAndReport.linkedinProfileListComments
-        });
+        const listComments = _.cloneDeep(this.allDefaultComments);
+
+        if (!_.isEmpty(listCommentsAndReport.cvListComments)) {
+            listComments.cv = listCommentsAndReport.cvListComments;
+        }
+
+        if (!_.isEmpty(listCommentsAndReport.coverLetterListComments)) {
+            listComments.coverLetter = listCommentsAndReport.coverLetterListComments;
+        }
+
+        if (!_.isEmpty(listCommentsAndReport.linkedinProfileListComments)) {
+            listComments.linkedinProfile = listCommentsAndReport.linkedinProfileListComments;
+        }
+
+        this._saveListCommentsInLocalStorage(listComments);
 
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 

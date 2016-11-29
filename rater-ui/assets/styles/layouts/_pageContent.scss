@@ -40,3 +40,206 @@
     font-size: 1.3em;
   }
 }
+
+.edition {
+  padding: 0.3em 0.7em 0.3em 2.3em;
+  border-radius: 0.15em;
+
+  font-size: $font-size-sm;
+  color: white;
+
+  $edition-icon-location-x: -1892px;
+  $edition-icon-location-y: -496px;
+
+  @include hdpi-sprite($pro-edition-color);
+  background-position: $edition-icon-location-x $edition-icon-location-y;
+  @include hidpi {
+    background-position: -943px -246px;
+  }
+
+  &.YOUNG_PRO {
+    $edition-icon-location-y: -596px;
+
+    @include hdpi-sprite($young-pro-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -296px;
+    }
+  }
+
+  &.EXEC {
+    $edition-icon-location-y: -696px;
+
+    @include hdpi-sprite($exec-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -346px;
+    }
+  }
+
+  &.CONSULT {
+    $edition-icon-location-y: -2596px;
+
+    @include hdpi-sprite($consult-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -1296px;
+    }
+  }
+
+  &.ACADEMIA {
+    $edition-icon-location-y: -2996px;
+
+    @include hdpi-sprite($academia-edition-color);
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -1496px;
+    }
+  }
+
+  @include medium-screen {
+    $edition-icon-location-x: -1893px;
+    $edition-icon-location-y: -796px;
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+
+    &.YOUNG_PRO {
+      $edition-icon-location-y: -896px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.EXEC {
+      $edition-icon-location-y: -996px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.CONSULT {
+      $edition-icon-location-y: -2696px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.ACADEMIA {
+      $edition-icon-location-y: -3096px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+  }
+
+  @include large-screen {
+    $edition-icon-location-x: -1888px;
+    $edition-icon-location-y: -793px;
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+
+    &.YOUNG_PRO {
+      $edition-icon-location-y: -893px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.EXEC {
+      $edition-icon-location-y: -993px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.CONSULT {
+      $edition-icon-location-y: -2693px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+
+    &.ACADEMIA {
+      $edition-icon-location-y: -3093px;
+      background-position: $edition-icon-location-x $edition-icon-location-y;
+    }
+  }
+}
+
+.single-column-panel {
+  @include medium-screen {
+    margin-left: auto;
+    margin-right: auto;
+
+    max-width: ($small-content-width + $medium-content-width) / 2;
+  }
+  @include large-screen {
+    max-width: $medium-content-width;
+  }
+}
+
+@mixin initial-edition-icon-locations {
+  $edition-icon-location-x: -1892px;
+  $edition-icon-location-y: -496px;
+
+  background-position: $edition-icon-location-x $edition-icon-location-y;
+  @include hidpi {
+    background-position: -943px -246px;
+  }
+
+  &.YOUNG_PRO {
+    $edition-icon-location-y: -596px;
+
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -296px;
+    }
+  }
+
+  &.EXEC {
+    $edition-icon-location-y: -696px;
+
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -346px;
+    }
+  }
+
+  &.CONSULT {
+    $edition-icon-location-y: -2596px;
+
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -1296px;
+    }
+  }
+
+  &.ACADEMIA {
+    $edition-icon-location-y: -2996px;
+
+    background-position: $edition-icon-location-x $edition-icon-location-y;
+    @include hidpi {
+      background-position: -943px -1496px;
+    }
+  }
+}
+
+#order-list .with-circles,
+#assessment {
+  .edition {
+    @include medium-screen {
+      @include initial-edition-icon-locations;
+    }
+    @include large-screen {
+      @include initial-edition-icon-locations;
+    }
+  }
+}
+
+.order-tag {
+  display: inline-block;
+
+  &.coupon {
+    color: white;
+    background-color: $dark-grey;
+    border-radius: $default-border-radius;
+    font-size: 11px;
+    padding: 0.5px 6px;
+  }
+
+  &.edition {
+    margin-left: 0.5em;
+
+    display: inline; // Breaks the design otherwise
+  }
+
+  &.product-code {
+    margin-right: 0.5em;
+
+    font-weight: bold;
+  }
+}

@@ -6,7 +6,7 @@ const Component = React.createClass({
             return null;
         }
 
-        return <span className="employer-sought" >{employer}</span>;
+        return <p className="employer-sought" >{employer}</p>;
     }
 });
 

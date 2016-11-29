@@ -4,6 +4,10 @@
 }
 
 #order-list {
+  p {
+    margin-bottom: 0;
+  }
+
   .with-circles {
     @include medium-screen {
       font-size: 14px;
@@ -23,7 +27,7 @@
     > li {
       background-color: white;
 
-      padding: 1.5em $spacer-unit-size;
+      padding: 1.5em $spacer-unit-size 1em;
       margin-bottom: 2em;
 
       @include list-item-border;
@@ -35,6 +39,35 @@
       &.completed,
       &.scheduled {
         @include list-item-border($brand-success);
+      }
+    }
+
+    @include medium-screen {
+      > li {
+        display: flex;
+      }
+    }
+  }
+
+  .order-section.second > div:first-child {
+    margin-bottom: $content-element-margin-bottom;
+  }
+
+  @include medium-screen {
+    .order-section {
+      $first-section-width: 33%;
+      $second-section-width: 33%;
+      $third-section-width: 100% - $first-section-width - $second-section-width;
+
+      width: $second-section-width;
+
+      &.first {
+        width: $first-section-width;
+      }
+
+      &.third {
+        width: $third-section-width;
+        text-align: right;
       }
     }
   }
@@ -49,6 +82,18 @@
 
       margin-right: 0.5em;
     }
+  }
+
+  .order-id {
+    margin-bottom: $content-element-margin-bottom;
+  }
+
+  .action-btn {
+    margin-bottom: $content-element-margin-bottom;
+  }
+
+  .with-circles .order-tags {
+    margin-bottom: $content-element-margin-bottom;
   }
 
   .secondary-buttons {
@@ -106,6 +151,8 @@
   }
 
   li {
+    padding: 0.25em;
+
     &:not(.disabled) {
       @include transition(background-color $default-animation-duration ease);
       cursor: pointer;
@@ -122,6 +169,25 @@
   }
 }
 
+#delete-modal {
+  .modal-body > section {
+    margin-bottom: $content-element-margin-bottom;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .employer-sought {
+    margin-bottom: $content-element-margin-bottom;
+  }
+
+  .order-tag.coupon {
+    font-size: $font-size-sm;
+    padding: 0.1em 0.6em;
+  }
+}
+
 #stats-panel {
   background-color: $background-body-color;
   color: $dark-grey;
@@ -129,6 +195,21 @@
 
 .no-flexbox {
   #order-list {
+    .orders {
+      @include medium-screen {
+        /* stylelint-disable-next-line max-nesting-depth */
+        > li {
+          display: block;
+          @include clearfix;
+        }
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        .order-section {
+          float: left;
+        }
+      }
+    }
+
     .rater-profile {
       display: block;
 

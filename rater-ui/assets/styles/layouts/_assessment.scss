@@ -12,6 +12,10 @@ $white-section-padding: 2em 1em 1em;
 
 #assessment {
   .with-circles {
+    p {
+      margin-bottom: 0;
+    }
+
     @include medium-screen {
       font-size: 14px;
     }
@@ -28,23 +32,41 @@ $white-section-padding: 2em 1em 1em;
     @include medium-screen {
       display: flex;
 
-      > section {
-        $first-section-width: 55%;
-        $second-section-width: 25%;
-        $third-section-width: 100% - $first-section-width - $second-section-width;
+      $first-section-width: 55%;
+      $second-section-width: 25%;
+      $third-section-width: 100% - $first-section-width - $second-section-width;
 
-        width: $second-section-width;
-
-        /* stylelint-disable-next-line max-nesting-depth */
-        &:first-child {
-          width: $first-section-width;
-        }
-
-        /* stylelint-disable-next-line max-nesting-depth */
-        &:last-child {
-          width: $third-section-width;
-        }
+      > .first {
+        width: $first-section-width;
       }
+
+      > .second {
+        width: $second-section-width;
+      }
+
+      > .third {
+        width: $third-section-width;
+        text-align: right;
+      }
+    }
+
+    .customer-comment {
+      margin: $content-element-margin-bottom 0;
+    }
+
+    .order-tags {
+      margin-bottom: $content-element-margin-bottom;
+    }
+
+    .time-left {
+      margin-top: $content-element-margin-bottom;
+    }
+  }
+
+  .nav.assessment {
+    display: none;
+    @include xl-screen {
+      display: block;
     }
   }
 
