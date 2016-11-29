@@ -967,7 +967,12 @@
 	        return React.createElement(
 	            "p",
 	            { className: "position-sought" },
-	            position
+	            React.createElement("i", { className: "fa fa-address-card-o" }),
+	            React.createElement(
+	                "span",
+	                null,
+	                position
+	            )
 	        );
 	    }
 	});
@@ -995,7 +1000,12 @@
 	        return React.createElement(
 	            "p",
 	            { className: "employer-sought" },
-	            employer
+	            React.createElement("i", { className: "fa fa-building-o" }),
+	            React.createElement(
+	                "span",
+	                null,
+	                employer
+	            )
 	        );
 	    }
 	});

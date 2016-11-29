@@ -6,7 +6,11 @@ const Component = React.createClass({
             return null;
         }
 
-        return <p className="position-sought" >{position}</p>;
+        return (
+            <p className="position-sought" >
+                <i className="fa fa-address-card-o" />
+                <span>{position}</span>
+            </p>);
     }
 });
 

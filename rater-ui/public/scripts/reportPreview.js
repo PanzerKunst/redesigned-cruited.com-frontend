@@ -360,10 +360,6 @@
 	                docReportScores = _store2.default.linkedinProfileReportScores;
 	            }
 
-	            // TODO: remove
-	            console.log("docReport", docReport);
-	            console.log("docReportScores", docReportScores);
-
 	            if (!docReport) {
 	                return React.createElement(
 	                    "div",

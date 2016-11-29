@@ -85,15 +85,15 @@
   }
 
   .order-id {
-    margin-bottom: $content-element-margin-bottom;
-  }
-
-  .action-btn {
-    margin-bottom: $content-element-margin-bottom;
+    margin: $content-element-margin-bottom 0;
   }
 
   .with-circles .order-tags {
     margin-bottom: $content-element-margin-bottom;
+  }
+
+  .action-btn {
+    margin-bottom: 0.5em;
   }
 
   .secondary-buttons {

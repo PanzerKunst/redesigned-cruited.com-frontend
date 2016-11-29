@@ -243,3 +243,47 @@
     font-weight: bold;
   }
 }
+
+.position-sought,
+.employer-sought {
+  display: flex;
+  align-items: center;
+
+  > .fa {
+    font-size: 1.5em;
+  }
+
+  > span {
+    display: inline-block;
+    line-height: 1em;
+  }
+}
+
+.position-sought {
+  margin-bottom: 0.5em !important;
+
+  > .fa {
+    margin-right: 0.3em;
+  }
+}
+
+.employer-sought > .fa {
+  margin: 0 0.5em 0 0.175em;
+}
+
+.no-flexbox {
+  .position-sought,
+  .employer-sought {
+    display: block;
+    @include clearfix;
+
+    > .fa,
+    > span {
+      float: left;
+    }
+
+    > span {
+      max-width: 89%;
+    }
+  }
+}
