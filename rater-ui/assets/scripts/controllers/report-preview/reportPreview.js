@@ -1,3 +1,4 @@
+import {localStorageKeys} from "../../global";
 import Browser from "../../services/browser";
 import String from "../../services/string";
 import {makeExpandable} from "../../services/expandablePanel";
@@ -62,7 +63,7 @@ const controller = {
             this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
             makeExpandable(this.$expandablePanels);
 
-            // TODO this._selectTabForSelectedProduct();
+            this._selectTabOfCurrentlyAssessedDoc();
         },
 
         _initElements() {
@@ -160,10 +161,12 @@ const controller = {
             TweenLite.to($cursor, 1, {left: `${score}%`, ease: Power4.easeInOut});
         },
 
-        // TODO
-        _selectTabForSelectedProduct() {
+        _selectTabOfCurrentlyAssessedDoc() {
+            const categoryProductCode = Browser.getFromLocalStorage(localStorageKeys.currentlyAssessedDoc);
 
-            // this.$tabs.filter(`[aria-controls=${this.state.selectedProductCode}-report-panel]`).tab("show");
+            if (categoryProductCode) {
+                this.$tabs.filter(`[aria-controls=${categoryProductCode}-report-panel]`).tab("show");
+            }
         },
 
         _tab(categoryProductCode, isActive = false) {

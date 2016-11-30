@@ -1,3 +1,4 @@
+import {localStorageKeys} from "../../global";
 import {enableLoading} from "../../services/animator";
 import Browser from "../../services/browser";
 import Category from "../../models/category";
@@ -70,7 +71,7 @@ const controller = {
                                     <EmployerSought employer={order.employerSought} />
                                 </div>
                                 {this._customerComment(order.customerComment)}
-                                {this._jobAdUrl(order.jobAdUrl)}
+                                {this._jobAdLink(order.jobAdUrl)}
                             </section>
                             <section className="order-details-section second">
                                 <OrderTags order={order} config={store.config} />
@@ -136,10 +137,9 @@ const controller = {
 
             this.$navPanel = $withCircles.children(".nav-panel");
 
-            const $tabListItems = this.$navPanel.children(".nav-tabs").children();
-
-            this.$tabLinks = $tabListItems.children();
-            this.$firstTab = $tabListItems.first().children();
+            this.$tabListItems = this.$navPanel.children(".nav-tabs").children();
+            this.$tabLinks = this.$tabListItems.children();
+            this.$firstTab = this.$tabListItems.first().children();
 
             this.$assessmentNavPanels = $withCircles.find(".nav.assessment");
         },
@@ -163,8 +163,7 @@ const controller = {
 
                 if (Browser.isXlScreen()) {
                     const $target = $(e.target);
-                    const hash = $target.attr("href");
-                    const categoryProductCode = hash.substring(1, hash.indexOf("-"));
+                    const categoryProductCode = this._categoryProductCodeFromHash($target.attr("href"));
 
                     this.$assessmentNavPanels.filter(`.${categoryProductCode}`).show();
                 }
@@ -185,11 +184,11 @@ const controller = {
             return <p className="customer-comment">{customerComment}</p>;
         },
 
-        _jobAdUrl(jobAdUrl) {
+        _jobAdLink(jobAdUrl) {
             if (!jobAdUrl) {
                 return null;
             }
-            return <a href={jobAdUrl} target="_blank">Job ad</a>;
+            return <a href={jobAdUrl} target="_blank" className="job-ad-link">Job ad</a>;
         },
 
         _linkedinProfilePic(linkedinProfile) {
@@ -327,11 +326,23 @@ const controller = {
             // - check that there are no brackets left
 
             enableLoading($btn, "Saving");
+            this._saveCurrentlyAssessedDoc();
             store.saveCurrentReport();
         },
 
         _categoryProductCodeFromOverallCommentTextarea($textarea) {
             return $textarea.closest(".tab-pane").data("productCode");
+        },
+
+        _categoryProductCodeFromHash(hash) {
+            return hash.substring(1, hash.indexOf("-"));
+        },
+
+        _saveCurrentlyAssessedDoc() {
+            const $selectedTab = this.$tabListItems.filter(".active");
+            const hash = $selectedTab.children().attr("href");
+
+            Browser.saveInLocalStorage(localStorageKeys.currentlyAssessedDoc, this._categoryProductCodeFromHash(hash));
         }
     })
 };

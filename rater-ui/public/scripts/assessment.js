@@ -46,7 +46,9 @@
 
 	"use strict";
 
-	var _animator = __webpack_require__(1);
+	var _global = __webpack_require__(1);
+
+	var _animator = __webpack_require__(2);
 
 	var _browser = __webpack_require__(3);
 
@@ -169,7 +171,7 @@
 	                                React.createElement(_employerSought2.default, { employer: order.employerSought })
 	                            ),
 	                            this._customerComment(order.customerComment),
-	                            this._jobAdUrl(order.jobAdUrl)
+	                            this._jobAdLink(order.jobAdUrl)
 	                        ),
 	                        React.createElement(
 	                            "section",
@@ -252,10 +254,9 @@
 
 	            this.$navPanel = $withCircles.children(".nav-panel");
 
-	            var $tabListItems = this.$navPanel.children(".nav-tabs").children();
-
-	            this.$tabLinks = $tabListItems.children();
-	            this.$firstTab = $tabListItems.first().children();
+	            this.$tabListItems = this.$navPanel.children(".nav-tabs").children();
+	            this.$tabLinks = this.$tabListItems.children();
+	            this.$firstTab = this.$tabListItems.first().children();
 
 	            this.$assessmentNavPanels = $withCircles.find(".nav.assessment");
 	        },
@@ -282,8 +283,7 @@
 
 	                if (_browser2.default.isXlScreen()) {
 	                    var $target = $(e.target);
-	                    var hash = $target.attr("href");
-	                    var categoryProductCode = hash.substring(1, hash.indexOf("-"));
+	                    var categoryProductCode = _this2._categoryProductCodeFromHash($target.attr("href"));
 
 	                    _this2.$assessmentNavPanels.filter("." + categoryProductCode).show();
 	                }
@@ -305,13 +305,13 @@
 	                customerComment
 	            );
 	        },
-	        _jobAdUrl: function _jobAdUrl(jobAdUrl) {
+	        _jobAdLink: function _jobAdLink(jobAdUrl) {
 	            if (!jobAdUrl) {
 	                return null;
 	            }
 	            return React.createElement(
 	                "a",
-	                { href: jobAdUrl, target: "_blank" },
+	                { href: jobAdUrl, target: "_blank", className: "job-ad-link" },
 	                "Job ad"
 	            );
 	        },
@@ -469,10 +469,20 @@
 	            // - check that there are no brackets left
 
 	            (0, _animator.enableLoading)($btn, "Saving");
+	            this._saveCurrentlyAssessedDoc();
 	            _store2.default.saveCurrentReport();
 	        },
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
 	            return $textarea.closest(".tab-pane").data("productCode");
+	        },
+	        _categoryProductCodeFromHash: function _categoryProductCodeFromHash(hash) {
+	            return hash.substring(1, hash.indexOf("-"));
+	        },
+	        _saveCurrentlyAssessedDoc: function _saveCurrentlyAssessedDoc() {
+	            var $selectedTab = this.$tabListItems.filter(".active");
+	            var hash = $selectedTab.children().attr("href");
+
+	            _browser2.default.saveInLocalStorage(_global.localStorageKeys.currentlyAssessedDoc, this._categoryProductCodeFromHash(hash));
 	        }
 	    })
 	};
@@ -493,6 +503,32 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+	var localStorageKeys = exports.localStorageKeys = {
+	    myAssessments: "myAssessments",
+	    currentlyAssessedDoc: "currentlyAssessedDoc"
+	};
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -506,7 +542,7 @@
 	exports.disableLoading = disableLoading;
 	exports.scrollTo = scrollTo;
 
-	var _global = __webpack_require__(2);
+	var _global = __webpack_require__(1);
 
 	function fadeIn($el, params) {
 	    if (!$el.is(":visible")) {
@@ -573,31 +609,6 @@
 
 	    TweenLite.to(window, 1, { scrollTo: scrollYPos, ease: Power4.easeOut });
 	}
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var animationDurations = exports.animationDurations = {
-	    short: 0.2,
-	    medium: 0.5
-	};
-
-	var httpStatusCodes = exports.httpStatusCodes = {
-	    ok: 200,
-	    created: 201,
-	    noContent: 204,
-	    signInIncorrectCredentials: 230
-	};
-
-	var localStorageKeys = exports.localStorageKeys = {
-	    myAssessments: "myAssessments"
-	};
 
 /***/ },
 /* 3 */
@@ -818,7 +829,7 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(2);
+	var _global = __webpack_require__(1);
 
 	var _product = __webpack_require__(5);
 
@@ -910,7 +921,7 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(2);
+	var _global = __webpack_require__(1);
 
 	var _string = __webpack_require__(8);
 
@@ -1321,7 +1332,7 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(2);
+	var _global = __webpack_require__(1);
 
 	var _category = __webpack_require__(4);
 
@@ -1554,22 +1565,17 @@
 	        var listCommentsForCategory = _.filter(this.listComments(categoryProductCode), function (ac) {
 	            return ac.categoryId === categoryId;
 	        });
-	        var reportCategory = this.reportCategory(categoryProductCode, categoryId);
 
 	        var sumOfAllPoints = 0;
-
-	        for (var i = 0; i < listCommentsForCategory.length; i++) {
-	            sumOfAllPoints += listCommentsForCategory[i].points;
-	        }
-
 	        var sumOfRedPoints = 0;
 
-	        // TODO: calculate sumOfRedPoints from the red comments in the list, not in the report
-	        for (var _i = 0; _i < reportCategory.comments.length; _i++) {
-	            var commentPoints = reportCategory.comments[_i].points;
+	        for (var i = 0; i < listCommentsForCategory.length; i++) {
+	            var listComment = listCommentsForCategory[i];
 
-	            if (commentPoints) {
-	                sumOfRedPoints += commentPoints;
+	            sumOfAllPoints += listComment.points;
+
+	            if (listComment.isRedSelected) {
+	                sumOfRedPoints += listComment.points;
 	            }
 	        }
 
@@ -2418,9 +2424,9 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(2);
+	var _global = __webpack_require__(1);
 
-	var _animator = __webpack_require__(1);
+	var _animator = __webpack_require__(2);
 
 	var _store = __webpack_require__(7);
 
@@ -2558,7 +2564,7 @@
 	});
 	exports.default = undefined;
 
-	var _animator = __webpack_require__(1);
+	var _animator = __webpack_require__(2);
 
 	var _category = __webpack_require__(4);
 

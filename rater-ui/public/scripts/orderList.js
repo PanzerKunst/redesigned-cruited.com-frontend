@@ -451,7 +451,8 @@
 	};
 
 	var localStorageKeys = exports.localStorageKeys = {
-	    myAssessments: "myAssessments"
+	    myAssessments: "myAssessments",
+	    currentlyAssessedDoc: "currentlyAssessedDoc"
 	};
 
 /***/ },

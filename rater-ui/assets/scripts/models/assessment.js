@@ -217,22 +217,17 @@ const Assessment = {
     categoryScore(categoryId) {
         const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
         const listCommentsForCategory = _.filter(this.listComments(categoryProductCode), ac => ac.categoryId === categoryId);
-        const reportCategory = this.reportCategory(categoryProductCode, categoryId);
 
         let sumOfAllPoints = 0;
-
-        for (let i = 0; i < listCommentsForCategory.length; i++) {
-            sumOfAllPoints += listCommentsForCategory[i].points;
-        }
-
         let sumOfRedPoints = 0;
 
-        // TODO: calculate sumOfRedPoints from the red comments in the list, not in the report
-        for (let i = 0; i < reportCategory.comments.length; i++) {
-            const commentPoints = reportCategory.comments[i].points;
+        for (let i = 0; i < listCommentsForCategory.length; i++) {
+            const listComment = listCommentsForCategory[i];
 
-            if (commentPoints) {
-                sumOfRedPoints += commentPoints;
+            sumOfAllPoints += listComment.points;
+
+            if (listComment.isRedSelected) {
+                sumOfRedPoints += listComment.points;
             }
         }
 

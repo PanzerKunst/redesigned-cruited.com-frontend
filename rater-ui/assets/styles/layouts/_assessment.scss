@@ -54,6 +54,12 @@ $white-section-padding: 2em 1em 1em;
       margin: $content-element-margin-bottom 0;
     }
 
+    .job-ad-link {
+      display: inline-block;
+
+      margin-top: $content-element-margin-bottom;
+    }
+
     .order-tags {
       margin-bottom: $content-element-margin-bottom;
     }

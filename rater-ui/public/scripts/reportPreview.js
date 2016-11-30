@@ -46,15 +46,17 @@
 
 	"use strict";
 
-	var _browser = __webpack_require__(1);
+	var _global = __webpack_require__(1);
+
+	var _browser = __webpack_require__(2);
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _string = __webpack_require__(2);
+	var _string = __webpack_require__(3);
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _expandablePanel = __webpack_require__(3);
+	var _expandablePanel = __webpack_require__(4);
 
 	var _category = __webpack_require__(5);
 
@@ -158,7 +160,7 @@
 	            this.$tabs.on("shown.bs.tab", this._placeScoreCursors);
 	            (0, _expandablePanel.makeExpandable)(this.$expandablePanels);
 
-	            // TODO this._selectTabForSelectedProduct();
+	            this._selectTabOfCurrentlyAssessedDoc();
 	        },
 	        _initElements: function _initElements() {
 	            var $content = $("#content");
@@ -275,12 +277,12 @@
 	            $cursor.css("left", 0);
 	            TweenLite.to($cursor, 1, { left: score + "%", ease: Power4.easeInOut });
 	        },
+	        _selectTabOfCurrentlyAssessedDoc: function _selectTabOfCurrentlyAssessedDoc() {
+	            var categoryProductCode = _browser2.default.getFromLocalStorage(_global.localStorageKeys.currentlyAssessedDoc);
 
-
-	        // TODO
-	        _selectTabForSelectedProduct: function _selectTabForSelectedProduct() {
-
-	            // this.$tabs.filter(`[aria-controls=${this.state.selectedProductCode}-report-panel]`).tab("show");
+	            if (categoryProductCode) {
+	                this.$tabs.filter("[aria-controls=" + categoryProductCode + "-report-panel]").tab("show");
+	            }
 	        },
 	        _tab: function _tab(categoryProductCode) {
 	            var isActive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -792,6 +794,32 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	var animationDurations = exports.animationDurations = {
+	    short: 0.2,
+	    medium: 0.5
+	};
+
+	var httpStatusCodes = exports.httpStatusCodes = {
+	    ok: 200,
+	    created: 201,
+	    noContent: 204,
+	    signInIncorrectCredentials: 230
+	};
+
+	var localStorageKeys = exports.localStorageKeys = {
+	    myAssessments: "myAssessments",
+	    currentlyAssessedDoc: "currentlyAssessedDoc"
+	};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var Browser = {
 	    regexOfUserAgentsNotSupportingFlexbox: ["OS 8_", "OS 7_", "OS 6_", "OS 5_", "OS 4_"],
 
@@ -904,7 +932,7 @@
 	exports.default = Browser;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -931,7 +959,7 @@
 	exports.default = StringUtils;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -941,7 +969,7 @@
 	});
 	exports.makeExpandable = makeExpandable;
 
-	var _global = __webpack_require__(4);
+	var _global = __webpack_require__(1);
 
 	function makeExpandable($panels) {
 	    _.forEach($panels, function (panel) {
@@ -971,31 +999,6 @@
 	        $el.children("header").click(_toggleBody);
 	    });
 	}
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var animationDurations = exports.animationDurations = {
-	    short: 0.2,
-	    medium: 0.5
-	};
-
-	var httpStatusCodes = exports.httpStatusCodes = {
-	    ok: 200,
-	    created: 201,
-	    noContent: 204,
-	    signInIncorrectCredentials: 230
-	};
-
-	var localStorageKeys = exports.localStorageKeys = {
-	    myAssessments: "myAssessments"
-	};
 
 /***/ },
 /* 5 */
@@ -1096,7 +1099,7 @@
 	});
 	exports.default = undefined;
 
-	var _global = __webpack_require__(4);
+	var _global = __webpack_require__(1);
 
 	var _product = __webpack_require__(6);
 
