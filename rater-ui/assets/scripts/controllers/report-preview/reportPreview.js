@@ -342,10 +342,9 @@ const controller = {
                                 }
 
                                 const categoryId = categoryAndItsComments.categoryId;
-                                const categoryClasses = `category sheet-of-paper id-${categoryId}`;
 
                                 return (
-                                    <li key={categoryId} className={categoryClasses}>
+                                    <li key={categoryId} className={`category sheet-of-paper id-${categoryId}`}>
                                         <header>
                                             <div className="category-title">
                                                 <h3>{store.i18nMessages[`category.title.${categoryId}`]}</h3>

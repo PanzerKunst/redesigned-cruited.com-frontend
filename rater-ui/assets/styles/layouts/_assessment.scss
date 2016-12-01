@@ -4,6 +4,11 @@
   margin: -8px 0 0 -5px;
 }
 
+@mixin error-border {
+  border-left: 0.2em solid $brand-danger;
+  padding-left: 0.2em;  // 0.4em by default
+}
+
 $comment-id-and-points-width: 7%;
 $green-comment-width: 27.5%;
 $red-comment-width: 100% - $comment-id-and-points-width - $green-comment-width;
@@ -51,7 +56,8 @@ $white-section-padding: 2em 1em 1em;
     }
 
     .customer-comment {
-      margin: $content-element-margin-bottom 0;
+      margin-top: $content-element-margin-bottom;
+      padding-right: $spacer-unit-size;
     }
 
     .job-ad-link {
@@ -64,21 +70,16 @@ $white-section-padding: 2em 1em 1em;
       margin-bottom: $content-element-margin-bottom;
     }
 
-    .time-left {
-      margin-top: $content-element-margin-bottom;
-    }
-  }
-
-  .nav.assessment {
-    display: none;
-    @include xl-screen {
-      display: block;
+    .btn-primary {
+      margin-bottom: $content-element-margin-bottom;
     }
   }
 
   @include xl-screen {
     .nav-panel {
       position: fixed;
+      background-color: white;
+      padding: $spacer-unit-size;
     }
 
     .nav-tabs {
@@ -89,13 +90,46 @@ $white-section-padding: 2em 1em 1em;
 
         /* stylelint-disable-next-line max-nesting-depth */
         > a {
+          padding-top: 0.7em;
+          padding-bottom: 0.7em;
+
           margin: 0;
+          width: 100%;
+          font-weight: bold;
 
           border: none;
           border-radius: 0;
 
-          width: 100%;
+          /* stylelint-disable-next-line max-nesting-depth */
+          &.has-errors {
+            @include error-border;
+          }
         }
+      }
+
+      a {
+        padding: 0.2em 0.4em;
+      }
+
+      > .active,
+      > .active > a {
+        background-color: $gradient-light-grey;
+      }
+    }
+  }
+
+  .nav.assessment {
+    display: none;
+    @include xl-screen {
+      display: block;
+    }
+
+    a {
+      display: inline-block;
+      font-size: 0.85em;
+
+      &.has-errors {
+        @include error-border;
       }
     }
   }
@@ -252,6 +286,10 @@ $white-section-padding: 2em 1em 1em;
     > .comment-paragraph {
       padding-right: 2.5em;
       min-height: 8em; // To have enough space for all buttons
+
+      &.has-errors {
+        @include error-border;
+      }
     }
 
     > .fa,
@@ -295,6 +333,10 @@ $white-section-padding: 2em 1em 1em;
 
     &.checked::after {
       color: $primary-btn-color;
+    }
+
+    &.has-errors::after {
+      color: $brand-danger;
     }
   }
 

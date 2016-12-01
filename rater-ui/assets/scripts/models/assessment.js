@@ -100,9 +100,7 @@ const Assessment = {
             return false;
         }
 
-        for (let i = 0; i < listCommentsForCategory.length; i++) {
-            const c = listCommentsForCategory[i];
-
+        for (const c of listCommentsForCategory) {
             if (!c.isGreenSelected && !c.isRedSelected) {
                 return false;
             }
@@ -198,12 +196,8 @@ const Assessment = {
 
         const categories = _.values(docReportCategoriesMap);
 
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
-
-            for (let j = 0; j < category.comments.length; j++) {
-                const comment = category.comments[j];
-
+        for (const category of categories) {
+            for (const comment of category.comments) {
                 if (!comment.isChecked) {
                     return false;
                 }
@@ -221,9 +215,7 @@ const Assessment = {
         let sumOfAllPoints = 0;
         let sumOfRedPoints = 0;
 
-        for (let i = 0; i < listCommentsForCategory.length; i++) {
-            const listComment = listCommentsForCategory[i];
-
+        for (const listComment of listCommentsForCategory) {
             sumOfAllPoints += listComment.points;
 
             if (listComment.isRedSelected) {
@@ -249,8 +241,7 @@ const Assessment = {
             allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
         });
 
-        for (let i = 0; i < allCategoriesAsArray[i]; i++) {
-            const categoryId = allCategoriesAsArray[i];
+        for (const categoryId of allCategoriesAsArray) {
             const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
             const reportCategory = this.reportCategory(categoryProductCode, categoryId);
             const defaultCategory = this._defaultReportCategory(categoryProductCode, categoryId);

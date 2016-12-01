@@ -92,7 +92,6 @@ const controller = {
                                 {this._tab(Category.productCodes.coverLetter, "Cover Letter")}
                                 {this._tab(Category.productCodes.linkedinProfile, "Linkedin Profile")}
                             </ul>
-                            <DocAssessmentNav />
                         </div>
                         <div className="tab-content">
                             {this._tabPane(Category.productCodes.cv)}
@@ -162,10 +161,7 @@ const controller = {
                 this.$assessmentNavPanels.hide();
 
                 if (Browser.isXlScreen()) {
-                    const $target = $(e.target);
-                    const categoryProductCode = this._categoryProductCodeFromHash($target.attr("href"));
-
-                    this.$assessmentNavPanels.filter(`.${categoryProductCode}`).show();
+                    $(e.target).siblings(".nav.assessment").show();
                 }
             });
         },
@@ -219,10 +215,16 @@ const controller = {
             }
 
             const attr = this._tabAttr(categoryProductCode);
+            const validationErrors = store.reportFormValidationErrors ? store.reportFormValidationErrors[categoryProductCode] : null;
+
+            const linkClasses = classNames({
+                "has-errors": !_.isEmpty(validationErrors)
+            });
 
             return (
                 <li role="presentation">
-                    <a href={`#${attr}`} aria-controls={attr} role="tab" data-toggle="tab" onClick={this._handleTabClick}>{label}</a>
+                    <a href={`#${attr}`} aria-controls={attr} role="tab" data-toggle="tab" className={linkClasses} onClick={this._handleTabClick}>{label}</a>
+                    <DocAssessmentNav categoryProductCode={categoryProductCode} validationErrors={validationErrors} />
                 </li>);
         },
 
@@ -283,10 +285,11 @@ const controller = {
                     <ul className="styleless">
                     {store.assessment.categoryIds(categoryProductCode).map(categoryId => {
                         const reportCategory = store.assessment.reportCategory(categoryProductCode, categoryId, true);
+                        const validationErrors = store.reportFormValidationErrors && store.reportFormValidationErrors[categoryProductCode] ? store.reportFormValidationErrors[categoryProductCode][categoryId] : null;
 
                         reportCategory.id = categoryId;
 
-                        return <ReportCategory key={categoryId} reportCategory={reportCategory} />;
+                        return <ReportCategory key={categoryId} reportCategory={reportCategory} validationErrors={validationErrors} />;
                     })}
                     </ul>);
             }
@@ -321,13 +324,13 @@ const controller = {
         _handlePreviewBtnClick(e) {
             const $btn = $(e.currentTarget);
 
-            // TODO: before submitting:
-            // - check that all report comments are checked in all tabs
-            // - check that there are no brackets left
+            store.validateReportForm();
 
-            enableLoading($btn, "Saving");
-            this._saveCurrentlyAssessedDoc();
-            store.saveCurrentReport();
+            if (!store.reportFormValidationErrors) {
+                enableLoading($btn, "Saving");
+                this._saveCurrentlyAssessedDoc();
+                store.saveCurrentReport();
+            }
         },
 
         _categoryProductCodeFromOverallCommentTextarea($textarea) {

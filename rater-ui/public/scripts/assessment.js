@@ -70,35 +70,35 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _positionSought = __webpack_require__(12);
+	var _positionSought = __webpack_require__(13);
 
 	var _positionSought2 = _interopRequireDefault(_positionSought);
 
-	var _employerSought = __webpack_require__(13);
+	var _employerSought = __webpack_require__(14);
 
 	var _employerSought2 = _interopRequireDefault(_employerSought);
 
-	var _orderTags = __webpack_require__(14);
+	var _orderTags = __webpack_require__(15);
 
 	var _orderTags2 = _interopRequireDefault(_orderTags);
 
-	var _timeLeft = __webpack_require__(15);
+	var _timeLeft = __webpack_require__(16);
 
 	var _timeLeft2 = _interopRequireDefault(_timeLeft);
 
-	var _greenRedAssessmentComment = __webpack_require__(16);
+	var _greenRedAssessmentComment = __webpack_require__(17);
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _reportCategory = __webpack_require__(17);
+	var _reportCategory = __webpack_require__(18);
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
-	var _orderStatusChangeBtn = __webpack_require__(20);
+	var _orderStatusChangeBtn = __webpack_require__(21);
 
 	var _orderStatusChangeBtn2 = _interopRequireDefault(_orderStatusChangeBtn);
 
-	var _docAssessmentNav = __webpack_require__(21);
+	var _docAssessmentNav = __webpack_require__(22);
 
 	var _docAssessmentNav2 = _interopRequireDefault(_docAssessmentNav);
 
@@ -208,8 +208,7 @@
 	                            this._tab(_category2.default.productCodes.cv, "CV"),
 	                            this._tab(_category2.default.productCodes.coverLetter, "Cover Letter"),
 	                            this._tab(_category2.default.productCodes.linkedinProfile, "Linkedin Profile")
-	                        ),
-	                        React.createElement(_docAssessmentNav2.default, null)
+	                        )
 	                    ),
 	                    React.createElement(
 	                        "div",
@@ -282,10 +281,7 @@
 	                _this2.$assessmentNavPanels.hide();
 
 	                if (_browser2.default.isXlScreen()) {
-	                    var $target = $(e.target);
-	                    var categoryProductCode = _this2._categoryProductCodeFromHash($target.attr("href"));
-
-	                    _this2.$assessmentNavPanels.filter("." + categoryProductCode).show();
+	                    $(e.target).siblings(".nav.assessment").show();
 	                }
 	            });
 	        },
@@ -349,15 +345,21 @@
 	            }
 
 	            var attr = this._tabAttr(categoryProductCode);
+	            var validationErrors = _store2.default.reportFormValidationErrors ? _store2.default.reportFormValidationErrors[categoryProductCode] : null;
+
+	            var linkClasses = classNames({
+	                "has-errors": !_.isEmpty(validationErrors)
+	            });
 
 	            return React.createElement(
 	                "li",
 	                { role: "presentation" },
 	                React.createElement(
 	                    "a",
-	                    { href: "#" + attr, "aria-controls": attr, role: "tab", "data-toggle": "tab", onClick: this._handleTabClick },
+	                    { href: "#" + attr, "aria-controls": attr, role: "tab", "data-toggle": "tab", className: linkClasses, onClick: this._handleTabClick },
 	                    label
-	                )
+	                ),
+	                React.createElement(_docAssessmentNav2.default, { categoryProductCode: categoryProductCode, validationErrors: validationErrors })
 	            );
 	        },
 	        _tabPane: function _tabPane(categoryProductCode) {
@@ -430,10 +432,11 @@
 	                    { className: "styleless" },
 	                    _store2.default.assessment.categoryIds(categoryProductCode).map(function (categoryId) {
 	                        var reportCategory = _store2.default.assessment.reportCategory(categoryProductCode, categoryId, true);
+	                        var validationErrors = _store2.default.reportFormValidationErrors && _store2.default.reportFormValidationErrors[categoryProductCode] ? _store2.default.reportFormValidationErrors[categoryProductCode][categoryId] : null;
 
 	                        reportCategory.id = categoryId;
 
-	                        return React.createElement(_reportCategory2.default, { key: categoryId, reportCategory: reportCategory });
+	                        return React.createElement(_reportCategory2.default, { key: categoryId, reportCategory: reportCategory, validationErrors: validationErrors });
 	                    })
 	                );
 	            }
@@ -464,13 +467,13 @@
 	        _handlePreviewBtnClick: function _handlePreviewBtnClick(e) {
 	            var $btn = $(e.currentTarget);
 
-	            // TODO: before submitting:
-	            // - check that all report comments are checked in all tabs
-	            // - check that there are no brackets left
+	            _store2.default.validateReportForm();
 
-	            (0, _animator.enableLoading)($btn, "Saving");
-	            this._saveCurrentlyAssessedDoc();
-	            _store2.default.saveCurrentReport();
+	            if (!_store2.default.reportFormValidationErrors) {
+	                (0, _animator.enableLoading)($btn, "Saving");
+	                this._saveCurrentlyAssessedDoc();
+	                _store2.default.saveCurrentReport();
+	            }
 	        },
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
 	            return $textarea.closest(".tab-pane").data("productCode");
@@ -636,11 +639,28 @@
 	        styleSheets.forEach(function (styleSheet) {
 	            var styleSheetRules = styleSheet.cssRules || styleSheet.rules; // .rules for IE, .cssRules for other browsers
 
-	            if (styleSheetRules) {
-	                for (var j = 0; j < styleSheetRules.length; j++) {
-	                    var rule = styleSheetRules[j];
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = styleSheetRules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var rule = _step.value;
 
 	                    _this.allCssRules[rule.selectorText] = rule.style;
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
 	                }
 	            }
 	        });
@@ -947,6 +967,10 @@
 
 	var _product2 = _interopRequireDefault(_product);
 
+	var _comment = __webpack_require__(12);
+
+	var _comment2 = _interopRequireDefault(_comment);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var store = {
@@ -1088,6 +1112,60 @@
 	        httpRequest.open(type, url);
 	        httpRequest.setRequestHeader("Content-Type", "application/json");
 	        httpRequest.send(JSON.stringify(assessment));
+	    },
+	    validateReportForm: function validateReportForm() {
+
+	        /*
+	         * {
+	         *   cv: {
+	         *     12: {
+	         *       233: {
+	         *         areBracketsRemaining: true,
+	         *         isUnChecked: true
+	         *       },
+	         *       95: {
+	         *         areBracketsRemaining: true
+	         *       }
+	         *     },
+	         *     13: {...}
+	         *   },
+	         *
+	         *   coverLetter: {...},
+	         *
+	         *   linkedinProfile: {...}
+	         * }
+	         */
+	        var errors = {};
+
+	        _.values(_category2.default.productCodes).forEach(function (categoryProductCode) {
+	            var docErrors = {};
+
+	            store.assessment.categoryIds(categoryProductCode).forEach(function (categoryId) {
+	                var categoryErrors = {};
+
+	                store.assessment.reportCategory(categoryProductCode, categoryId).comments.forEach(function (comment) {
+	                    var commentErrors = {
+	                        areBracketsRemaining: !_comment2.default.isTextValidForReport(comment.redText),
+	                        isUnChecked: !comment.isChecked
+	                    };
+
+	                    if (commentErrors.areBracketsRemaining || commentErrors.isUnChecked) {
+	                        categoryErrors[comment.id] = commentErrors;
+	                    }
+	                });
+
+	                if (!_.isEmpty(categoryErrors)) {
+	                    docErrors[categoryId] = categoryErrors;
+	                }
+	            });
+
+	            if (!_.isEmpty(docErrors)) {
+	                errors[categoryProductCode] = docErrors;
+	            }
+	        });
+
+	        this.reportFormValidationErrors = _.isEmpty(errors) ? null : errors;
+	        this.reactComponent.forceUpdate();
 	    },
 	    _docCommentListForBackend: function _docCommentListForBackend(categoryProductCode) {
 	        var _this2 = this;
@@ -1449,11 +1527,30 @@
 	            return false;
 	        }
 
-	        for (var i = 0; i < listCommentsForCategory.length; i++) {
-	            var c = listCommentsForCategory[i];
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
 
-	            if (!c.isGreenSelected && !c.isRedSelected) {
-	                return false;
+	        try {
+	            for (var _iterator = listCommentsForCategory[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                var c = _step.value;
+
+	                if (!c.isGreenSelected && !c.isRedSelected) {
+	                    return false;
+	                }
+	            }
+	        } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion && _iterator.return) {
+	                    _iterator.return();
+	                }
+	            } finally {
+	                if (_didIteratorError) {
+	                    throw _iteratorError;
+	                }
 	            }
 	        }
 
@@ -1543,14 +1640,51 @@
 
 	        var categories = _.values(docReportCategoriesMap);
 
-	        for (var i = 0; i < categories.length; i++) {
-	            var category = categories[i];
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
 
-	            for (var j = 0; j < category.comments.length; j++) {
-	                var comment = category.comments[j];
+	        try {
+	            for (var _iterator2 = categories[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                var category = _step2.value;
+	                var _iteratorNormalCompletion3 = true;
+	                var _didIteratorError3 = false;
+	                var _iteratorError3 = undefined;
 
-	                if (!comment.isChecked) {
-	                    return false;
+	                try {
+	                    for (var _iterator3 = category.comments[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                        var comment = _step3.value;
+
+	                        if (!comment.isChecked) {
+	                            return false;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError3 = true;
+	                    _iteratorError3 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                            _iterator3.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError3) {
+	                            throw _iteratorError3;
+	                        }
+	                    }
+	                }
+	            }
+	        } catch (err) {
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                    _iterator2.return();
+	                }
+	            } finally {
+	                if (_didIteratorError2) {
+	                    throw _iteratorError2;
 	                }
 	            }
 	        }
@@ -1569,13 +1703,32 @@
 	        var sumOfAllPoints = 0;
 	        var sumOfRedPoints = 0;
 
-	        for (var i = 0; i < listCommentsForCategory.length; i++) {
-	            var listComment = listCommentsForCategory[i];
+	        var _iteratorNormalCompletion4 = true;
+	        var _didIteratorError4 = false;
+	        var _iteratorError4 = undefined;
 
-	            sumOfAllPoints += listComment.points;
+	        try {
+	            for (var _iterator4 = listCommentsForCategory[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                var listComment = _step4.value;
 
-	            if (listComment.isRedSelected) {
-	                sumOfRedPoints += listComment.points;
+	                sumOfAllPoints += listComment.points;
+
+	                if (listComment.isRedSelected) {
+	                    sumOfRedPoints += listComment.points;
+	                }
+	            }
+	        } catch (err) {
+	            _didIteratorError4 = true;
+	            _iteratorError4 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                    _iterator4.return();
+	                }
+	            } finally {
+	                if (_didIteratorError4) {
+	                    throw _iteratorError4;
+	                }
 	            }
 	        }
 
@@ -1595,14 +1748,34 @@
 	            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
 	        });
 
-	        for (var i = 0; i < allCategoriesAsArray[i]; i++) {
-	            var categoryId = allCategoriesAsArray[i];
-	            var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
-	            var reportCategory = this.reportCategory(categoryProductCode, categoryId);
-	            var defaultCategory = this._defaultReportCategory(categoryProductCode, categoryId);
+	        var _iteratorNormalCompletion5 = true;
+	        var _didIteratorError5 = false;
+	        var _iteratorError5 = undefined;
 
-	            if (!_.isEqual(reportCategory.comments, defaultCategory.comments) || !_.isEqual(reportCategory.wellDoneComment, defaultCategory.wellDoneComment)) {
-	                return true;
+	        try {
+	            for (var _iterator5 = allCategoriesAsArray[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                var categoryId = _step5.value;
+
+	                var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
+	                var reportCategory = this.reportCategory(categoryProductCode, categoryId);
+	                var defaultCategory = this._defaultReportCategory(categoryProductCode, categoryId);
+
+	                if (!_.isEqual(reportCategory.comments, defaultCategory.comments) || !_.isEqual(reportCategory.wellDoneComment, defaultCategory.wellDoneComment)) {
+	                    return true;
+	                }
+	            }
+	        } catch (err) {
+	            _didIteratorError5 = true;
+	            _iteratorError5 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                    _iterator5.return();
+	                }
+	            } finally {
+	                if (_didIteratorError5) {
+	                    throw _iteratorError5;
+	                }
 	            }
 	        }
 
@@ -1841,6 +2014,28 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	var Comment = {
+
+	    // Static
+	    isTextValidForReport: function isTextValidForReport(text) {
+	        return text.indexOf("[") === -1 && text.indexOf("]") === -1;
+	    }
+
+	    // Instance
+
+	};
+
+	exports.default = Comment;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var Component = React.createClass({
 	    displayName: "Component",
 	    render: function render() {
@@ -1866,7 +2061,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1899,7 +2094,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1982,7 +2177,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2024,7 +2219,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2191,7 +2386,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2209,7 +2404,7 @@
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _keyboard = __webpack_require__(18);
+	var _keyboard = __webpack_require__(19);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
@@ -2217,7 +2412,7 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _reportComment = __webpack_require__(19);
+	var _reportComment = __webpack_require__(20);
 
 	var _reportComment2 = _interopRequireDefault(_reportComment);
 
@@ -2231,6 +2426,8 @@
 	        };
 	    },
 	    render: function render() {
+	        var _this = this;
+
 	        var reportCategory = this.props.reportCategory;
 
 	        var liClasses = classNames({
@@ -2251,7 +2448,10 @@
 	                "ul",
 	                { className: "styleless" },
 	                reportCategory.comments.map(function (comment) {
-	                    return React.createElement(_reportComment2.default, { key: comment.id, comment: comment });
+	                    var commentId = comment.id;
+	                    var validationErrors = _this.props.validationErrors ? _this.props.validationErrors[commentId] : null;
+
+	                    return React.createElement(_reportComment2.default, { key: commentId, comment: comment, validationErrors: validationErrors });
 	                })
 	            ),
 	            React.createElement(
@@ -2292,7 +2492,7 @@
 	        }
 	    },
 	    _makeCommentsSortable: function _makeCommentsSortable() {
-	        var _this = this;
+	        var _this2 = this;
 
 	        if (!_store2.default.isOrderReadOnly()) {
 
@@ -2300,7 +2500,7 @@
 	            new Sortable(this.$commentList.get(0), {
 	                animation: 150,
 	                onUpdate: function onUpdate(e) {
-	                    return _store2.default.handleReportCommentsReorder(_this.props.reportCategory.id, e.oldIndex, e.newIndex);
+	                    return _store2.default.handleReportCommentsReorder(_this2.props.reportCategory.id, e.oldIndex, e.newIndex);
 	                },
 	                handle: ".fa-arrows"
 	            });
@@ -2384,7 +2584,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2414,7 +2614,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2428,6 +2628,10 @@
 
 	var _animator = __webpack_require__(2);
 
+	var _comment = __webpack_require__(12);
+
+	var _comment2 = _interopRequireDefault(_comment);
+
 	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
@@ -2438,6 +2642,7 @@
 	    displayName: "Component",
 	    render: function render() {
 	        var c = this.props.comment;
+	        var validationErrors = this.props.validationErrors;
 
 	        var liClasses = classNames({
 	            "report-comment": true,
@@ -2445,9 +2650,15 @@
 	            "well-done": c.isWellDone
 	        });
 
+	        var paragraphClasses = classNames({
+	            "comment-paragraph": true,
+	            "has-errors": validationErrors && validationErrors.areBracketsRemaining
+	        });
+
 	        var checkboxClasses = classNames({
 	            "report-comment-checkbox": true,
-	            checked: c.isChecked
+	            checked: c.isChecked,
+	            "has-errors": validationErrors && validationErrors.isUnChecked
 	        });
 
 	        return React.createElement(
@@ -2456,7 +2667,7 @@
 	            React.createElement("button", { type: "button", className: "styleless fa fa-arrows fa-fw" }),
 	            React.createElement(
 	                "p",
-	                { className: "comment-paragraph", onBlur: this._handleParagraphBlur },
+	                { className: paragraphClasses, onBlur: this._handleParagraphBlur },
 	                c.redText
 	            ),
 	            React.createElement("span", { className: checkboxClasses, onClick: this._handleCheckboxClick }),
@@ -2477,10 +2688,15 @@
 	    },
 	    _handleParagraphBlur: function _handleParagraphBlur(e) {
 	        var c = this.props.comment;
+	        var $p = $(e.currentTarget);
 
-	        c.redText = $(e.currentTarget).text();
+	        c.redText = $p.text();
 
 	        _store2.default.updateCommentInListAndReport(c);
+
+	        if ($p.hasClass("has-errors") && _comment2.default.isTextValidForReport(c.redText)) {
+	            _store2.default.validateReportForm();
+	        }
 	    },
 	    _handleResetClick: function _handleResetClick() {
 	        if (!_store2.default.isOrderReadOnly()) {
@@ -2499,13 +2715,17 @@
 	            });
 	        }
 	    },
-	    _handleCheckboxClick: function _handleCheckboxClick() {
+	    _handleCheckboxClick: function _handleCheckboxClick(e) {
 	        if (!_store2.default.isOrderReadOnly()) {
 	            var updatedComment = this.props.comment;
 
 	            updatedComment.isChecked = updatedComment.isChecked ? false : true;
 
 	            _store2.default.updateReportCommentIfExists(updatedComment);
+
+	            if ($(e.currentTarget).hasClass("has-errors") && updatedComment.isChecked) {
+	                _store2.default.validateReportForm();
+	            }
 	        }
 	    }
 	});
@@ -2513,7 +2733,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2554,7 +2774,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2566,10 +2786,6 @@
 
 	var _animator = __webpack_require__(2);
 
-	var _category = __webpack_require__(4);
-
-	var _category2 = _interopRequireDefault(_category);
-
 	var _store = __webpack_require__(7);
 
 	var _store2 = _interopRequireDefault(_store);
@@ -2579,35 +2795,29 @@
 	var Component = React.createClass({
 	    displayName: "Component",
 	    render: function render() {
-	        var _this = this;
-
 	        if (!_store2.default.assessment) {
 	            return null;
 	        }
 
+	        var categoryProductCode = this.props.categoryProductCode;
+
 	        return React.createElement(
 	            "section",
-	            null,
-	            _.values(_category2.default.productCodes).map(function (categoryProductCode) {
-	                return React.createElement(
-	                    "div",
-	                    { key: categoryProductCode, className: "nav assessment " + categoryProductCode },
-	                    React.createElement(
-	                        "ul",
-	                        { className: "styleless" },
-	                        _this._categoryLinks(categoryProductCode)
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        null,
-	                        React.createElement(
-	                            "a",
-	                            { href: "#" + categoryProductCode + "-report-form", onClick: _this._handleScrollToLinkClick },
-	                            "Report form"
-	                        )
-	                    )
-	                );
-	            })
+	            { key: categoryProductCode, className: "nav assessment " + categoryProductCode },
+	            React.createElement(
+	                "ul",
+	                { className: "styleless" },
+	                this._categoryLinks(categoryProductCode)
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "centered-contents" },
+	                React.createElement(
+	                    "a",
+	                    { href: "#" + categoryProductCode + "-report-form", onClick: this._handleScrollToLinkClick },
+	                    "Report form"
+	                )
+	            )
 	        );
 	    },
 	    componentDidUpdate: function componentDidUpdate() {
@@ -2617,15 +2827,21 @@
 	        this.$siteHeader = $("#container").children("header");
 	    },
 	    _categoryLinks: function _categoryLinks(categoryProductCode) {
-	        var _this2 = this;
+	        var _this = this;
 
 	        return _store2.default.assessment.categoryIds(categoryProductCode).map(function (categoryId) {
+	            var validationErrorsForThisCategory = _this.props.validationErrors ? _this.props.validationErrors[categoryId] : null;
+
+	            var linkClasses = classNames({
+	                "has-errors": !_.isEmpty(validationErrorsForThisCategory)
+	            });
+
 	            return React.createElement(
 	                "li",
 	                { key: categoryId },
 	                React.createElement(
 	                    "a",
-	                    { href: "#list-category-" + categoryId, onClick: _this2._handleScrollToLinkClick },
+	                    { href: "#list-category-" + categoryId, onClick: _this._handleScrollToLinkClick, className: linkClasses },
 	                    _store2.default.i18nMessages["category.title." + categoryId]
 	                )
 	            );

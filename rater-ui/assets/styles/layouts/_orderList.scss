@@ -100,7 +100,7 @@
     > button,
     > a {
       padding: 0.5em 0.6em;
-      font-size: 1.5em;
+      font-size: 1.3em;
       color: $grey;
     }
 
@@ -159,7 +159,7 @@
 
       &:hover,
       &.selected {
-        background-color: $well-border-color;
+        background-color: $gradient-light-grey;
       }
     }
 

@@ -1,10 +1,12 @@
 import {animationDurations} from "../../global";
 import {fadeOut} from "../../services/animator";
+import Comment from "../../models/comment";
 import store from "./store";
 
 const Component = React.createClass({
     render() {
         const c = this.props.comment;
+        const validationErrors = this.props.validationErrors;
 
         const liClasses = classNames({
             "report-comment": true,
@@ -12,15 +14,21 @@ const Component = React.createClass({
             "well-done": c.isWellDone
         });
 
+        const paragraphClasses = classNames({
+            "comment-paragraph": true,
+            "has-errors": validationErrors && validationErrors.areBracketsRemaining
+        });
+
         const checkboxClasses = classNames({
             "report-comment-checkbox": true,
-            checked: c.isChecked
+            checked: c.isChecked,
+            "has-errors": validationErrors && validationErrors.isUnChecked
         });
 
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
                 <button type="button" className="styleless fa fa-arrows fa-fw" />
-                <p className="comment-paragraph" onBlur={this._handleParagraphBlur}>{c.redText}</p>
+                <p className={paragraphClasses} onBlur={this._handleParagraphBlur}>{c.redText}</p>
                 <span className={checkboxClasses} onClick={this._handleCheckboxClick}/>
                 <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />
                 <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
@@ -42,10 +50,15 @@ const Component = React.createClass({
 
     _handleParagraphBlur(e) {
         const c = this.props.comment;
+        const $p = $(e.currentTarget);
 
-        c.redText = $(e.currentTarget).text();
+        c.redText = $p.text();
 
         store.updateCommentInListAndReport(c);
+
+        if ($p.hasClass("has-errors") && Comment.isTextValidForReport(c.redText)) {
+            store.validateReportForm();
+        }
     },
 
     _handleResetClick() {
@@ -63,13 +76,17 @@ const Component = React.createClass({
         }
     },
 
-    _handleCheckboxClick() {
+    _handleCheckboxClick(e) {
         if (!store.isOrderReadOnly()) {
             const updatedComment = this.props.comment;
 
             updatedComment.isChecked = updatedComment.isChecked ? false : true;
 
             store.updateReportCommentIfExists(updatedComment);
+
+            if ($(e.currentTarget).hasClass("has-errors") && updatedComment.isChecked) {
+                store.validateReportForm();
+            }
         }
     }
 });

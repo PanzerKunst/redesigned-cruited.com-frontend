@@ -5,6 +5,7 @@ import Order from "../../models/order";
 import Assessment from "../../models/assessment";
 import Category from "../../models/category";
 import Product from "../../models/product";
+import Comment from "../../models/comment";
 
 const store = {
     reactComponent: null,
@@ -165,6 +166,61 @@ const store = {
         httpRequest.open(type, url);
         httpRequest.setRequestHeader("Content-Type", "application/json");
         httpRequest.send(JSON.stringify(assessment));
+    },
+
+    validateReportForm() {
+
+        /*
+         * {
+         *   cv: {
+         *     12: {
+         *       233: {
+         *         areBracketsRemaining: true,
+         *         isUnChecked: true
+         *       },
+         *       95: {
+         *         areBracketsRemaining: true
+         *       }
+         *     },
+         *     13: {...}
+         *   },
+         *
+         *   coverLetter: {...},
+         *
+         *   linkedinProfile: {...}
+         * }
+         */
+        const errors = {};
+
+        _.values(Category.productCodes).forEach(categoryProductCode => {
+            const docErrors = {};
+
+            store.assessment.categoryIds(categoryProductCode).forEach(categoryId => {
+                const categoryErrors = {};
+
+                store.assessment.reportCategory(categoryProductCode, categoryId).comments.forEach(comment => {
+                    const commentErrors = {
+                        areBracketsRemaining: !Comment.isTextValidForReport(comment.redText),
+                        isUnChecked: !comment.isChecked
+                    };
+
+                    if (commentErrors.areBracketsRemaining || commentErrors.isUnChecked) {
+                        categoryErrors[comment.id] = commentErrors;
+                    }
+                });
+
+                if (!_.isEmpty(categoryErrors)) {
+                    docErrors[categoryId] = categoryErrors;
+                }
+            });
+
+            if (!_.isEmpty(docErrors)) {
+                errors[categoryProductCode] = docErrors;
+            }
+        });
+
+        this.reportFormValidationErrors = _.isEmpty(errors) ? null : errors;
+        this.reactComponent.forceUpdate();
     },
 
     _docCommentListForBackend(categoryProductCode) {

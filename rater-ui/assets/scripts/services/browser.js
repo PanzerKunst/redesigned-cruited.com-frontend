@@ -19,12 +19,8 @@ const Browser = {
         styleSheets.forEach(styleSheet => {
             const styleSheetRules = styleSheet.cssRules || styleSheet.rules;  // .rules for IE, .cssRules for other browsers
 
-            if (styleSheetRules) {
-                for (let j = 0; j < styleSheetRules.length; j++) {
-                    const rule = styleSheetRules[j];
-
-                    this.allCssRules[rule.selectorText] = rule.style;
-                }
+            for (const rule of styleSheetRules) {
+                this.allCssRules[rule.selectorText] = rule.style;
             }
         });
 

@@ -26,9 +26,12 @@ const Component = React.createClass({
                 <h3>{store.i18nMessages[`category.title.${reportCategory.id}`]}</h3>
                 {this._wellDoneComment()}
                 <ul className="styleless">
-                {reportCategory.comments.map(comment =>
-                        <ReportComment key={comment.id} comment={comment} />
-                )}
+                {reportCategory.comments.map(comment => {
+                    const commentId = comment.id;
+                    const validationErrors = this.props.validationErrors ? this.props.validationErrors[commentId] : null;
+
+                    return <ReportComment key={commentId} comment={comment} validationErrors={validationErrors} />;
+                })}
                 </ul>
                 <div className="comment-composer hidden">
                     <textarea className="form-control" onKeyUp={this._handleComposerKeyUp} />

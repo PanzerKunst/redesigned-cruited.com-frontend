@@ -1,5 +1,4 @@
 import {scrollTo} from "../../services/animator";
-import Category from "../../models/category";
 import store from "./store";
 
 const Component = React.createClass({
@@ -8,18 +7,16 @@ const Component = React.createClass({
             return null;
         }
 
+        const categoryProductCode = this.props.categoryProductCode;
+
         return (
-            <section>
-                {_.values(Category.productCodes).map(categoryProductCode => (
-                        <div key={categoryProductCode} className={`nav assessment ${categoryProductCode}`}>
-                            <ul className="styleless">
-                                {this._categoryLinks(categoryProductCode)}
-                            </ul>
-                            <div>
-                                <a href={`#${categoryProductCode}-report-form`} onClick={this._handleScrollToLinkClick}>Report form</a>
-                            </div>
-                        </div>)
-                )}
+            <section key={categoryProductCode} className={`nav assessment ${categoryProductCode}`}>
+                <ul className="styleless">
+                    {this._categoryLinks(categoryProductCode)}
+                </ul>
+                <div className="centered-contents">
+                    <a href={`#${categoryProductCode}-report-form`} onClick={this._handleScrollToLinkClick}>Report form</a>
+                </div>
             </section>);
     },
 
@@ -32,11 +29,18 @@ const Component = React.createClass({
     },
 
     _categoryLinks(categoryProductCode) {
-        return store.assessment.categoryIds(categoryProductCode).map(categoryId => (
+        return store.assessment.categoryIds(categoryProductCode).map(categoryId => {
+            const validationErrorsForThisCategory = this.props.validationErrors ? this.props.validationErrors[categoryId] : null;
+
+            const linkClasses = classNames({
+                "has-errors": !_.isEmpty(validationErrorsForThisCategory)
+            });
+
+            return (
                 <li key={categoryId}>
-                    <a href={`#list-category-${categoryId}`} onClick={this._handleScrollToLinkClick}>{store.i18nMessages[`category.title.${categoryId}`]}</a>
-                </li>)
-        );
+                    <a href={`#list-category-${categoryId}`} onClick={this._handleScrollToLinkClick} className={linkClasses}>{store.i18nMessages[`category.title.${categoryId}`]}</a>
+                </li>);
+        });
     },
 
     _handleScrollToLinkClick(e) {
