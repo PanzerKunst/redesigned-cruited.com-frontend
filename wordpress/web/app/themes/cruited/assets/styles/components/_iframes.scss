@@ -14,6 +14,13 @@
     }
 }
 
+.unionen-egen-linkedin .main iframe {
+    height: 32em;
+    @include medium-screen {
+        height: 25em;
+    }
+}
+
 #ycbmiframecruited {
     width: $small-content-width - 2*$spacer-unit-size;
     @include medium-screen {
