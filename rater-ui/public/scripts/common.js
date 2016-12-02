@@ -71,7 +71,11 @@
 	        this.$contentOverlayWhenMenuOpen = this.$siteHeader.find("#content-overlay-when-menu-open");
 	    },
 	    _initEvents: function _initEvents() {
-	        this.$window.scroll(_.debounce(this._onScroll.bind(this), 15));
+	        var _this = this;
+
+	        this.$window.scroll(_.debounce(function () {
+	            return _this._onScroll();
+	        }, 15));
 	        this._initMenuEvents();
 	    },
 	    _initMenuEvents: function _initMenuEvents() {
@@ -84,13 +88,13 @@
 	        this.$siteHeader.toggleClass("scrolled-down", isScrolledDownEnough);
 	    },
 	    _toggleMenu: function _toggleMenu() {
-	        var _this = this;
+	        var _this2 = this;
 
 	        if (this.$siteHeader.hasClass("menu-open")) {
 	            TweenLite.to(this.$menu, _global.animationDurations.short, {
 	                opacity: 0,
 	                onComplete: function onComplete() {
-	                    _this.$menu.css({ display: "none" });
+	                    _this2.$menu.css({ display: "none" });
 	                }
 	            });
 

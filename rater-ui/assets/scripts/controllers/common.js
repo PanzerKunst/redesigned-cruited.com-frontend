@@ -20,7 +20,7 @@ const CommonController = {
     },
 
     _initEvents() {
-        this.$window.scroll(_.debounce(this._onScroll.bind(this), 15));
+        this.$window.scroll(_.debounce(() => this._onScroll(), 15));
         this._initMenuEvents();
     },
 

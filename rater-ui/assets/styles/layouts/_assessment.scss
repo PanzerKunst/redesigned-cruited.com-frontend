@@ -55,15 +55,17 @@ $white-section-padding: 2em 1em 1em;
       }
     }
 
-    .customer-comment {
+    .customer-comment,
+    .job-ad-link {
       margin-top: $content-element-margin-bottom;
       padding-right: $spacer-unit-size;
     }
 
     .job-ad-link {
       display: inline-block;
+      max-width: 100%;
 
-      margin-top: $content-element-margin-bottom;
+      @include ellipsis;
     }
 
     .order-tags {
@@ -107,10 +109,6 @@ $white-section-padding: 2em 1em 1em;
         }
       }
 
-      a {
-        padding: 0.2em 0.4em;
-      }
-
       > .active,
       > .active > a {
         background-color: $gradient-light-grey;
@@ -124,13 +122,55 @@ $white-section-padding: 2em 1em 1em;
       display: block;
     }
 
+    $checkbox-width: 10%;
+    $link-width: 100% - $checkbox-width;
+
+    .fa-check {
+      width: $checkbox-width;
+      color: $well-border-color;
+      padding-left: 0.3em;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+
+      > a {
+        width: $link-width;
+      }
+
+      &.active {
+        background-color: $sky-blue;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > a {
+          color: white;
+        }
+      }
+
+      &.all-selected > .fa {
+        color: $primary-btn-color;
+      }
+    }
+
     a {
       display: inline-block;
-      font-size: 0.85em;
 
-      &.has-errors {
-        @include error-border;
+      font-size: 0.85em;
+      color: $dark-grey;
+
+      padding: 0.4em 0;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
       }
+    }
+
+    > a {
+      text-transform: uppercase;
+      margin-left: $checkbox-width;
+      border-top: 1px solid $well-border-color;
     }
   }
 
@@ -368,6 +408,20 @@ $white-section-padding: 2em 1em 1em;
         > section {
           float: left;
         }
+      }
+    }
+
+    .nav.assessment li {
+      display: block;
+      @include clearfix;
+
+      > .fa,
+      > a {
+        float: left;
+      }
+
+      > .fa {
+        padding-top: 0.6em;
       }
     }
 

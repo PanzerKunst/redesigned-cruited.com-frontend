@@ -94,7 +94,24 @@ const Assessment = {
 
     areAllListCommentsSelected(categoryProductCode) {
         const listComments = this._listCommentsFromLocalStorage();
-        const listCommentsForCategory = listComments ? listComments[categoryProductCode] : null;
+        const listCommentsForDoc = listComments ? listComments[categoryProductCode] : null;
+
+        if (!listCommentsForDoc) {
+            return false;
+        }
+
+        for (const c of listCommentsForDoc) {
+            if (!c.isGreenSelected && !c.isRedSelected) {
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    areListCommentsSelected(categoryProductCode, categoryId) {
+        const listComments = this._listCommentsFromLocalStorage();
+        const listCommentsForCategory = listComments ? _.filter(listComments[categoryProductCode], ["categoryId", categoryId]) : null;
 
         if (!listCommentsForCategory) {
             return false;

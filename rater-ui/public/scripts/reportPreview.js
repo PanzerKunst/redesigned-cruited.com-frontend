@@ -224,25 +224,21 @@
 	                return React.createElement(
 	                    "span",
 	                    null,
-	                    "`$",
-	                    order.positionSought,
-	                    "-$",
-	                    order.employerSought,
-	                    "`"
+	                    order.positionSought + " - " + order.employerSought
 	                );
 	            }
 	            if (order.positionSought) {
 	                return React.createElement(
 	                    "span",
 	                    null,
-	                    "order.positionSought"
+	                    order.positionSought
 	                );
 	            }
 	            if (order.employerSought) {
 	                return React.createElement(
 	                    "span",
 	                    null,
-	                    "order.employerSought"
+	                    order.employerSought
 	                );
 	            }
 

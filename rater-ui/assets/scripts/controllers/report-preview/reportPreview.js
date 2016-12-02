@@ -114,13 +114,13 @@ const controller = {
             const order = store.order;
 
             if (order.positionSought && order.employerSought) {
-                return <span>`${order.positionSought}-${order.employerSought}`</span>;
+                return <span>{`${order.positionSought} - ${order.employerSought}`}</span>;
             }
             if (order.positionSought) {
-                return <span>order.positionSought</span>;
+                return <span>{order.positionSought}</span>;
             }
             if (order.employerSought) {
-                return <span>order.employerSought</span>;
+                return <span>{order.employerSought}</span>;
             }
 
             return null;

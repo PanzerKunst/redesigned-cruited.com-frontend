@@ -9,14 +9,27 @@ const Component = React.createClass({
 
         const categoryProductCode = this.props.categoryProductCode;
 
+        if (!this.categoryIds) {
+            this.categoryIds = store.assessment.categoryIds(categoryProductCode);
+        }
+
         return (
-            <section key={categoryProductCode} className={`nav assessment ${categoryProductCode}`}>
+            <section ref="root" className={`nav assessment ${categoryProductCode}`}>
                 <ul className="styleless">
-                    {this._categoryLinks(categoryProductCode)}
+                    {this.categoryIds.map(categoryId => {
+                        const liClasses = classNames({
+                            active: this._isCategoryCurrentlyActive(categoryId),
+                            "all-selected": store.assessment.areListCommentsSelected(this.props.categoryProductCode, categoryId)
+                        });
+
+                        return (
+                            <li key={categoryId} className={liClasses} data-category-id={categoryId}>
+                                <i className="fa fa-check" aria-hidden="true"></i>
+                                <a href={`#list-category-${categoryId}`} onClick={this._handleScrollToLinkClick}>{store.i18nMessages[`category.title.${categoryId}`]}</a>
+                            </li>);
+                    })}
                 </ul>
-                <div className="centered-contents">
-                    <a href={`#${categoryProductCode}-report-form`} onClick={this._handleScrollToLinkClick}>Report form</a>
-                </div>
+                <a href={`#${categoryProductCode}-report-form`} onClick={this._handleScrollToLinkClick}>Report form</a>
             </section>);
     },
 
@@ -25,22 +38,22 @@ const Component = React.createClass({
     },
 
     _initElements() {
-        this.$siteHeader = $("#container").children("header");
+        const $container = $("#container");
+
+        this.$siteHeader = $container.children("header");
+        this.$navPanel = $container.find(".nav-panel");
+
+        const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
+
+        this.$listItems = $rootEl.find("li");
     },
 
-    _categoryLinks(categoryProductCode) {
-        return store.assessment.categoryIds(categoryProductCode).map(categoryId => {
-            const validationErrorsForThisCategory = this.props.validationErrors ? this.props.validationErrors[categoryId] : null;
+    _isCategoryCurrentlyActive(categoryId) {
+        if (!this.$listItems) {
+            return false;
+        }
 
-            const linkClasses = classNames({
-                "has-errors": !_.isEmpty(validationErrorsForThisCategory)
-            });
-
-            return (
-                <li key={categoryId}>
-                    <a href={`#list-category-${categoryId}`} onClick={this._handleScrollToLinkClick} className={linkClasses}>{store.i18nMessages[`category.title.${categoryId}`]}</a>
-                </li>);
-        });
+        return this.$listItems.filter(`[data-category-id="${categoryId}"]`).hasClass("active");
     },
 
     _handleScrollToLinkClick(e) {

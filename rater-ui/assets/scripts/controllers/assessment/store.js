@@ -66,10 +66,6 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    updateOverallComment(categoryProductCode, commentText) {
-        this.assessment.updateOverallComment(categoryProductCode, commentText);
-    },
-
     updateReportCategory(category, isRefreshRequired) {
         this.assessment.updateReportCategory(category);
 

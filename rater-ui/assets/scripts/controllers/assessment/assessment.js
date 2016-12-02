@@ -80,7 +80,7 @@ const controller = {
                                 <p>{order.customer.emailAddress}</p>
                             </section>
                             <section className="order-details-section third">
-                                {this._previewOrViewBtn(order)}
+                                {this._previewOrViewBtn()}
                                 <OrderStatusChangeBtn />
                                 <TimeLeft order={order} />
                             </section>
@@ -100,7 +100,7 @@ const controller = {
                         </div>
 
                         <div className="centered-contents">
-                            {this._previewOrViewBtn(order)}
+                            {this._previewOrViewBtn()}
                         </div>
                     </div>
                 </div>);
@@ -146,6 +146,7 @@ const controller = {
         _initEvents() {
             this._showCorrectAssessmentNavPanels();
             this.$window.resize(() => this._setNavPanelLocation());
+            this.$window.scroll(_.debounce(() => this._updateActiveCategoryInAssessmentNav(), 15));
         },
 
         _setNavPanelLocation() {
@@ -162,6 +163,7 @@ const controller = {
 
                 if (Browser.isXlScreen()) {
                     $(e.target).siblings(".nav.assessment").show();
+                    this._updateActiveCategoryInAssessmentNav();
                 }
             });
         },
@@ -184,7 +186,7 @@ const controller = {
             if (!jobAdUrl) {
                 return null;
             }
-            return <a href={jobAdUrl} target="_blank" className="job-ad-link">Job ad</a>;
+            return <a href={jobAdUrl} target="_blank" className="job-ad-link">{jobAdUrl}</a>;
         },
 
         _linkedinProfilePic(linkedinProfile) {
@@ -318,7 +320,7 @@ const controller = {
             const textareaValue = $textarea.val();
             const overallComment = textareaValue === "" ? null : textareaValue;
 
-            store.updateOverallComment(categoryProductCode, overallComment);
+            store.assessment.updateOverallComment(categoryProductCode, overallComment);
         },
 
         _handlePreviewBtnClick(e) {
@@ -337,15 +339,35 @@ const controller = {
             return $textarea.closest(".tab-pane").data("productCode");
         },
 
-        _categoryProductCodeFromHash(hash) {
-            return hash.substring(1, hash.indexOf("-"));
+        _saveCurrentlyAssessedDoc() {
+            Browser.saveInLocalStorage(localStorageKeys.currentlyAssessedDoc, this._currentlyActiveCategoryProductCode());
         },
 
-        _saveCurrentlyAssessedDoc() {
-            const $selectedTab = this.$tabListItems.filter(".active");
-            const hash = $selectedTab.children().attr("href");
+        _updateActiveCategoryInAssessmentNav() {
+            if (Browser.isXlScreen()) {
 
-            Browser.saveInLocalStorage(localStorageKeys.currentlyAssessedDoc, this._categoryProductCodeFromHash(hash));
+                const categoryIdsForCurrentDoc = store.assessment.categoryIds(this._currentlyActiveCategoryProductCode());
+
+                for (const categoryId of categoryIdsForCurrentDoc) {
+                    const navPanelTopPos = this.$navPanel.offset().top;
+
+                    const $categoryPanel = $(`#list-category-${categoryId}`);
+                    const categoryPanelTopPos = $categoryPanel.offset().top;
+                    const categoryPanelBottomPos = categoryPanelTopPos + $categoryPanel.height();
+
+                    if (navPanelTopPos >= categoryPanelTopPos && navPanelTopPos <= categoryPanelBottomPos) {
+                        $(`[href="#list-category-${categoryId}"]`).parent().addClass("active");
+                    } else {
+                        $(`[href="#list-category-${categoryId}"]`).parent().removeClass("active");
+                    }
+                }
+            }
+        },
+
+        _currentlyActiveCategoryProductCode() {
+            const activeLinkHref = this.$tabListItems.filter(".active").children().attr("href");
+
+            return activeLinkHref.substring(1, activeLinkHref.indexOf("-"));
         }
     })
 };

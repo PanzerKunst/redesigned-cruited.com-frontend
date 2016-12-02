@@ -194,7 +194,7 @@
 	                        React.createElement(
 	                            "section",
 	                            { className: "order-details-section third" },
-	                            this._previewOrViewBtn(order),
+	                            this._previewOrViewBtn(),
 	                            React.createElement(_orderStatusChangeBtn2.default, null),
 	                            React.createElement(_timeLeft2.default, { order: order })
 	                        )
@@ -220,7 +220,7 @@
 	                    React.createElement(
 	                        "div",
 	                        { className: "centered-contents" },
-	                        this._previewOrViewBtn(order)
+	                        this._previewOrViewBtn()
 	                    )
 	                )
 	            );
@@ -266,6 +266,9 @@
 	            this.$window.resize(function () {
 	                return _this._setNavPanelLocation();
 	            });
+	            this.$window.scroll(_.debounce(function () {
+	                return _this._updateActiveCategoryInAssessmentNav();
+	            }, 15));
 	        },
 	        _setNavPanelLocation: function _setNavPanelLocation() {
 	            if (_browser2.default.isXlScreen()) {
@@ -282,6 +285,7 @@
 
 	                if (_browser2.default.isXlScreen()) {
 	                    $(e.target).siblings(".nav.assessment").show();
+	                    _this2._updateActiveCategoryInAssessmentNav();
 	                }
 	            });
 	        },
@@ -308,7 +312,7 @@
 	            return React.createElement(
 	                "a",
 	                { href: jobAdUrl, target: "_blank", className: "job-ad-link" },
-	                "Job ad"
+	                jobAdUrl
 	            );
 	        },
 	        _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
@@ -462,7 +466,7 @@
 	            var textareaValue = $textarea.val();
 	            var overallComment = textareaValue === "" ? null : textareaValue;
 
-	            _store2.default.updateOverallComment(categoryProductCode, overallComment);
+	            _store2.default.assessment.updateOverallComment(categoryProductCode, overallComment);
 	        },
 	        _handlePreviewBtnClick: function _handlePreviewBtnClick(e) {
 	            var $btn = $(e.currentTarget);
@@ -478,14 +482,54 @@
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
 	            return $textarea.closest(".tab-pane").data("productCode");
 	        },
-	        _categoryProductCodeFromHash: function _categoryProductCodeFromHash(hash) {
-	            return hash.substring(1, hash.indexOf("-"));
-	        },
 	        _saveCurrentlyAssessedDoc: function _saveCurrentlyAssessedDoc() {
-	            var $selectedTab = this.$tabListItems.filter(".active");
-	            var hash = $selectedTab.children().attr("href");
+	            _browser2.default.saveInLocalStorage(_global.localStorageKeys.currentlyAssessedDoc, this._currentlyActiveCategoryProductCode());
+	        },
+	        _updateActiveCategoryInAssessmentNav: function _updateActiveCategoryInAssessmentNav() {
+	            if (_browser2.default.isXlScreen()) {
 
-	            _browser2.default.saveInLocalStorage(_global.localStorageKeys.currentlyAssessedDoc, this._categoryProductCodeFromHash(hash));
+	                var categoryIdsForCurrentDoc = _store2.default.assessment.categoryIds(this._currentlyActiveCategoryProductCode());
+
+	                var _iteratorNormalCompletion = true;
+	                var _didIteratorError = false;
+	                var _iteratorError = undefined;
+
+	                try {
+	                    for (var _iterator = categoryIdsForCurrentDoc[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                        var categoryId = _step.value;
+
+	                        var navPanelTopPos = this.$navPanel.offset().top;
+
+	                        var $categoryPanel = $("#list-category-" + categoryId);
+	                        var categoryPanelTopPos = $categoryPanel.offset().top;
+	                        var categoryPanelBottomPos = categoryPanelTopPos + $categoryPanel.height();
+
+	                        if (navPanelTopPos >= categoryPanelTopPos && navPanelTopPos <= categoryPanelBottomPos) {
+	                            $("[href=\"#list-category-" + categoryId + "\"]").parent().addClass("active");
+	                        } else {
+	                            $("[href=\"#list-category-" + categoryId + "\"]").parent().removeClass("active");
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError = true;
+	                    _iteratorError = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion && _iterator.return) {
+	                            _iterator.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError) {
+	                            throw _iteratorError;
+	                        }
+	                    }
+	                }
+	            }
+	        },
+	        _currentlyActiveCategoryProductCode: function _currentlyActiveCategoryProductCode() {
+	            var activeLinkHref = this.$tabListItems.filter(".active").children().attr("href");
+
+	            return activeLinkHref.substring(1, activeLinkHref.indexOf("-"));
 	        }
 	    })
 	};
@@ -1027,9 +1071,6 @@
 	        this.assessment.updateListComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
-	    updateOverallComment: function updateOverallComment(categoryProductCode, commentText) {
-	        this.assessment.updateOverallComment(categoryProductCode, commentText);
-	    },
 	    updateReportCategory: function updateReportCategory(category, isRefreshRequired) {
 	        this.assessment.updateReportCategory(category);
 
@@ -1521,9 +1562,9 @@
 	    },
 	    areAllListCommentsSelected: function areAllListCommentsSelected(categoryProductCode) {
 	        var listComments = this._listCommentsFromLocalStorage();
-	        var listCommentsForCategory = listComments ? listComments[categoryProductCode] : null;
+	        var listCommentsForDoc = listComments ? listComments[categoryProductCode] : null;
 
-	        if (!listCommentsForCategory) {
+	        if (!listCommentsForDoc) {
 	            return false;
 	        }
 
@@ -1532,7 +1573,7 @@
 	        var _iteratorError = undefined;
 
 	        try {
-	            for (var _iterator = listCommentsForCategory[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            for (var _iterator = listCommentsForDoc[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                var c = _step.value;
 
 	                if (!c.isGreenSelected && !c.isRedSelected) {
@@ -1550,6 +1591,43 @@
 	            } finally {
 	                if (_didIteratorError) {
 	                    throw _iteratorError;
+	                }
+	            }
+	        }
+
+	        return true;
+	    },
+	    areListCommentsSelected: function areListCommentsSelected(categoryProductCode, categoryId) {
+	        var listComments = this._listCommentsFromLocalStorage();
+	        var listCommentsForCategory = listComments ? _.filter(listComments[categoryProductCode], ["categoryId", categoryId]) : null;
+
+	        if (!listCommentsForCategory) {
+	            return false;
+	        }
+
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
+
+	        try {
+	            for (var _iterator2 = listCommentsForCategory[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                var c = _step2.value;
+
+	                if (!c.isGreenSelected && !c.isRedSelected) {
+	                    return false;
+	                }
+	            }
+	        } catch (err) {
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                    _iterator2.return();
+	                }
+	            } finally {
+	                if (_didIteratorError2) {
+	                    throw _iteratorError2;
 	                }
 	            }
 	        }
@@ -1640,51 +1718,51 @@
 
 	        var categories = _.values(docReportCategoriesMap);
 
-	        var _iteratorNormalCompletion2 = true;
-	        var _didIteratorError2 = false;
-	        var _iteratorError2 = undefined;
+	        var _iteratorNormalCompletion3 = true;
+	        var _didIteratorError3 = false;
+	        var _iteratorError3 = undefined;
 
 	        try {
-	            for (var _iterator2 = categories[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                var category = _step2.value;
-	                var _iteratorNormalCompletion3 = true;
-	                var _didIteratorError3 = false;
-	                var _iteratorError3 = undefined;
+	            for (var _iterator3 = categories[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                var category = _step3.value;
+	                var _iteratorNormalCompletion4 = true;
+	                var _didIteratorError4 = false;
+	                var _iteratorError4 = undefined;
 
 	                try {
-	                    for (var _iterator3 = category.comments[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                        var comment = _step3.value;
+	                    for (var _iterator4 = category.comments[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                        var comment = _step4.value;
 
 	                        if (!comment.isChecked) {
 	                            return false;
 	                        }
 	                    }
 	                } catch (err) {
-	                    _didIteratorError3 = true;
-	                    _iteratorError3 = err;
+	                    _didIteratorError4 = true;
+	                    _iteratorError4 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                            _iterator3.return();
+	                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                            _iterator4.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError3) {
-	                            throw _iteratorError3;
+	                        if (_didIteratorError4) {
+	                            throw _iteratorError4;
 	                        }
 	                    }
 	                }
 	            }
 	        } catch (err) {
-	            _didIteratorError2 = true;
-	            _iteratorError2 = err;
+	            _didIteratorError3 = true;
+	            _iteratorError3 = err;
 	        } finally {
 	            try {
-	                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                    _iterator2.return();
+	                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                    _iterator3.return();
 	                }
 	            } finally {
-	                if (_didIteratorError2) {
-	                    throw _iteratorError2;
+	                if (_didIteratorError3) {
+	                    throw _iteratorError3;
 	                }
 	            }
 	        }
@@ -1703,13 +1781,13 @@
 	        var sumOfAllPoints = 0;
 	        var sumOfRedPoints = 0;
 
-	        var _iteratorNormalCompletion4 = true;
-	        var _didIteratorError4 = false;
-	        var _iteratorError4 = undefined;
+	        var _iteratorNormalCompletion5 = true;
+	        var _didIteratorError5 = false;
+	        var _iteratorError5 = undefined;
 
 	        try {
-	            for (var _iterator4 = listCommentsForCategory[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                var listComment = _step4.value;
+	            for (var _iterator5 = listCommentsForCategory[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                var listComment = _step5.value;
 
 	                sumOfAllPoints += listComment.points;
 
@@ -1718,16 +1796,16 @@
 	                }
 	            }
 	        } catch (err) {
-	            _didIteratorError4 = true;
-	            _iteratorError4 = err;
+	            _didIteratorError5 = true;
+	            _iteratorError5 = err;
 	        } finally {
 	            try {
-	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	                    _iterator4.return();
+	                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                    _iterator5.return();
 	                }
 	            } finally {
-	                if (_didIteratorError4) {
-	                    throw _iteratorError4;
+	                if (_didIteratorError5) {
+	                    throw _iteratorError5;
 	                }
 	            }
 	        }
@@ -1748,13 +1826,13 @@
 	            allCategoriesAsArray = _.concat(allCategoriesAsArray, categoryIdsForThatDoc);
 	        });
 
-	        var _iteratorNormalCompletion5 = true;
-	        var _didIteratorError5 = false;
-	        var _iteratorError5 = undefined;
+	        var _iteratorNormalCompletion6 = true;
+	        var _didIteratorError6 = false;
+	        var _iteratorError6 = undefined;
 
 	        try {
-	            for (var _iterator5 = allCategoriesAsArray[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                var categoryId = _step5.value;
+	            for (var _iterator6 = allCategoriesAsArray[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                var categoryId = _step6.value;
 
 	                var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
 	                var reportCategory = this.reportCategory(categoryProductCode, categoryId);
@@ -1765,16 +1843,16 @@
 	                }
 	            }
 	        } catch (err) {
-	            _didIteratorError5 = true;
-	            _iteratorError5 = err;
+	            _didIteratorError6 = true;
+	            _iteratorError6 = err;
 	        } finally {
 	            try {
-	                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-	                    _iterator5.return();
+	                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                    _iterator6.return();
 	                }
 	            } finally {
-	                if (_didIteratorError5) {
-	                    throw _iteratorError5;
+	                if (_didIteratorError6) {
+	                    throw _iteratorError6;
 	                }
 	            }
 	        }
@@ -2437,7 +2515,7 @@
 
 	        return React.createElement(
 	            "li",
-	            { ref: "root", className: liClasses },
+	            { ref: "root", className: liClasses, id: "report-category-" + reportCategory.id },
 	            React.createElement(
 	                "h3",
 	                null,
@@ -2538,9 +2616,11 @@
 	    _handleComposerKeyUp: function _handleComposerKeyUp(e) {
 	        this._adaptTextareaHeight();
 
-	        if (e.keyCode === _keyboard2.default.keyCodes.enter) {
+	        if (e.keyCode === _keyboard2.default.keyCodes.enter || e.keyCode === _keyboard2.default.keyCodes.escape) {
 	            this._hideComposer();
+	        }
 
+	        if (e.keyCode === _keyboard2.default.keyCodes.enter) {
 	            _store2.default.addReportComment({
 	                id: _string2.default.uuid(),
 	                categoryId: this.props.reportCategory.id,
@@ -2795,28 +2875,46 @@
 	var Component = React.createClass({
 	    displayName: "Component",
 	    render: function render() {
+	        var _this = this;
+
 	        if (!_store2.default.assessment) {
 	            return null;
 	        }
 
 	        var categoryProductCode = this.props.categoryProductCode;
 
+	        if (!this.categoryIds) {
+	            this.categoryIds = _store2.default.assessment.categoryIds(categoryProductCode);
+	        }
+
 	        return React.createElement(
 	            "section",
-	            { key: categoryProductCode, className: "nav assessment " + categoryProductCode },
+	            { ref: "root", className: "nav assessment " + categoryProductCode },
 	            React.createElement(
 	                "ul",
 	                { className: "styleless" },
-	                this._categoryLinks(categoryProductCode)
+	                this.categoryIds.map(function (categoryId) {
+	                    var liClasses = classNames({
+	                        active: _this._isCategoryCurrentlyActive(categoryId),
+	                        "all-selected": _store2.default.assessment.areListCommentsSelected(_this.props.categoryProductCode, categoryId)
+	                    });
+
+	                    return React.createElement(
+	                        "li",
+	                        { key: categoryId, className: liClasses, "data-category-id": categoryId },
+	                        React.createElement("i", { className: "fa fa-check", "aria-hidden": "true" }),
+	                        React.createElement(
+	                            "a",
+	                            { href: "#list-category-" + categoryId, onClick: _this._handleScrollToLinkClick },
+	                            _store2.default.i18nMessages["category.title." + categoryId]
+	                        )
+	                    );
+	                })
 	            ),
 	            React.createElement(
-	                "div",
-	                { className: "centered-contents" },
-	                React.createElement(
-	                    "a",
-	                    { href: "#" + categoryProductCode + "-report-form", onClick: this._handleScrollToLinkClick },
-	                    "Report form"
-	                )
+	                "a",
+	                { href: "#" + categoryProductCode + "-report-form", onClick: this._handleScrollToLinkClick },
+	                "Report form"
 	            )
 	        );
 	    },
@@ -2824,28 +2922,21 @@
 	        this._initElements();
 	    },
 	    _initElements: function _initElements() {
-	        this.$siteHeader = $("#container").children("header");
+	        var $container = $("#container");
+
+	        this.$siteHeader = $container.children("header");
+	        this.$navPanel = $container.find(".nav-panel");
+
+	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
+
+	        this.$listItems = $rootEl.find("li");
 	    },
-	    _categoryLinks: function _categoryLinks(categoryProductCode) {
-	        var _this = this;
+	    _isCategoryCurrentlyActive: function _isCategoryCurrentlyActive(categoryId) {
+	        if (!this.$listItems) {
+	            return false;
+	        }
 
-	        return _store2.default.assessment.categoryIds(categoryProductCode).map(function (categoryId) {
-	            var validationErrorsForThisCategory = _this.props.validationErrors ? _this.props.validationErrors[categoryId] : null;
-
-	            var linkClasses = classNames({
-	                "has-errors": !_.isEmpty(validationErrorsForThisCategory)
-	            });
-
-	            return React.createElement(
-	                "li",
-	                { key: categoryId },
-	                React.createElement(
-	                    "a",
-	                    { href: "#list-category-" + categoryId, onClick: _this._handleScrollToLinkClick, className: linkClasses },
-	                    _store2.default.i18nMessages["category.title." + categoryId]
-	                )
-	            );
-	        });
+	        return this.$listItems.filter("[data-category-id=\"" + categoryId + "\"]").hasClass("active");
 	    },
 	    _handleScrollToLinkClick: function _handleScrollToLinkClick(e) {
 	        (0, _animator.scrollTo)(e, this.$siteHeader.height());

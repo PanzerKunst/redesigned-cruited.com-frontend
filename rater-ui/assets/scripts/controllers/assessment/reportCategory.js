@@ -22,7 +22,7 @@ const Component = React.createClass({
         });
 
         return (
-            <li ref="root" className={liClasses}>
+            <li ref="root" className={liClasses} id={`report-category-${reportCategory.id}`}>
                 <h3>{store.i18nMessages[`category.title.${reportCategory.id}`]}</h3>
                 {this._wellDoneComment()}
                 <ul className="styleless">
@@ -110,9 +110,11 @@ const Component = React.createClass({
     _handleComposerKeyUp(e) {
         this._adaptTextareaHeight();
 
-        if (e.keyCode === Keyboard.keyCodes.enter) {
+        if (e.keyCode === Keyboard.keyCodes.enter || e.keyCode === Keyboard.keyCodes.escape) {
             this._hideComposer();
+        }
 
+        if (e.keyCode === Keyboard.keyCodes.enter) {
             store.addReportComment({
                 id: String.uuid(),
                 categoryId: this.props.reportCategory.id,
