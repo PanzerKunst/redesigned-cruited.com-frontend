@@ -54,7 +54,7 @@
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
-	var _assignModal = __webpack_require__(13);
+	var _assignModal = __webpack_require__(14);
 
 	var _assignModal2 = _interopRequireDefault(_assignModal);
 
@@ -651,7 +651,14 @@
 
 	var _orderTags2 = _interopRequireDefault(_orderTags);
 
+	var _customerProfile = __webpack_require__(13);
+
+	var _customerProfile2 = _interopRequireDefault(_customerProfile);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 
@@ -691,20 +698,7 @@
 	                    React.createElement(_positionSought2.default, { position: order.positionSought }),
 	                    React.createElement(_employerSought2.default, { employer: order.employerSought })
 	                ),
-	                React.createElement(
-	                    "div",
-	                    null,
-	                    React.createElement(
-	                        "p",
-	                        null,
-	                        order.customer.firstName
-	                    ),
-	                    React.createElement(
-	                        "p",
-	                        null,
-	                        order.customer.emailAddress
-	                    )
-	                )
+	                React.createElement(_customerProfile2.default, { customer: order.customer })
 	            ),
 	            React.createElement(
 	                "section",
@@ -1123,10 +1117,10 @@
 
 	        return React.createElement(
 	            "article",
-	            { className: "rater-profile" },
+	            { className: "user-profile" },
 	            React.createElement("div", { className: "profile-picture", style: myProfilePictureStyleAttr }),
 	            React.createElement(
-	                "span",
+	                "p",
 	                null,
 	                account.firstName,
 	                " ",
@@ -1182,6 +1176,55 @@
 
 /***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var customer = this.props.customer;
+
+	        return React.createElement(
+	            "article",
+	            { className: "user-profile customer" },
+	            this._linkedinProfilePic(customer.linkedinProfile),
+	            React.createElement(
+	                "div",
+	                null,
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    customer.firstName,
+	                    " ",
+	                    customer.lastName
+	                ),
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    customer.emailAddress
+	                )
+	            )
+	        );
+	    },
+	    _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
+	        if (!linkedinProfile) {
+	            return null;
+	        }
+
+	        var style = { backgroundImage: "url(" + linkedinProfile.pictureUrl + ")" };
+
+	        return React.createElement("div", { className: "profile-picture", style: style });
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

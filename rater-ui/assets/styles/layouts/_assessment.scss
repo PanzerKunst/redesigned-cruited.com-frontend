@@ -6,7 +6,7 @@
 
 @mixin error-border {
   border-left: 0.2em solid $brand-danger;
-  padding-left: 0.2em;  // 0.4em by default
+  padding-left: 0.2em; // 0.4em by default
 }
 
 $comment-id-and-points-width: 7%;
@@ -27,12 +27,38 @@ $white-section-padding: 2em 1em 1em;
     @include large-screen {
       font-size: 14px;
     }
+
+    &.fixed-order-details > #order-details {
+      position: fixed;
+      z-index: $z-index-header;
+      top: $header-height;
+      width: $medium-content-width;
+
+      @include large-screen {
+        top: $header-height-large-screen;
+        width: $large-content-width;
+      }
+
+      // offset-x  offset-y  blur-radius spread-radius color
+      box-shadow: 0 0.25em 0.5em 0 $drop-shadow-color;
+
+      padding-bottom: 0.3em;
+
+      .customer-comment,
+      .job-ad-link,
+      .order-tags:nth-child(2),
+      .order-tag.product-code,
+      .order-tag.lang,
+      .user-profile,
+      .time-left {
+        display: none;
+      }
+    }
   }
 
   #order-details {
     background-color: white;
     padding: 1.5em $spacer-unit-size;
-    margin-bottom: 3em;
 
     @include medium-screen {
       display: flex;
@@ -77,6 +103,22 @@ $white-section-padding: 2em 1em 1em;
     }
   }
 
+  $margin-below-order-details: 3em;
+
+  .nav-panel {
+    margin-top: $margin-below-order-details;
+  }
+
+  @include large-screen {
+    .position-and-employer {
+      display: flex;
+    }
+
+    .position-sought {
+      margin-right: 2em;
+    }
+  }
+
   @include xl-screen {
     .nav-panel {
       position: fixed;
@@ -113,6 +155,10 @@ $white-section-padding: 2em 1em 1em;
       > .active > a {
         background-color: $gradient-light-grey;
       }
+    }
+
+    .tab-content {
+      margin-top: $margin-below-order-details;
     }
   }
 
@@ -406,6 +452,18 @@ $white-section-padding: 2em 1em 1em;
 
         /* stylelint-disable-next-line max-nesting-depth */
         > section {
+          float: left;
+        }
+      }
+    }
+
+    @include large-screen {
+      .position-and-employer {
+        display: block;
+        @include clearfix;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > p {
           float: left;
         }
       }

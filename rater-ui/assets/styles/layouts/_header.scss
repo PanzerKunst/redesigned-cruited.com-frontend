@@ -1,8 +1,7 @@
-$drop-shadow-color: transparentize(black, 0.8);
 $header-bottom-border-height: 1px;
 
 @mixin header-box-shadow {
-  //          offset-x  offset-y  blur-radius spread-radius color
+  // offset-x  offset-y  blur-radius spread-radius color
   box-shadow: 0 0.25em 0.5em 0 $drop-shadow-color;
 }
 

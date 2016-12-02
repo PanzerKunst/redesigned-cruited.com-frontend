@@ -19,6 +19,9 @@ import OrderTags from "../common-components/orderTags";
 import TimeLeft from "../common-components/timeLeft";
 
 // eslint-disable-next-line no-unused-vars
+import CustomerProfile from "../common-components/customerProfile";
+
+// eslint-disable-next-line no-unused-vars
 import GreenRedAssessmentComment from "./greenRedAssessmentComment";
 
 // eslint-disable-next-line no-unused-vars
@@ -66,7 +69,7 @@ const controller = {
                     <div className="with-circles">
                         <div id="order-details">
                             <section className="order-details-section first">
-                                <div>
+                                <div className="position-and-employer">
                                     <PositionSought position={order.positionSought} />
                                     <EmployerSought employer={order.employerSought} />
                                 </div>
@@ -75,9 +78,7 @@ const controller = {
                             </section>
                             <section className="order-details-section second">
                                 <OrderTags order={order} config={store.config} />
-                                {this._linkedinProfilePic(order.customer.linkedinProfile)}
-                                <p>{order.customer.firstName} {order.customer.lastName}</p>
-                                <p>{order.customer.emailAddress}</p>
+                                <CustomerProfile customer={order.customer} />
                             </section>
                             <section className="order-details-section third">
                                 {this._previewOrViewBtn()}
@@ -132,21 +133,23 @@ const controller = {
 
         _initElements() {
             this.$window = $(window);
-            const $withCircles = $(".with-circles");
+            this.$withCircles = $(".with-circles");
 
-            this.$navPanel = $withCircles.children(".nav-panel");
+            this.$orderDetails = this.$withCircles.children("#order-details");
+
+            this.$navPanel = this.$withCircles.children(".nav-panel");
 
             this.$tabListItems = this.$navPanel.children(".nav-tabs").children();
             this.$tabLinks = this.$tabListItems.children();
             this.$firstTab = this.$tabListItems.first().children();
 
-            this.$assessmentNavPanels = $withCircles.find(".nav.assessment");
+            this.$assessmentNavPanels = this.$withCircles.find(".nav.assessment");
         },
 
         _initEvents() {
             this._showCorrectAssessmentNavPanels();
             this.$window.resize(() => this._setNavPanelLocation());
-            this.$window.scroll(_.debounce(() => this._updateActiveCategoryInAssessmentNav(), 15));
+            this.$window.scroll(_.debounce(() => this._onScroll(), 15));
         },
 
         _setNavPanelLocation() {
@@ -187,16 +190,6 @@ const controller = {
                 return null;
             }
             return <a href={jobAdUrl} target="_blank" className="job-ad-link">{jobAdUrl}</a>;
-        },
-
-        _linkedinProfilePic(linkedinProfile) {
-            if (!linkedinProfile) {
-                return null;
-            }
-
-            const style = {backgroundImage: `url(${linkedinProfile.pictureUrl})`};
-
-            return <div style={style}></div>;
         },
 
         _previewOrViewBtn() {
@@ -341,6 +334,27 @@ const controller = {
 
         _saveCurrentlyAssessedDoc() {
             Browser.saveInLocalStorage(localStorageKeys.currentlyAssessedDoc, this._currentlyActiveCategoryProductCode());
+        },
+
+        _onScroll() {
+            this._updateFloatingOrderDetailsPanel();
+            this._updateActiveCategoryInAssessmentNav();
+        },
+
+        _updateFloatingOrderDetailsPanel() {
+            if (Browser.isMediumScreen() || Browser.isLargeScreen() || Browser.isXlScreen()) {
+                if (this.$window.scrollTop() > 300) {
+                    if (!this.defaultOrderDetailsHeight) {
+                        this.defaultOrderDetailsHeight = this.$orderDetails.outerHeight();
+                    }
+
+                    this.$withCircles.css("margin-top", this.defaultOrderDetailsHeight);
+                    this.$withCircles.addClass("fixed-order-details");
+                } else {
+                    this.$withCircles.css("margin-top", 0);
+                    this.$withCircles.removeClass("fixed-order-details");
+                }
+            }
         },
 
         _updateActiveCategoryInAssessmentNav() {

@@ -17,6 +17,9 @@ import EmployerSought from "../common-components/employerSought";
 // eslint-disable-next-line no-unused-vars
 import OrderTags from "../common-components/orderTags";
 
+// eslint-disable-next-line no-unused-vars
+import CustomerProfile from "../common-components/customerProfile";
+
 const Component = React.createClass({
     render() {
         const order = this.props.order;
@@ -34,10 +37,7 @@ const Component = React.createClass({
                         <PositionSought position={order.positionSought} />
                         <EmployerSought employer={order.employerSought} />
                     </div>
-                    <div>
-                        <p>{order.customer.firstName}</p>
-                        <p>{order.customer.emailAddress}</p>
-                    </div>
+                    <CustomerProfile customer={order.customer} />
                 </section>
                 <section className="order-section third">
                     <OrderTags order={order} config={store.config} />

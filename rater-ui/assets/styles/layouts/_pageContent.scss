@@ -220,6 +220,22 @@
   }
 }
 
+.user-profile {
+  display: flex;
+  align-items: center;
+
+  > .profile-picture {
+    width: 40px;
+    height: 40px;
+
+    margin-right: 0.5em;
+  }
+
+  &.customer > .profile-picture {
+    border-radius: 0;
+  }
+}
+
 .order-tag {
   display: inline-block;
 
@@ -260,12 +276,8 @@
   }
 }
 
-.position-sought {
-  margin-bottom: 0.5em !important;
-
-  > .fa {
-    margin-right: 0.3em;
-  }
+.position-sought > .fa {
+  margin-right: 0.3em;
 }
 
 .employer-sought > .fa {
@@ -273,6 +285,17 @@
 }
 
 .no-flexbox {
+  .user-profile {
+    display: block;
+    @include clearfix;
+
+    > .profile-picture,
+    > p,
+    > div {
+      float: left;
+    }
+  }
+
   .position-sought,
   .employer-sought {
     display: block;
@@ -284,6 +307,7 @@
     }
 
     > span {
+      margin-top: 0.25em;
       max-width: 89%;
     }
   }

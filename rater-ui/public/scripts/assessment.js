@@ -86,19 +86,23 @@
 
 	var _timeLeft2 = _interopRequireDefault(_timeLeft);
 
-	var _greenRedAssessmentComment = __webpack_require__(17);
+	var _customerProfile = __webpack_require__(17);
+
+	var _customerProfile2 = _interopRequireDefault(_customerProfile);
+
+	var _greenRedAssessmentComment = __webpack_require__(18);
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _reportCategory = __webpack_require__(18);
+	var _reportCategory = __webpack_require__(19);
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
-	var _orderStatusChangeBtn = __webpack_require__(21);
+	var _orderStatusChangeBtn = __webpack_require__(22);
 
 	var _orderStatusChangeBtn2 = _interopRequireDefault(_orderStatusChangeBtn);
 
-	var _docAssessmentNav = __webpack_require__(22);
+	var _docAssessmentNav = __webpack_require__(23);
 
 	var _docAssessmentNav2 = _interopRequireDefault(_docAssessmentNav);
 
@@ -166,7 +170,7 @@
 	                            { className: "order-details-section first" },
 	                            React.createElement(
 	                                "div",
-	                                null,
+	                                { className: "position-and-employer" },
 	                                React.createElement(_positionSought2.default, { position: order.positionSought }),
 	                                React.createElement(_employerSought2.default, { employer: order.employerSought })
 	                            ),
@@ -177,19 +181,7 @@
 	                            "section",
 	                            { className: "order-details-section second" },
 	                            React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
-	                            this._linkedinProfilePic(order.customer.linkedinProfile),
-	                            React.createElement(
-	                                "p",
-	                                null,
-	                                order.customer.firstName,
-	                                " ",
-	                                order.customer.lastName
-	                            ),
-	                            React.createElement(
-	                                "p",
-	                                null,
-	                                order.customer.emailAddress
-	                            )
+	                            React.createElement(_customerProfile2.default, { customer: order.customer })
 	                        ),
 	                        React.createElement(
 	                            "section",
@@ -249,15 +241,17 @@
 	        },
 	        _initElements: function _initElements() {
 	            this.$window = $(window);
-	            var $withCircles = $(".with-circles");
+	            this.$withCircles = $(".with-circles");
 
-	            this.$navPanel = $withCircles.children(".nav-panel");
+	            this.$orderDetails = this.$withCircles.children("#order-details");
+
+	            this.$navPanel = this.$withCircles.children(".nav-panel");
 
 	            this.$tabListItems = this.$navPanel.children(".nav-tabs").children();
 	            this.$tabLinks = this.$tabListItems.children();
 	            this.$firstTab = this.$tabListItems.first().children();
 
-	            this.$assessmentNavPanels = $withCircles.find(".nav.assessment");
+	            this.$assessmentNavPanels = this.$withCircles.find(".nav.assessment");
 	        },
 	        _initEvents: function _initEvents() {
 	            var _this = this;
@@ -267,7 +261,7 @@
 	                return _this._setNavPanelLocation();
 	            });
 	            this.$window.scroll(_.debounce(function () {
-	                return _this._updateActiveCategoryInAssessmentNav();
+	                return _this._onScroll();
 	            }, 15));
 	        },
 	        _setNavPanelLocation: function _setNavPanelLocation() {
@@ -314,15 +308,6 @@
 	                { href: jobAdUrl, target: "_blank", className: "job-ad-link" },
 	                jobAdUrl
 	            );
-	        },
-	        _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
-	            if (!linkedinProfile) {
-	                return null;
-	            }
-
-	            var style = { backgroundImage: "url(" + linkedinProfile.pictureUrl + ")" };
-
-	            return React.createElement("div", { style: style });
 	        },
 	        _previewOrViewBtn: function _previewOrViewBtn() {
 	            if (_store2.default.order.status === _order2.default.statuses.scheduled || _store2.default.order.status === _order2.default.statuses.completed) {
@@ -485,6 +470,25 @@
 	        _saveCurrentlyAssessedDoc: function _saveCurrentlyAssessedDoc() {
 	            _browser2.default.saveInLocalStorage(_global.localStorageKeys.currentlyAssessedDoc, this._currentlyActiveCategoryProductCode());
 	        },
+	        _onScroll: function _onScroll() {
+	            this._updateFloatingOrderDetailsPanel();
+	            this._updateActiveCategoryInAssessmentNav();
+	        },
+	        _updateFloatingOrderDetailsPanel: function _updateFloatingOrderDetailsPanel() {
+	            if (_browser2.default.isMediumScreen() || _browser2.default.isLargeScreen() || _browser2.default.isXlScreen()) {
+	                if (this.$window.scrollTop() > 300) {
+	                    if (!this.defaultOrderDetailsHeight) {
+	                        this.defaultOrderDetailsHeight = this.$orderDetails.outerHeight();
+	                    }
+
+	                    this.$withCircles.css("margin-top", this.defaultOrderDetailsHeight);
+	                    this.$withCircles.addClass("fixed-order-details");
+	                } else {
+	                    this.$withCircles.css("margin-top", 0);
+	                    this.$withCircles.removeClass("fixed-order-details");
+	                }
+	            }
+	        },
 	        _updateActiveCategoryInAssessmentNav: function _updateActiveCategoryInAssessmentNav() {
 	            if (_browser2.default.isXlScreen()) {
 
@@ -533,6 +537,9 @@
 	        }
 	    })
 	};
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 
@@ -2298,6 +2305,55 @@
 
 /***/ },
 /* 17 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var customer = this.props.customer;
+
+	        return React.createElement(
+	            "article",
+	            { className: "user-profile customer" },
+	            this._linkedinProfilePic(customer.linkedinProfile),
+	            React.createElement(
+	                "div",
+	                null,
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    customer.firstName,
+	                    " ",
+	                    customer.lastName
+	                ),
+	                React.createElement(
+	                    "p",
+	                    null,
+	                    customer.emailAddress
+	                )
+	            )
+	        );
+	    },
+	    _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
+	        if (!linkedinProfile) {
+	            return null;
+	        }
+
+	        var style = { backgroundImage: "url(" + linkedinProfile.pictureUrl + ")" };
+
+	        return React.createElement("div", { className: "profile-picture", style: style });
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2464,7 +2520,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2482,7 +2538,7 @@
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _keyboard = __webpack_require__(19);
+	var _keyboard = __webpack_require__(20);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
@@ -2490,7 +2546,7 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _reportComment = __webpack_require__(20);
+	var _reportComment = __webpack_require__(21);
 
 	var _reportComment2 = _interopRequireDefault(_reportComment);
 
@@ -2664,7 +2720,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2694,7 +2750,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2813,7 +2869,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2854,7 +2910,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
