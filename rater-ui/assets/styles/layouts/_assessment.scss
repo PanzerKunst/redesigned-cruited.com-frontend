@@ -42,16 +42,30 @@ $white-section-padding: 2em 1em 1em;
       // offset-x  offset-y  blur-radius spread-radius color
       box-shadow: 0 0.25em 0.5em 0 $drop-shadow-color;
 
-      padding-bottom: 0.3em;
+      padding-bottom: 0;
 
-      .customer-comment,
-      .job-ad-link,
-      .order-tags:nth-child(2),
-      .order-tag.product-code,
-      .order-tag.lang,
-      .user-profile,
-      .time-left {
-        display: none;
+      > .centered-contents {
+        display: block;
+        color: $well-border-color;
+      }
+
+      &.collapsed {
+        /* stylelint-disable-next-line max-nesting-depth */
+        .customer-comment,
+        .job-ad-link,
+        .order-tags:nth-child(2),
+        .order-tag.product-code,
+        .order-tag.lang,
+        .user-profile,
+        .time-left {
+          display: none;
+        }
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        .order-tags,
+        .btn-primary {
+          margin-bottom: 0;
+        }
       }
     }
   }
@@ -60,22 +74,28 @@ $white-section-padding: 2em 1em 1em;
     background-color: white;
     padding: 1.5em $spacer-unit-size;
 
-    @include medium-screen {
-      display: flex;
+    > .centered-contents {
+      display: none;
+    }
 
+    @include medium-screen {
       $first-section-width: 55%;
       $second-section-width: 25%;
       $third-section-width: 100% - $first-section-width - $second-section-width;
 
-      > .first {
+      > div:first-child {
+        display: flex;
+      }
+
+      .first {
         width: $first-section-width;
       }
 
-      > .second {
+      .second {
         width: $second-section-width;
       }
 
-      > .third {
+      .third {
         width: $third-section-width;
         text-align: right;
       }
@@ -447,12 +467,15 @@ $white-section-padding: 2em 1em 1em;
   #assessment {
     #order-details {
       @include medium-screen {
-        display: block;
-        @include clearfix;
-
         /* stylelint-disable-next-line max-nesting-depth */
-        > section {
-          float: left;
+        > div:first-child {
+          display: block;
+          @include clearfix;
+
+          /* stylelint-disable-next-line max-nesting-depth */
+          > section {
+            float: left;
+          }
         }
       }
     }

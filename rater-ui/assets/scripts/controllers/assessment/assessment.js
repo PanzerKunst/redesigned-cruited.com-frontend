@@ -67,24 +67,29 @@ const controller = {
                         </div>
                     </header>
                     <div className="with-circles">
-                        <div id="order-details">
-                            <section className="order-details-section first">
-                                <div className="position-and-employer">
-                                    <PositionSought position={order.positionSought} />
-                                    <EmployerSought employer={order.employerSought} />
-                                </div>
-                                {this._customerComment(order.customerComment)}
-                                {this._jobAdLink(order.jobAdUrl)}
-                            </section>
-                            <section className="order-details-section second">
-                                <OrderTags order={order} config={store.config} />
-                                <CustomerProfile customer={order.customer} />
-                            </section>
-                            <section className="order-details-section third">
-                                {this._previewOrViewBtn()}
-                                <OrderStatusChangeBtn />
-                                <TimeLeft order={order} />
-                            </section>
+                        <div id="order-details" className="collapsed">
+                            <div>
+                                <section className="order-details-section first">
+                                    <div className="position-and-employer">
+                                        <PositionSought position={order.positionSought} />
+                                        <EmployerSought employer={order.employerSought} />
+                                    </div>
+                                    {this._customerComment(order.customerComment)}
+                                    {this._jobAdLink(order.jobAdUrl)}
+                                </section>
+                                <section className="order-details-section second">
+                                    <OrderTags order={order} config={store.config} />
+                                    <CustomerProfile customer={order.customer} />
+                                </section>
+                                <section className="order-details-section third">
+                                    {this._previewOrViewBtn()}
+                                    <OrderStatusChangeBtn />
+                                    <TimeLeft order={order} />
+                                </section>
+                            </div>
+                            <div className="centered-contents">
+                                <button className="styleless fa fa-chevron-down" onClick={this._handleExpandCollapseClick}/>
+                            </div>
                         </div>
 
                         <div className="nav-panel">
@@ -98,10 +103,6 @@ const controller = {
                             {this._tabPane(Category.productCodes.cv)}
                             {this._tabPane(Category.productCodes.coverLetter)}
                             {this._tabPane(Category.productCodes.linkedinProfile)}
-                        </div>
-
-                        <div className="centered-contents">
-                            {this._previewOrViewBtn()}
                         </div>
                     </div>
                 </div>);
@@ -136,6 +137,7 @@ const controller = {
             this.$withCircles = $(".with-circles");
 
             this.$orderDetails = this.$withCircles.children("#order-details");
+            this.$collapseExpandBtn = this.$orderDetails.children(".centered-contents").children();
 
             this.$navPanel = this.$withCircles.children(".nav-panel");
 
@@ -326,6 +328,18 @@ const controller = {
                 this._saveCurrentlyAssessedDoc();
                 store.saveCurrentReport();
             }
+        },
+
+        _handleExpandCollapseClick() {
+            if (this.$orderDetails.hasClass("collapsed")) {
+                this.$collapseExpandBtn.removeClass("fa-chevron-down");
+                this.$collapseExpandBtn.addClass("fa-chevron-up");
+            } else {
+                this.$collapseExpandBtn.removeClass("fa-chevron-up");
+                this.$collapseExpandBtn.addClass("fa-chevron-down");
+            }
+
+            this.$orderDetails.toggleClass("collapsed");
         },
 
         _categoryProductCodeFromOverallCommentTextarea($textarea) {

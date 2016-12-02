@@ -164,31 +164,40 @@
 	                    { className: "with-circles" },
 	                    React.createElement(
 	                        "div",
-	                        { id: "order-details" },
+	                        { id: "order-details", className: "collapsed" },
 	                        React.createElement(
-	                            "section",
-	                            { className: "order-details-section first" },
+	                            "div",
+	                            null,
 	                            React.createElement(
-	                                "div",
-	                                { className: "position-and-employer" },
-	                                React.createElement(_positionSought2.default, { position: order.positionSought }),
-	                                React.createElement(_employerSought2.default, { employer: order.employerSought })
+	                                "section",
+	                                { className: "order-details-section first" },
+	                                React.createElement(
+	                                    "div",
+	                                    { className: "position-and-employer" },
+	                                    React.createElement(_positionSought2.default, { position: order.positionSought }),
+	                                    React.createElement(_employerSought2.default, { employer: order.employerSought })
+	                                ),
+	                                this._customerComment(order.customerComment),
+	                                this._jobAdLink(order.jobAdUrl)
 	                            ),
-	                            this._customerComment(order.customerComment),
-	                            this._jobAdLink(order.jobAdUrl)
+	                            React.createElement(
+	                                "section",
+	                                { className: "order-details-section second" },
+	                                React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
+	                                React.createElement(_customerProfile2.default, { customer: order.customer })
+	                            ),
+	                            React.createElement(
+	                                "section",
+	                                { className: "order-details-section third" },
+	                                this._previewOrViewBtn(),
+	                                React.createElement(_orderStatusChangeBtn2.default, null),
+	                                React.createElement(_timeLeft2.default, { order: order })
+	                            )
 	                        ),
 	                        React.createElement(
-	                            "section",
-	                            { className: "order-details-section second" },
-	                            React.createElement(_orderTags2.default, { order: order, config: _store2.default.config }),
-	                            React.createElement(_customerProfile2.default, { customer: order.customer })
-	                        ),
-	                        React.createElement(
-	                            "section",
-	                            { className: "order-details-section third" },
-	                            this._previewOrViewBtn(),
-	                            React.createElement(_orderStatusChangeBtn2.default, null),
-	                            React.createElement(_timeLeft2.default, { order: order })
+	                            "div",
+	                            { className: "centered-contents" },
+	                            React.createElement("button", { className: "styleless fa fa-chevron-down", onClick: this._handleExpandCollapseClick })
 	                        )
 	                    ),
 	                    React.createElement(
@@ -208,11 +217,6 @@
 	                        this._tabPane(_category2.default.productCodes.cv),
 	                        this._tabPane(_category2.default.productCodes.coverLetter),
 	                        this._tabPane(_category2.default.productCodes.linkedinProfile)
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "centered-contents" },
-	                        this._previewOrViewBtn()
 	                    )
 	                )
 	            );
@@ -244,6 +248,7 @@
 	            this.$withCircles = $(".with-circles");
 
 	            this.$orderDetails = this.$withCircles.children("#order-details");
+	            this.$collapseExpandBtn = this.$orderDetails.children(".centered-contents").children();
 
 	            this.$navPanel = this.$withCircles.children(".nav-panel");
 
@@ -463,6 +468,17 @@
 	                this._saveCurrentlyAssessedDoc();
 	                _store2.default.saveCurrentReport();
 	            }
+	        },
+	        _handleExpandCollapseClick: function _handleExpandCollapseClick() {
+	            if (this.$orderDetails.hasClass("collapsed")) {
+	                this.$collapseExpandBtn.removeClass("fa-chevron-down");
+	                this.$collapseExpandBtn.addClass("fa-chevron-up");
+	            } else {
+	                this.$collapseExpandBtn.removeClass("fa-chevron-up");
+	                this.$collapseExpandBtn.addClass("fa-chevron-down");
+	            }
+
+	            this.$orderDetails.toggleClass("collapsed");
 	        },
 	        _categoryProductCodeFromOverallCommentTextarea: function _categoryProductCodeFromOverallCommentTextarea($textarea) {
 	            return $textarea.closest(".tab-pane").data("productCode");
@@ -2340,7 +2356,7 @@
 	        );
 	    },
 	    _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
-	        if (!linkedinProfile) {
+	        if (!linkedinProfile || !linkedinProfile.pictureUrl) {
 	            return null;
 	        }
 

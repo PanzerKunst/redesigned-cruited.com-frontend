@@ -13,7 +13,7 @@ const Component = React.createClass({
     },
 
     _linkedinProfilePic(linkedinProfile) {
-        if (!linkedinProfile) {
+        if (!linkedinProfile || !linkedinProfile.pictureUrl) {
             return null;
         }
 

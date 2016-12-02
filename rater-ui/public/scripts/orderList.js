@@ -1211,7 +1211,7 @@
 	        );
 	    },
 	    _linkedinProfilePic: function _linkedinProfilePic(linkedinProfile) {
-	        if (!linkedinProfile) {
+	        if (!linkedinProfile || !linkedinProfile.pictureUrl) {
 	            return null;
 	        }
 
