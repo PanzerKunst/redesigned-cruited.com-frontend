@@ -22,8 +22,11 @@
 }
 
 #ycbmiframecruited {
+    height: 49em;
     width: $small-content-width - 2*$spacer-unit-size;
+
     @include medium-screen {
+        height: 36em;
         width: 100%;
     }
 }
