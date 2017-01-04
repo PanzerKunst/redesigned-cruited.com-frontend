@@ -149,7 +149,13 @@ object Account {
   private def safetizeJsonStringValue(jsLookupResult: JsLookupResult): JsValue = {
     jsLookupResult.asOpt[String] match {
       case None => JsNull
-      case Some(stringValue) => JsString(stringValue.replaceAll("\r\n", "\\\\n").replaceAll("\\n", "\\\\n").replaceAll("\"", "\\\\\"").replaceAll("\\t", "    "))
+      case Some(stringValue) => JsString(stringValue
+        .replaceAll("\r\n", "\\\\n")
+        .replaceAll("\\n", "\\\\n")
+        .replaceAll("\"", "\\\\\"")
+        .replaceAll("\\t", "    ")
+        .replaceAll("\\\\s", "\\\\ ")
+      )
     }
   }
 }
