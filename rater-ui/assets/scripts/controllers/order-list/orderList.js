@@ -29,7 +29,7 @@ const controller = {
                         {this._topOrders()}
                         <ul className="styleless orders">
                         {store.moreOrders.map(order =>
-                                <ListItem key={order.id} order={order} />
+                            <ListItem key={order.id} order={order} />
                         )}
                         </ul>
                         <div id="load-more-panel">

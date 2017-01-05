@@ -54,11 +54,12 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
       val query = """
       select v.id, variation,
         dc.id as id_default, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, dc.type as doc_type, score, grouped,
-        variation_type.tag_type, variation_type.edition_id as tag_id
+        e.id as edition_id, e.edition as edition_code
       from default_variations v
         inner join defaults dc on dc.id = v.id_default
         inner join default_categories c on c.id = dc.category
         inner join product_edition_variation variation_type on variation_type.variation_id = v.id
+        left join product_edition e on e.id = variation_type.edition_id
       where v.shw = 1
         and dc.shw = 1
         and c.shw = 1
@@ -68,10 +69,10 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
 
       val rowParser = long("id") ~ str("variation") ~
         long("id_default") ~ long("category_id") ~ str("name_good") ~ str("name_bad") ~ str("doc_type") ~ int("score") ~ int("grouped") ~
-        str("tag_type") ~ long("tag_id") map {
+        (long("edition_id") ?) ~ (str("edition_code") ?) map {
         case id ~ text ~
           defaultCommentId ~ categoryId ~ greenText ~ redText ~ dbDocType ~ points ~ grouped ~
-          tagType ~ tagId =>
+          editionIdOpt ~ editionCodeOpt =>
 
           FrontendCommentVariation(
             id = id,
@@ -87,8 +88,12 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
               }
             ),
             text = text,
-            editionId = tagType match {
-              case CommentVariation.dbTagTypeEdition => Some(tagId)
+            edition = editionIdOpt match {
+              case Some(editionId) => Some(Edition(
+                id = editionId,
+                code = editionCodeOpt.get
+              ))
+
               case _ => None
             }
           )

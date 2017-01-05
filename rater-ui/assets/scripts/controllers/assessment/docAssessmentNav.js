@@ -41,6 +41,7 @@ const Component = React.createClass({
         const $container = $("#container");
 
         this.$siteHeader = $container.children("header");
+        this.$orderDetails = $container.find("#order-details");
         this.$navPanel = $container.find(".nav-panel");
 
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
@@ -57,7 +58,7 @@ const Component = React.createClass({
     },
 
     _handleScrollToLinkClick(e) {
-        scrollTo(e, this.$siteHeader.height());
+        scrollTo(e, this.$siteHeader.height() + this.$orderDetails.height());
     }
 });
 

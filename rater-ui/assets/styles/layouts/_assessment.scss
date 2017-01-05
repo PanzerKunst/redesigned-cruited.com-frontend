@@ -123,6 +123,35 @@ $white-section-padding: 2em 1em 1em;
     }
   }
 
+  #variations-modal {
+    ul {
+      margin-bottom: 0;
+    }
+
+    li {
+      padding: 0.25em;
+
+      @include transition(background-color $default-animation-duration ease);
+      cursor: pointer;
+
+      &:hover {
+        background-color: $gradient-light-grey;
+      }
+
+      > div {
+        position: relative;
+      }
+
+      .variation-tag {
+        display: inline-block;
+
+        position: absolute;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+
   $margin-below-order-details: 3em;
 
   .nav-panel {
@@ -321,6 +350,10 @@ $white-section-padding: 2em 1em 1em;
       position: absolute;
       bottom: 0;
       z-index: 1;
+    }
+
+    .fa-clone {
+      right: 4em;
     }
 
     .fa-plus-circle {

@@ -26,6 +26,7 @@ const Component = React.createClass({
                 </div>
                 <div className="red">
                     <p className={redParagraphClasses} onClick={this._handleRedParagraphClick} onBlur={this._handleRedParagraphBlur}>{c.redText}</p>
+                    <button type="button" className="styleless fa fa-clone" onClick={this._handleVariationsClick} />
                     <button type="button" className="styleless fa fa-plus-circle" onClick={this._handleAddClick} />
                     <button type="button" className="styleless fa fa-undo" onClick={this._handleResetClick} />
                 </div>
@@ -77,35 +78,7 @@ const Component = React.createClass({
             c.isRedSelected = true;
 
             store.updateListComment(c);
-
-            this._selectNextCommentAsRedIfGrouped();
-        }
-    },
-
-    _selectNextCommentAsRedIfGrouped() {
-        let categoryProductCode = null;
-        let indexOfNextCommentInList = -1;
-
-        _.keys(store.allDefaultComments).forEach(categoryProductCd => {
-            const docDefaultComments = store.allDefaultComments[categoryProductCd];
-
-            for (let i = 0; i < docDefaultComments.length; i++) {
-                if (docDefaultComments[i].id === this.props.comment.id) {
-                    categoryProductCode = categoryProductCd;
-                    indexOfNextCommentInList = i + 1;
-                    break;
-                }
-            }
-        });
-
-        const nextComment = indexOfNextCommentInList > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
-
-        // eslint-disable-next-line no-undefined
-        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
-            nextComment.isGreenSelected = false;
-            nextComment.isRedSelected = true;
-
-            store.updateListComment(nextComment);
+            store.selectNextCommentAsRedIfGrouped(this.props.comment.id);
         }
     },
 
@@ -115,6 +88,12 @@ const Component = React.createClass({
         c.redText = $(e.currentTarget).text();
 
         store.updateCommentInListAndReport(c);
+    },
+
+    _handleVariationsClick() {
+        if (!store.isOrderReadOnly()) {
+            store.setVariationsModalForComment(this.props.comment.id);
+        }
     },
 
     _handleAddClick() {

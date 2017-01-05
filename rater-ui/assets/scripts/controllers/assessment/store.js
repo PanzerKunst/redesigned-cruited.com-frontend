@@ -94,20 +94,58 @@ const store = {
     },
 
     isOrderReadOnly() {
-        return (this.order.rater.id !== this.account.id && this.order.status !== Order.statuses.awaitingFeedback) ||
+        return !this.order.rater ||
+            (this.order.rater.id !== this.account.id && this.order.status !== Order.statuses.awaitingFeedback) ||
             this.order.status < Order.statuses.inProgress ||
             this.order.status === Order.statuses.scheduled ||
             this.order.status === Order.statuses.completed;
     },
 
     isOrderStartable() {
-        return this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
+        return this.order.rater && this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
     },
 
     areAllReportCommentsCheckedForAtLeastOneCategory() {
         return this.assessment && (this.assessment.areAllReportCommentsChecked(Category.productCodes.cv) ||
             this.assessment.areAllReportCommentsChecked(Category.productCodes.coverLetter) ||
             this.assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile));
+    },
+
+    selectNextCommentAsRedIfGrouped(commentId) {
+        let categoryProductCode = null;
+        let indexOfNextCommentInList = -1;
+
+        _.keys(this.allDefaultComments).forEach(categoryProductCd => {
+            const docDefaultComments = store.allDefaultComments[categoryProductCd];
+
+            for (let i = 0; i < docDefaultComments.length; i++) {
+                if (docDefaultComments[i].id === commentId) {
+                    categoryProductCode = categoryProductCd;
+                    indexOfNextCommentInList = i + 1;
+                    break;
+                }
+            }
+        });
+
+        const nextComment = indexOfNextCommentInList > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
+
+        // eslint-disable-next-line no-undefined
+        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
+            nextComment.isGreenSelected = false;
+            nextComment.isRedSelected = true;
+
+            this.updateListComment(nextComment);
+        }
+    },
+
+    setVariationsModalForComment(defaultCommentId) {
+        const findCondition = c => c.id === defaultCommentId;
+
+        this.currentDefaultComment = _.find(this.allDefaultComments.cv, c => findCondition(c)) ||
+        _.find(this.allDefaultComments.coverLetter, c => findCondition(c)) ||
+        _.find(this.allDefaultComments.linkedinProfile, c => findCondition(c));
+
+        this.reactComponent.forceUpdate();
     },
 
     saveCurrentReport() {
@@ -287,15 +325,15 @@ const store = {
     },
 
     /* backendListCommentsForDoc List[
-     * defaultComment: [
+     * defaultComment:
      *   id: Long,
      *   categoryId: Long,
      *   greenText: String,
      *   redText: String,
      *   points: Int,
      *   isGrouped: Boolean],
-     * isGreenSelected: Boolean,
-     * redText: Option[String]
+     *   isGreenSelected: Boolean,
+     *   redText: Option[String]
      * ]
      */
     _listCommentFromBackend(backendListCommentsForDoc) {

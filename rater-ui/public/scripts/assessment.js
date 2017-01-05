@@ -106,7 +106,14 @@
 
 	var _docAssessmentNav2 = _interopRequireDefault(_docAssessmentNav);
 
+	var _variationsModal = __webpack_require__(24);
+
+	var _variationsModal2 = _interopRequireDefault(_variationsModal);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// eslint-disable-next-line no-unused-vars
+
 
 	// eslint-disable-next-line no-unused-vars
 
@@ -200,6 +207,7 @@
 	                            React.createElement("button", { className: "styleless fa fa-chevron-down", onClick: this._handleExpandCollapseClick })
 	                        )
 	                    ),
+	                    React.createElement(_variationsModal2.default, null),
 	                    React.createElement(
 	                        "div",
 	                        { className: "nav-panel" },
@@ -492,7 +500,7 @@
 	        },
 	        _updateFloatingOrderDetailsPanel: function _updateFloatingOrderDetailsPanel() {
 	            if (_browser2.default.isMediumScreen() || _browser2.default.isLargeScreen() || _browser2.default.isXlScreen()) {
-	                if (this.$window.scrollTop() > 300) {
+	                if (this.$window.scrollTop() > 150) {
 	                    if (!this.defaultOrderDetailsHeight) {
 	                        this.defaultOrderDetailsHeight = this.$orderDetails.outerHeight();
 	                    }
@@ -1117,13 +1125,54 @@
 	        this.assessment.reorderReportComment(categoryId, oldIndex, newIndex);
 	    },
 	    isOrderReadOnly: function isOrderReadOnly() {
-	        return this.order.rater.id !== this.account.id && this.order.status !== _order2.default.statuses.awaitingFeedback || this.order.status < _order2.default.statuses.inProgress || this.order.status === _order2.default.statuses.scheduled || this.order.status === _order2.default.statuses.completed;
+	        return !this.order.rater || this.order.rater.id !== this.account.id && this.order.status !== _order2.default.statuses.awaitingFeedback || this.order.status < _order2.default.statuses.inProgress || this.order.status === _order2.default.statuses.scheduled || this.order.status === _order2.default.statuses.completed;
 	    },
 	    isOrderStartable: function isOrderStartable() {
-	        return this.order.rater.id === this.account.id && this.order.status === _order2.default.statuses.paid;
+	        return this.order.rater && this.order.rater.id === this.account.id && this.order.status === _order2.default.statuses.paid;
 	    },
 	    areAllReportCommentsCheckedForAtLeastOneCategory: function areAllReportCommentsCheckedForAtLeastOneCategory() {
 	        return this.assessment && (this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.cv) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.coverLetter) || this.assessment.areAllReportCommentsChecked(_category2.default.productCodes.linkedinProfile));
+	    },
+	    selectNextCommentAsRedIfGrouped: function selectNextCommentAsRedIfGrouped(commentId) {
+	        var categoryProductCode = null;
+	        var indexOfNextCommentInList = -1;
+
+	        _.keys(this.allDefaultComments).forEach(function (categoryProductCd) {
+	            var docDefaultComments = store.allDefaultComments[categoryProductCd];
+
+	            for (var i = 0; i < docDefaultComments.length; i++) {
+	                if (docDefaultComments[i].id === commentId) {
+	                    categoryProductCode = categoryProductCd;
+	                    indexOfNextCommentInList = i + 1;
+	                    break;
+	                }
+	            }
+	        });
+
+	        var nextComment = indexOfNextCommentInList > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
+
+	        // eslint-disable-next-line no-undefined
+	        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
+	            nextComment.isGreenSelected = false;
+	            nextComment.isRedSelected = true;
+
+	            this.updateListComment(nextComment);
+	        }
+	    },
+	    setVariationsModalForComment: function setVariationsModalForComment(defaultCommentId) {
+	        var findCondition = function findCondition(c) {
+	            return c.id === defaultCommentId;
+	        };
+
+	        this.currentDefaultComment = _.find(this.allDefaultComments.cv, function (c) {
+	            return findCondition(c);
+	        }) || _.find(this.allDefaultComments.coverLetter, function (c) {
+	            return findCondition(c);
+	        }) || _.find(this.allDefaultComments.linkedinProfile, function (c) {
+	            return findCondition(c);
+	        });
+
+	        this.reactComponent.forceUpdate();
 	    },
 	    saveCurrentReport: function saveCurrentReport() {
 	        var _this = this;
@@ -1301,15 +1350,15 @@
 
 
 	    /* backendListCommentsForDoc List[
-	     * defaultComment: [
+	     * defaultComment:
 	     *   id: Long,
 	     *   categoryId: Long,
 	     *   greenText: String,
 	     *   redText: String,
 	     *   points: Int,
 	     *   isGrouped: Boolean],
-	     * isGreenSelected: Boolean,
-	     * redText: Option[String]
+	     *   isGreenSelected: Boolean,
+	     *   redText: Option[String]
 	     * ]
 	     */
 	    _listCommentFromBackend: function _listCommentFromBackend(backendListCommentsForDoc) {
@@ -1517,22 +1566,75 @@
 	        var listComments = this._listCommentsFromLocalStorage();
 	        var listCommentsToUpdate = listComments.cv;
 
-	        if (!_.find(listCommentsToUpdate, function (c) {
-	            return c.id === comment.id;
-	        })) {
-	            listCommentsToUpdate = listComments.coverLetter;
+	        if (_.has(comment, "defaultComment.id")) {
+	            if (!_.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.defaultComment.id;
+	            })) {
+	                listCommentsToUpdate = listComments.coverLetter;
+	            }
+	            if (!_.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.defaultComment.id;
+	            })) {
+	                listCommentsToUpdate = listComments.linkedinProfile;
+	            }
+	        } else {
+	            if (!_.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.id;
+	            })) {
+	                listCommentsToUpdate = listComments.coverLetter;
+	            }
+	            if (!_.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.id;
+	            })) {
+	                listCommentsToUpdate = listComments.linkedinProfile;
+	            }
 	        }
-	        if (!_.find(listCommentsToUpdate, function (c) {
-	            return c.id === comment.id;
-	        })) {
-	            listCommentsToUpdate = listComments.linkedinProfile;
-	        }
+
+	        /*
+	         * Structure of the comment object:
+	         * {
+	         *   id: 1,
+	         *   categoryId: 13,
+	         *   greenText: "string",
+	         *   redText: "string",
+	         *   points: 5,
+	         *   isGrouped: false,
+	         *   isGreenSelected: true,
+	         *   isRedSelected: false
+	         * }
+	         */
+
+	        /*
+	         * Structure of the commentVariation object:
+	         * {
+	         *   id: 238,
+	         *   defaultCommentId: 12,
+	         *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
+	         *   editionId: 4 [or `undefined` if variation is for an extra language]
+	         * }
+	         */
 
 	        var commentToUpdate = _.find(listCommentsToUpdate, function (c) {
 	            return c.id === comment.id;
 	        });
+	        var updatedComment = comment;
 
-	        Object.assign(commentToUpdate, comment);
+	        if (_.has(comment, "defaultComment.id")) {
+	            // `comment` is a variation
+	            commentToUpdate = _.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.defaultComment.id;
+	            });
+
+	            updatedComment = Object.assign(Object.create(commentToUpdate), {
+	                redText: comment.text,
+	                variationId: comment.id,
+	                variationEditionId: comment.editionId,
+	                isGreenSelected: false,
+	                isRedSelected: true
+	            });
+	        }
+
+	        Object.assign(commentToUpdate, updatedComment);
 
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
@@ -2425,6 +2527,7 @@
 	                    { className: redParagraphClasses, onClick: this._handleRedParagraphClick, onBlur: this._handleRedParagraphBlur },
 	                    c.redText
 	                ),
+	                React.createElement("button", { type: "button", className: "styleless fa fa-clone", onClick: this._handleVariationsClick }),
 	                React.createElement("button", { type: "button", className: "styleless fa fa-plus-circle", onClick: this._handleAddClick }),
 	                React.createElement("button", { type: "button", className: "styleless fa fa-undo", onClick: this._handleResetClick })
 	            ),
@@ -2481,36 +2584,7 @@
 	            c.isRedSelected = true;
 
 	            _store2.default.updateListComment(c);
-
-	            this._selectNextCommentAsRedIfGrouped();
-	        }
-	    },
-	    _selectNextCommentAsRedIfGrouped: function _selectNextCommentAsRedIfGrouped() {
-	        var _this = this;
-
-	        var categoryProductCode = null;
-	        var indexOfNextCommentInList = -1;
-
-	        _.keys(_store2.default.allDefaultComments).forEach(function (categoryProductCd) {
-	            var docDefaultComments = _store2.default.allDefaultComments[categoryProductCd];
-
-	            for (var i = 0; i < docDefaultComments.length; i++) {
-	                if (docDefaultComments[i].id === _this.props.comment.id) {
-	                    categoryProductCode = categoryProductCd;
-	                    indexOfNextCommentInList = i + 1;
-	                    break;
-	                }
-	            }
-	        });
-
-	        var nextComment = indexOfNextCommentInList > -1 ? _store2.default.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
-
-	        // eslint-disable-next-line no-undefined
-	        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
-	            nextComment.isGreenSelected = false;
-	            nextComment.isRedSelected = true;
-
-	            _store2.default.updateListComment(nextComment);
+	            _store2.default.selectNextCommentAsRedIfGrouped(this.props.comment.id);
 	        }
 	    },
 	    _handleRedParagraphBlur: function _handleRedParagraphBlur(e) {
@@ -2519,6 +2593,11 @@
 	        c.redText = $(e.currentTarget).text();
 
 	        _store2.default.updateCommentInListAndReport(c);
+	    },
+	    _handleVariationsClick: function _handleVariationsClick() {
+	        if (!_store2.default.isOrderReadOnly()) {
+	            _store2.default.setVariationsModalForComment(this.props.comment.id);
+	        }
 	    },
 	    _handleAddClick: function _handleAddClick() {
 	        if (!_store2.default.isOrderReadOnly()) {
@@ -2997,6 +3076,7 @@
 	        var $container = $("#container");
 
 	        this.$siteHeader = $container.children("header");
+	        this.$orderDetails = $container.find("#order-details");
 	        this.$navPanel = $container.find(".nav-panel");
 
 	        var $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
@@ -3011,7 +3091,154 @@
 	        return this.$listItems.filter("[data-category-id=\"" + categoryId + "\"]").hasClass("active");
 	    },
 	    _handleScrollToLinkClick: function _handleScrollToLinkClick(e) {
-	        (0, _animator.scrollTo)(e, this.$siteHeader.height());
+	        (0, _animator.scrollTo)(e, this.$siteHeader.height() + this.$orderDetails.height());
+	    }
+	});
+
+	exports.default = Component;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = undefined;
+
+	var _store = __webpack_require__(7);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Component = React.createClass({
+	    displayName: "Component",
+	    render: function render() {
+	        var _this = this;
+
+	        var currentDefaultComment = _store2.default.currentDefaultComment;
+
+	        if (!currentDefaultComment) {
+	            return null;
+	        }
+
+	        var variations = _.filter(_store2.default.allCommentVariations, function (v) {
+	            return v.defaultComment.id === currentDefaultComment.id;
+	        });
+
+	        // TODO: remove
+	        console.log("store.allCommentVariations", _store2.default.allCommentVariations);
+	        console.log("variations", variations);
+
+	        return React.createElement(
+	            "div",
+	            { id: "variations-modal", className: "modal fade", tabIndex: "-1", role: "dialog" },
+	            React.createElement(
+	                "div",
+	                { className: "modal-dialog", role: "document" },
+	                React.createElement(
+	                    "div",
+	                    { className: "modal-content" },
+	                    React.createElement(
+	                        "div",
+	                        { className: "modal-header" },
+	                        React.createElement(
+	                            "button",
+	                            { type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close" },
+	                            React.createElement(
+	                                "span",
+	                                { "aria-hidden": "true" },
+	                                "\xD7"
+	                            )
+	                        ),
+	                        React.createElement(
+	                            "h3",
+	                            { className: "modal-title" },
+	                            "Variations"
+	                        )
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "modal-body" },
+	                        React.createElement(
+	                            "ul",
+	                            { className: "styleless" },
+	                            React.createElement(
+	                                "li",
+	                                { key: currentDefaultComment.id, onClick: this._handleDefaultCommentClick },
+	                                this._listItemContents(currentDefaultComment.redText, { code: "PRO" })
+	                            ),
+	                            variations.map(function (variation) {
+	                                return React.createElement(
+	                                    "li",
+	                                    { key: variation.id, onClick: _this._handleVariationClick, "data-variation-id": variation.id },
+	                                    _this._listItemContents(variation.text, variation.edition)
+	                                );
+	                            })
+	                        )
+	                    )
+	                )
+	            )
+	        );
+	    },
+	    componentDidUpdate: function componentDidUpdate() {
+	        this._initElements();
+
+	        if (_store2.default.currentDefaultComment && !_.isEmpty(this.$listItems)) {
+	            this.$modal.modal();
+	        }
+	    },
+	    _initElements: function _initElements() {
+	        this.$modal = $("#variations-modal");
+	        this.$listItems = this.$modal.find("li");
+	    },
+	    _listItemContents: function _listItemContents(variationText, edition) {
+	        var tag = edition ? edition.code : "English";
+
+	        return React.createElement(
+	            "div",
+	            null,
+	            React.createElement(
+	                "p",
+	                null,
+	                variationText
+	            ),
+	            React.createElement(
+	                "span",
+	                { className: "variation-tag" },
+	                tag
+	            )
+	        );
+	    },
+	    _handleDefaultCommentClick: function _handleDefaultCommentClick() {
+	        var c = _store2.default.currentDefaultComment;
+
+	        c.isGreenSelected = false;
+	        c.isRedSelected = true;
+
+	        _store2.default.updateListComment(c);
+	        _store2.default.selectNextCommentAsRedIfGrouped(c.id);
+
+	        this._finishClickHandling();
+	    },
+	    _handleVariationClick: function _handleVariationClick(e) {
+	        var $li = $(e.currentTarget);
+	        var variationId = $li.data("variation-id");
+	        var variation = _.find(_store2.default.allCommentVariations, function (v) {
+	            return v.id === variationId;
+	        });
+
+	        _store2.default.updateListComment(variation);
+	        _store2.default.selectNextCommentAsRedIfGrouped(variation.defaultComment.id);
+
+	        this._finishClickHandling();
+	    },
+	    _finishClickHandling: function _finishClickHandling() {
+	        _store2.default.currentDefaultComment = null;
+	        this.$modal.modal("hide");
 	    }
 	});
 

@@ -33,16 +33,62 @@ const Assessment = {
         const listComments = this._listCommentsFromLocalStorage();
         let listCommentsToUpdate = listComments.cv;
 
-        if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
-            listCommentsToUpdate = listComments.coverLetter;
-        }
-        if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
-            listCommentsToUpdate = listComments.linkedinProfile;
+        if (_.has(comment, "defaultComment.id")) {
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
+                listCommentsToUpdate = listComments.coverLetter;
+            }
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
+                listCommentsToUpdate = listComments.linkedinProfile;
+            }
+        } else {
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
+                listCommentsToUpdate = listComments.coverLetter;
+            }
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
+                listCommentsToUpdate = listComments.linkedinProfile;
+            }
         }
 
-        const commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
+        /*
+         * Structure of the comment object:
+         * {
+         *   id: 1,
+         *   categoryId: 13,
+         *   greenText: "string",
+         *   redText: "string",
+         *   points: 5,
+         *   isGrouped: false,
+         *   isGreenSelected: true,
+         *   isRedSelected: false
+         * }
+         */
 
-        Object.assign(commentToUpdate, comment);
+        /*
+         * Structure of the commentVariation object:
+         * {
+         *   id: 238,
+         *   defaultCommentId: 12,
+         *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
+         *   editionId: 4 [or `undefined` if variation is for an extra language]
+         * }
+         */
+
+        let commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
+        let updatedComment = comment;
+
+        if (_.has(comment, "defaultComment.id")) { // `comment` is a variation
+            commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id);
+
+            updatedComment = Object.assign(Object.create(commentToUpdate), {
+                redText: comment.text,
+                variationId: comment.id,
+                variationEditionId: comment.editionId,
+                isGreenSelected: false,
+                isRedSelected: true
+            });
+        }
+
+        Object.assign(commentToUpdate, updatedComment);
 
         this._saveListCommentsInLocalStorage(listComments);
     },

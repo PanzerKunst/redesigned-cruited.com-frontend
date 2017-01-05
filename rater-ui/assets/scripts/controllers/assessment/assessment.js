@@ -33,6 +33,9 @@ import OrderStatusChangeBtn from "./orderStatusChangeBtn";
 // eslint-disable-next-line no-unused-vars
 import DocAssessmentNav from "./docAssessmentNav";
 
+// eslint-disable-next-line no-unused-vars
+import VariationsModal from "./variationsModal";
+
 const controller = {
     init() {
         store.reactComponent = ReactDOM.render(
@@ -91,6 +94,8 @@ const controller = {
                                 <button className="styleless fa fa-chevron-down" onClick={this._handleExpandCollapseClick}/>
                             </div>
                         </div>
+
+                        <VariationsModal />
 
                         <div className="nav-panel">
                             <ul className="nav nav-tabs" role="tablist">
@@ -357,7 +362,7 @@ const controller = {
 
         _updateFloatingOrderDetailsPanel() {
             if (Browser.isMediumScreen() || Browser.isLargeScreen() || Browser.isXlScreen()) {
-                if (this.$window.scrollTop() > 300) {
+                if (this.$window.scrollTop() > 150) {
                     if (!this.defaultOrderDetailsHeight) {
                         this.defaultOrderDetailsHeight = this.$orderDetails.outerHeight();
                     }

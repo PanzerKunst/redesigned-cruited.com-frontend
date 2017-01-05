@@ -16,6 +16,6 @@ object CommentVariation {
       (JsPath \ "editionId").formatNullable[Long]
     )(CommentVariation.apply, unlift(CommentVariation.unapply))
 
-  val dbTagTypeEdition = "edition"
-  val dbTagTypeLanguage = "language"
+  val dbVariationTypeEdition = "edition"
+  val dbVariationTypeLanguage = "language"
 }
