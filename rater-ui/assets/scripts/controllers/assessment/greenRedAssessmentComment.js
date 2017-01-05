@@ -92,7 +92,7 @@ const Component = React.createClass({
 
     _handleVariationsClick() {
         if (!store.isOrderReadOnly()) {
-            store.setVariationsModalForComment(this.props.comment.id);
+            store.setVariationsModalForComment(this.props.comment);
         }
     },
 

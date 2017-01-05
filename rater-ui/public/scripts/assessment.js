@@ -1061,7 +1061,8 @@
 	    init: function init() {
 	        this.assessment = Object.assign(Object.create(_assessment2.default), {
 	            orderId: this.order.id,
-	            allDefaultComments: this.allDefaultComments
+	            allDefaultComments: this.allDefaultComments,
+	            allCommentVariations: this.allCommentVariations
 	        });
 
 	        this.assessment.init();
@@ -1159,19 +1160,8 @@
 	            this.updateListComment(nextComment);
 	        }
 	    },
-	    setVariationsModalForComment: function setVariationsModalForComment(defaultCommentId) {
-	        var findCondition = function findCondition(c) {
-	            return c.id === defaultCommentId;
-	        };
-
-	        this.currentDefaultComment = _.find(this.allDefaultComments.cv, function (c) {
-	            return findCondition(c);
-	        }) || _.find(this.allDefaultComments.coverLetter, function (c) {
-	            return findCondition(c);
-	        }) || _.find(this.allDefaultComments.linkedinProfile, function (c) {
-	            return findCondition(c);
-	        });
-
+	    setVariationsModalForComment: function setVariationsModalForComment(comment) {
+	        this.currentDefaultComment = this.assessment.originalDefaultComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
 	    saveCurrentReport: function saveCurrentReport() {
@@ -1563,32 +1553,6 @@
 	        return listComments[categoryProductCode];
 	    },
 	    updateListComment: function updateListComment(comment) {
-	        var listComments = this._listCommentsFromLocalStorage();
-	        var listCommentsToUpdate = listComments.cv;
-
-	        if (_.has(comment, "defaultComment.id")) {
-	            if (!_.find(listCommentsToUpdate, function (c) {
-	                return c.id === comment.defaultComment.id;
-	            })) {
-	                listCommentsToUpdate = listComments.coverLetter;
-	            }
-	            if (!_.find(listCommentsToUpdate, function (c) {
-	                return c.id === comment.defaultComment.id;
-	            })) {
-	                listCommentsToUpdate = listComments.linkedinProfile;
-	            }
-	        } else {
-	            if (!_.find(listCommentsToUpdate, function (c) {
-	                return c.id === comment.id;
-	            })) {
-	                listCommentsToUpdate = listComments.coverLetter;
-	            }
-	            if (!_.find(listCommentsToUpdate, function (c) {
-	                return c.id === comment.id;
-	            })) {
-	                listCommentsToUpdate = listComments.linkedinProfile;
-	            }
-	        }
 
 	        /*
 	         * Structure of the comment object:
@@ -1610,28 +1574,54 @@
 	         *   id: 238,
 	         *   defaultCommentId: 12,
 	         *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
-	         *   editionId: 4 [or `undefined` if variation is for an extra language]
+	         *   edition: {
+	         *     id: 4,
+	         *     code: "YOUNG_PRO"
+	         *   } [or `undefined` if variation is for an extra language]
 	         * }
 	         */
 
-	        var commentToUpdate = _.find(listCommentsToUpdate, function (c) {
-	            return c.id === comment.id;
-	        });
-	        var updatedComment = comment;
+	        var listComments = this._listCommentsFromLocalStorage();
+	        var listCommentsToUpdate = listComments.cv;
 
-	        if (_.has(comment, "defaultComment.id")) {
+	        if (comment.defaultComment) {
+	            // `comment` is a variation
+	            if (!_.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.defaultComment.id;
+	            })) {
+	                listCommentsToUpdate = listComments.coverLetter;
+	            }
+	            if (!_.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.defaultComment.id;
+	            })) {
+	                listCommentsToUpdate = listComments.linkedinProfile;
+	            }
+	        } else {
+	            var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+
+	            listCommentsToUpdate = listComments[categoryProductCode];
+	        }
+
+	        var commentToUpdate = null;
+	        var updatedComment = null;
+
+	        if (comment.defaultComment) {
 	            // `comment` is a variation
 	            commentToUpdate = _.find(listCommentsToUpdate, function (c) {
 	                return c.id === comment.defaultComment.id;
 	            });
 
-	            updatedComment = Object.assign(Object.create(commentToUpdate), {
+	            updatedComment = Object.assign(_.cloneDeep(comment.defaultComment), {
 	                redText: comment.text,
 	                variationId: comment.id,
-	                variationEditionId: comment.editionId,
 	                isGreenSelected: false,
 	                isRedSelected: true
 	            });
+	        } else {
+	            commentToUpdate = _.find(listCommentsToUpdate, function (c) {
+	                return c.id === comment.id;
+	            });
+	            updatedComment = comment;
 	        }
 
 	        Object.assign(commentToUpdate, updatedComment);
@@ -1639,12 +1629,7 @@
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
 	    resetListComment: function resetListComment(comment) {
-	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var originalComment = _.find(this.allDefaultComments[categoryProductCode], function (c) {
-	            return c.id === comment.id;
-	        });
-
-	        this.updateListComment(originalComment);
+	        this.updateListComment(this._originalComment(comment));
 	    },
 
 
@@ -1814,12 +1799,7 @@
 	        this._removeReportCommentFromLocalStorage(categoryProductCode, comment);
 	    },
 	    resetReportComment: function resetReportComment(comment) {
-	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var originalComment = _.find(this.allDefaultComments[categoryProductCode], function (c) {
-	            return c.id === comment.id;
-	        });
-
-	        this.updateReportCommentIfExists(originalComment);
+	        this.updateReportCommentIfExists(this._originalComment(comment));
 	    },
 	    reorderReportComment: function reorderReportComment(categoryId, oldIndex, newIndex) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(categoryId);
@@ -1983,6 +1963,13 @@
 	        }
 
 	        return false;
+	    },
+	    originalDefaultComment: function originalDefaultComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+
+	        return _.find(this.allDefaultComments[categoryProductCode], function (c) {
+	            return c.id === comment.id;
+	        });
 	    },
 	    _initCategoryIds: function _initCategoryIds() {
 	        var predicate = function predicate(dc) {
@@ -2186,6 +2173,21 @@
 	                _this2.updateListComment(listComment);
 	            }
 	        });
+	    },
+	    _originalComment: function _originalComment(comment) {
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var originalComment = _.find(this.allDefaultComments[categoryProductCode], function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        if (comment.variationId) {
+	            originalComment.variationId = comment.variationId;
+	            originalComment.redText = _.find(this.allCommentVariations, function (c) {
+	                return c.id === comment.variationId;
+	            }).text;
+	        }
+
+	        return originalComment;
 	    }
 	};
 
@@ -2596,7 +2598,7 @@
 	    },
 	    _handleVariationsClick: function _handleVariationsClick() {
 	        if (!_store2.default.isOrderReadOnly()) {
-	            _store2.default.setVariationsModalForComment(this.props.comment.id);
+	            _store2.default.setVariationsModalForComment(this.props.comment);
 	        }
 	    },
 	    _handleAddClick: function _handleAddClick() {
@@ -3129,10 +3131,6 @@
 	            return v.defaultComment.id === currentDefaultComment.id;
 	        });
 
-	        // TODO: remove
-	        console.log("store.allCommentVariations", _store2.default.allCommentVariations);
-	        console.log("variations", variations);
-
 	        return React.createElement(
 	            "div",
 	            { id: "variations-modal", className: "modal fade", tabIndex: "-1", role: "dialog" },
@@ -3186,6 +3184,7 @@
 	    },
 	    componentDidUpdate: function componentDidUpdate() {
 	        this._initElements();
+	        this._initEvents();
 
 	        if (_store2.default.currentDefaultComment && !_.isEmpty(this.$listItems)) {
 	            this.$modal.modal();
@@ -3195,21 +3194,34 @@
 	        this.$modal = $("#variations-modal");
 	        this.$listItems = this.$modal.find("li");
 	    },
+	    _initEvents: function _initEvents() {
+	        if (!this.areEventsInitialized && !_.isEmpty(this.$modal)) {
+	            this.$modal.on("hide.bs.modal", function () {
+	                _store2.default.currentDefaultComment = null;
+	            });
+
+	            this.areEventsInitialized = true;
+	        }
+	    },
 	    _listItemContents: function _listItemContents(variationText, edition) {
-	        var tag = edition ? edition.code : "English";
+	        var tagText = edition ? edition.code : "English";
+
+	        var tagClasses = "variation-tag";
+
+	        tagClasses += edition && edition.code ? " edition " + edition.code : " extra-language";
 
 	        return React.createElement(
 	            "div",
 	            null,
 	            React.createElement(
 	                "p",
-	                null,
+	                { className: "variation-text" },
 	                variationText
 	            ),
 	            React.createElement(
 	                "span",
-	                { className: "variation-tag" },
-	                tag
+	                { className: tagClasses },
+	                tagText
 	            )
 	        );
 	    },
@@ -3222,7 +3234,7 @@
 	        _store2.default.updateListComment(c);
 	        _store2.default.selectNextCommentAsRedIfGrouped(c.id);
 
-	        this._finishClickHandling();
+	        this.$modal.modal("hide");
 	    },
 	    _handleVariationClick: function _handleVariationClick(e) {
 	        var $li = $(e.currentTarget);
@@ -3234,10 +3246,6 @@
 	        _store2.default.updateListComment(variation);
 	        _store2.default.selectNextCommentAsRedIfGrouped(variation.defaultComment.id);
 
-	        this._finishClickHandling();
-	    },
-	    _finishClickHandling: function _finishClickHandling() {
-	        _store2.default.currentDefaultComment = null;
 	        this.$modal.modal("hide");
 	    }
 	});

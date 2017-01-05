@@ -30,24 +30,6 @@ const Assessment = {
     },
 
     updateListComment(comment) {
-        const listComments = this._listCommentsFromLocalStorage();
-        let listCommentsToUpdate = listComments.cv;
-
-        if (_.has(comment, "defaultComment.id")) {
-            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
-                listCommentsToUpdate = listComments.coverLetter;
-            }
-            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
-                listCommentsToUpdate = listComments.linkedinProfile;
-            }
-        } else {
-            if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
-                listCommentsToUpdate = listComments.coverLetter;
-            }
-            if (!_.find(listCommentsToUpdate, c => c.id === comment.id)) {
-                listCommentsToUpdate = listComments.linkedinProfile;
-            }
-        }
 
         /*
          * Structure of the comment object:
@@ -69,23 +51,43 @@ const Assessment = {
          *   id: 238,
          *   defaultCommentId: 12,
          *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
-         *   editionId: 4 [or `undefined` if variation is for an extra language]
+         *   edition: {
+         *     id: 4,
+         *     code: "YOUNG_PRO"
+         *   } [or `undefined` if variation is for an extra language]
          * }
          */
 
-        let commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
-        let updatedComment = comment;
+        const listComments = this._listCommentsFromLocalStorage();
+        let listCommentsToUpdate = listComments.cv;
 
-        if (_.has(comment, "defaultComment.id")) { // `comment` is a variation
+        if (comment.defaultComment) { // `comment` is a variation
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
+                listCommentsToUpdate = listComments.coverLetter;
+            }
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
+                listCommentsToUpdate = listComments.linkedinProfile;
+            }
+        } else {
+            const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+
+            listCommentsToUpdate = listComments[categoryProductCode];
+        }
+
+        let commentToUpdate = null;
+        let updatedComment = null;
+
+        if (comment.defaultComment) { // `comment` is a variation
             commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id);
 
-            updatedComment = Object.assign(Object.create(commentToUpdate), {
-                redText: comment.text,
-                variationId: comment.id,
-                variationEditionId: comment.editionId,
-                isGreenSelected: false,
-                isRedSelected: true
-            });
+            updatedComment = _.cloneDeep(comment.defaultComment);
+            updatedComment.redText = comment.text;
+            updatedComment.variationId = comment.id;
+            updatedComment.isGreenSelected = false;
+            updatedComment.isRedSelected = true;
+        } else {
+            commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
+            updatedComment = comment;
         }
 
         Object.assign(commentToUpdate, updatedComment);
@@ -94,10 +96,7 @@ const Assessment = {
     },
 
     resetListComment(comment) {
-        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-        const originalComment = _.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id);
-
-        this.updateListComment(originalComment);
+        this.updateListComment(this._originalComment(comment));
     },
 
     /*
@@ -230,10 +229,7 @@ const Assessment = {
     },
 
     resetReportComment(comment) {
-        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-        const originalComment = _.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id);
-
-        this.updateReportCommentIfExists(originalComment);
+        this.updateReportCommentIfExists(this._originalComment(comment));
     },
 
     reorderReportComment(categoryId, oldIndex, newIndex) {
@@ -315,6 +311,12 @@ const Assessment = {
         }
 
         return false;
+    },
+
+    originalDefaultComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+
+        return _.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id);
     },
 
     _initCategoryIds() {
@@ -507,6 +509,18 @@ const Assessment = {
                 this.updateListComment(listComment);
             }
         });
+    },
+
+    _originalComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const originalComment = _.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id);
+
+        if (comment.variationId) {
+            originalComment.variationId = comment.variationId;
+            originalComment.redText = _.find(this.allCommentVariations, c => c.id === comment.variationId).text;
+        }
+
+        return originalComment;
     }
 };
 

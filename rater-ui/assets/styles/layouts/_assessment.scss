@@ -70,6 +70,12 @@ $white-section-padding: 2em 1em 1em;
     }
   }
 
+  .edition,
+  .extra-language {
+    display: inline-block;
+    padding: 0.2em 0.6em 0 2.3em;
+  }
+
   #order-details {
     background-color: white;
     padding: 1.5em $spacer-unit-size;
@@ -142,13 +148,26 @@ $white-section-padding: 2em 1em 1em;
         position: relative;
       }
 
-      .variation-tag {
-        display: inline-block;
+      .variation-text {
+        padding-bottom: 1.5em;
+      }
 
+      .variation-tag {
         position: absolute;
         right: 0;
         bottom: 0;
       }
+    }
+
+    .extra-language {
+      border-radius: 0.15em;
+
+      font-size: $font-size-sm;
+      color: white;
+      text-transform: uppercase;
+
+      background-color: black;
+      padding-left: 0.6em;
     }
   }
 

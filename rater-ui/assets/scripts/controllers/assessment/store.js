@@ -18,10 +18,10 @@ const store = {
     backendAssessment: CR.ControllerData.assessment,
 
     init() {
-        this.assessment = Object.assign(Object.create(Assessment), {
-            orderId: this.order.id,
-            allDefaultComments: this.allDefaultComments
-        });
+        this.assessment = Object.create(Assessment);
+        this.assessment.orderId = this.order.id;
+        this.assessment.allDefaultComments = this.allDefaultComments;
+        this.assessment.allCommentVariations = this.allCommentVariations;
 
         this.assessment.init();
 
@@ -138,13 +138,8 @@ const store = {
         }
     },
 
-    setVariationsModalForComment(defaultCommentId) {
-        const findCondition = c => c.id === defaultCommentId;
-
-        this.currentDefaultComment = _.find(this.allDefaultComments.cv, c => findCondition(c)) ||
-        _.find(this.allDefaultComments.coverLetter, c => findCondition(c)) ||
-        _.find(this.allDefaultComments.linkedinProfile, c => findCondition(c));
-
+    setVariationsModalForComment(comment) {
+        this.currentDefaultComment = this.assessment.originalDefaultComment(comment);
         this.reactComponent.forceUpdate();
     },
 
@@ -350,11 +345,14 @@ const store = {
          *   isRedSelected: false
          * }
          */
-        return backendListCommentsForDoc.map(c => Object.assign(c.defaultComment, {
-            redText: c.redText || c.defaultComment.redText,
-            isGreenSelected: c.isGreenSelected,
-            isRedSelected: !c.isGreenSelected
-        }));
+        return backendListCommentsForDoc.map(c => {
+            const commentForBackend = c.defaultComment;
+            commentForBackend.redText = c.redText || c.defaultComment.redText;
+            commentForBackend.isGreenSelected = c.isGreenSelected;
+            commentForBackend.isRedSelected = !c.isGreenSelected;
+
+            return commentForBackend;
+        });
     },
 
     /* backendDocReport DocumentReport(redComments: List[RedComment],

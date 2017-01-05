@@ -1,6 +1,6 @@
 import {animationDurations} from "../global";
 
-const validator = {
+const Validator = {
     fieldIds: [],
     checkEmpty: "empty",
     checkEmail: "email",
@@ -361,14 +361,13 @@ const validator = {
     }
 };
 
-function Validator(fieldIds) {
-    const instance = Object.assign(Object.create(validator), {
-        fieldIds
-    });
+function validator(fieldIds) {
+    const instance = Object.create(Validator);
 
+    instance.fieldIds = fieldIds;
     instance.init();
 
     return instance;
 }
 
-export {Validator as default};
+export {validator as default};

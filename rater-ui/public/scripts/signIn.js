@@ -321,7 +321,7 @@
 
 	var _global = __webpack_require__(1);
 
-	var validator = {
+	var Validator = {
 	    fieldIds: [],
 	    checkEmpty: "empty",
 	    checkEmail: "email",
@@ -649,8 +649,8 @@
 	    }
 	};
 
-	function Validator(fieldIds) {
-	    var instance = Object.assign(Object.create(validator), {
+	function validator(fieldIds) {
+	    var instance = Object.assign(Object.create(Validator), {
 	        fieldIds: fieldIds
 	    });
 
@@ -659,7 +659,7 @@
 	    return instance;
 	}
 
-	exports.default = Validator;
+	exports.default = validator;
 
 /***/ }
 /******/ ]);

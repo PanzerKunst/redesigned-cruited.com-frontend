@@ -10,10 +10,6 @@ const Component = React.createClass({
 
         const variations = _.filter(store.allCommentVariations, v => v.defaultComment.id === currentDefaultComment.id);
 
-        // TODO: remove
-        console.log("store.allCommentVariations", store.allCommentVariations);
-        console.log("variations", variations);
-
         return (
             <div id="variations-modal" className="modal fade" tabIndex="-1" role="dialog">
                 <div className="modal-dialog" role="document">
@@ -44,6 +40,7 @@ const Component = React.createClass({
 
     componentDidUpdate() {
         this._initElements();
+        this._initEvents();
 
         if (store.currentDefaultComment && !_.isEmpty(this.$listItems)) {
             this.$modal.modal();
@@ -55,13 +52,27 @@ const Component = React.createClass({
         this.$listItems = this.$modal.find("li");
     },
 
+    _initEvents() {
+        if (!this.areEventsInitialized && !_.isEmpty(this.$modal)) {
+            this.$modal.on("hide.bs.modal", () => {
+                store.currentDefaultComment = null;
+            });
+
+            this.areEventsInitialized = true;
+        }
+    },
+
     _listItemContents(variationText, edition) {
-        const tag = edition ? edition.code : "English";
+        const tagText = edition ? edition.code : "English";
+
+        let tagClasses = "variation-tag";
+
+        tagClasses += edition && edition.code ? ` edition ${edition.code}` : " extra-language";
 
         return (
             <div>
-                <p>{variationText}</p>
-                <span className="variation-tag">{tag}</span>
+                <p className="variation-text">{variationText}</p>
+                <span className={tagClasses}>{tagText}</span>
             </div>);
     },
 
@@ -74,7 +85,7 @@ const Component = React.createClass({
         store.updateListComment(c);
         store.selectNextCommentAsRedIfGrouped(c.id);
 
-        this._finishClickHandling();
+        this.$modal.modal("hide");
     },
 
     _handleVariationClick(e) {
@@ -85,11 +96,6 @@ const Component = React.createClass({
         store.updateListComment(variation);
         store.selectNextCommentAsRedIfGrouped(variation.defaultComment.id);
 
-        this._finishClickHandling();
-    },
-
-    _finishClickHandling() {
-        store.currentDefaultComment = null;
         this.$modal.modal("hide");
     }
 });
