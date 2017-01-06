@@ -1102,6 +1102,10 @@
 	        this.assessment.updateListComment(comment);
 	        this.reactComponent.forceUpdate();
 	    },
+	    variationSelected: function variationSelected(comment) {
+	        this.assessment.variationSelected(comment);
+	        this.reactComponent.forceUpdate();
+	    },
 	    updateReportCategory: function updateReportCategory(category, isRefreshRequired) {
 	        this.assessment.updateReportCategory(category);
 
@@ -1553,40 +1557,62 @@
 
 	        return listComments[categoryProductCode];
 	    },
+
+
+	    /*
+	     * Called when a comment's text is updated in the list
+	     *
+	     * Structure of the comment object:
+	     * {
+	     *   id: 1,
+	     *   categoryId: 13,
+	     *   greenText: "string",
+	     *   redText: "string",
+	     *   points: 5,
+	     *   isGrouped: false,
+	     *   isGreenSelected: true,
+	     *   isRedSelected: false,
+	     *   variationId: 402
+	     * }
+	     */
 	    updateListComment: function updateListComment(comment) {
-
-	        /*
-	         * Structure of the comment object:
-	         * {
-	         *   id: 1,
-	         *   categoryId: 13,
-	         *   greenText: "string",
-	         *   redText: "string",
-	         *   points: 5,
-	         *   isGrouped: false,
-	         *   isGreenSelected: true,
-	         *   isRedSelected: false
-	         * }
-	         */
-
-	        /*
-	         * Structure of the commentVariation object:
-	         * {
-	         *   id: 238,
-	         *   defaultComment: {...},
-	         *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
-	         *   edition: {
-	         *     id: 4,
-	         *     code: "YOUNG_PRO"
-	         *   } [or `undefined` if variation is for an extra language]
-	         * }
-	         */
-
 	        var listComments = this._listCommentsFromLocalStorage();
-	        var listCommentsToUpdate = listComments.cv;
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var listCommentsToUpdate = listComments[categoryProductCode];
+	        var commentToUpdate = _.find(listCommentsToUpdate, function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        commentToUpdate.redText = comment.redText;
+	        commentToUpdate.isGreenSelected = comment.isGreenSelected;
+	        commentToUpdate.isRedSelected = comment.isRedSelected;
+
+	        this._saveListCommentsInLocalStorage(listComments);
+	    },
+
+
+	    /*
+	     * Called when a variation is selected
+	     *
+	     * Structure of the commentVariation object:
+	     * {
+	     *   id: 238,
+	     *   defaultComment: {...},
+	     *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
+	     *   edition: {
+	     *     id: 4,
+	     *     code: "YOUNG_PRO"
+	     *   } [or `undefined` if variation is for an extra language]
+	     * }
+	     */
+	    variationSelected: function variationSelected(comment) {
+	        var listComments = this._listCommentsFromLocalStorage();
+	        var commentToUpdate = null;
 
 	        if (comment.defaultComment) {
-	            // `comment` is a variation
+	            // A variation (non-default) is selected in the modal
+	            var listCommentsToUpdate = listComments.cv;
+
 	            if (!_.find(listCommentsToUpdate, function (c) {
 	                return c.id === comment.defaultComment.id;
 	            })) {
@@ -1597,41 +1623,61 @@
 	            })) {
 	                listCommentsToUpdate = listComments.linkedinProfile;
 	            }
-	        } else {
-	            var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 
-	            listCommentsToUpdate = listComments[categoryProductCode];
-	        }
-
-	        var commentToUpdate = null;
-	        var updatedComment = null;
-
-	        if (comment.defaultComment) {
-	            // `comment` is a variation
 	            commentToUpdate = _.find(listCommentsToUpdate, function (c) {
 	                return c.id === comment.defaultComment.id;
 	            });
 
-	            updatedComment = _.cloneDeep(comment.defaultComment);
-	            updatedComment.redText = comment.text;
-	            updatedComment.variationId = comment.id;
-	            updatedComment.isGreenSelected = false;
-	            updatedComment.isRedSelected = true;
+	            commentToUpdate.redText = comment.text;
+	            commentToUpdate.variationId = comment.id;
 	        } else {
-	            commentToUpdate = _.find(listCommentsToUpdate, function (c) {
+	            // The default comment is selected in the modal
+	            var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	            var _listCommentsToUpdate = listComments[categoryProductCode];
+
+	            commentToUpdate = _.find(_listCommentsToUpdate, function (c) {
 	                return c.id === comment.id;
 	            });
 
-	            updatedComment = comment;
-	            updatedComment.variationId = null;
+	            commentToUpdate.redText = comment.redText;
+	            commentToUpdate.variationId = null;
 	        }
 
-	        Object.assign(commentToUpdate, updatedComment);
+	        commentToUpdate.isGreenSelected = false;
+	        commentToUpdate.isRedSelected = true;
 
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
+
+
+	    /*
+	     * Called when a reset button is clicked in the list
+	     */
 	    resetListComment: function resetListComment(comment) {
-	        this.updateListComment(this._originalComment(comment));
+	        var listComments = this._listCommentsFromLocalStorage();
+	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
+	        var listCommentsToUpdate = listComments[categoryProductCode];
+	        var commentToUpdate = _.find(listCommentsToUpdate, function (c) {
+	            return c.id === comment.id;
+	        });
+
+	        if (comment.variationId) {
+	            // The comment is a variation
+	            var originalVariation = _.find(this.allCommentVariations, function (v) {
+	                return v.id === comment.variationId;
+	            });
+
+	            commentToUpdate.redText = originalVariation.text;
+	        } else {
+	            // The comment is a default
+	            var originalDefault = _.find(this.allDefaultComments[categoryProductCode], function (c) {
+	                return c.id === comment.id;
+	            });
+
+	            commentToUpdate.redText = originalDefault.redText;
+	        }
+
+	        this._saveListCommentsInLocalStorage(listComments);
 	    },
 
 
@@ -2177,6 +2223,10 @@
 	        });
 	    },
 	    _originalComment: function _originalComment(comment) {
+
+	        // TODO: remove
+	        console.log("_originalComment()", comment);
+
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 	        var originalComment = _.cloneDeep(_.find(this.allDefaultComments[categoryProductCode], function (c) {
 	            return c.id === comment.id;
@@ -3157,7 +3207,7 @@
 	                        React.createElement(
 	                            "h3",
 	                            { className: "modal-title" },
-	                            "Variations"
+	                            "Select variation"
 	                        )
 	                    ),
 	                    React.createElement(
@@ -3232,10 +3282,7 @@
 	    _handleDefaultCommentClick: function _handleDefaultCommentClick() {
 	        var c = _store2.default.currentDefaultComment;
 
-	        c.isGreenSelected = false;
-	        c.isRedSelected = true;
-
-	        _store2.default.updateListComment(c);
+	        _store2.default.variationSelected(c);
 	        _store2.default.selectNextCommentAsRedIfGrouped(c.id);
 
 	        this.$modal.modal("hide");
@@ -3247,7 +3294,7 @@
 	            return v.id === variationId;
 	        });
 
-	        _store2.default.updateListComment(variation);
+	        _store2.default.variationSelected(variation);
 	        _store2.default.selectNextCommentAsRedIfGrouped(variation.defaultComment.id);
 
 	        this.$modal.modal("hide");

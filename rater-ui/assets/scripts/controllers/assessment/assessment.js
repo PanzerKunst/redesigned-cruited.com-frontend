@@ -260,7 +260,7 @@ const controller = {
 
                             <ul className="styleless">
                             {listCommentsForThisCategory.map(ac =>
-                                    <GreenRedAssessmentComment key={ac.id} comment={ac} />
+                                <GreenRedAssessmentComment key={ac.id} comment={ac} />
                             )}
                             </ul>
                         </section>);

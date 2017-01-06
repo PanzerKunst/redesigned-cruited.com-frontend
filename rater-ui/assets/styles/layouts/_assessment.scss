@@ -137,6 +137,11 @@ $white-section-padding: 2em 1em 1em;
     li {
       padding: 0.25em;
 
+      margin-bottom: $content-element-margin-bottom;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
       @include transition(background-color $default-animation-duration ease);
       cursor: pointer;
 

@@ -18,7 +18,7 @@ const Component = React.createClass({
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h3 className="modal-title">Variations</h3>
+                            <h3 className="modal-title">Select variation</h3>
                         </div>
                         <div className="modal-body">
                             <ul className="styleless">
@@ -81,10 +81,7 @@ const Component = React.createClass({
     _handleDefaultCommentClick() {
         const c = store.currentDefaultComment;
 
-        c.isGreenSelected = false;
-        c.isRedSelected = true;
-
-        store.updateListComment(c);
+        store.variationSelected(c);
         store.selectNextCommentAsRedIfGrouped(c.id);
 
         this.$modal.modal("hide");
@@ -95,7 +92,7 @@ const Component = React.createClass({
         const variationId = $li.data("variation-id");
         const variation = _.find(store.allCommentVariations, v => v.id === variationId);
 
-        store.updateListComment(variation);
+        store.variationSelected(variation);
         store.selectNextCommentAsRedIfGrouped(variation.defaultComment.id);
 
         this.$modal.modal("hide");

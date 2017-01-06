@@ -66,6 +66,11 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
+    variationSelected(comment) {
+        this.assessment.variationSelected(comment);
+        this.reactComponent.forceUpdate();
+    },
+
     updateReportCategory(category, isRefreshRequired) {
         this.assessment.updateReportCategory(category);
 

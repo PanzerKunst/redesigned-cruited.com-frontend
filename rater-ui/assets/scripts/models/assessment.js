@@ -29,76 +29,103 @@ const Assessment = {
         return listComments[categoryProductCode];
     },
 
+    /*
+     * Called when a comment's text is updated in the list
+     *
+     * Structure of the comment object:
+     * {
+     *   id: 1,
+     *   categoryId: 13,
+     *   greenText: "string",
+     *   redText: "string",
+     *   points: 5,
+     *   isGrouped: false,
+     *   isGreenSelected: true,
+     *   isRedSelected: false,
+     *   variationId: 402
+     * }
+     */
     updateListComment(comment) {
-
-        /*
-         * Structure of the comment object:
-         * {
-         *   id: 1,
-         *   categoryId: 13,
-         *   greenText: "string",
-         *   redText: "string",
-         *   points: 5,
-         *   isGrouped: false,
-         *   isGreenSelected: true,
-         *   isRedSelected: false
-         * }
-         */
-
-        /*
-         * Structure of the commentVariation object:
-         * {
-         *   id: 238,
-         *   defaultComment: {...},
-         *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
-         *   edition: {
-         *     id: 4,
-         *     code: "YOUNG_PRO"
-         *   } [or `undefined` if variation is for an extra language]
-         * }
-         */
-
         const listComments = this._listCommentsFromLocalStorage();
-        let listCommentsToUpdate = listComments.cv;
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const listCommentsToUpdate = listComments[categoryProductCode];
+        const commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
 
-        if (comment.defaultComment) { // `comment` is a variation
+        commentToUpdate.redText = comment.redText;
+        commentToUpdate.isGreenSelected = comment.isGreenSelected;
+        commentToUpdate.isRedSelected = comment.isRedSelected;
+
+        this._saveListCommentsInLocalStorage(listComments);
+    },
+
+    /*
+     * Called when a variation is selected
+     *
+     * Structure of the commentVariation object:
+     * {
+     *   id: 238,
+     *   defaultComment: {...},
+     *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
+     *   edition: {
+     *     id: 4,
+     *     code: "YOUNG_PRO"
+     *   } [or `undefined` if variation is for an extra language]
+     * }
+     */
+    variationSelected(comment) {
+        const listComments = this._listCommentsFromLocalStorage();
+        let commentToUpdate = null;
+
+        if (comment.defaultComment) {   // A variation (non-default) is selected in the modal
+            let listCommentsToUpdate = listComments.cv;
+
             if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
                 listCommentsToUpdate = listComments.coverLetter;
             }
             if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
                 listCommentsToUpdate = listComments.linkedinProfile;
             }
-        } else {
-            const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
 
-            listCommentsToUpdate = listComments[categoryProductCode];
-        }
-
-        let commentToUpdate = null;
-        let updatedComment = null;
-
-        if (comment.defaultComment) { // `comment` is a variation
             commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id);
 
-            updatedComment = _.cloneDeep(comment.defaultComment);
-            updatedComment.redText = comment.text;
-            updatedComment.variationId = comment.id;
-            updatedComment.isGreenSelected = false;
-            updatedComment.isRedSelected = true;
-        } else {
+            commentToUpdate.redText = comment.text;
+            commentToUpdate.variationId = comment.id;
+        } else {    // The default comment is selected in the modal
+            const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+            const listCommentsToUpdate = listComments[categoryProductCode];
+
             commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
 
-            updatedComment = comment;
-            updatedComment.variationId = null;
+            commentToUpdate.redText = comment.redText;
+            commentToUpdate.variationId = null;
         }
 
-        Object.assign(commentToUpdate, updatedComment);
+        commentToUpdate.isGreenSelected = false;
+        commentToUpdate.isRedSelected = true;
 
         this._saveListCommentsInLocalStorage(listComments);
     },
 
+    /*
+     * Called when a reset button is clicked in the list
+     */
     resetListComment(comment) {
-        this.updateListComment(this._originalComment(comment));
+        const listComments = this._listCommentsFromLocalStorage();
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const listCommentsToUpdate = listComments[categoryProductCode];
+        const commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
+
+        if (comment.variationId) {  // The comment is a variation
+            const originalVariation = _.find(this.allCommentVariations, v => v.id === comment.variationId);
+
+            commentToUpdate.redText = originalVariation.text;
+        } else {    // The comment is a default
+            const originalDefault = _.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id);
+
+            commentToUpdate.redText = originalDefault.redText;
+        }
+
+        this._saveListCommentsInLocalStorage(listComments);
     },
 
     /*
@@ -514,6 +541,10 @@ const Assessment = {
     },
 
     _originalComment(comment) {
+
+        // TODO: remove
+        console.log("_originalComment()", comment);
+
         const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
         const originalComment = _.cloneDeep(_.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id));
 
