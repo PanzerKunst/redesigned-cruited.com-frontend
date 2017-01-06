@@ -1059,11 +1059,10 @@
 	    backendAssessment: CR.ControllerData.assessment,
 
 	    init: function init() {
-	        this.assessment = Object.assign(Object.create(_assessment2.default), {
-	            orderId: this.order.id,
-	            allDefaultComments: this.allDefaultComments,
-	            allCommentVariations: this.allCommentVariations
-	        });
+	        this.assessment = Object.create(_assessment2.default);
+	        this.assessment.orderId = this.order.id;
+	        this.assessment.allDefaultComments = this.allDefaultComments;
+	        this.assessment.allCommentVariations = this.allCommentVariations;
 
 	        this.assessment.init();
 
@@ -1366,11 +1365,13 @@
 	         * }
 	         */
 	        return backendListCommentsForDoc.map(function (c) {
-	            return Object.assign(c.defaultComment, {
-	                redText: c.redText || c.defaultComment.redText,
-	                isGreenSelected: c.isGreenSelected,
-	                isRedSelected: !c.isGreenSelected
-	            });
+	            var commentForBackend = c.defaultComment;
+
+	            commentForBackend.redText = c.redText || c.defaultComment.redText;
+	            commentForBackend.isGreenSelected = c.isGreenSelected;
+	            commentForBackend.isRedSelected = !c.isGreenSelected;
+
+	            return commentForBackend;
 	        });
 	    },
 
@@ -1572,7 +1573,7 @@
 	         * Structure of the commentVariation object:
 	         * {
 	         *   id: 238,
-	         *   defaultCommentId: 12,
+	         *   defaultComment: {...},
 	         *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
 	         *   edition: {
 	         *     id: 4,
@@ -1611,17 +1612,18 @@
 	                return c.id === comment.defaultComment.id;
 	            });
 
-	            updatedComment = Object.assign(_.cloneDeep(comment.defaultComment), {
-	                redText: comment.text,
-	                variationId: comment.id,
-	                isGreenSelected: false,
-	                isRedSelected: true
-	            });
+	            updatedComment = _.cloneDeep(comment.defaultComment);
+	            updatedComment.redText = comment.text;
+	            updatedComment.variationId = comment.id;
+	            updatedComment.isGreenSelected = false;
+	            updatedComment.isRedSelected = true;
 	        } else {
 	            commentToUpdate = _.find(listCommentsToUpdate, function (c) {
 	                return c.id === comment.id;
 	            });
+
 	            updatedComment = comment;
+	            updatedComment.variationId = null;
 	        }
 
 	        Object.assign(commentToUpdate, updatedComment);
@@ -2176,9 +2178,9 @@
 	    },
 	    _originalComment: function _originalComment(comment) {
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
-	        var originalComment = _.find(this.allDefaultComments[categoryProductCode], function (c) {
+	        var originalComment = _.cloneDeep(_.find(this.allDefaultComments[categoryProductCode], function (c) {
 	            return c.id === comment.id;
-	        });
+	        }));
 
 	        if (comment.variationId) {
 	            originalComment.variationId = comment.variationId;
@@ -3195,12 +3197,14 @@
 	        this.$listItems = this.$modal.find("li");
 	    },
 	    _initEvents: function _initEvents() {
-	        if (!this.areEventsInitialized && !_.isEmpty(this.$modal)) {
-	            this.$modal.on("hide.bs.modal", function () {
-	                _store2.default.currentDefaultComment = null;
-	            });
+	        if (!_.isEmpty(this.$modal)) {
+	            var modalEvents = $._data(this.$modal.get(0), "events");
 
-	            this.areEventsInitialized = true;
+	            if (!_.has(modalEvents, "hide")) {
+	                this.$modal.on("hide.bs.modal", function () {
+	                    _store2.default.currentDefaultComment = null;
+	                });
+	            }
 	        }
 	    },
 	    _listItemContents: function _listItemContents(variationText, edition) {

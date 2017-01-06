@@ -347,6 +347,7 @@ const store = {
          */
         return backendListCommentsForDoc.map(c => {
             const commentForBackend = c.defaultComment;
+
             commentForBackend.redText = c.redText || c.defaultComment.redText;
             commentForBackend.isGreenSelected = c.isGreenSelected;
             commentForBackend.isRedSelected = !c.isGreenSelected;

@@ -53,12 +53,14 @@ const Component = React.createClass({
     },
 
     _initEvents() {
-        if (!this.areEventsInitialized && !_.isEmpty(this.$modal)) {
-            this.$modal.on("hide.bs.modal", () => {
-                store.currentDefaultComment = null;
-            });
+        if (!_.isEmpty(this.$modal)) {
+            const modalEvents = $._data(this.$modal.get(0), "events");
 
-            this.areEventsInitialized = true;
+            if (!_.has(modalEvents, "hide")) {
+                this.$modal.on("hide.bs.modal", () => {
+                    store.currentDefaultComment = null;
+                });
+            }
         }
     },
 

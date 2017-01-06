@@ -49,7 +49,7 @@ const Assessment = {
          * Structure of the commentVariation object:
          * {
          *   id: 238,
-         *   defaultCommentId: 12,
+         *   defaultComment: {...},
          *   text: "Visa en tydligare riktning för din karriär. Formulera gärna ett mer specifikt mål eller uttryck en mer övergripande riktning eller vision för din karriär. Vart är du på väg? Var ser du dig själv om några år?",
          *   edition: {
          *     id: 4,
@@ -87,7 +87,9 @@ const Assessment = {
             updatedComment.isRedSelected = true;
         } else {
             commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
+
             updatedComment = comment;
+            updatedComment.variationId = null;
         }
 
         Object.assign(commentToUpdate, updatedComment);
@@ -513,7 +515,7 @@ const Assessment = {
 
     _originalComment(comment) {
         const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-        const originalComment = _.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id);
+        const originalComment = _.cloneDeep(_.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id));
 
         if (comment.variationId) {
             originalComment.variationId = comment.variationId;

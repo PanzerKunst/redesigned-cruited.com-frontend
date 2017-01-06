@@ -650,10 +650,9 @@
 	};
 
 	function validator(fieldIds) {
-	    var instance = Object.assign(Object.create(Validator), {
-	        fieldIds: fieldIds
-	    });
+	    var instance = Object.create(Validator);
 
+	    instance.fieldIds = fieldIds;
 	    instance.init();
 
 	    return instance;
