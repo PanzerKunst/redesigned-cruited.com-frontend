@@ -12,4 +12,9 @@ node_modules
 /document-web-service/conf/application.conf
 /document-web-service/conf/application-test.conf
 /document-web-service/conf/application-prod.conf
+/document-web-service/public
+/rater-ui/conf/application.conf
+/rater-ui/conf/application-test.conf
+/rater-ui/conf/application-prod.conf
+/rater-ui/public
 /dws-test-client/conf/application.conf
