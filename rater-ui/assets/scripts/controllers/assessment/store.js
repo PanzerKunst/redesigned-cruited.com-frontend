@@ -6,6 +6,7 @@ import Assessment from "../../models/assessment";
 import Category from "../../models/category";
 import Product from "../../models/product";
 import Comment from "../../models/comment";
+import Edition from "../../models/edition";
 
 const store = {
     reactComponent: null,
@@ -19,26 +20,34 @@ const store = {
 
     init() {
         this.assessment = Object.create(Assessment);
-        this.assessment.orderId = this.order.id;
+        this.assessment.order = this.order;
         this.assessment.allDefaultComments = this.allDefaultComments;
         this.assessment.allCommentVariations = this.allCommentVariations;
 
         this.assessment.init();
 
-        if (!this.assessment.isReportStarted() && this.backendAssessment) {
+        if (!this.assessment.isReportStarted()) {
+            if (this.backendAssessment) {
 
-            // TODO: remove
-            console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
+                // TODO: remove
+                console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
 
-            this.assessment.initListCommentsAndReport({
-                cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
-                coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
-                linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
+                this.assessment.initListCommentsAndReport({
+                    cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
+                    coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
+                    linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
 
-                cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
-                coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
-                linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
-            });
+                    cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
+                    coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
+                    linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
+                });
+            } else if (this.order.editionCode !== Edition.codes.pro) {
+
+                // TODO: remove
+                console.log("Initializing assessment with variations");
+
+                this.assessment.initListCommentsWithCorrectVariations();
+            }
         }
 
         this.reactComponent.forceUpdate();

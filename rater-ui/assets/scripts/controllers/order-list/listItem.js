@@ -102,16 +102,11 @@ const Component = React.createClass({
             viewBtn = <a href={order.reportUrl(store.config)} target="_blank" className="fa fa-eye" />;
         }
 
-        // TODO: make the button available to everyone
-        const deleteBtn = store.account.isAdmin() ?
-            <button className="styleless fa fa-trash" onClick={this._handleDeleteClick}></button> :
-            null;
-
         return (
             <div className="secondary-buttons">
                 {assignBtn}
                 {viewBtn}
-                {deleteBtn}
+                <button className="styleless fa fa-trash" onClick={this._handleDeleteClick}></button>
             </div>);
     },
 

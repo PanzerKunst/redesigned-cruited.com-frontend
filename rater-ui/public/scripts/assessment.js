@@ -70,43 +70,43 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _positionSought = __webpack_require__(13);
+	var _positionSought = __webpack_require__(15);
 
 	var _positionSought2 = _interopRequireDefault(_positionSought);
 
-	var _employerSought = __webpack_require__(14);
+	var _employerSought = __webpack_require__(16);
 
 	var _employerSought2 = _interopRequireDefault(_employerSought);
 
-	var _orderTags = __webpack_require__(15);
+	var _orderTags = __webpack_require__(17);
 
 	var _orderTags2 = _interopRequireDefault(_orderTags);
 
-	var _timeLeft = __webpack_require__(16);
+	var _timeLeft = __webpack_require__(18);
 
 	var _timeLeft2 = _interopRequireDefault(_timeLeft);
 
-	var _customerProfile = __webpack_require__(17);
+	var _customerProfile = __webpack_require__(19);
 
 	var _customerProfile2 = _interopRequireDefault(_customerProfile);
 
-	var _greenRedAssessmentComment = __webpack_require__(18);
+	var _greenRedAssessmentComment = __webpack_require__(20);
 
 	var _greenRedAssessmentComment2 = _interopRequireDefault(_greenRedAssessmentComment);
 
-	var _reportCategory = __webpack_require__(19);
+	var _reportCategory = __webpack_require__(21);
 
 	var _reportCategory2 = _interopRequireDefault(_reportCategory);
 
-	var _orderStatusChangeBtn = __webpack_require__(22);
+	var _orderStatusChangeBtn = __webpack_require__(24);
 
 	var _orderStatusChangeBtn2 = _interopRequireDefault(_orderStatusChangeBtn);
 
-	var _docAssessmentNav = __webpack_require__(23);
+	var _docAssessmentNav = __webpack_require__(25);
 
 	var _docAssessmentNav2 = _interopRequireDefault(_docAssessmentNav);
 
-	var _variationsModal = __webpack_require__(24);
+	var _variationsModal = __webpack_require__(26);
 
 	var _variationsModal2 = _interopRequireDefault(_variationsModal);
 
@@ -1042,7 +1042,7 @@
 
 	var _product2 = _interopRequireDefault(_product);
 
-	var _comment = __webpack_require__(12);
+	var _comment = __webpack_require__(14);
 
 	var _comment2 = _interopRequireDefault(_comment);
 
@@ -1060,26 +1060,30 @@
 
 	    init: function init() {
 	        this.assessment = Object.create(_assessment2.default);
-	        this.assessment.orderId = this.order.id;
+	        this.assessment.order = this.order;
 	        this.assessment.allDefaultComments = this.allDefaultComments;
 	        this.assessment.allCommentVariations = this.allCommentVariations;
 
 	        this.assessment.init();
 
-	        if (!this.assessment.isReportStarted() && this.backendAssessment) {
+	        if (!this.assessment.isReportStarted()) {
+	            if (this.backendAssessment) {
 
-	            // TODO: remove
-	            console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
+	                // TODO: remove
+	                console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
 
-	            this.assessment.initListCommentsAndReport({
-	                cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
-	                coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
-	                linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
+	                this.assessment.initListCommentsAndReport({
+	                    cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
+	                    coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
+	                    linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
 
-	                cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
-	                coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
-	                linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
-	            });
+	                    cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
+	                    coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
+	                    linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
+	                });
+	            } else {
+	                this.assessment.initListCommentsWithCorrectVariations();
+	            }
 	        }
 
 	        this.reactComponent.forceUpdate();
@@ -1524,11 +1528,19 @@
 
 	var _category2 = _interopRequireDefault(_category);
 
+	var _edition = __webpack_require__(11);
+
+	var _edition2 = _interopRequireDefault(_edition);
+
+	var _language = __webpack_require__(12);
+
+	var _language2 = _interopRequireDefault(_language);
+
 	var _browser = __webpack_require__(3);
 
 	var _browser2 = _interopRequireDefault(_browser);
 
-	var _array = __webpack_require__(11);
+	var _array = __webpack_require__(13);
 
 	var _array2 = _interopRequireDefault(_array);
 
@@ -1679,6 +1691,19 @@
 
 	        this._saveListCommentsInLocalStorage(listComments);
 	    },
+	    initListCommentsWithCorrectVariations: function initListCommentsWithCorrectVariations() {
+
+	        // TODO: remove
+	        console.log(this.order);
+
+	        if (this.order.editionCode === _edition2.default.codes.academia) {
+	            this._initListCommentsWithVariations(_edition2.default.codes.academia);
+	        } else if (this.order.languageCode === _language2.default.codes.en) {
+	            this._initListCommentsWithVariations();
+	        } else if (this.order.editionCode !== _edition2.default.codes.pro) {
+	            this._initListCommentsWithVariations(this.order.editionCode);
+	        }
+	    },
 
 
 	    /*
@@ -1710,7 +1735,7 @@
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        myAssessments[this.orderId].report = {
+	        myAssessments[this.order.id].report = {
 	            cv: listCommentsAndReport.cvReport,
 	            coverLetter: listCommentsAndReport.coverLetterReport,
 	            linkedinProfile: listCommentsAndReport.linkedinProfileReport
@@ -1795,7 +1820,7 @@
 	    overallComment: function overallComment(categoryProductCode) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        return _.get(myAssessments, [this.orderId, "report", categoryProductCode, "overallComment"]);
+	        return _.get(myAssessments, [this.order.id, "report", categoryProductCode, "overallComment"]);
 	    },
 	    updateOverallComment: function updateOverallComment(categoryProductCode, commentText) {
 	        this._saveReportOverallCommentInLocalStorage(categoryProductCode, commentText);
@@ -1805,8 +1830,8 @@
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        if (_.has(myAssessments, [this.orderId, "report", categoryProductCode, "categories", categoryId])) {
-	            return myAssessments[this.orderId].report[categoryProductCode].categories[categoryId];
+	        if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", categoryId])) {
+	            return myAssessments[this.order.id].report[categoryProductCode].categories[categoryId];
 	        }
 
 	        var reportCategory = this._defaultReportCategory(categoryProductCode, categoryId);
@@ -1831,8 +1856,8 @@
 	        var categoryProductCode = _category2.default.productCodeFromCategoryId(comment.categoryId);
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        if (_.has(myAssessments, [this.orderId, "report", categoryProductCode, "categories", comment.categoryId])) {
-	            var commentToUpdate = _.find(myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
+	        if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", comment.categoryId])) {
+	            var commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
 	                return c.id === comment.id;
 	            });
 
@@ -1863,7 +1888,7 @@
 	        }
 
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-	        var docReportCategoriesMap = _.get(myAssessments, [this.orderId, "report", categoryProductCode, "categories"]);
+	        var docReportCategoriesMap = _.get(myAssessments, [this.order.id, "report", categoryProductCode, "categories"]);
 
 	        if (_.isEmpty(docReportCategoriesMap)) {
 	            return false;
@@ -1968,7 +1993,7 @@
 	    deleteAssessmentInfoFromLocalStorage: function deleteAssessmentInfoFromLocalStorage() {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
 
-	        myAssessments[this.orderId] = null;
+	        myAssessments[this.order.id] = null;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
@@ -2058,7 +2083,7 @@
 	    _listCommentsFromLocalStorage: function _listCommentsFromLocalStorage() {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        return myAssessments && myAssessments[this.orderId] ? myAssessments[this.orderId].listComments : null;
+	        return myAssessments && myAssessments[this.order.id] ? myAssessments[this.order.id].listComments : null;
 	    },
 
 
@@ -2084,8 +2109,8 @@
 	    _saveListCommentsInLocalStorage: function _saveListCommentsInLocalStorage(comments) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments) || {};
 
-	        myAssessments[this.orderId] = myAssessments[this.orderId] || {};
-	        myAssessments[this.orderId].listComments = comments;
+	        myAssessments[this.order.id] = myAssessments[this.order.id] || {};
+	        myAssessments[this.order.id].listComments = comments;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
@@ -2097,9 +2122,9 @@
 	    _saveReportOverallCommentInLocalStorage: function _saveReportOverallCommentInLocalStorage(categoryProductCode, commentText) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        myAssessments[this.orderId].report = myAssessments[this.orderId].report || {};
-	        myAssessments[this.orderId].report[categoryProductCode] = myAssessments[this.orderId].report[categoryProductCode] || {};
-	        myAssessments[this.orderId].report[categoryProductCode].overallComment = commentText;
+	        myAssessments[this.order.id].report = myAssessments[this.order.id].report || {};
+	        myAssessments[this.order.id].report[categoryProductCode] = myAssessments[this.order.id].report[categoryProductCode] || {};
+	        myAssessments[this.order.id].report[categoryProductCode].overallComment = commentText;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
@@ -2146,23 +2171,23 @@
 	    _saveReportCategoryInLocalStorage: function _saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        myAssessments[this.orderId].report = myAssessments[this.orderId].report || {};
-	        myAssessments[this.orderId].report[categoryProductCode] = myAssessments[this.orderId].report[categoryProductCode] || {};
-	        myAssessments[this.orderId].report[categoryProductCode].categories = myAssessments[this.orderId].report[categoryProductCode].categories || {};
-	        myAssessments[this.orderId].report[categoryProductCode].categories[categoryId] = reportCategory;
+	        myAssessments[this.order.id].report = myAssessments[this.order.id].report || {};
+	        myAssessments[this.order.id].report[categoryProductCode] = myAssessments[this.order.id].report[categoryProductCode] || {};
+	        myAssessments[this.order.id].report[categoryProductCode].categories = myAssessments[this.order.id].report[categoryProductCode].categories || {};
+	        myAssessments[this.order.id].report[categoryProductCode].categories[categoryId] = reportCategory;
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
 	    },
 	    _saveReportCommentInLocalStorage: function _saveReportCommentInLocalStorage(categoryProductCode, comment) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
-	        var commentToUpdate = _.find(myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
+	        var commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
 
 	        if (commentToUpdate) {
 	            Object.assign(commentToUpdate, comment);
 	        } else {
-	            myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
+	            myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
 	        }
 
 	        _browser2.default.saveInLocalStorage(_global.localStorageKeys.myAssessments, myAssessments);
@@ -2170,7 +2195,7 @@
 	    _removeReportCommentFromLocalStorage: function _removeReportCommentFromLocalStorage(categoryProductCode, comment) {
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
-	        _.remove(myAssessments[this.orderId].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
+	        _.remove(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, function (c) {
 	            return c.id === comment.id;
 	        });
 
@@ -2201,8 +2226,8 @@
 	        var myAssessments = _browser2.default.getFromLocalStorage(_global.localStorageKeys.myAssessments);
 
 	        this.listComments(categoryProductCode).forEach(function (listComment) {
-	            if (_.has(myAssessments, [_this2.orderId, "report", categoryProductCode, "categories", listComment.categoryId])) {
-	                var reportComments = myAssessments[_this2.orderId].report[categoryProductCode].categories[listComment.categoryId].comments;
+	            if (_.has(myAssessments, [_this2.order.id, "report", categoryProductCode, "categories", listComment.categoryId])) {
+	                var reportComments = myAssessments[_this2.order.id].report[categoryProductCode].categories[listComment.categoryId].comments;
 	                var correspondingReportComment = _.find(reportComments, function (rc) {
 	                    return rc.id === listComment.id;
 	                });
@@ -2240,6 +2265,68 @@
 	        }
 
 	        return originalComment;
+	    },
+	    _initListCommentsWithVariations: function _initListCommentsWithVariations(editionCode) {
+	        var _this3 = this;
+
+	        var variations = null;
+
+	        if (editionCode) {
+	            variations = _.filter(this.allCommentVariations, function (v) {
+	                return v.edition && v.edition.code === editionCode;
+	            });
+	        } else {
+	            // If `editionCode` is undefined, it means we load the variations for the English language
+	            variations = _.filter(this.allCommentVariations, function (v) {
+	                return !v.edition;
+	            });
+	        }
+
+	        if (!_.isEmpty(variations)) {
+	            (function () {
+	                var listComments = _this3._listCommentsFromLocalStorage();
+
+	                _.values(_category2.default.productCodes).forEach(function (categoryProductCode) {
+	                    var _iteratorNormalCompletion7 = true;
+	                    var _didIteratorError7 = false;
+	                    var _iteratorError7 = undefined;
+
+	                    try {
+	                        var _loop = function _loop() {
+	                            var defaultComment = _step7.value;
+
+	                            var variation = _.find(variations, function (v) {
+	                                return v.defaultComment.id === defaultComment.id;
+	                            });
+
+	                            if (variation) {
+	                                defaultComment.redText = variation.text;
+	                                defaultComment.variationId = variation.id;
+	                            }
+	                        };
+
+	                        for (var _iterator7 = listComments[categoryProductCode][Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                            _loop();
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError7 = true;
+	                        _iteratorError7 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                                _iterator7.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError7) {
+	                                throw _iteratorError7;
+	                            }
+	                        }
+	                    }
+	                });
+
+	                _this3._saveListCommentsInLocalStorage(listComments);
+	            })();
+	        }
 	    }
 	};
 
@@ -2247,6 +2334,52 @@
 
 /***/ },
 /* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Edition = {
+
+	    // Static
+	    codes: {
+	        pro: "PRO",
+	        youngPro: "YOUNG_PRO",
+	        exec: "EXEC",
+	        academia: "ACADEMIA"
+	    }
+
+	    // Instance
+	};
+
+	exports.default = Edition;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var Language = {
+
+	    // Static
+	    codes: {
+	        sv: "sv",
+	        en: "en"
+	    }
+
+	    // Instance
+	};
+
+	exports.default = Language;
+
+/***/ },
+/* 13 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2263,7 +2396,7 @@
 	exports.default = ArrayUtils;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2285,7 +2418,7 @@
 	exports.default = Comment;
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2318,7 +2451,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2351,7 +2484,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2434,7 +2567,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2476,7 +2609,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2525,7 +2658,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2669,7 +2802,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2687,7 +2820,7 @@
 
 	var _string2 = _interopRequireDefault(_string);
 
-	var _keyboard = __webpack_require__(20);
+	var _keyboard = __webpack_require__(22);
 
 	var _keyboard2 = _interopRequireDefault(_keyboard);
 
@@ -2695,7 +2828,7 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _reportComment = __webpack_require__(21);
+	var _reportComment = __webpack_require__(23);
 
 	var _reportComment2 = _interopRequireDefault(_reportComment);
 
@@ -2869,7 +3002,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2899,7 +3032,7 @@
 	exports.default = Keyboard;
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2913,7 +3046,7 @@
 
 	var _animator = __webpack_require__(2);
 
-	var _comment = __webpack_require__(12);
+	var _comment = __webpack_require__(14);
 
 	var _comment2 = _interopRequireDefault(_comment);
 
@@ -3018,7 +3151,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3059,7 +3192,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3152,7 +3285,7 @@
 	exports.default = Component;
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
