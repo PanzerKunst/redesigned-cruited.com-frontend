@@ -103,6 +103,8 @@ const store = {
 
                     this.moreOrders = _.concat(this.moreOrders, moreOrders);
                     this.reactComponent.forceUpdate();
+
+                    this._fetchScoreListOfDisplayedCustomers();
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
@@ -224,6 +226,61 @@ const store = {
             this.searchNbDays *= 1.5;
             this.searchCriteria.toMoment.subtract(this.searchNbDays, "d");
         }
+    },
+
+    _fetchScoreListOfDisplayedCustomers() {
+        const type = "POST";
+        const url = "/api/assessments/scores-of-customers";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+
+                    /*
+                     * {
+                     *   646: [
+                     *   {
+                     *     order: {},
+                     *     scores: {
+                     *       cvReportScores: {},
+                     *       coverLetterReportScores: {},
+                     *       linkedinProfileReportScores: {}
+                     *     }
+                     *   }, {
+                     *     order: {},
+                     *     scores: {
+                     *       cvReportScores: {}
+                     *     }
+                     *   }],
+                     *   886: [...]
+                     * }
+                     */
+                    this.customerIdsAndTheirOrdersAndScores = JSON.parse(httpRequest.responseText);
+
+                    this.reactComponent.forceUpdate();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify(this._currentCustomerIds()));
+    },
+
+    _currentCustomerIds() {
+        const customerIds = [];
+
+        for (const order of this.topOrders) {
+            customerIds.push(order.customer.id);
+        }
+
+        for (const order of this.moreOrders) {
+            customerIds.push(order.customer.id);
+        }
+
+        return _.uniq(customerIds);
     }
 };
 

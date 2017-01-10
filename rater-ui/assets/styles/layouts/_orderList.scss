@@ -49,8 +49,14 @@
     }
   }
 
-  .order-section.second > div:first-child {
-    margin-bottom: $content-element-margin-bottom;
+  .order-section.second {
+    > div:first-child {
+      margin-bottom: $content-element-margin-bottom;
+    }
+
+    > p {
+      margin-top: $content-element-margin-bottom;
+    }
   }
 
   .position-sought {

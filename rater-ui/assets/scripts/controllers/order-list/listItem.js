@@ -38,11 +38,12 @@ const Component = React.createClass({
                         <EmployerSought employer={order.employerSought} />
                     </div>
                     <CustomerProfile customer={order.customer} />
+                    {this._lastRating()}
                 </section>
                 <section className="order-section third">
                     <OrderTags order={order} config={store.config} />
-                    {this._actionBtn(order)}
-                    {this._secondaryButtons(order)}
+                    {this._actionBtn()}
+                    {this._secondaryButtons()}
                 </section>
             </li>);
     },
@@ -80,7 +81,26 @@ const Component = React.createClass({
         return <span className="order-list-item-tag coupon" data-toggle="tooltip" title={coupon.code}>{coupon.campaignName}</span>;
     },
 
-    _actionBtn(order) {
+    _lastRating() {
+        const order = this.props.order;
+        const customerId = order.customer.id;
+        const ordersAndScores = store.customerIdsAndTheirOrdersAndScores ? store.customerIdsAndTheirOrdersAndScores[customerId] : null;
+
+        _.remove(ordersAndScores, orderAndScores => orderAndScores.order.id === order.id);
+
+        if (_.isEmpty(ordersAndScores)) {
+            return null;
+        }
+
+        const lastOrderAndScores = ordersAndScores[0];
+        const lastRater = lastOrderAndScores.order.rater;
+        const lastOrderDueMoment = moment(lastOrderAndScores.order.dueTimestamp);
+
+        return <p>{`Last rated by ${lastRater.firstName} ${lastRater.lastName} on ${lastOrderDueMoment.format("YYYY-MM-DD")}`}</p>;
+    },
+
+    _actionBtn() {
+        const order = this.props.order;
         const text = store.isOrderReadOnly(order) ? "Check" : "Assess";
 
         return (
@@ -89,7 +109,9 @@ const Component = React.createClass({
             </div>);
     },
 
-    _secondaryButtons(order) {
+    _secondaryButtons() {
+        const order = this.props.order;
+
         const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled ?
             null :
             <button className="styleless fa fa-user" onClick={this._handleAssignClick}>
