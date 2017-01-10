@@ -84,6 +84,10 @@ $white-section-padding: 2em 1em 1em;
       display: none;
     }
 
+    .second > ul {
+      margin-top: $content-element-margin-bottom;
+    }
+
     @include medium-screen {
       $first-section-width: 55%;
       $second-section-width: 25%;
@@ -189,6 +193,10 @@ $white-section-padding: 2em 1em 1em;
 
     .position-sought {
       margin-right: 2em;
+    }
+
+    .employer-sought {
+      margin-right: $spacer-unit-size;
     }
   }
 

@@ -83,6 +83,7 @@ const controller = {
                                 <section className="order-details-section second">
                                     <OrderTags order={order} config={store.config} />
                                     <CustomerProfile customer={order.customer} />
+                                    {this._previousOrdersAndScores()}
                                 </section>
                                 <section className="order-details-section third">
                                     {this._previewOrViewBtn()}
@@ -197,6 +198,29 @@ const controller = {
                 return null;
             }
             return <a href={jobAdUrl} target="_blank" className="job-ad-link">{jobAdUrl}</a>;
+        },
+
+        _previousOrdersAndScores() {
+            if (!store.scoresOfOtherOrders) {
+                return null;
+            }
+
+            return (
+                <ul className="styleless">
+                {store.scoresOfOtherOrders.map(orderAndScores => {
+                    const order = orderAndScores.order;
+                    const orderDueMoment = moment(orderAndScores.order.dueTimestamp);
+                    const rater = orderAndScores.order.rater;
+                    const cvScore = orderAndScores.scores.cvReportScores ? `CV ${orderAndScores.scores.cvReportScores.globalScore}%, ` : "";
+                    const coverLetterScore = orderAndScores.scores.coverLetterReportScores ? `CL ${orderAndScores.scores.coverLetterReportScores.globalScore}%, ` : "";
+                    const linkedinProfileScore = orderAndScores.scores.linkedinProfileReportScores ? `LI ${orderAndScores.scores.linkedinProfileReportScores.globalScore}%, ` : "";
+
+                    return (
+                    <li key={order.id}>
+                        <a href={order.reportUrl(store.config)} target="_blank">{`${orderDueMoment.format("YYYY-MM-DD")} [${cvScore}${coverLetterScore}${linkedinProfileScore}${rater.firstName} ${rater.lastName}]`}</a>
+                    </li>);
+                })}
+                </ul>);
         },
 
         _previewOrViewBtn() {

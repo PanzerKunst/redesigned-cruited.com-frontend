@@ -104,7 +104,7 @@ const store = {
                     this.moreOrders = _.concat(this.moreOrders, moreOrders);
                     this.reactComponent.forceUpdate();
 
-                    this._fetchScoreListOfDisplayedCustomers();
+                    this._fetchLastRatingInfoForDisplayedCustomers();
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
@@ -228,7 +228,7 @@ const store = {
         }
     },
 
-    _fetchScoreListOfDisplayedCustomers() {
+    _fetchLastRatingInfoForDisplayedCustomers() {
         const type = "POST";
         const url = "/api/assessments/scores-of-customers";
         const httpRequest = new XMLHttpRequest();
@@ -256,7 +256,22 @@ const store = {
                      *   886: [...]
                      * }
                      */
-                    this.customerIdsAndTheirOrdersAndScores = JSON.parse(httpRequest.responseText);
+                    const customerIdsAndTheirOrdersAndScores = JSON.parse(httpRequest.responseText);
+
+                    this.customerIdsAndTheirOrdersAndScores = {};
+
+                    for (const customerId of _.keys(customerIdsAndTheirOrdersAndScores)) {
+                        const customerOrdersAndScores = customerIdsAndTheirOrdersAndScores[customerId].map(orderAndScores => {
+                            const smartOrder = Object.assign(Object.create(Order), orderAndScores.order);
+
+                            return {
+                                order: smartOrder,
+                                scores: orderAndScores.scores
+                            };
+                        });
+
+                        this.customerIdsAndTheirOrdersAndScores[customerId] = customerOrdersAndScores;
+                    }
 
                     this.reactComponent.forceUpdate();
                 } else {

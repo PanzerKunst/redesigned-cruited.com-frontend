@@ -19,6 +19,8 @@ const store = {
     backendAssessment: CR.ControllerData.assessment,
 
     init() {
+        this._fetchScoresOfAllOrders();
+
         this.assessment = Object.create(Assessment);
         this.assessment.order = this.order;
         this.assessment.allDefaultComments = this.allDefaultComments;
@@ -264,6 +266,58 @@ const store = {
 
         this.reportFormValidationErrors = _.isEmpty(errors) ? null : errors;
         this.reactComponent.forceUpdate();
+    },
+
+    _fetchScoresOfAllOrders() {
+        const type = "POST";
+        const url = "/api/assessments/scores-of-customers";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+
+                    /*
+                     * {
+                     *   646: [
+                     *   {
+                     *     order: {},
+                     *     scores: {
+                     *       cvReportScores: {},
+                     *       coverLetterReportScores: {},
+                     *       linkedinProfileReportScores: {}
+                     *     }
+                     *   }, {
+                     *     order: {},
+                     *     scores: {
+                     *       cvReportScores: {}
+                     *     }
+                     *   }],
+                     *   886: [...]
+                     * }
+                     */
+                    const scoresOfOtherOrders = _.values(JSON.parse(httpRequest.responseText))[0];
+
+                    _.remove(scoresOfOtherOrders, orderAndScores => orderAndScores.order.id === this.order.id);
+
+                    this.scoresOfOtherOrders = scoresOfOtherOrders.map(orderAndScores => {
+                        const smartOrder = Object.assign(Object.create(Order), orderAndScores.order);
+
+                        return {
+                            order: smartOrder,
+                            scores: orderAndScores.scores
+                        };
+                    });
+
+                    this.reactComponent.forceUpdate();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify([this.order.customer.id]));
     },
 
     _docCommentListForBackend(categoryProductCode) {
