@@ -6,75 +6,49 @@ const Component = React.createClass({
 
         return (
             <div id="stats-panel">
-                <section>
-                    <div>
-                        <i className="fa fa-coffee"></i>
-                    </div>
-                    <div>
-                        <i className="fa fa-user"></i>
-                        <span>{this.dueTotalAssignedToMe}</span>
-                    </div>
-                    <div>
-                        <i className="fa fa-users"></i>
-                        <span>{this.dueTotal}</span>
-                    </div>
-                </section>
-                <section>
-                    <div>
-                        <span>8h:</span>
-                        <span>{this.dueWithin8hAssignedToMe}</span>
-                    </div>
-                    <div>
-                        <span>16h:</span>
-                        <span>{this.dueWithin16hAssignedToMe}</span>
-                    </div>
-                    <div>
-                        <span>24h:</span>
-                        <span>{this.dueWithin24hAssignedToMe}</span>
-                    </div>
-                </section>
-                <section>
-                    <div>
-                        <i className="fa fa-glass"></i>
-                    </div>
-                    <div>
-                        <i className="fa fa-user"></i>
-                        <span>{this.sentToTheCustomerThisMonthByMe}</span>
-                    </div>
-                    <div>
-                        <i className="fa fa-users"></i>
-                        <span>{this.sentToTheCustomerThisMonth}</span>
-                    </div>
-                </section>
-            </div>
-        );
+                <div>
+                    <i className="fa fa-glass"></i>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Me</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{this.nbOrdersThisMonth} / {this.nbDocsThisMonth}</td>
+                            <td>{this.nbOrdersThisMonthByMe} / {this.nbDocsThisMonthByMe}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>);
     },
 
     _processData() {
-        const due = store.dueOrders;
-        const assignedToMePredicate = o => o.rater && o.rater.id === store.account.id;
+        this.nbOrdersThisMonth = store.ordersSentToTheCustomerThisMonth.length;
+        this.nbDocsThisMonth = this._nbDocs(store.ordersSentToTheCustomerThisMonth);
 
-        this.dueTotal = due.length;
-        this.dueTotalAssignedToMe = _.filter(due, assignedToMePredicate).length;
+        const ordersThisMonthByMe = _.filter(store.ordersSentToTheCustomerThisMonth, o => o.rater.id === store.account.id);
 
-        const now = moment();
-        const momentIn8h = moment(now).add(8, "H");
-        const dueWithin8hForEveryone = _.filter(due, o => o.dueTimestamp < momentIn8h.valueOf());
+        this.nbOrdersThisMonthByMe = ordersThisMonthByMe.length;
+        this.nbDocsThisMonthByMe = this._nbDocs(ordersThisMonthByMe);
+    },
 
-        this.dueWithin8hAssignedToMe = _.filter(dueWithin8hForEveryone, assignedToMePredicate).length;
+    _nbDocs(orders) {
+        if (orders.length === 0) {
+            return 0;
+        }
 
-        const momentIn16h = moment(now).add(16, "H");
-        const dueWithin16hForEveryone = _.filter(due, o => o.dueTimestamp < momentIn16h.valueOf());
+        const nbDocsArray = orders.map(order => order.containedProductCodes.length);
+        let result = 0;
 
-        this.dueWithin16hAssignedToMe = _.filter(dueWithin16hForEveryone, assignedToMePredicate).length;
+        for (const nbDocs of nbDocsArray) {
+            result += nbDocs;
+        }
 
-        const momentIn24h = moment(now).add(24, "H");
-        const dueWithin24hForEveryone = _.filter(due, o => o.dueTimestamp < momentIn24h.valueOf());
-
-        this.dueWithin24hAssignedToMe = _.filter(dueWithin24hForEveryone, assignedToMePredicate).length;
-
-        this.sentToTheCustomerThisMonth = store.ordersSentToTheCustomerThisMonth.length;
-        this.sentToTheCustomerThisMonthByMe = _.filter(store.ordersSentToTheCustomerThisMonth, assignedToMePredicate).length;
+        return result;
     }
 });
 

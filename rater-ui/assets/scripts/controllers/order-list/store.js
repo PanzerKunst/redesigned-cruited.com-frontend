@@ -19,14 +19,8 @@ const store = {
         this._fetchTopOrders();
         this._fetchAllRaters();
 
-        /* TODO: uncomment when work resumes on the stats panel
-         this._fetchDueOrders();
-         this._fetchOrdersSentToTheCustomerThisMonth();
-
-         setInterval(() => {
-         this._fetchDueOrders();
-         this._fetchOrdersSentToTheCustomerThisMonth();
-         }, 10 * 1000); */
+        this._fetchOrdersSentToTheCustomerThisMonth();
+        setInterval(() => this._fetchOrdersSentToTheCustomerThisMonth(), 10 * 1000);
     },
 
     assignOrderTo(account) {
@@ -167,50 +161,29 @@ const store = {
         httpRequest.send();
     },
 
-    /* TODO: uncomment when work resumes on the stats panel
-     _fetchDueOrders() {
-     const type = "GET";
-     const url = "/api/orders/due";
+    _fetchOrdersSentToTheCustomerThisMonth() {
+        const type = "GET";
+        const url = "/api/orders/sent";
 
-     const httpRequest = new XMLHttpRequest();
+        const httpRequest = new XMLHttpRequest();
 
-     httpRequest.onreadystatechange = () => {
-     if (httpRequest.readyState === XMLHttpRequest.DONE) {
-     if (httpRequest.status === httpStatusCodes.ok) {
-     const dueOrdersJson = JSON.parse(httpRequest.responseText);
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    const sentOrdersJson = JSON.parse(httpRequest.responseText);
 
-     this.dueOrders = dueOrdersJson.map(o => Object.assign(Object.create(Order), o));
-     this.reactComponent.forceUpdate();
-     } else {
-     alert(`AJAX failure doing a ${type} request to "${url}"`);
-     }
-     }
-     };
-     httpRequest.open(type, url);
-     httpRequest.send();
-     },
+                    this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
+                    this.reactComponent.forceUpdate();
+                } else {
 
-     _fetchOrdersSentToTheCustomerThisMonth() {
-     const type = "GET";
-     const url = "/api/orders/sent";
-
-     const httpRequest = new XMLHttpRequest();
-
-     httpRequest.onreadystatechange = () => {
-     if (httpRequest.readyState === XMLHttpRequest.DONE) {
-     if (httpRequest.status === httpStatusCodes.ok) {
-     const sentOrdersJson = JSON.parse(httpRequest.responseText);
-
-     this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
-     this.reactComponent.forceUpdate();
-     } else {
-     alert(`AJAX failure doing a ${type} request to "${url}"`);
-     }
-     }
-     };
-     httpRequest.open(type, url);
-     httpRequest.send();
-     }, */
+                    // We don't display any error, because it happens so often, and possibly on page refresh
+                    // alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.send();
+    },
 
     _updateSearchCriteria() {
         if (!this.searchCriteria) {

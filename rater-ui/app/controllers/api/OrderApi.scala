@@ -78,6 +78,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
     }
   }
 
+  /* TODO
   def due = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
@@ -86,7 +87,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
         case Some(account) => Ok(Json.toJson(orderDto.dueOrders))
       }
     }
-  }
+  } */
 
   def sentToTheCustomerThisMonth() = Action { request =>
     SessionService.getAccountId(request.session) match {

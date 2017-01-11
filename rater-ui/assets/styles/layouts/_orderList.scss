@@ -4,6 +4,14 @@
 }
 
 #order-list {
+  #content > header > div {
+    @include medium-screen {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
   p {
     margin-bottom: 0;
   }
@@ -191,12 +199,77 @@
 }
 
 #stats-panel {
-  background-color: $background-body-color;
-  color: $dark-grey;
+  display: none;
+
+  $stats-panel-grey: rgb(87, 87, 87); // #575757
+  $stats-panel-green: rgb(150, 237, 134); // #96ED86
+
+  @include medium-screen {
+    display: flex;
+    margin-top: 48px;
+  }
+  @include large-screen {
+    margin-top: 70px;
+  }
+
+  > div {
+    background-color: darken($stats-panel-grey, 10%);
+    color: $background-body-color;
+  }
+
+  > table {
+    font-size: 0.65em;
+    color: $background-body-color;
+  }
+
+  th,
+  td {
+    width: 7em;
+    text-align: center;
+  }
+
+  thead th {
+    font-weight: normal;
+
+    background-color: $stats-panel-grey;
+    &:first-child {
+      background-color: lighten($stats-panel-grey, 5%);
+    }
+  }
+
+  tbody {
+    color: black;
+  }
+
+  tbody td {
+    background-color: $stats-panel-green;
+    &:first-child {
+      background-color: lighten($stats-panel-green, 5%);
+    }
+  }
 }
 
 .no-flexbox {
   #order-list {
+
+    // TODO: test
+    #content > header > div {
+      @include medium-screen {
+        display: block;
+        @include clearfix;
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > h1 {
+          float: left;
+        }
+
+        /* stylelint-disable-next-line max-nesting-depth */
+        > #stats-panel {
+          float: right;
+        }
+      }
+    }
+
     .orders {
       @include medium-screen {
         /* stylelint-disable-next-line max-nesting-depth */
@@ -214,6 +287,19 @@
 
     .user-profile > p {
       margin-top: 0.6em;
+    }
+  }
+
+  // TODO: test
+  #stats-panel {
+    @include medium-screen {
+      display: block;
+      @include clearfix;
+
+      > div,
+      > table {
+        float: left;
+      }
     }
   }
 }

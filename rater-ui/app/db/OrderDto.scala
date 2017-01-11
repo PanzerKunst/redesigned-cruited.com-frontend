@@ -163,6 +163,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     processQuery(query)
   }
 
+  /* TODO: remove
   def calculateDueOrders() {
     val query = """
         select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
@@ -183,7 +184,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     Logger.info("OrderDto.getDueOrders():" + query) */
 
     dueOrders = processQuery(query)
-  }
+  } */
 
   def calculateOrdersSentToTheCustomer(from: Date, to: Date) {
     val query = """
@@ -195,7 +196,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         from documents d
           inner join product_edition e on e.id = d.edition_id
           inner join useri u on u.id = d.added_by
-          left join useri r on r.id = d.assign_to
+          inner join useri r on r.id = d.assign_to
           left join codes c on c.name = d.code
         where """ + commonClause + """
           and paid_on >= '""" + DbUtil.dateFormat.format(from) + """'

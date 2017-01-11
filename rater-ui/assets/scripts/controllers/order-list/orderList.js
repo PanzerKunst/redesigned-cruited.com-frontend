@@ -1,6 +1,9 @@
 import store from "./store";
 
 // eslint-disable-next-line no-unused-vars
+import StatsPanel from "./statsPanel";
+
+// eslint-disable-next-line no-unused-vars
 import ListItem from "./listItem";
 
 // eslint-disable-next-line no-unused-vars
@@ -23,6 +26,7 @@ const controller = {
                     <header>
                         <div>
                             <h1>Orders</h1>
+                            <StatsPanel />
                         </div>
                     </header>
                     <div className="with-circles">
