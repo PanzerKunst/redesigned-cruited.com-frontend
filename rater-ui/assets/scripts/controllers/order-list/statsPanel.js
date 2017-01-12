@@ -6,9 +6,7 @@ const Component = React.createClass({
 
         return (
             <div id="stats-panel">
-                <div>
-                    <i className="fa fa-glass"></i>
-                </div>
+                <div></div>
                 <table>
                     <thead>
                         <tr>

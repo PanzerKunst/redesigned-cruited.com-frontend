@@ -220,15 +220,28 @@
 
   @include medium-screen {
     display: flex;
-    margin-top: 48px;
+    margin-top: 49px;
   }
   @include large-screen {
     margin-top: 70px;
   }
 
   > div {
-    background-color: darken($stats-panel-grey, 10%);
-    color: $background-body-color;
+    width: 1.5em;
+
+    @include hdpi-sprite(darken($stats-panel-grey, 10%));
+
+    background-position: 3px -195px;
+    @include hidpi {
+      background-position: 3px -95px;
+    }
+
+    @include large-screen {
+      background-position: 6px -191px;
+      @include hidpi {
+        background-position: 6px -91px;
+      }
+    }
   }
 
   > table {
@@ -265,8 +278,6 @@
 
 .no-flexbox {
   #order-list {
-
-    // TODO: test
     #content > header > div {
       @include medium-screen {
         display: block;
@@ -304,7 +315,6 @@
     }
   }
 
-  // TODO: test
   #stats-panel {
     @include medium-screen {
       display: block;
