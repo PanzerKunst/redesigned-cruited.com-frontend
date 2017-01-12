@@ -43,10 +43,9 @@ const Component = React.createClass({
         this._initElements();
     },
 
-    /* TODO: remove
     componentDidUpdate() {
         this._addContentEditableToParagraphs();
-    }, */
+    },
 
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
@@ -54,14 +53,13 @@ const Component = React.createClass({
         this.$redParagraphs = $rootEl.children(".red").children(".comment-paragraph");
     },
 
-    /* TODO: remove
     _addContentEditableToParagraphs() {
         if (!store.isOrderReadOnly()) {
             _.forEach(this.$redParagraphs, p =>
                 $(p).attr("contenteditable", "true")
             );
         }
-    }, */
+    },
 
     _handleGreenParagraphClick() {
         if (!store.isOrderReadOnly()) {
@@ -87,14 +85,12 @@ const Component = React.createClass({
     },
 
 
-    _handleRedParagraphBlur() {
-
-        /* TODO: remove function
+    _handleRedParagraphBlur(e) {
         const c = this.props.comment;
 
         c.redText = $(e.currentTarget).text();
 
-        store.updateCommentInListAndReport(c); */
+        store.updateCommentInListAndReport(c);
     },
 
     _handleVariationsClick() {
