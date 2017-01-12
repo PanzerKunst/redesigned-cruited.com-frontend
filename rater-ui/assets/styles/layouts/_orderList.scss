@@ -94,8 +94,22 @@
     }
   }
 
-  .order-id {
+  .order-id-and-status {
     margin: $content-element-margin-bottom 0;
+
+    > .order-status {
+      margin-left: 1em;
+
+      color: $brand-danger;
+      &.IN_PROGRESS,
+      &.FOR_FEEDBACK {
+        color: $brand-warning;
+      }
+      &.COMPLETED,
+      &.SCHEDULED {
+        color: $brand-success;
+      }
+    }
   }
 
   .with-circles .order-tags {

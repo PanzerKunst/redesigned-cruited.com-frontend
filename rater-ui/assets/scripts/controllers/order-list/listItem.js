@@ -28,7 +28,10 @@ const Component = React.createClass({
             <li ref="li" className={this._cssClassForStatus(order.status)}>
                 <section className="order-section first">
                     <RaterProfile account={order.rater} />
-                    <p className="order-id">#{order.id}</p>
+                    <div className="order-id-and-status">
+                        <span>#{order.id}</span>
+                        <span className={`order-status ${order.statusCode()}`}>{order.statusCode()}</span>
+                    </div>
                     <TimeLeft order={order} />
                     <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
                 </section>

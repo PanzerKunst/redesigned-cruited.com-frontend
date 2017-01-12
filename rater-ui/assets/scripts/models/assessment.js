@@ -162,10 +162,13 @@ const Assessment = {
                 if (backendListComment.isGreenSelected) {
                     listComment.isGreenSelected = true;
                     listComment.isRedSelected = false;
-                } else if (backendListComment.redText) {
+                } else {
                     listComment.isGreenSelected = false;
                     listComment.isRedSelected = true;
-                    listComment.redText = backendListComment.redText;
+
+                    if (backendListComment.redText) {
+                        listComment.redText = backendListComment.redText;
+                    }
                 }
             }
 

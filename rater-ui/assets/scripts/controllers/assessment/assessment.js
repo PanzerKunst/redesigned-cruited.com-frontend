@@ -217,7 +217,7 @@ const controller = {
 
                     return (
                     <li key={order.id}>
-                        <a href={order.reportUrl(store.config)} target="_blank">{`${orderDueMoment.format("YYYY-MM-DD")} [${cvScore}${coverLetterScore}${linkedinProfileScore}${rater.firstName} ${rater.lastName}]`}</a>
+                        <a href={`/assessments/${order.id}`} target="_blank">{`${orderDueMoment.format("YYYY-MM-DD")} [${cvScore}${coverLetterScore}${linkedinProfileScore}${rater.firstName} ${rater.lastName}]`}</a>
                     </li>);
                 })}
                 </ul>);

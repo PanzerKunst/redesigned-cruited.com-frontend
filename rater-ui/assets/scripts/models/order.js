@@ -51,6 +51,23 @@ const Order = {
         return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}/thumbnail`;
     },
 
+    statusCode() {
+        switch (this.status) {
+            case this.statuses.notPaid:
+                return "NOT_PAID";
+            case this.statuses.paid:
+                return "PAID";
+            case this.statuses.inProgress:
+                return "IN_PROGRESS";
+            case this.statuses.awaitingFeedback:
+                return "FOR_FEEDBACK";
+            case this.statuses.scheduled:
+                return "SCHEDULED";
+            default:
+                return "COMPLETED";
+        }
+    },
+
     updateStatus(status, onAjaxRequestSuccess) {
         this.status = status;
 
