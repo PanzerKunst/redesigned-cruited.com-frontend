@@ -140,39 +140,46 @@ const Assessment = {
         }
     },
 
-    /*
-     * @param listCommentsAndReport {
-     * cvListComments: [...],
-     * coverLetterListComments: [...],
-     * linkedinProfileListComments: [...],
-     * cvReport: {...},
-     * coverLetterReport: {...},
-     * linkedinProfileReport: {...}
-     * }
+    /* @backendListCommentsForDoc List[
+     * defaultComment:
+     *   id: Long,
+     *   categoryId: Long,
+     *   greenText: String,
+     *   redText: String,
+     *   points: Int,
+     *   isGrouped: Boolean],
+     *   isGreenSelected: Boolean,
+     *   redText: Option[String]
+     * ]
      */
-    initListCommentsAndReport(listCommentsAndReport) {
-        const listComments = _.cloneDeep(this.allDefaultComments);
+    initListComments(categoryProductCode, backendListCommentsForDoc) {
+        if (!_.isEmpty(backendListCommentsForDoc)) {
+            const listComments = this._listCommentsFromLocalStorage() || _.cloneDeep(this.allDefaultComments);
 
-        if (!_.isEmpty(listCommentsAndReport.cvListComments)) {
-            listComments.cv = listCommentsAndReport.cvListComments;
+            for (const listComment of listComments[categoryProductCode]) {
+                const backendListComment = _.find(backendListCommentsForDoc, c => c.defaultComment.id === listComment.id);
+
+                if (backendListComment.isGreenSelected) {
+                    listComment.isGreenSelected = true;
+                    listComment.isRedSelected = false;
+                } else if (backendListComment.redText) {
+                    listComment.isGreenSelected = false;
+                    listComment.isRedSelected = true;
+                    listComment.redText = backendListComment.redText;
+                }
+            }
+
+            this._saveListCommentsInLocalStorage(listComments);
         }
+    },
 
-        if (!_.isEmpty(listCommentsAndReport.coverLetterListComments)) {
-            listComments.coverLetter = listCommentsAndReport.coverLetterListComments;
-        }
-
-        if (!_.isEmpty(listCommentsAndReport.linkedinProfileListComments)) {
-            listComments.linkedinProfile = listCommentsAndReport.linkedinProfileListComments;
-        }
-
-        this._saveListCommentsInLocalStorage(listComments);
-
+    initReport(cvReport, coverLetterReport, linedinProfileReport) {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
         myAssessments[this.order.id].report = {
-            cv: listCommentsAndReport.cvReport,
-            coverLetter: listCommentsAndReport.coverLetterReport,
-            linkedinProfile: listCommentsAndReport.linkedinProfileReport
+            cv: cvReport,
+            coverLetter: coverLetterReport,
+            linkedinProfile: linedinProfileReport
         };
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);

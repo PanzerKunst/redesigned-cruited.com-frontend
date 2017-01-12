@@ -7,6 +7,7 @@ import Category from "../../models/category";
 import Product from "../../models/product";
 import Comment from "../../models/comment";
 import Edition from "../../models/edition";
+import Language from "../../models/language";
 
 const store = {
     reactComponent: null,
@@ -29,26 +30,28 @@ const store = {
         this.assessment.init();
 
         if (!this.assessment.isReportStarted()) {
-            if (this.backendAssessment) {
-
-                // TODO: remove
-                console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
-
-                this.assessment.initListCommentsAndReport({
-                    cvListComments: this._listCommentFromBackend(this.backendAssessment.cvCommentList),
-                    coverLetterListComments: this._listCommentFromBackend(this.backendAssessment.coverLetterCommentList),
-                    linkedinProfileListComments: this._listCommentFromBackend(this.backendAssessment.linkedinProfileCommentList),
-
-                    cvReport: this._docReportFromBackend(this.backendAssessment.cvReport),
-                    coverLetterReport: this._docReportFromBackend(this.backendAssessment.coverLetterReport),
-                    linkedinProfileReport: this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
-                });
-            } else if (this.order.editionCode !== Edition.codes.pro) {
+            if (this.order.languageCode !== Language.codes.sv || this.order.editionCode !== Edition.codes.pro) {
 
                 // TODO: remove
                 console.log("Initializing assessment with variations");
 
                 this.assessment.initListCommentsWithCorrectVariations();
+            }
+
+            if (this.backendAssessment) {
+
+                // TODO: remove
+                console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
+
+                this.assessment.initListComments(Category.productCodes.cv, this.backendAssessment.cvCommentList);
+                this.assessment.initListComments(Category.productCodes.coverLetter, this.backendAssessment.coverLetterCommentList);
+                this.assessment.initListComments(Category.productCodes.linkedinProfile, this.backendAssessment.linkedinProfileCommentList);
+
+                this.assessment.initReport(
+                    this._docReportFromBackend(this.backendAssessment.cvReport),
+                    this._docReportFromBackend(this.backendAssessment.coverLetterReport),
+                    this._docReportFromBackend(this.backendAssessment.linkedinProfileReport)
+                );
             }
         }
 
@@ -385,43 +388,6 @@ const store = {
         }
 
         return docReport;
-    },
-
-    /* backendListCommentsForDoc List[
-     * defaultComment:
-     *   id: Long,
-     *   categoryId: Long,
-     *   greenText: String,
-     *   redText: String,
-     *   points: Int,
-     *   isGrouped: Boolean],
-     *   isGreenSelected: Boolean,
-     *   redText: Option[String]
-     * ]
-     */
-    _listCommentFromBackend(backendListCommentsForDoc) {
-
-        /* Frontend list comment:
-         * {
-         *   id: 1,
-         *   categoryId: 13,
-         *   greenText: "string",
-         *   redText: "string",
-         *   points: 5,
-         *   isGrouped: false,
-         *   isGreenSelected: true,
-         *   isRedSelected: false
-         * }
-         */
-        return backendListCommentsForDoc.map(c => {
-            const commentForBackend = c.defaultComment;
-
-            commentForBackend.redText = c.redText || c.defaultComment.redText;
-            commentForBackend.isGreenSelected = c.isGreenSelected;
-            commentForBackend.isRedSelected = !c.isGreenSelected;
-
-            return commentForBackend;
-        });
     },
 
     /* backendDocReport DocumentReport(redComments: List[RedComment],
