@@ -20,16 +20,14 @@ const Order = {
     },
 
     documentUrl(config, productCode) {
+        if (productCode === Product.codes.linkedinProfile) {
+            return this.customer.linkedinProfile.publicProfileUrl;
+        }
+
         let urlMiddle = "cv";
 
-        switch (productCode) {
-            case Product.codes.coverLetter:
-                urlMiddle = "cover-letter";
-                break;
-            case Product.codes.linkedinProfile:
-                urlMiddle = "linkedin-profile";
-                break;
-            default:
+        if (productCode === Product.codes.coverLetter) {
+            urlMiddle = "cover-letter";
         }
 
         return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}?token=${this.idInBase64}`;
