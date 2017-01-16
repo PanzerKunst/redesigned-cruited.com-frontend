@@ -427,7 +427,11 @@ $white-section-padding: 2em 1em 1em;
   .report-category {
     background-color: white;
     padding: $white-section-padding;
-    margin: 0 -1em $content-element-margin-bottom -1em;
+    margin: 0 -4.1em $content-element-margin-bottom -1em;
+
+    @include large-screen {
+      margin-right: -5.7em;
+    }
 
     &.read-only {
       > a {
@@ -456,16 +460,32 @@ $white-section-padding: 2em 1em 1em;
       padding-right: 2.5em;
       min-height: 8em; // To have enough space for all buttons
 
+      @include medium-screen {
+        max-width: ($small-content-width + $medium-content-width) / 2;
+      }
+      @include large-screen {
+        max-width: $medium-content-width;
+      }
+
       &.has-errors {
         @include error-border;
       }
     }
 
     > .fa,
-    > .report-comment-checkbox {
+    > .report-comment-checkbox,
+    > .id-and-points {
       position: absolute;
-      right: 0;
       top: 0;
+    }
+
+    > .fa,
+    > .report-comment-checkbox {
+      right: 3.1em;
+
+      @include large-screen {
+        right: 4.7em;
+      }
     }
 
     > .fa-fw {
@@ -486,6 +506,17 @@ $white-section-padding: 2em 1em 1em;
 
     > .fa-trash {
       top: 6em;
+    }
+
+
+    > .id-and-points {
+      right: 0;
+
+      // Same width as the comment list, but in pixels
+      width: 43px;
+      @include large-screen {
+        width: 65px;
+      }
     }
   }
 

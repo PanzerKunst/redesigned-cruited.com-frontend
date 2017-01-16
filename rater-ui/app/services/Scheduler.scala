@@ -13,8 +13,6 @@ class Scheduler @Inject()(orderDto: OrderDto) {
 
   val task = new Runnable {
     def run() = {
-      // TODO orderDto.calculateDueOrders()
-
       val now = Calendar.getInstance()
 
       val from = Calendar.getInstance()

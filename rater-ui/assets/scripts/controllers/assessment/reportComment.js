@@ -27,11 +27,16 @@ const Component = React.createClass({
 
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
-                <button type="button" className="styleless fa fa-arrows fa-fw" />
                 <p className={paragraphClasses} onBlur={this._handleParagraphBlur}>{c.redText}</p>
+                <button type="button" className="styleless fa fa-arrows fa-fw" />
                 <span className={checkboxClasses} onClick={this._handleCheckboxClick}/>
                 <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />
                 <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
+
+                <div className="id-and-points">
+                    <p>{c.id}</p>
+                    <p>{c.points}pt</p>
+                </div>
             </li>);
     },
 

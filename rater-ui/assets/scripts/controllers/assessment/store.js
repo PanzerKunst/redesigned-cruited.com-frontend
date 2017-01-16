@@ -31,18 +31,10 @@ const store = {
 
         if (!this.assessment.isReportStarted()) {
             if (this.order.languageCode !== Language.codes.sv || this.order.editionCode !== Edition.codes.pro) {
-
-                // TODO: remove
-                console.log("Initializing assessment with variations");
-
                 this.assessment.initListCommentsWithCorrectVariations();
             }
 
             if (this.backendAssessment) {
-
-                // TODO: remove
-                console.log("!this.assessment.isReportStarted() && this.backendAssessment", this.backendAssessment);
-
                 this.assessment.initListComments(Category.productCodes.cv, this.backendAssessment.cvCommentList);
                 this.assessment.initListComments(Category.productCodes.coverLetter, this.backendAssessment.coverLetterCommentList);
                 this.assessment.initListComments(Category.productCodes.linkedinProfile, this.backendAssessment.linkedinProfileCommentList);
