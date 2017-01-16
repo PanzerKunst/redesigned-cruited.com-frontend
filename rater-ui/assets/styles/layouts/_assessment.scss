@@ -335,8 +335,6 @@ $white-section-padding: 2em 1em 1em;
 
       > .comment-paragraph {
         height: 100%;
-
-        @include transition(background-color $default-animation-duration/2 ease);
       }
     }
 

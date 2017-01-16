@@ -17,7 +17,7 @@ Free port 80 temporarily: `$ sudo service nginx stop`
 
     $ ./letsencrypt-auto certonly -t --standalone
 
-Enter email `services@cruited.com` and domains `api.cruited.com app.cruited.com`
+Enter email `services@cruited.com` and domains `api.cruited.com app.cruited.com rater.cruited.com`
 
 Restart Nginx: `$ sudo service nginx start`
 

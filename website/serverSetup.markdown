@@ -58,7 +58,6 @@ Copy `typesafe-activator-X.Y.Z-minimal.zip` from the workstation to the server's
 
     $ cd ~
     $ unzip typesafe-activator-X.Y.Z-minimal.zip
-    $ cd activator-X.Y.Z-minimal
 
 Add `~/activator-X.Y.Z-minimal/bin` to the PATH if it isn't there yet:
 

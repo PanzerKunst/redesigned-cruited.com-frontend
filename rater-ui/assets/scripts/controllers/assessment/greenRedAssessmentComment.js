@@ -50,19 +50,23 @@ const Component = React.createClass({
     _initElements() {
         const $rootEl = $(ReactDOM.findDOMNode(this.refs.root));
 
-        this.$redParagraphs = $rootEl.children(".red").children(".comment-paragraph");
+        this.$greenParagraph = $($rootEl.children(".green").children(".comment-paragraph").get(0));
+        this.$redParagraph = $($rootEl.children(".red").children(".comment-paragraph").get(0));
     },
 
     _addContentEditableToParagraphs() {
         if (!store.isOrderReadOnly()) {
-            _.forEach(this.$redParagraphs, p =>
-                $(p).attr("contenteditable", "true")
-            );
+            this.$redParagraph.attr("contenteditable", "true");
         }
     },
 
     _handleGreenParagraphClick() {
         if (!store.isOrderReadOnly()) {
+
+            // We add those classes here to make the UI more responsive
+            this.$redParagraph.removeClass("selected");
+            this.$greenParagraph.addClass("selected");
+
             const c = this.props.comment;
 
             c.isRedSelected = false;
@@ -74,6 +78,11 @@ const Component = React.createClass({
 
     _handleRedParagraphClick() {
         if (!store.isOrderReadOnly()) {
+
+            // We add those classes here to make the UI more responsive
+            this.$greenParagraph.removeClass("selected");
+            this.$redParagraph.addClass("selected");
+
             const c = this.props.comment;
 
             c.isGreenSelected = false;
