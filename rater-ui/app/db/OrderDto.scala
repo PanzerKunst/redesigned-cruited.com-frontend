@@ -133,7 +133,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
       paidAfterClause +
       paidBeforeClause +
       exceptOrderIdClause + """
-        order by d.id desc;"""
+        order by d.status, d.id desc;"""
 
     Logger.info("OrderDto.getOlderOrdersExcept():" + query)
 
