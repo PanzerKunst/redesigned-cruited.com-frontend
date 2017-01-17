@@ -263,6 +263,7 @@ const Assessment = {
         this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
     },
 
+    /* TODO: remove
     areAllReportCommentsChecked(categoryProductCode) {
         if (!this.areAllListCommentsSelected(categoryProductCode)) {
             return false;
@@ -279,14 +280,14 @@ const Assessment = {
 
         for (const category of categories) {
             for (const comment of category.comments) {
-                if (!comment || !comment.isChecked) {
+                if (comment === null) {
                     return false;
                 }
             }
         }
 
         return true;
-    },
+    }, */
 
     // (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100
     categoryScore(categoryId) {

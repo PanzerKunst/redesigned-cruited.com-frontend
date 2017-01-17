@@ -25,7 +25,7 @@ const store = {
     },
 
     updateOrderStatus(status) {
-        this.order.updateStatus(status, () => history.back());
+        this.order.updateStatus(status, () => (location.href = "/"));
     }
 };
 

@@ -240,13 +240,15 @@ const store = {
                 const categoryErrors = {};
 
                 store.assessment.reportCategory(categoryProductCode, categoryId).comments.forEach(comment => {
-                    const commentErrors = {
-                        areBracketsRemaining: !Comment.isTextValidForReport(comment.redText),
-                        isUnChecked: !comment.isChecked
-                    };
+                    if (comment !== null) {
+                        const commentErrors = {
+                            areBracketsRemaining: !Comment.isTextValidForReport(comment.redText)/* ,
+                            isUnChecked: !comment.isChecked TODO: remove the `isChecked` property from all comments */
+                        };
 
-                    if (commentErrors.areBracketsRemaining || commentErrors.isUnChecked) {
-                        categoryErrors[comment.id] = commentErrors;
+                        if (commentErrors.areBracketsRemaining /* TODO || commentErrors.isUnChecked */) {
+                            categoryErrors[comment.id] = commentErrors;
+                        }
                     }
                 });
 
@@ -356,12 +358,14 @@ const store = {
              points: Option[Int])  // None when custom comment coming from frontend
              */
             reportCategory.comments.forEach(c => {
-                docReport.redComments.push({
-                    defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
-                    categoryId,
-                    text: c.redText,
-                    points: c.points
-                });
+                if (c !== null) {
+                    docReport.redComments.push({
+                        defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
+                        categoryId,
+                        text: c.redText,
+                        points: c.points
+                    });
+                }
             });
 
             /*
