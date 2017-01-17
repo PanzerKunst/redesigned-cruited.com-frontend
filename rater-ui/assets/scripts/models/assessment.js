@@ -75,37 +75,8 @@ const Assessment = {
      * }
      */
     variationSelected(comment) {
-        const listComments = this._listCommentsFromLocalStorage();
-        let commentToUpdate = null;
-
-        if (comment.defaultComment) {   // A variation (non-default) is selected in the modal
-            let listCommentsToUpdate = listComments.cv;
-
-            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
-                listCommentsToUpdate = listComments.coverLetter;
-            }
-            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
-                listCommentsToUpdate = listComments.linkedinProfile;
-            }
-
-            commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id);
-
-            commentToUpdate.redText = comment.text;
-            commentToUpdate.variationId = comment.id;
-        } else {    // The default comment is selected in the modal
-            const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-            const listCommentsToUpdate = listComments[categoryProductCode];
-
-            commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
-
-            commentToUpdate.redText = comment.redText;
-            commentToUpdate.variationId = null;
-        }
-
-        commentToUpdate.isGreenSelected = false;
-        commentToUpdate.isRedSelected = true;
-
-        this._saveListCommentsInLocalStorage(listComments);
+        this._applyVariationInCommentList(comment);
+        this._applyVariationInReportSection(comment);
     },
 
     /*
@@ -605,6 +576,66 @@ const Assessment = {
             });
 
             this._saveListCommentsInLocalStorage(listComments);
+        }
+    },
+
+    _applyVariationInCommentList(comment) {
+        const listComments = this._listCommentsFromLocalStorage();
+        let commentToUpdate = null;
+
+        if (comment.defaultComment) {   // A variation (non-default) is selected in the modal
+            let listCommentsToUpdate = listComments.cv;
+
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
+                listCommentsToUpdate = listComments.coverLetter;
+            }
+            if (!_.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id)) {
+                listCommentsToUpdate = listComments.linkedinProfile;
+            }
+
+            commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.defaultComment.id);
+
+            commentToUpdate.redText = comment.text;
+            commentToUpdate.variationId = comment.id;
+        } else {    // The default comment is selected in the modal
+            const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+            const listCommentsToUpdate = listComments[categoryProductCode];
+
+            commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
+
+            commentToUpdate.redText = comment.redText;
+            commentToUpdate.variationId = null;
+        }
+
+        commentToUpdate.isGreenSelected = false;
+        commentToUpdate.isRedSelected = true;
+
+        this._saveListCommentsInLocalStorage(listComments);
+    },
+
+    _applyVariationInReportSection(comment) {
+        const categoryId = comment.defaultComment ? comment.defaultComment.categoryId : comment.categoryId;
+        const categoryProductCode = Category.productCodeFromCategoryId(categoryId);
+        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
+
+        if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", categoryId])) {
+            let commentToUpdate = null;
+
+            if (comment.defaultComment) {   // Variation
+                commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[categoryId].comments, c => c.id === comment.defaultComment.id);
+
+                commentToUpdate.redText = comment.text;
+                commentToUpdate.variationId = comment.id;
+            } else {    // Default
+                commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[categoryId].comments, c => c.id === comment.id);
+
+                commentToUpdate.redText = comment.redText;
+                commentToUpdate.variationId = null;
+            }
+
+            if (commentToUpdate) {
+                this._saveReportCommentInLocalStorage(categoryProductCode, commentToUpdate);
+            }
         }
     }
 };

@@ -19,17 +19,18 @@ const Component = React.createClass({
             "has-errors": validationErrors && validationErrors.areBracketsRemaining
         });
 
+        /* TODO: remove
         const checkboxClasses = classNames({
             "report-comment-checkbox": true,
             checked: c.isChecked,
             "has-errors": validationErrors && validationErrors.isUnChecked
-        });
+        }); */
 
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
                 <p className={paragraphClasses} onBlur={this._handleParagraphBlur}>{c.redText}</p>
                 <button type="button" className="styleless fa fa-arrows fa-fw" />
-                <span className={checkboxClasses} onClick={this._handleCheckboxClick}/>
+                <button type="button" className="styleless fa fa-clone fa-fw" onClick={this._handleVariationsClick} />
                 <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />
                 <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
 
@@ -66,6 +67,12 @@ const Component = React.createClass({
         }
     },
 
+    _handleVariationsClick() {
+        if (!store.isOrderReadOnly()) {
+            store.setVariationsModalForComment(this.props.comment);
+        }
+    },
+
     _handleResetClick() {
         if (!store.isOrderReadOnly()) {
             store.resetCommentInListAndReport(this.props.comment);
@@ -79,7 +86,7 @@ const Component = React.createClass({
                 onComplete: () => store.removeReportComment(this.props.comment)
             });
         }
-    },
+    } /* TODO: remove ,
 
     _handleCheckboxClick(e) {
         if (!store.isOrderReadOnly()) {
@@ -93,7 +100,7 @@ const Component = React.createClass({
                 store.validateReportForm();
             }
         }
-    }
+    } */
 });
 
 export {Component as default};

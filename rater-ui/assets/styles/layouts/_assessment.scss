@@ -57,6 +57,7 @@ $white-section-padding: 2em 1em 1em;
         .order-tag.product-code,
         .order-tag.lang,
         .user-profile,
+        .second > ul,
         .time-left {
           display: none;
         }
@@ -325,6 +326,11 @@ $white-section-padding: 2em 1em 1em;
     background-color: $gradient-light-grey;
   }
 
+  .red > .comment-paragraph,
+  .report-comment > .comment-paragraph {
+    padding-right: 2.5em;
+  }
+
   .list-comment {
     margin-bottom: 1em;
 
@@ -335,15 +341,12 @@ $white-section-padding: 2em 1em 1em;
 
       > .comment-paragraph {
         height: 100%;
+        min-height: 6em;  // To fit icons
       }
     }
 
     > .red {
       position: relative;
-
-      > .comment-paragraph {
-        padding-bottom: 1.5em;
-      }
     }
 
     > .green > .selected {
@@ -378,20 +381,17 @@ $white-section-padding: 2em 1em 1em;
 
     .fa {
       position: absolute;
-      bottom: 0;
+      top: 0;
+      right: 0;
       z-index: 1;
     }
 
-    .fa-clone {
-      right: 4em;
-    }
-
     .fa-plus-circle {
-      right: 2em;
+      top: 2em;
     }
 
     .fa-undo {
-      right: 0;
+      top: 4em;
     }
   }
 
@@ -457,7 +457,6 @@ $white-section-padding: 2em 1em 1em;
     margin-bottom: $content-element-margin-bottom;
 
     > .comment-paragraph {
-      padding-right: 2.5em;
       min-height: 8em; // To have enough space for all buttons
 
       @include medium-screen {
@@ -473,14 +472,14 @@ $white-section-padding: 2em 1em 1em;
     }
 
     > .fa,
-    > .report-comment-checkbox,
+    > .report-comment-checkbox, /* TODO: remove */
     > .id-and-points {
       position: absolute;
       top: 0;
     }
 
     > .fa,
-    > .report-comment-checkbox {
+    > .report-comment-checkbox {   /* TODO: remove */
       right: 3.1em;
 
       @include large-screen {
@@ -496,7 +495,8 @@ $white-section-padding: 2em 1em 1em;
       cursor: move;
     }
 
-    > .report-comment-checkbox {
+    > .report-comment-checkbox, /* TODO: remove */
+    > .fa-clone {
       top: 2em;
     }
 

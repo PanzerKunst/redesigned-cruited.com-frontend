@@ -93,7 +93,6 @@ const Component = React.createClass({
         }
     },
 
-
     _handleRedParagraphBlur(e) {
         const c = this.props.comment;
 
