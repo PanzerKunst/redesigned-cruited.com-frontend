@@ -543,6 +543,13 @@ $white-section-padding: 2em 1em 1em;
   .well-done-comment-composer {
     margin-bottom: $content-element-margin-bottom;
 
+    @include medium-screen {
+      max-width: ($small-content-width + $medium-content-width) / 2;
+    }
+    @include large-screen {
+      max-width: $medium-content-width;
+    }
+
     > textarea {
       height: 4em;
     }

@@ -308,7 +308,7 @@ const Assessment = {
 
         for (const category of categories) {
             for (const comment of category.comments) {
-                if (!comment.isChecked) {
+                if (!comment || !comment.isChecked) {
                     return false;
                 }
             }
