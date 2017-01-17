@@ -27,6 +27,10 @@ const Component = React.createClass({
                 {this._wellDoneComment()}
                 <ul className="styleless">
                 {reportCategory.comments.map(comment => {
+                    if (comment === null) {
+                        return null;
+                    }
+
                     const commentId = comment.id;
                     const validationErrors = this.props.validationErrors ? this.props.validationErrors[commentId] : null;
 

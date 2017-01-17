@@ -394,9 +394,7 @@ const Assessment = {
         while (loopCondition()) {
             const topComment = this._findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory);
 
-            if (topComment) {
-                topCommentsForCategory.push(topComment);
-            }
+            topCommentsForCategory.push(topComment);
         }
 
         return topCommentsForCategory;
@@ -529,15 +527,24 @@ const Assessment = {
             const isCommentAlreadyInList = _.find(reportCommentsForCategory, tc => tc.id === redComment.id);
 
             if (!isCommentAlreadyInList) {
-                if (commentWithMostPoints === null) {
-                    commentWithMostPoints = redComment;
-                } else if (redComment.points > commentWithMostPoints.points) {
-                    commentWithMostPoints = redComment;
+
+                // if `redComment` is not a child comment, or is a child comment but parent isn't in `reportCommentsForCategory`
+                if (!redComment.isGrouped || !this._isParentCommentAlreadyInList(redComment, redCommentsForCategory, reportCommentsForCategory)) {
+                    if (commentWithMostPoints === null || redComment.points > commentWithMostPoints.points) {
+                        commentWithMostPoints = redComment;
+                    }
                 }
             }
         });
 
         return commentWithMostPoints;
+    },
+
+    _isParentCommentAlreadyInList(childComment, redCommentsForCategory, reportCommentsForCategory) {
+        const indexOfParentComment = _.findIndex(redCommentsForCategory, c => c.id === childComment.id) - 1;
+
+        // eslint-disable-next-line no-undefined
+        return _.find(reportCommentsForCategory, c => c.id === redCommentsForCategory[indexOfParentComment].id) !== undefined;
     },
 
     _initListCommentsFromDocReport(categoryProductCode) {

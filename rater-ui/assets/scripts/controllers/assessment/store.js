@@ -124,7 +124,7 @@ const store = {
 
     selectNextCommentAsRedIfGrouped(commentId) {
         let categoryProductCode = null;
-        let indexOfNextCommentInList = -1;
+        let indexOfNextComment = -1;
 
         _.keys(this.allDefaultComments).forEach(categoryProductCd => {
             const docDefaultComments = store.allDefaultComments[categoryProductCd];
@@ -132,13 +132,13 @@ const store = {
             for (let i = 0; i < docDefaultComments.length; i++) {
                 if (docDefaultComments[i].id === commentId) {
                     categoryProductCode = categoryProductCd;
-                    indexOfNextCommentInList = i + 1;
+                    indexOfNextComment = i + 1;
                     break;
                 }
             }
         });
 
-        const nextComment = indexOfNextCommentInList > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextCommentInList] : null;
+        const nextComment = indexOfNextComment > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextComment] : null;
 
         // eslint-disable-next-line no-undefined
         if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
