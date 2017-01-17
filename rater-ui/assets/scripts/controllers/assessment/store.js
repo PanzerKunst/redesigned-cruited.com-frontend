@@ -116,11 +116,12 @@ const store = {
         return this.order.rater && this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
     },
 
+    /* TODO: remove
     areAllReportCommentsCheckedForAtLeastOneCategory() {
         return this.assessment && (this.assessment.areAllReportCommentsChecked(Category.productCodes.cv) ||
             this.assessment.areAllReportCommentsChecked(Category.productCodes.coverLetter) ||
             this.assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile));
-    },
+    }, */
 
     selectNextCommentAsRedIfGrouped(commentId) {
         let categoryProductCode = null;
