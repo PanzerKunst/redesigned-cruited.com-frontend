@@ -384,6 +384,10 @@ $white-section-padding: 2em 1em 1em;
       top: 0;
       right: 0;
       z-index: 1;
+
+      &:active {
+        color: $icon-btn-active-color;
+      }
     }
 
     .fa-plus-circle {
@@ -480,8 +484,11 @@ $white-section-padding: 2em 1em 1em;
 
     > .fa,
     > .report-comment-checkbox {   /* TODO: remove */
-      right: 3.1em;
+      &:active {
+        color: $icon-btn-active-color;
+      }
 
+      right: 3.1em;
       @include large-screen {
         right: 4.7em;
       }

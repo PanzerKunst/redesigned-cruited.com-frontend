@@ -236,7 +236,7 @@ const Assessment = {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
         if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", comment.categoryId])) {
-            const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
+            const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c !== null && c.id === comment.id);
 
             if (commentToUpdate) {
                 this._saveReportCommentInLocalStorage(categoryProductCode, comment);
@@ -298,10 +298,12 @@ const Assessment = {
         let sumOfRedPoints = 0;
 
         for (const listComment of listCommentsForCategory) {
-            sumOfAllPoints += listComment.points;
+            if (listComment !== null) {
+                sumOfAllPoints += listComment.points;
 
-            if (listComment.isRedSelected) {
-                sumOfRedPoints += listComment.points;
+                if (listComment.isRedSelected) {
+                    sumOfRedPoints += listComment.points;
+                }
             }
         }
 

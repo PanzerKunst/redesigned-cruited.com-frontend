@@ -123,6 +123,12 @@ const store = {
             this.assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile));
     }, */
 
+    areAllListCommentsSelected() {
+        return this.assessment && (this.assessment.areAllListCommentsSelected(Category.productCodes.cv) ||
+            this.assessment.areAllListCommentsSelected(Category.productCodes.coverLetter) ||
+            this.assessment.areAllListCommentsSelected(Category.productCodes.linkedinProfile));
+    },
+
     selectNextCommentAsRedIfGrouped(commentId) {
         let categoryProductCode = null;
         let indexOfNextComment = -1;

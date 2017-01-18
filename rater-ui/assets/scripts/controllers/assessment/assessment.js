@@ -228,7 +228,7 @@ const controller = {
                 return <a className="btn btn-primary" href={store.order.reportUrl(store.config)}>View report</a>;
             }
 
-            if (!store.isOrderReadOnly()) {
+            if (!store.isOrderReadOnly() && store.areAllListCommentsSelected()) {
                 return <button className="btn btn-primary" onClick={this._handlePreviewBtnClick}>Preview report</button>;
             }
 
