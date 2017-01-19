@@ -23,7 +23,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
         inner join default_categories c on c.id = dc.category
       where dc.shw = 1
         and c.shw = 1
-      order by category, dc.ordd;"""
+      order by c.ordd, category, dc.ordd;"""
 
       Logger.info("AssessmentDto.getAllDefaultComments():" + query)
 
@@ -252,119 +252,117 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
 
   // Using JDBC here instead of Anorm due to issue https://github.com/playframework/anorm/issues/122
   private def getDocumentReportsOfOrderId(orderId: Long): (Option[DocumentReport], Option[DocumentReport], Option[DocumentReport]) = {
-    db.withConnection { implicit c =>
-      val query = """
-        select custom_comment_cv, custom_comment, custom_comment_li,
-          rc.id_default, rc.comment as red_comment_text, rc.ordd, rc.points,
-          cat.id as red_comment_cat_id, cat.type as red_comment_doc_type,
-          tc.comment as top_comment_text,
-          cat2.id as top_comment_cat_id, cat2.type as top_comment_doc_type
-        from documents d
-          left join documents_comments rc on rc.id_doc = d.id
-          left join default_categories cat on cat.id = rc.category
-          left join single_document_top_comment tc on tc.doc_id = d.id
-          left join default_categories cat2 on cat2.id = tc.cate_id
-        where d.id = """ + orderId + """
-          and d.status > """ + Order.statusIdPaid + """
-        order by red_comment_doc_type, red_comment_cat_id, ordd, top_comment_doc_type, top_comment_cat_id;"""
+    val query = """
+      select custom_comment_cv, custom_comment, custom_comment_li,
+        rc.id_default, rc.comment as red_comment_text, rc.ordd as red_comment_order, rc.points,
+        cat.id as red_comment_cat_id, cat.type as red_comment_doc_type, cat.ordd as red_comment_category_order,
+        tc.comment as top_comment_text,
+        cat2.id as top_comment_cat_id, cat2.type as top_comment_doc_type
+      from documents d
+        left join documents_comments rc on rc.id_doc = d.id
+        left join default_categories cat on cat.id = rc.category
+        left join single_document_top_comment tc on tc.doc_id = d.id
+        left join default_categories cat2 on cat2.id = tc.cate_id
+      where d.id = """ + orderId + """
+        and d.status > """ + Order.statusIdPaid + """
+      order by red_comment_doc_type, red_comment_category_order, red_comment_cat_id, red_comment_order, top_comment_doc_type, top_comment_cat_id;"""
 
-      Logger.info("AssessmentDto.getDocumentReportsOfOrderId():" + query)
+    Logger.info("AssessmentDto.getDocumentReportsOfOrderId():" + query)
 
-      var denormalisedDocumentReports = new ListBuffer[(Option[RedComment], Option[WellDoneComment], Option[String], Option[String], Option[String])]()
-      val conn = db.getConnection()
+    var denormalisedDocumentReports = new ListBuffer[(Option[RedComment], Option[WellDoneComment], Option[String], Option[String], Option[String])]()
+    val conn = db.getConnection()
 
-      try {
-        val rs = conn.createStatement.executeQuery(query)
+    try {
+      val rs = conn.createStatement.executeQuery(query)
 
-        while (rs.next()) {
+      while (rs.next()) {
 
-          // redCommentOpt
+        // redCommentOpt
 
-          val redCommentCategoryId = rs.getLong("red_comment_cat_id")
-          val redCommentCategoryIdOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(redCommentCategoryId)
-          }
-
-          val defaultCommentId = rs.getLong("id_default")
-          val defaultCommentIdOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(defaultCommentId)
-          }
-
-          val points = rs.getInt("points")
-          val pointsOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(points)
-          }
-
-          val redCommentText = rs.getString("red_comment_text")
-          val redCommentOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(RedComment(
-              defaultCommentId = defaultCommentIdOpt,
-              categoryId = redCommentCategoryIdOpt.get,
-              text = redCommentText,
-              points = pointsOpt
-            ))
-          }
-
-
-          // wellDoneCommentOpt
-
-          val wellDoneCommentCategoryId = rs.getLong("top_comment_cat_id")
-          val wellDoneCommentCategoryIdOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(wellDoneCommentCategoryId)
-          }
-
-          val wellDoneCommentText = rs.getString("top_comment_text")
-          val wellDoneCommentTextOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(wellDoneCommentText)
-          }
-
-          val wellDoneCommentOpt = if (rs.wasNull()) {
-            None
-          } else {
-            Some(WellDoneComment(
-              categoryId = wellDoneCommentCategoryIdOpt.get,
-              text = wellDoneCommentTextOpt.get
-            ))
-          }
-
-
-          val cvOverallCommentOpt = rs.getString("custom_comment_cv") match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
-
-          val coverLetterOverallCommentOpt = rs.getString("custom_comment") match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
-
-          val linkedinProfileOverallCommentOpt = rs.getString("custom_comment_li") match {
-            case "" => None
-            case otherString => Some(otherString)
-          }
-
-          val denormalisedDocumentReport = (redCommentOpt, wellDoneCommentOpt, cvOverallCommentOpt, coverLetterOverallCommentOpt, linkedinProfileOverallCommentOpt)
-          denormalisedDocumentReports += denormalisedDocumentReport
+        val redCommentCategoryId = rs.getLong("red_comment_cat_id")
+        val redCommentCategoryIdOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(redCommentCategoryId)
         }
 
-        normaliseDocumentReports(denormalisedDocumentReports.toList)
-      } finally {
-        conn.close()
+        val defaultCommentId = rs.getLong("id_default")
+        val defaultCommentIdOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(defaultCommentId)
+        }
+
+        val points = rs.getInt("points")
+        val pointsOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(points)
+        }
+
+        val redCommentText = rs.getString("red_comment_text")
+        val redCommentOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(RedComment(
+            defaultCommentId = defaultCommentIdOpt,
+            categoryId = redCommentCategoryIdOpt.get,
+            text = redCommentText,
+            points = pointsOpt
+          ))
+        }
+
+
+        // wellDoneCommentOpt
+
+        val wellDoneCommentCategoryId = rs.getLong("top_comment_cat_id")
+        val wellDoneCommentCategoryIdOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(wellDoneCommentCategoryId)
+        }
+
+        val wellDoneCommentText = rs.getString("top_comment_text")
+        val wellDoneCommentTextOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(wellDoneCommentText)
+        }
+
+        val wellDoneCommentOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(WellDoneComment(
+            categoryId = wellDoneCommentCategoryIdOpt.get,
+            text = wellDoneCommentTextOpt.get
+          ))
+        }
+
+
+        val cvOverallCommentOpt = rs.getString("custom_comment_cv") match {
+          case "" => None
+          case otherString => Some(otherString)
+        }
+
+
+        val coverLetterOverallCommentOpt = rs.getString("custom_comment") match {
+          case "" => None
+          case otherString => Some(otherString)
+        }
+
+
+        val linkedinProfileOverallCommentOpt = rs.getString("custom_comment_li") match {
+          case "" => None
+          case otherString => Some(otherString)
+        }
+
+        val denormalisedDocumentReport = (redCommentOpt, wellDoneCommentOpt, cvOverallCommentOpt, coverLetterOverallCommentOpt, linkedinProfileOverallCommentOpt)
+        denormalisedDocumentReports += denormalisedDocumentReport
       }
+
+      normaliseDocumentReports(denormalisedDocumentReports.toList)
+    } finally {
+      conn.close()
     }
   }
 

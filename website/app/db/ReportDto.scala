@@ -20,8 +20,8 @@ object ReportDto {
         select file, file_cv, added_at, added_by, d.type as doc_types, position, employer, job_ad_url, customer_comment, paid_on, custom_comment, custom_comment_cv, custom_comment_li, lang,
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message,
-          rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd, rc.points,
-          cat.id as red_comment_cat_id, cat.type as red_comment_doc_type,
+          rc.id as red_comment_id, rc.comment as red_comment_text, rc.ordd as red_comment_order, rc.points,
+          cat.id as red_comment_cat_id, cat.type as red_comment_doc_type, cat.ordd as red_comment_category_order,
           tc.id as top_comment_id, tc.comment as top_comment_text,
           cat2.id as top_comment_cat_id, cat2.type as top_comment_doc_type
         from documents d
@@ -33,7 +33,7 @@ object ReportDto {
           left join default_categories cat2 on cat2.id = tc.cate_id
         where d.id = """ + orderId + """
           and d.status > """ + Order.statusIdPaid + """
-        order by red_comment_doc_type, red_comment_cat_id, ordd, top_comment_doc_type, top_comment_cat_id, top_comment_id;"""
+        order by red_comment_doc_type, red_comment_category_order, red_comment_cat_id, red_comment_order, top_comment_doc_type, top_comment_cat_id, top_comment_id;"""
 
       Logger.info("ReportDto.getOfOrderId():" + query)
 

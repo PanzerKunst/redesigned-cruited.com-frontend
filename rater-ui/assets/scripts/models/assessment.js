@@ -517,6 +517,10 @@ const Assessment = {
     _isParentCommentAlreadyInList(childComment, redCommentsForCategory, reportCommentsForCategory) {
         const indexOfParentComment = _.findIndex(redCommentsForCategory, c => c.id === childComment.id) - 1;
 
+        if (indexOfParentComment < 0) {
+            return false;
+        }
+
         // eslint-disable-next-line no-undefined
         return _.find(reportCommentsForCategory, c => c.id === redCommentsForCategory[indexOfParentComment].id) !== undefined;
     },
