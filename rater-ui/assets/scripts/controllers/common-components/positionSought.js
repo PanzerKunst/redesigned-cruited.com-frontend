@@ -1,14 +1,10 @@
 const Component = props => {
-    const position = props.position;
-
-    if (!position) {
-        return null;
-    }
+    const position = props.position || "&Oslash;";
 
     return (
         <p className="position-sought" >
             <i className="fa fa-address-card-o" />
-            <span>{position}</span>
+            <span dangerouslySetInnerHTML={{__html: position}} />
         </p>);
 };
 

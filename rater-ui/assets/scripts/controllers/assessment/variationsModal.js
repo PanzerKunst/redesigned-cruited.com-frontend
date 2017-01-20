@@ -93,7 +93,7 @@ const Component = React.createClass({
 
         return (
             <div className="variation-id-and-tag">
-                <span>{variation.id}</span>
+                <span className="variation-id">{variation.id}</span>
                 <span className={tagClasses}>{tagText}</span>
             </div>);
     },
