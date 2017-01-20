@@ -18,17 +18,24 @@ const Component = React.createClass({
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h3 className="modal-title">Select variation</h3>
+                            <h3 className="modal-title">{`Select variation for ${currentDefaultComment.id}`}</h3>
                         </div>
                         <div className="modal-body">
                             <ul className="styleless">
                                 <li key={currentDefaultComment.id} onClick={this._handleDefaultCommentClick}>
-                                    {this._listItemContents(currentDefaultComment.redText, {code: "PRO"})}
+                                    <p className="variation-text">{currentDefaultComment.redText}</p>
+
+                                    {this._listItemContents({
+                                        edition: {
+                                            code: "PRO"
+                                        }
+                                    })}
                                 </li>
 
                             {variations.map(variation =>
                                 <li key={variation.id} onClick={this._handleVariationClick} data-variation-id={variation.id}>
-                                    {this._listItemContents(variation.text, variation.edition)}
+                                    <p className="variation-text">{variation.text}</p>
+                                    {this._listItemContents(variation)}
                                 </li>
                             )}
                             </ul>
@@ -64,16 +71,29 @@ const Component = React.createClass({
         }
     },
 
-    _listItemContents(variationText, edition) {
-        const tagText = edition ? edition.code : "English";
+    _listItemContents(variation) {
+        const edition = variation.edition;
+        const languageCode = variation.languageCode;
 
-        let tagClasses = "variation-tag";
+        let tagText = "";
 
-        tagClasses += edition && edition.code ? ` edition ${edition.code}` : " extra-language";
+        if (edition) {
+            tagText = edition.code;
+        } else if (languageCode) {
+            tagText = "English";
+        }
+
+        let tagClasses = null;
+
+        if (edition) {
+            tagClasses = `edition ${edition.code}`;
+        } else if (languageCode) {
+            tagClasses = "extra-language";
+        }
 
         return (
-            <div>
-                <p className="variation-text">{variationText}</p>
+            <div className="variation-id-and-tag">
+                <span>{variation.id}</span>
                 <span className={tagClasses}>{tagText}</span>
             </div>);
     },

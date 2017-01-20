@@ -3,8 +3,7 @@ import String from "../../services/string";
 import Keyboard from "../../services/keyboard";
 import store from "./store";
 
-// eslint-disable-next-line no-unused-vars
-import ReportComment from "./reportComment";
+import ReportComment from "./reportComment";    // eslint-disable-line no-unused-vars
 
 const Component = React.createClass({
     getInitialState() {

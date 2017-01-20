@@ -521,8 +521,7 @@ const Assessment = {
             return false;
         }
 
-        // eslint-disable-next-line no-undefined
-        return _.find(reportCommentsForCategory, c => c.id === redCommentsForCategory[indexOfParentComment].id) !== undefined;
+        return _.find(reportCommentsForCategory, c => c.id === redCommentsForCategory[indexOfParentComment].id) !== undefined;  // eslint-disable-line no-undefined
     },
 
     _initListCommentsFromDocReport(categoryProductCode) {
@@ -565,7 +564,7 @@ const Assessment = {
         if (editionCode) {
             variations = _.filter(this.allCommentVariations, v => v.edition && v.edition.code === editionCode);
         } else {    // If `editionCode` is undefined, it means we load the variations for the English language
-            variations = _.filter(this.allCommentVariations, v => !v.edition);
+            variations = _.filter(this.allCommentVariations, v => v.languageCode !== undefined);    // eslint-disable-line no-undefined
         }
 
         if (!_.isEmpty(variations)) {

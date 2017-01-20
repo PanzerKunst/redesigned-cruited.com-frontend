@@ -147,8 +147,7 @@ const store = {
 
         const nextComment = indexOfNextComment > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextComment] : null;
 
-        // eslint-disable-next-line no-undefined
-        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) {
+        if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) { // eslint-disable-line no-undefined
             nextComment.isGreenSelected = false;
             nextComment.isRedSelected = true;
 

@@ -1,7 +1,6 @@
 import store from "./store";
 
-// eslint-disable-next-line no-unused-vars
-import RaterProfile from "./raterProfile";
+import RaterProfile from "./raterProfile";  // eslint-disable-line no-unused-vars
 
 const Component = React.createClass({
     render() {

@@ -5,10 +5,9 @@ import javax.inject.{Inject, Singleton}
 import anorm.SqlParser._
 import anorm._
 import models._
-import models.frontend.FrontendCommentVariation
 import play.api.Logger
 import play.api.db.Database
-import services.GlobalConfig
+import services.{I18nService, GlobalConfig}
 
 import scala.collection.mutable.ListBuffer
 import scala.util.control.Breaks._
@@ -49,16 +48,17 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
     }
   }
 
-  def allCommentVariations: List[FrontendCommentVariation] = {
+  def allCommentVariations: List[CommentVariation] = {
     db.withConnection { implicit c =>
       val query = """
       select v.id, variation,
         dc.id as id_default, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, dc.type as doc_type, score, grouped,
+        variation_type.tag_type,
         e.id as edition_id, e.edition as edition_code
       from default_variations v
         inner join defaults dc on dc.id = v.id_default
         inner join default_categories c on c.id = dc.category
-        inner join product_edition_variation variation_type on variation_type.variation_id = v.id
+        left join product_edition_variation variation_type on variation_type.variation_id = v.id
         left join product_edition e on e.id = variation_type.edition_id
       where v.shw = 1
         and dc.shw = 1
@@ -69,12 +69,14 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
 
       val rowParser = long("id") ~ str("variation") ~
         long("id_default") ~ long("category_id") ~ str("name_good") ~ str("name_bad") ~ str("doc_type") ~ int("score") ~ int("grouped") ~
+        (str("tag_type") ?) ~
         (long("edition_id") ?) ~ (str("edition_code") ?) map {
         case id ~ text ~
           defaultCommentId ~ categoryId ~ greenText ~ redText ~ dbDocType ~ points ~ grouped ~
+          tagTypeOpt ~
           editionIdOpt ~ editionCodeOpt =>
 
-          FrontendCommentVariation(
+          CommentVariation(
             id = id,
             defaultComment = DefaultComment(
               id = defaultCommentId,
@@ -94,6 +96,10 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
                 code = editionCodeOpt.get
               ))
 
+              case None => None
+            },
+            languageCode = tagTypeOpt match {
+              case Some(CommentVariation.dbVariationTypeLanguage) => Some(I18nService.languageCodeEn)
               case _ => None
             }
           )

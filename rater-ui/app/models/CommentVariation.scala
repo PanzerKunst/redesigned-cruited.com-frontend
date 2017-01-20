@@ -4,16 +4,18 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{Format, JsPath}
 
 case class CommentVariation(id: Long,
-                            defaultCommentId: Long,
+                            defaultComment: DefaultComment,
                             text: String,
-                            editionId: Option[Long])
+                            edition: Option[Edition],
+                            languageCode: Option[String])
 
 object CommentVariation {
   implicit val format: Format[CommentVariation] = (
     (JsPath \ "id").format[Long] and
-      (JsPath \ "defaultCommentId").format[Long] and
+      (JsPath \ "defaultComment").format[DefaultComment] and
       (JsPath \ "text").format[String] and
-      (JsPath \ "editionId").formatNullable[Long]
+      (JsPath \ "edition").formatNullable[Edition] and
+      (JsPath \ "languageCode").formatNullable[String]
     )(CommentVariation.apply, unlift(CommentVariation.unapply))
 
   val dbVariationTypeEdition = "edition"

@@ -1,13 +1,8 @@
 import store from "./store";
 
-// eslint-disable-next-line no-unused-vars
-import StatsPanel from "./statsPanel";
-
-// eslint-disable-next-line no-unused-vars
-import ListItem from "./listItem";
-
-// eslint-disable-next-line no-unused-vars
-import AssignModal from "./assignModal";
+import StatsPanel from "./statsPanel";  // eslint-disable-line no-unused-vars
+import ListItem from "./listItem";  // eslint-disable-line no-unused-vars
+import AssignModal from "./assignModal";    // eslint-disable-line no-unused-vars
 
 const controller = {
     init() {

@@ -1,24 +1,13 @@
 import Order from "../../models/order";
 import store from "./store";
+
 import DeleteModal from "./deleteModal";
-
-// eslint-disable-next-line no-unused-vars
-import RaterProfile from "./raterProfile";
-
-// eslint-disable-next-line no-unused-vars
-import TimeLeft from "../common-components/timeLeft";
-
-// eslint-disable-next-line no-unused-vars
-import PositionSought from "../common-components/positionSought";
-
-// eslint-disable-next-line no-unused-vars
-import EmployerSought from "../common-components/employerSought";
-
-// eslint-disable-next-line no-unused-vars
-import OrderTags from "../common-components/orderTags";
-
-// eslint-disable-next-line no-unused-vars
-import CustomerProfile from "../common-components/customerProfile";
+import RaterProfile from "./raterProfile";  // eslint-disable-line no-unused-vars
+import TimeLeft from "../common-components/timeLeft";   // eslint-disable-line no-unused-vars
+import PositionSought from "../common-components/positionSought";   // eslint-disable-line no-unused-vars
+import EmployerSought from "../common-components/employerSought";   // eslint-disable-line no-unused-vars
+import OrderTags from "../common-components/orderTags"; // eslint-disable-line no-unused-vars
+import CustomerProfile from "../common-components/customerProfile"; // eslint-disable-line no-unused-vars
 
 const Component = React.createClass({
     render() {

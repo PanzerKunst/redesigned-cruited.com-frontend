@@ -4,37 +4,20 @@ import Browser from "../../services/browser";
 import Category from "../../models/category";
 import Product from "../../models/product";
 import Order from "../../models/order";
+
 import store from "./store";
 
-// eslint-disable-next-line no-unused-vars
-import PositionSought from "../common-components/positionSought";
+import PositionSought from "../common-components/positionSought";   // eslint-disable-line no-unused-vars
+import EmployerSought from "../common-components/employerSought";   // eslint-disable-line no-unused-vars
+import OrderTags from "../common-components/orderTags"; // eslint-disable-line no-unused-vars
+import TimeLeft from "../common-components/timeLeft";   // eslint-disable-line no-unused-vars
+import CustomerProfile from "../common-components/customerProfile"; // eslint-disable-line no-unused-vars
 
-// eslint-disable-next-line no-unused-vars
-import EmployerSought from "../common-components/employerSought";
-
-// eslint-disable-next-line no-unused-vars
-import OrderTags from "../common-components/orderTags";
-
-// eslint-disable-next-line no-unused-vars
-import TimeLeft from "../common-components/timeLeft";
-
-// eslint-disable-next-line no-unused-vars
-import CustomerProfile from "../common-components/customerProfile";
-
-// eslint-disable-next-line no-unused-vars
-import GreenRedAssessmentComment from "./greenRedAssessmentComment";
-
-// eslint-disable-next-line no-unused-vars
-import ReportCategory from "./reportCategory";
-
-// eslint-disable-next-line no-unused-vars
-import OrderStatusChangeBtn from "./orderStatusChangeBtn";
-
-// eslint-disable-next-line no-unused-vars
-import DocAssessmentNav from "./docAssessmentNav";
-
-// eslint-disable-next-line no-unused-vars
-import VariationsModal from "./variationsModal";
+import GreenRedAssessmentComment from "./greenRedAssessmentComment";    // eslint-disable-line no-unused-vars
+import ReportCategory from "./reportCategory";  // eslint-disable-line no-unused-vars
+import OrderStatusChangeBtn from "./orderStatusChangeBtn";  // eslint-disable-line no-unused-vars
+import DocAssessmentNav from "./docAssessmentNav";  // eslint-disable-line no-unused-vars
+import VariationsModal from "./variationsModal";    // eslint-disable-line no-unused-vars
 
 const controller = {
     init() {

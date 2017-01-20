@@ -1,13 +1,8 @@
 import store from "./store";
 
-// eslint-disable-next-line no-unused-vars
-import PositionSought from "../common-components/positionSought";
-
-// eslint-disable-next-line no-unused-vars
-import EmployerSought from "../common-components/employerSought";
-
-// eslint-disable-next-line no-unused-vars
-import OrderTags from "../common-components/orderTags";
+import PositionSought from "../common-components/positionSought";   // eslint-disable-line no-unused-vars
+import EmployerSought from "../common-components/employerSought";   // eslint-disable-line no-unused-vars
+import OrderTags from "../common-components/orderTags"; // eslint-disable-line no-unused-vars
 
 const Component = React.createClass({
     render() {
