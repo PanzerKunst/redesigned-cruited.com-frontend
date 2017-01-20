@@ -1,24 +1,22 @@
-const Component = React.createClass({
-    render() {
-        const account = this.props.account;
+const Component = props => {
+    const account = props.account;
 
-        if (!account) {
-            return null;
-        }
-
-        let myProfilePictureStyleAttr = null;
-        const myLinkedinProfile = account.linkedinProfile;
-
-        if (myLinkedinProfile) {
-            myProfilePictureStyleAttr = {backgroundImage: `url(${myLinkedinProfile.pictureUrl})`};
-        }
-
-        return (
-            <article className="user-profile">
-                <div className="profile-picture" style={myProfilePictureStyleAttr}></div>
-                <p>{account.firstName} {account.lastName}</p>
-            </article>);
+    if (!account) {
+        return null;
     }
-});
+
+    let myProfilePictureStyleAttr = null;
+    const myLinkedinProfile = account.linkedinProfile;
+
+    if (myLinkedinProfile) {
+        myProfilePictureStyleAttr = {backgroundImage: `url(${myLinkedinProfile.pictureUrl})`};
+    }
+
+    return (
+        <article className="user-profile">
+            <div className="profile-picture" style={myProfilePictureStyleAttr}></div>
+            <p>{account.firstName} {account.lastName}</p>
+        </article>);
+};
 
 export {Component as default};
