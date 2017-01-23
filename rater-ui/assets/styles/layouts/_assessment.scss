@@ -626,12 +626,13 @@ $white-section-padding: 2em 1em 1em;
       @include clearfix;
 
       > .fa,
-      > a {
+      > a,
+      > .category-score {
         float: left;
       }
 
       > .fa {
-        padding-top: 0.6em;
+        padding-top: 0.4em;
       }
     }
 

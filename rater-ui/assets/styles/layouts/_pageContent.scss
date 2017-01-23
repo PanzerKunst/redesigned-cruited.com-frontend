@@ -313,6 +313,8 @@
   }
 }
 
-.time-left {
+.time-left > span {
+  display: inline-block;
+  margin-left: 0.3em;
   font-weight: bold;
 }

@@ -10,7 +10,7 @@ const Component = props => {
     const dueMoment = moment(order.dueTimestamp);
     const timeLeft = moment.duration(dueMoment.valueOf() - moment().valueOf());
 
-    return <p className="time-left">{timeLeft.hours()}h{timeLeft.minutes()}m left</p>;
+    return <p className="time-left"><i className="fa fa-clock-o" aria-hidden="true"></i><span>{timeLeft.hours()}h {timeLeft.minutes()}m</span></p>;
 };
 
 export {Component as default};
