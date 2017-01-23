@@ -9,6 +9,15 @@
   padding-left: 0.2em; // 0.4em by default
 }
 
+@mixin icon-btn-states {
+  &:hover {
+    color: $icon-btn-hover-color;
+  }
+  &:active {
+    color: $icon-btn-active-color;
+  }
+}
+
 $comment-id-and-points-width: 7%;
 $green-comment-width: 27.5%;
 $red-comment-width: 100% - $comment-id-and-points-width - $green-comment-width;
@@ -206,8 +215,12 @@ $white-section-padding: 2em 1em 1em;
   @include xl-screen {
     .nav-panel {
       position: fixed;
+      top: 12em;
+
       background-color: white;
+
       padding: $spacer-unit-size;
+      margin-top: 0;
     }
 
     .nav-tabs {
@@ -252,13 +265,13 @@ $white-section-padding: 2em 1em 1em;
       display: block;
     }
 
-    $checkbox-width: 10%;
-    $link-width: 100% - $checkbox-width;
+    font-size: 0.85em;
 
-    .fa-check {
-      width: $checkbox-width;
-      color: $well-border-color;
-      padding-left: 0.3em;
+    $checkbox-width: 2em;
+
+    li,
+    > a {
+      padding: 0.4em 0;
     }
 
     li {
@@ -266,14 +279,17 @@ $white-section-padding: 2em 1em 1em;
       align-items: center;
 
       > a {
-        width: $link-width;
+        width: 8em;
+
+        @include ellipsis;
       }
 
       &.active {
         background-color: $sky-blue;
 
         /* stylelint-disable-next-line max-nesting-depth */
-        > a {
+        > a,
+        > .category-score {
           color: white;
         }
       }
@@ -286,11 +302,6 @@ $white-section-padding: 2em 1em 1em;
     a {
       display: inline-block;
 
-      font-size: 0.85em;
-      color: $dark-grey;
-
-      padding: 0.4em 0;
-
       &:hover,
       &:focus {
         text-decoration: none;
@@ -301,6 +312,18 @@ $white-section-padding: 2em 1em 1em;
       text-transform: uppercase;
       margin-left: $checkbox-width;
       border-top: 1px solid $well-border-color;
+    }
+
+    .fa-check {
+      width: $checkbox-width;
+
+      color: $well-border-color;
+      text-align: center;
+    }
+
+    .category-score {
+      display: inline-block;
+      padding: 0 0.5em 0 0.3em;
     }
   }
 
@@ -387,9 +410,7 @@ $white-section-padding: 2em 1em 1em;
       right: 0;
       z-index: 1;
 
-      &:active {
-        color: $icon-btn-active-color;
-      }
+      @include icon-btn-states;
     }
 
     .fa-plus-circle {
@@ -486,9 +507,7 @@ $white-section-padding: 2em 1em 1em;
 
     > .fa,
     > .report-comment-checkbox {   /* TODO: remove */
-      &:active {
-        color: $icon-btn-active-color;
-      }
+      @include icon-btn-states;
 
       right: 3.1em;
       @include large-screen {
@@ -529,7 +548,7 @@ $white-section-padding: 2em 1em 1em;
     }
   }
 
-  .report-comment-checkbox {
+  .report-comment-checkbox {  /* TODO: remove */
     display: inline-block;
     padding: 0.3em 0.5em 0;
     cursor: pointer;

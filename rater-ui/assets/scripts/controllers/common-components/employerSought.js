@@ -1,5 +1,5 @@
 const Component = props => {
-    const employer = props.employer || "&Oslash;";
+    const employer = props.employer || "&#8212;";
 
     return (
         <p className="employer-sought" >

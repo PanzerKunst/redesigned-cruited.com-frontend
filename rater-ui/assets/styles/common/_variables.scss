@@ -22,7 +22,8 @@ $pdf-red: rgb(240, 90, 40); // #F05A28
 $weak-assessment-score-color: rgb(183, 90, 88); // #B75A58
 $good-assessment-score-color: rgb(207, 172, 71); // #CFAC47
 $excellent-assessment-score-color: rgb(49, 161, 100); // #31A164
-$icon-btn-active-color: black;
+$icon-btn-hover-color: black;
+$icon-btn-active-color: $well-border-color;
 
 
 $line-height-project: 1.75em;

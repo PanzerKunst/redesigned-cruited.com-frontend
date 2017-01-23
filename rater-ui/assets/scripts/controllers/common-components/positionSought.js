@@ -1,5 +1,5 @@
 const Component = props => {
-    const position = props.position || "&Oslash;";
+    const position = props.position || "&#8212;";
 
     return (
         <p className="position-sought" >
