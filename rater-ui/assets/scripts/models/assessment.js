@@ -475,7 +475,7 @@ const Assessment = {
 
     _saveReportCommentInLocalStorage(categoryProductCode, comment) {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-        const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
+        const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c !== null && c.id === comment.id);
 
         if (commentToUpdate) {
             Object.assign(commentToUpdate, comment);

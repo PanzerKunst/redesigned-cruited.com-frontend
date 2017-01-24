@@ -34,10 +34,7 @@ const Component = React.createClass({
                 <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />
                 <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
 
-                <div className="id-and-points">
-                    <p>{c.id}</p>
-                    <p>{c.points}pt</p>
-                </div>
+                {this._idAndPoints()}
             </li>);
     },
 
@@ -52,6 +49,20 @@ const Component = React.createClass({
     _initElements() {
         this.$li = $(ReactDOM.findDOMNode(this.refs.root));
         this.$commentParagraph = this.$li.children(".comment-paragraph");
+    },
+
+    _idAndPoints() {
+        const c = this.props.comment;
+
+        if (_.isNaN(_.toNumber(c.id))) {
+            return <div className="id-and-points"></div>;
+        }
+
+        return (
+            <div className="id-and-points">
+                <p>{c.id}</p>
+                <p>{c.points}pt</p>
+            </div>);
     },
 
     _handleParagraphBlur(e) {
