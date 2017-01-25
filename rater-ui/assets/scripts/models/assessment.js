@@ -263,32 +263,6 @@ const Assessment = {
         this._saveReportCategoryInLocalStorage(categoryProductCode, categoryId, reportCategory);
     },
 
-    /* TODO: remove
-    areAllReportCommentsChecked(categoryProductCode) {
-        if (!this.areAllListCommentsSelected(categoryProductCode)) {
-            return false;
-        }
-
-        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-        const docReportCategoriesMap = _.get(myAssessments, [this.order.id, "report", categoryProductCode, "categories"]);
-
-        if (_.isEmpty(docReportCategoriesMap)) {
-            return false;
-        }
-
-        const categories = _.values(docReportCategoriesMap);
-
-        for (const category of categories) {
-            for (const comment of category.comments) {
-                if (comment === null) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }, */
-
     // (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100
     categoryScore(categoryId) {
         const categoryProductCode = Category.productCodeFromCategoryId(categoryId);

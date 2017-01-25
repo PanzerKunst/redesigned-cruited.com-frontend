@@ -19,13 +19,6 @@ const Component = React.createClass({
             "has-errors": validationErrors && validationErrors.areBracketsRemaining
         });
 
-        /* TODO: remove
-        const checkboxClasses = classNames({
-            "report-comment-checkbox": true,
-            checked: c.isChecked,
-            "has-errors": validationErrors && validationErrors.isUnChecked
-        }); */
-
         return (
             <li ref="root" data-comment-id={c.id} className={liClasses}>
                 <p className={paragraphClasses} onBlur={this._handleParagraphBlur}>{c.redText}</p>
@@ -97,21 +90,7 @@ const Component = React.createClass({
                 onComplete: () => store.removeReportComment(this.props.comment)
             });
         }
-    } /* TODO: remove ,
-
-    _handleCheckboxClick(e) {
-        if (!store.isOrderReadOnly()) {
-            const updatedComment = this.props.comment;
-
-            updatedComment.isChecked = updatedComment.isChecked ? false : true;
-
-            store.updateReportCommentIfExists(updatedComment);
-
-            if ($(e.currentTarget).hasClass("has-errors") && updatedComment.isChecked) {
-                store.validateReportForm();
-            }
-        }
-    } */
+    }
 });
 
 export {Component as default};

@@ -116,13 +116,6 @@ const store = {
         return this.order.rater && this.order.rater.id === this.account.id && this.order.status === Order.statuses.paid;
     },
 
-    /* TODO: remove
-    areAllReportCommentsCheckedForAtLeastOneCategory() {
-        return this.assessment && (this.assessment.areAllReportCommentsChecked(Category.productCodes.cv) ||
-            this.assessment.areAllReportCommentsChecked(Category.productCodes.coverLetter) ||
-            this.assessment.areAllReportCommentsChecked(Category.productCodes.linkedinProfile));
-    }, */
-
     areAllListCommentsSelected() {
         return this.assessment && (this.assessment.areAllListCommentsSelected(Category.productCodes.cv) ||
             this.assessment.areAllListCommentsSelected(Category.productCodes.coverLetter) ||
@@ -247,11 +240,10 @@ const store = {
                 store.assessment.reportCategory(categoryProductCode, categoryId).comments.forEach(comment => {
                     if (comment !== null) {
                         const commentErrors = {
-                            areBracketsRemaining: !Comment.isTextValidForReport(comment.redText)/* ,
-                            isUnChecked: !comment.isChecked TODO: remove the `isChecked` property from all comments */
+                            areBracketsRemaining: !Comment.isTextValidForReport(comment.redText)
                         };
 
-                        if (commentErrors.areBracketsRemaining /* TODO || commentErrors.isUnChecked */) {
+                        if (commentErrors.areBracketsRemaining) {
                             categoryErrors[comment.id] = commentErrors;
                         }
                     }
@@ -439,8 +431,7 @@ const store = {
                         id: c.defaultCommentId || String.uuid(),
                         categoryId: c.categoryId,
                         redText: c.text,
-                        points: c.points,
-                        isChecked: true
+                        points: c.points
                     };
 
                     return redComment;

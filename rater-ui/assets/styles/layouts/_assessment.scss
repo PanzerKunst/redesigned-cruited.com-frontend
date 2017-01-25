@@ -279,7 +279,7 @@ $white-section-padding: 2em 1em 1em;
       align-items: center;
 
       > a {
-        width: 6em;
+        width: 6.7em;
 
         @include ellipsis;
       }
@@ -499,14 +499,12 @@ $white-section-padding: 2em 1em 1em;
     }
 
     > .fa,
-    > .report-comment-checkbox, /* TODO: remove */
     > .id-and-points {
       position: absolute;
       top: 0;
     }
 
-    > .fa,
-    > .report-comment-checkbox {   /* TODO: remove */
+    > .fa {
       @include icon-btn-states;
 
       right: 3.1em;
@@ -523,7 +521,6 @@ $white-section-padding: 2em 1em 1em;
       cursor: move;
     }
 
-    > .report-comment-checkbox, /* TODO: remove */
     > .fa-clone {
       top: 2em;
     }
@@ -545,26 +542,6 @@ $white-section-padding: 2em 1em 1em;
       @include large-screen {
         width: 65px;
       }
-    }
-  }
-
-  .report-comment-checkbox {  /* TODO: remove */
-    display: inline-block;
-    padding: 0.3em 0.5em 0;
-    cursor: pointer;
-
-    &::after {
-      @include icon-font($fa-var-check-square-o);
-      font-size: 1.2em;
-      color: $well-border-color;
-    }
-
-    &.checked::after {
-      color: $primary-btn-color;
-    }
-
-    &.has-errors::after {
-      color: $brand-danger;
     }
   }
 
