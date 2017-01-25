@@ -105,3 +105,8 @@ report.analysis.explanation.text = Our experts have looked at your {docLabel} to
 report.analysis.explanation.docLabel.cv = CV
 report.analysis.explanation.docLabel.coverLetter = cover letter
 report.analysis.explanation.docLabel.linkedinProfile = LinkedIn profile
+
+
+# Emails
+
+email.reportAvailable.subject = Your assessment report is ready!

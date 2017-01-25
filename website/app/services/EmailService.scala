@@ -15,7 +15,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
   val accountNameErik = Play.application().configuration().getString("play.mailer.forsandree.account.name")
 
   def sendResetPasswordEmail(emailAddress: String, firstName: String, languageCode: String, resetPasswordUrl: String, subject: String) {
-    val view = if (languageCode == "en") {
+    val view = if (languageCode == I18nService.languageCodeEn) {
       views.html.email.en.resetPassword(firstName, resetPasswordUrl)
     } else {
       views.html.email.sv.resetPassword(firstName, resetPasswordUrl)
@@ -23,16 +23,16 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
 
     mailerClient.send(Email(
       subject,
-      accountName + "<" + accountAddress + ">",
+      accountName + " <" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(view.toString())
+      bodyHtml = Some(view.toString)
     ))
 
     Logger.info("Sent ResetPasswordEmail to " + emailAddress)
   }
 
   def sendFreeOrderCompleteEmail(emailAddress: String, firstName: String, languageCode: String, subject: String) {
-    val view = if (languageCode == "en") {
+    val view = if (languageCode == I18nService.languageCodeEn) {
       views.html.email.en.orderComplete.free(firstName)
     } else {
       views.html.email.sv.orderComplete.free(firstName)
@@ -40,7 +40,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
 
     mailerClient.send(Email(
       subject,
-      accountName + "<" + accountAddress + ">",
+      accountName + " <" + accountAddress + ">",
       Seq(emailAddress),
       bodyHtml = Some(view.toString)
     ))
@@ -49,7 +49,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
   }
 
   def sendPaidOrderCompleteEmail(emailAddress: String, firstName: String, languageCode: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, vatAmount: Double, orderDateTime: String, subject: String) {
-    val view = if (languageCode == "en") {
+    val view = if (languageCode == I18nService.languageCodeEn) {
       views.html.email.en.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, GlobalConfig.paymentCurrencyCode, vatAmount, orderDateTime)
     } else {
       views.html.email.sv.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, GlobalConfig.paymentCurrencyCode, vatAmount, orderDateTime)
@@ -57,16 +57,16 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
 
     mailerClient.send(Email(
       subject,
-      accountName + "<" + accountAddress + ">",
+      accountName + " <" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(view.toString())
+      bodyHtml = Some(view.toString)
     ))
 
     Logger.info("Sent PaidOrderCompleteEmail to " + emailAddress)
   }
 
   def sendUnpaidOrderReminderEmail(emailAddress: String, firstName: String, languageCode: String, paymentUrl: String, subject: String) = {
-    val view = if (languageCode == "en") {
+    val view = if (languageCode == I18nService.languageCodeEn) {
       views.html.email.en.unpaidOrderReminder(firstName, paymentUrl)
     } else {
       views.html.email.sv.unpaidOrderReminder(firstName, paymentUrl)
@@ -74,16 +74,16 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
 
     mailerClient.send(Email(
       subject,
-      accountName + "<" + accountAddress + ">",
+      accountName + " <" + accountAddress + ">",
       Seq(emailAddress),
-      bodyHtml = Some(view.toString())
+      bodyHtml = Some(view.toString)
     ))
 
     Logger.info("Sent UnpaidOrderReminderEmail to " + emailAddress)
   }
 
   def sendTheTwoDaysAfterAssessmentDeliveredEmail(emailAddress: String, firstName: String, languageCode: String, subject: String) = {
-    val view = if (languageCode == "en") {
+    val view = if (languageCode == I18nService.languageCodeEn) {
       views.html.email.en.twoDaysAfterAssessmentDelivered(firstName)
     } else {
       views.html.email.sv.twoDaysAfterAssessmentDelivered(firstName)
@@ -91,7 +91,7 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
 
     mailerClient.send(Email(
       subject,
-      accountNameErik + "<" + accountAddressErik + ">",
+      accountNameErik + " <" + accountAddressErik + ">",
       Seq(emailAddress),
       bodyHtml = Some(view.toString)
     ))

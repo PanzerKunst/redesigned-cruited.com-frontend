@@ -105,3 +105,8 @@ report.analysis.explanation.text = Vi har bedömt {docLabel} och identifierat va
 report.analysis.explanation.docLabel.cv = din CV
 report.analysis.explanation.docLabel.coverLetter = ditt personliga brev
 report.analysis.explanation.docLabel.linkedinProfile = din LinkedIn-profil
+
+
+# Emails
+
+email.reportAvailable.subject = Din bedömning är klar!

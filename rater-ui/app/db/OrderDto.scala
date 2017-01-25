@@ -187,6 +187,33 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     ordersSentToTheCustomer = processQuery(query)
   }
 
+  def getScheduledOrdersArrivedToTerm: List[Order] = {
+    val oneDayAgoPlus90Minutes = Calendar.getInstance()
+    oneDayAgoPlus90Minutes.add(Calendar.DATE, -1)
+    oneDayAgoPlus90Minutes.add(Calendar.MINUTE, 90)
+
+    val query = """
+      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, customer_comment, paid_on, d.lang as order_lang,
+        edition,
+        u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
+        r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
+        c.id as coupon_id, c.name, c.tp as coupon_type, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
+      from documents d
+        inner join product_edition e on e.id = d.edition_id
+        inner join useri u on u.id = d.added_by
+        inner join useri r on r.id = d.assign_to
+        left join codes c on c.name = d.code
+      where """ + commonClause + """
+        and d.status = '""" + Order.statusIdScheduled + """'
+        and paid_on < '""" + DbUtil.dateFormat.format(oneDayAgoPlus90Minutes.getTime) + """'
+      order by d.id desc;"""
+
+    // Commented out because it spams too much
+    // Logger.info("OrderDto.getScheduledOrdersArrivedToTerm():" + query)
+
+    processQuery(query).map(frontendOrder => new Order(frontendOrder))
+  }
+
   /* Using JDBC here instead of Anorm due to issue https://github.com/playframework/anorm/issues/122 */
   private def processQuery(query: String): List[FrontendOrder] = {
     var orders = new ListBuffer[FrontendOrder]()
