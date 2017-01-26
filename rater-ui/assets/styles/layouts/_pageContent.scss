@@ -211,6 +211,8 @@
 #order-list .with-circles,
 #assessment {
   .edition {
+    padding: 0.2em 0.6em 0 2.3em;
+
     @include medium-screen {
       @include initial-edition-icon-locations;
     }
@@ -236,8 +238,21 @@
   }
 }
 
+.order-tags {
+  margin-bottom: $content-element-margin-bottom;
+
+  > section {
+    display: flex;
+
+    &:first-child {
+      margin-bottom: $content-element-margin-bottom / 2;
+    }
+  }
+}
+
 .order-tag {
   display: inline-block;
+  text-align: center;
 
   &.coupon {
     color: white;
@@ -249,14 +264,40 @@
 
   &.edition {
     margin-left: 0.5em;
-
-    display: inline; // Breaks the design otherwise
   }
 
-  &.product-code {
-    margin-right: 0.5em;
+  &.product-code > a,
+  &.lang {
+    width: 2.3em;
+    height: 2.3em;
+    display: inline-block;
 
     font-weight: bold;
+  }
+
+  &.product-code > a {
+    margin-right: 0.5em;
+
+    border: 0.2em solid $sky-blue;
+
+    color: $sky-blue;
+    text-decoration: none !important;
+
+    @include transition(color $default-animation-duration ease, background-color $default-animation-duration ease);
+
+    &:hover {
+      background-color: $sky-blue;
+      color: white;
+    }
+  }
+
+  &.lang {
+    background-color: $stats-panel-grey;
+    color: white;
+
+    > span {
+      vertical-align: middle;
+    }
   }
 }
 
@@ -282,6 +323,12 @@
 
 .employer-sought > .fa {
   margin: 0 0.5em 0 0.175em;
+}
+
+.time-left > span {
+  display: inline-block;
+  margin-left: 0.3em;
+  font-weight: bold;
 }
 
 .no-flexbox {
@@ -311,10 +358,4 @@
       max-width: 89%;
     }
   }
-}
-
-.time-left > span {
-  display: inline-block;
-  margin-left: 0.3em;
-  font-weight: bold;
 }

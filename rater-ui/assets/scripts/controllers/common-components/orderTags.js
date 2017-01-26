@@ -17,7 +17,9 @@ const Component = React.createClass({
                                 <a href={order.documentUrl(this.props.config, productCode)} target="_blank">{Product.humanReadableCode(productCode)}</a>
                             </span>
                     )}
-                    <span className="order-tag lang">{order.languageCode}</span>
+                    <span className="order-tag lang">
+                        <span>{order.languageCode}</span>
+                    </span>
                 </section>
             </div>);
     },

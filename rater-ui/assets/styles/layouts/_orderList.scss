@@ -112,10 +112,6 @@
     }
   }
 
-  .with-circles .order-tags {
-    margin-bottom: $content-element-margin-bottom;
-  }
-
   .action-btn {
     margin-bottom: 0.5em;
   }
@@ -146,6 +142,10 @@
         right: 1em;
       }
     }
+  }
+
+  .order-tags > section {
+    justify-content: flex-end;
   }
 
   #load-more-panel {
@@ -215,7 +215,6 @@
 #stats-panel {
   display: none;
 
-  $stats-panel-grey: rgb(87, 87, 87); // #575757
   $stats-panel-green: rgb(150, 237, 134); // #96ED86
 
   @include medium-screen {

@@ -10,11 +10,11 @@ const Product = {
     humanReadableCode(dbCode) {
         switch (dbCode) {
             case this.codes.cv:
-                return "CV";
+                return "cv";
             case this.codes.coverLetter:
-                return "Cover letter";
+                return "cl";
             default:
-                return "Linkedin";
+                return "in";
         }
     }
 
