@@ -238,14 +238,12 @@ const store = {
                 const categoryErrors = {};
 
                 store.assessment.reportCategory(categoryProductCode, categoryId).comments.forEach(comment => {
-                    if (comment !== null) {
-                        const commentErrors = {
-                            areBracketsRemaining: !Comment.isTextValidForReport(comment.redText)
-                        };
+                    const commentErrors = {
+                        areBracketsRemaining: !Comment.isTextValidForReport(comment.redText)
+                    };
 
-                        if (commentErrors.areBracketsRemaining) {
-                            categoryErrors[comment.id] = commentErrors;
-                        }
+                    if (commentErrors.areBracketsRemaining) {
+                        categoryErrors[comment.id] = commentErrors;
                     }
                 });
 
@@ -355,14 +353,12 @@ const store = {
              points: Option[Int])  // None when custom comment coming from frontend
              */
             reportCategory.comments.forEach(c => {
-                if (c !== null) {
-                    docReport.redComments.push({
-                        defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
-                        categoryId,
-                        text: c.redText,
-                        points: c.points
-                    });
-                }
+                docReport.redComments.push({
+                    defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
+                    categoryId,
+                    text: c.redText,
+                    points: c.points
+                });
             });
 
             /*

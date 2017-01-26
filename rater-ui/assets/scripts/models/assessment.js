@@ -236,7 +236,7 @@ const Assessment = {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
         if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", comment.categoryId])) {
-            const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c !== null && c.id === comment.id);
+            const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
             if (commentToUpdate) {
                 this._saveReportCommentInLocalStorage(categoryProductCode, comment);
@@ -272,12 +272,10 @@ const Assessment = {
         let sumOfRedPoints = 0;
 
         for (const listComment of listCommentsForCategory) {
-            if (listComment !== null) {
-                sumOfAllPoints += listComment.points;
+            sumOfAllPoints += listComment.points;
 
-                if (listComment.isRedSelected) {
-                    sumOfRedPoints += listComment.points;
-                }
+            if (listComment.isRedSelected) {
+                sumOfRedPoints += listComment.points;
             }
         }
 
@@ -330,22 +328,50 @@ const Assessment = {
 
     _calculateTopComments(categoryProductCode, categoryId) {
         const redCommentsForCategory = _.filter(this.listComments(categoryProductCode), ac => ac.categoryId === categoryId && ac.isRedSelected === true);
-        const topCommentsForCategory = [];
 
-        const loopCondition = () => {
-            if (redCommentsForCategory.length < this.nbReportComments) {
-                return topCommentsForCategory.length < redCommentsForCategory.length;
-            }
-            return topCommentsForCategory.length < this.nbReportComments;
-        };
+        // We initialise the top comments with all the red comments
+        const topCommentsForCategory = _.cloneDeep(redCommentsForCategory);
 
-        while (loopCondition()) {
-            const topComment = this._findRedCommentWithMostPointsInListExcept(redCommentsForCategory, topCommentsForCategory);
-
-            topCommentsForCategory.push(topComment);
-        }
+        this._removeChildComments(topCommentsForCategory, categoryProductCode);
+        this._removeCommentsUtilTopThree(topCommentsForCategory);
 
         return topCommentsForCategory;
+    },
+
+    // For each child comment in that report list, if the parent is also in the list, remove the child
+    _removeChildComments(topCommentsForCategory, categoryProductCode) {
+        for (const comment of topCommentsForCategory) {
+            const parentComment = this._parentComment(comment, categoryProductCode);
+
+            if (parentComment && _.find(topCommentsForCategory, c => c.id === parentComment.id)) {
+                _.remove(topCommentsForCategory, c => c.id === comment.id);
+            }
+        }
+    },
+
+    _parentComment(childComment, categoryProductCode) {
+        if (!childComment.isGrouped) {
+            return null;
+        }
+
+        const childCommentIndex = _.findIndex(this.allDefaultComments[categoryProductCode], c => c.id === childComment.id);
+
+        return this.allDefaultComments[categoryProductCode][childCommentIndex - 1];
+    },
+
+    // If the number of comments is > 3, remove one by one the "lightest" comment (the one with the least points) until 3 is reached
+    _removeCommentsUtilTopThree(topCommentsForCategory) {
+        while (topCommentsForCategory.length > this.nbReportComments) {
+            let lightestComment = topCommentsForCategory[0];
+
+            for (const comment of topCommentsForCategory) {
+                if (comment.points < lightestComment.points) {
+                    lightestComment = comment;
+                }
+            }
+
+            _.remove(topCommentsForCategory, c => c.id === lightestComment.id);
+        }
     },
 
     _listCommentsFromLocalStorage() {
@@ -449,7 +475,7 @@ const Assessment = {
 
     _saveReportCommentInLocalStorage(categoryProductCode, comment) {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
-        const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c !== null && c.id === comment.id);
+        const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
         if (commentToUpdate) {
             Object.assign(commentToUpdate, comment);
@@ -466,36 +492,6 @@ const Assessment = {
         _.remove(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
         Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
-    },
-
-    _findRedCommentWithMostPointsInListExcept(redCommentsForCategory, reportCommentsForCategory) {
-        let commentWithMostPoints = null;
-
-        redCommentsForCategory.forEach(redComment => {
-            const isCommentAlreadyInList = _.find(reportCommentsForCategory, tc => tc.id === redComment.id);
-
-            if (!isCommentAlreadyInList) {
-
-                // if `redComment` is not a child comment, or is a child comment but parent isn't in `reportCommentsForCategory`
-                if (!redComment.isGrouped || !this._isParentCommentAlreadyInList(redComment, redCommentsForCategory, reportCommentsForCategory)) {
-                    if (commentWithMostPoints === null || redComment.points > commentWithMostPoints.points) {
-                        commentWithMostPoints = redComment;
-                    }
-                }
-            }
-        });
-
-        return commentWithMostPoints;
-    },
-
-    _isParentCommentAlreadyInList(childComment, redCommentsForCategory, reportCommentsForCategory) {
-        const indexOfParentComment = _.findIndex(redCommentsForCategory, c => c.id === childComment.id) - 1;
-
-        if (indexOfParentComment < 0) {
-            return false;
-        }
-
-        return _.find(reportCommentsForCategory, c => c.id === redCommentsForCategory[indexOfParentComment].id) !== undefined;  // eslint-disable-line no-undefined
     },
 
     _initListCommentsFromDocReport(categoryProductCode) {

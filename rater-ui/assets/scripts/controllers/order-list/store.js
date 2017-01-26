@@ -196,7 +196,7 @@ const store = {
         } else {
             this.searchCriteria.fromMoment = moment(this.searchCriteria.toMoment);
 
-            this.searchNbDays *= 1.5;
+            this.searchNbDays *= 8;
             this.searchCriteria.toMoment.subtract(this.searchNbDays, "d");
         }
     },
