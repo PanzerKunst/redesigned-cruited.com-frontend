@@ -26,11 +26,15 @@ const controller = {
                     </header>
                     <div className="with-circles">
                         {this._topOrders()}
-                        <ul className="styleless orders">
-                        {store.moreOrders.map(order =>
-                            <ListItem key={order.id} order={order} />
-                        )}
-                        </ul>
+                        <section id="other-orders">
+                            <h2>Team</h2>
+
+                            <ul className="styleless orders">
+                            {store.moreOrders.map(order =>
+                                <ListItem key={order.id} order={order} />
+                            )}
+                            </ul>
+                        </section>
                         <div id="load-more-panel">
                             <div className="centered-contents">
                                 <i className="fa fa-spinner fa-pulse"/>
@@ -64,11 +68,15 @@ const controller = {
         _topOrders() {
             if (store.areTopOrdersFetched) {
                 return (
-                    <ul className="styleless orders">
-                    {store.topOrders.map(order =>
-                            <ListItem key={order.id} order={order} />
-                    )}
-                    </ul>);
+                    <section id="top-orders">
+                        <h2>My TODOs</h2>
+
+                        <ul className="styleless orders">
+                        {store.topOrders.map(order =>
+                                <ListItem key={order.id} order={order} />
+                        )}
+                        </ul>
+                    </section>);
             }
             return (
                 <div className="centered-contents">

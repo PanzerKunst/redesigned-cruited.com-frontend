@@ -29,6 +29,18 @@
     }
   }
 
+  h2 {
+    color: $dark-grey;
+  }
+
+  #top-orders > h2 {
+    margin-top: 0;
+  }
+
+  #other-orders > h2 {
+    margin-top: 3em;
+  }
+
   .orders {
     margin-bottom: 0;
 
