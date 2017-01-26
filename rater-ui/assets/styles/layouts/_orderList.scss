@@ -259,7 +259,7 @@
 
     background-color: $stats-panel-grey;
     &:first-child {
-      background-color: lighten($stats-panel-grey, 5%);
+      background-color: $stats-panel-light-grey;
     }
   }
 

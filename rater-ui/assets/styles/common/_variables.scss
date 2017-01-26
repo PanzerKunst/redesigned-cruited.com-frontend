@@ -25,6 +25,7 @@ $excellent-assessment-score-color: rgb(49, 161, 100); // #31A164
 $icon-btn-hover-color: black;
 $icon-btn-active-color: $well-border-color;
 $stats-panel-grey: rgb(87, 87, 87); // #575757
+$stats-panel-light-grey: lighten($stats-panel-grey, 5%);
 
 
 $line-height-project: 1.75em;

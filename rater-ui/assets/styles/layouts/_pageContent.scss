@@ -226,11 +226,19 @@
   display: flex;
   align-items: center;
 
+  > .profile-picture,
+  > .fa {
+    margin-right: 10px;
+  }
+
   > .profile-picture {
     width: 40px;
     height: 40px;
+  }
 
-    margin-right: 0.5em;
+  > .fa {
+    font-size: 3.1em;
+    color: $well-border-color;
   }
 
   &.customer > .profile-picture {
@@ -292,7 +300,7 @@
   }
 
   &.lang {
-    background-color: $stats-panel-grey;
+    background-color: $stats-panel-light-grey;
     color: white;
 
     > span {
@@ -337,8 +345,8 @@
     @include clearfix;
 
     > .profile-picture,
-    > p,
-    > div {
+    > .fa,
+    > p {
       float: left;
     }
   }

@@ -2,7 +2,11 @@ const Component = props => {
     const account = props.account;
 
     if (!account) {
-        return null;
+        return (
+            <article className="user-profile">
+                <i className="fa fa-question-circle" aria-hidden="true"></i>
+                <p>Unassigned</p>
+            </article>);
     }
 
     let myProfilePictureStyleAttr = null;

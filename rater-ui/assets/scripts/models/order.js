@@ -66,6 +66,23 @@ const Order = {
         }
     },
 
+    humanReadableStatus() {
+        switch (this.status) {
+            case this.statuses.notPaid:
+                return "NOT PAID";
+            case this.statuses.paid:
+                return "READY TO ASSESS";
+            case this.statuses.inProgress:
+                return "IN PROGRESS";
+            case this.statuses.awaitingFeedback:
+                return "READY FOR FEEDBACK";
+            case this.statuses.scheduled:
+                return "SCHEDULED";
+            default:
+                return "COMPLETED";
+        }
+    },
+
     updateStatus(status, onAjaxRequestSuccess) {
         this.status = status;
 

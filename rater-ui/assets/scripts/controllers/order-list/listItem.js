@@ -19,7 +19,7 @@ const Component = React.createClass({
                     <RaterProfile account={order.rater} />
                     <div className="order-id-and-status">
                         <span>#{order.id}</span>
-                        <span className={`order-status ${order.statusCode()}`}>{order.statusCode()}</span>
+                        <span className={`order-status ${order.statusCode()}`}>{order.humanReadableStatus()}</span>
                     </div>
                     <TimeLeft order={order} />
                     <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
