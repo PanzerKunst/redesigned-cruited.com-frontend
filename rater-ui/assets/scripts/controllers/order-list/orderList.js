@@ -67,17 +67,26 @@ const controller = {
 
         _topOrders() {
             if (store.areTopOrdersFetched) {
+                if (store.topOrders.length === 0) {
+                    return (
+                        <section id="top-orders">
+                            <div></div>
+                            <p className="centered-contents">You are done!<i className="fa fa-smile-o" aria-hidden="true"></i></p>
+                        </section>);
+                }
+
                 return (
                     <section id="top-orders">
-                        <h2>My TODOs</h2>
+                        <h2>To Do</h2>
 
                         <ul className="styleless orders">
                         {store.topOrders.map(order =>
-                                <ListItem key={order.id} order={order} />
+                            <ListItem key={order.id} order={order} />
                         )}
                         </ul>
                     </section>);
             }
+
             return (
                 <div className="centered-contents">
                     <i className="fa fa-spinner fa-pulse"/>

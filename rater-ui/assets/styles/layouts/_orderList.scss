@@ -33,8 +33,34 @@
     color: $dark-grey;
   }
 
-  #top-orders > h2 {
-    margin-top: 0;
+  #top-orders {
+    > h2 {
+      margin-top: 0;
+    }
+
+    > div {
+      $image-location-x: 0;
+      $image-location-y: -300px;
+
+      @include hdpi-sprite;
+      background-position: $image-location-x $image-location-y;
+      @include hidpi {
+        background-position: half-pos($image-location-x, $image-location-y);
+      }
+
+      width: 151px;
+      height: 151px;
+
+      margin: 2em auto 0;
+    }
+
+    > p {
+      margin-top: 0.5em;
+    }
+
+    .fa-smile-o {
+      margin-left: 0.25em;
+    }
   }
 
   #other-orders > h2 {
