@@ -7,7 +7,8 @@ const Component = React.createClass({
         const listCommentClasses = classNames({
             "list-comment": true,
             grouped: c.isGrouped,
-            "read-only": store.isOrderReadOnly()
+            "read-only": store.isOrderReadOnly(),
+            selected: c.isGreenSelected || c.isRedSelected
         });
 
         const greenParagraphClasses = classNames({

@@ -364,20 +364,27 @@ $white-section-padding: 2em 1em 1em;
       position: relative;
     }
 
-    > .green > .selected {
+    > .green > .comment-paragraph.selected {
       background-color: $green-comment-bg;
     }
-    > .red > .selected {
+    > .red > .comment-paragraph.selected {
       background-color: $red-comment-bg;
     }
 
     &.read-only {
       > .green,
       > .red,
-      button,
-      .report-comment-checkbox {
+      button {
         cursor: default;
       }
+
+      .comment-paragraph {
+        color: lighten($stats-panel-grey, 25%);
+      }
+    }
+
+    &.selected .comment-paragraph {
+      background-color: darken($gradient-light-grey, 5%);
     }
 
     @include medium-screen {
@@ -456,10 +463,6 @@ $white-section-padding: 2em 1em 1em;
       }
 
       button {
-        cursor: default;
-      }
-
-      .report-comment-checkbox {
         cursor: default;
       }
     }
