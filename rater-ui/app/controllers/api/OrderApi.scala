@@ -70,7 +70,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
               }
               val to = new Date(orderSearchData.to)
 
-              val olderOrdersExcept = orderDto.getOlderOrdersExcept(fromOpt, to, orderSearchData.excludedOrderIds)
+              val olderOrdersExcept = orderDto.getOlderOrdersExcept(fromOpt, to, orderSearchData.excludedOrderIds).sortWith(sortOrderByStatus)
 
               Ok(Json.toJson(olderOrdersExcept))
           }
@@ -95,6 +95,27 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) => Ok(Json.toJson(orderDto.ordersToDo))
       }
+    }
+  }
+
+  private def sortOrderByStatus(o1: FrontendOrder, o2: FrontendOrder): Boolean = {
+    val s1 = o1.status
+    val s2 = o2.status
+
+    if (s1 == s2) {
+      o1.id > o2.id
+    } else if (o1.status == Order.statusIdComplete) {
+      false
+    } else if (o1.status == Order.statusIdScheduled && o2.status != Order.statusIdComplete) {
+      false
+    } else if (o1.status == Order.statusIdAwaitingFeedback && o2.status != Order.statusIdComplete && o2.status != Order.statusIdScheduled) {
+      false
+    } else if (o1.status == Order.statusIdInProgress && (o2.status == Order.statusIdPaid || o2.status != Order.statusIdNotPaid)) {
+      false
+    } else if (o1.status == Order.statusIdPaid && o2.status != Order.statusIdNotPaid) {
+      false
+    } else {
+      true
     }
   }
 }
