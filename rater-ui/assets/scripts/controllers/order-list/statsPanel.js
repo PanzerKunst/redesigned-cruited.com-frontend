@@ -66,7 +66,7 @@ const Component = React.createClass({
         this.nbOrdersToDo = store.ordersToDo.length;
         this.nbDocsToDo = this._nbDocs(store.ordersToDo);
 
-        const ordersIneedToDo = _.filter(store.ordersToDo, o => o.rater.id === store.account.id);
+        const ordersIneedToDo = _.filter(store.ordersToDo, o => o.rater && o.rater.id === store.account.id);
 
         const ordersIneedToDoSoon = _.filter(ordersIneedToDo, o => {
             const dueMomentMinus8h = moment(o.dueTimestamp).subtract(this.nbHoursSoon, "hour");
