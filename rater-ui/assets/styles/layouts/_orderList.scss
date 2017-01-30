@@ -292,7 +292,7 @@ $stats-panel-border-radius: 4px;
       font-weight: normal;
 
       background-color: $stats-panel-grey;
-      &:first-child {
+      &:last-child {
         background-color: $stats-panel-light-grey;
       }
 
@@ -343,17 +343,17 @@ section#stats-todo {
     }
   }
 
-  thead th:last-child {
+  th:first-child {
     background-color: darken($stats-panel-grey, 5%);
   }
 
-  tbody td {
+  td {
     background-color: $brand-warning;
     &:first-child {
-      background-color: lighten($brand-warning, 5%);
+      background-color: darken($brand-warning, 5%);
     }
     &:last-child {
-      background-color: darken($brand-warning, 5%);
+      background-color: lighten($brand-warning, 5%);
     }
   }
 }
@@ -373,9 +373,9 @@ section#stats-month {
     }
   }
 
-  tbody td {
+  td {
     background-color: $primary-btn-color;
-    &:first-child {
+    &:last-child {
       background-color: lighten($primary-btn-color, 5%);
     }
   }
