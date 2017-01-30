@@ -35,7 +35,7 @@
 
   #top-orders {
     > h2 {
-      margin-top: 0;
+      margin-top: 0.7em;
     }
 
     > div {
@@ -56,6 +56,10 @@
 
     > p {
       margin-top: 0.5em;
+    }
+
+    li {
+      background-color: lighten($brand-danger, 43%);
     }
 
     .fa-smile-o {
@@ -250,65 +254,111 @@
   }
 }
 
+$stats-panel-main-col-width: 10em;
+$stats-panel-green: rgb(150, 237, 134); // #96ED86
+
 #stats-panel {
-  display: none;
-
-  $stats-panel-green: rgb(150, 237, 134); // #96ED86
-
   @include medium-screen {
-    display: flex;
     margin-top: 49px;
   }
   @include large-screen {
     margin-top: 70px;
   }
 
-  > div {
-    width: 1.5em;
+  > section {
+    display: none;
+    cursor: pointer;
 
-    @include hdpi-sprite(darken($stats-panel-grey, 10%));
+    @include medium-screen {
+      display: flex;
 
-    background-position: 3px -195px;
-    @include hidpi {
-      background-position: 3px -95px;
+      &#stats-month {
+        display: none;
+      }
     }
 
-    @include large-screen {
-      background-position: 6px -191px;
-      @include hidpi {
-        background-position: 6px -91px;
+    > table {
+      font-size: 0.65em;
+      color: $background-body-color;
+    }
+
+    th,
+    td {
+      width: $stats-panel-main-col-width;
+      text-align: center;
+    }
+
+    thead th {
+      font-weight: normal;
+
+      background-color: $stats-panel-grey;
+      &:first-child {
+        background-color: $stats-panel-light-grey;
+      }
+    }
+
+    tbody {
+      color: black;
+    }
+
+    tbody td {
+      background-color: $stats-panel-green;
+      &:first-child {
+        background-color: lighten($stats-panel-green, 5%);
       }
     }
   }
 
-  > table {
-    font-size: 0.65em;
-    color: $background-body-color;
+  div {
+    width: 1.5em;
+
+    @include hdpi-sprite(darken($stats-panel-grey, 10%));
+  }
+}
+
+section#stats-todo {
+  > div {
+    background-position: -97px -195px;
+    @include hidpi {
+      background-position: -47px -95px;
+    }
+
+    @include large-screen {
+      background-position: -93px -191px;
+      @include hidpi {
+        background-position: -43px -91px;
+      }
+    }
   }
 
   th,
   td {
-    width: 7em;
-    text-align: center;
-  }
+    width: $stats-panel-main-col-width / 2;
 
-  thead th {
-    font-weight: normal;
-
-    background-color: $stats-panel-grey;
     &:first-child {
-      background-color: $stats-panel-light-grey;
+      width: $stats-panel-main-col-width;
     }
   }
 
-  tbody {
-    color: black;
+  thead th:last-child {
+    background-color: darken($stats-panel-grey, 5%);
   }
 
-  tbody td {
-    background-color: $stats-panel-green;
-    &:first-child {
-      background-color: lighten($stats-panel-green, 5%);
+  tbody td:last-child {
+    background-color: darken($stats-panel-green, 5%);
+  }
+}
+
+section#stats-month > div {
+  background-position: 3px -195px;
+  @include hidpi {
+    background-position: 3px -95px;
+  }
+
+  @include large-screen {
+    background-position: 6px -191px;
+    @include hidpi {
+      background-position: 6px -91px;
     }
   }
 }
@@ -352,7 +402,7 @@
     }
   }
 
-  #stats-panel {
+  #stats-panel > section {
     @include medium-screen {
       display: block;
       @include clearfix;

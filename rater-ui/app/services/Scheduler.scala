@@ -16,6 +16,7 @@ class Scheduler @Inject()(orderDto: OrderDto, emailService: EmailService, messag
   val task = new Runnable {
     def run() = {
       calculateOrdersSentToTheCustomer()
+      orderDto.calculateOrdersToDo()
       handleScheduledAssessementsArrivedToTerm()
     }
   }

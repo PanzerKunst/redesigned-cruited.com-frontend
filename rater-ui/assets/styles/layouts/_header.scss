@@ -132,10 +132,10 @@ $header-bottom-border-height: 1px;
 
     > span {
       font-size: $font-size-sm;
-      @include ellipsis;
-      max-width: 4em;
+
+      display: none;
       @include medium-screen {
-        max-width: 100%;
+        display: inline-block;
       }
     }
   }

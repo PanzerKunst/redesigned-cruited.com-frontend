@@ -338,7 +338,12 @@ $white-section-padding: 2em 1em 1em;
   .comment-paragraph {
     margin-bottom: 0;
     padding: $comment-paragraph-padding-top 0.4em;
-    background-color: $gradient-light-grey;
+
+    @include linear-gradient(to right, $gradient-light-grey, darken($gradient-light-grey, 2%));
+  }
+
+  .read-only .comment-paragraph {
+    color: lighten($stats-panel-grey, 20%);
   }
 
   .red > .comment-paragraph,
@@ -366,9 +371,11 @@ $white-section-padding: 2em 1em 1em;
 
     > .green > .comment-paragraph.selected {
       background-color: $green-comment-bg;
+      background-image: none; // Disabling the gradient
     }
     > .red > .comment-paragraph.selected {
       background-color: $red-comment-bg;
+      background-image: none; // Disabling the gradient
     }
 
     &.read-only {
@@ -377,14 +384,11 @@ $white-section-padding: 2em 1em 1em;
       button {
         cursor: default;
       }
-
-      .comment-paragraph {
-        color: lighten($stats-panel-grey, 25%);
-      }
     }
 
     &.selected .comment-paragraph {
       background-color: darken($gradient-light-grey, 5%);
+      background-image: none; // Disabling the gradient
     }
 
     @include medium-screen {

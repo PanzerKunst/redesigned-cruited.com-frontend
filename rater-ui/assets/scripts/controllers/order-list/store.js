@@ -12,15 +12,18 @@ const store = {
     currentOrder: null,
     areTopOrdersFetched: false,
     stats: null,
-    dueOrders: [],
     ordersSentToTheCustomerThisMonth: [],
+    ordersToDo: [],
 
     init() {
         this._fetchTopOrders();
         this._fetchAllRaters();
 
-        this._fetchOrdersSentToTheCustomerThisMonth();
-        setInterval(() => this._fetchOrdersSentToTheCustomerThisMonth(), 10 * 1000);
+        this._fetchStats();
+
+        setInterval(() => {
+            this._fetchStats();
+        }, 10 * 1000);
     },
 
     assignOrderTo(account) {
@@ -161,6 +164,36 @@ const store = {
         httpRequest.send();
     },
 
+    _fetchStats() {
+        this._fetchOrdersToDo();
+        this._fetchOrdersSentToTheCustomerThisMonth();
+    },
+
+    _fetchOrdersToDo() {
+        const type = "GET";
+        const url = "/api/orders/todo";
+
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    const ordersToDoJson = JSON.parse(httpRequest.responseText);
+
+                    this.ordersToDo = ordersToDoJson.map(o => Object.assign(Object.create(Order), o));
+
+                    // No need to `reactComponent.forceUpdate`, as `_fetchOrdersSentToTheCustomerThisMonth()` does it already.
+                } else {
+
+                    // We don't display any error, because this call happens often, and possibly on page refresh
+                    // alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.send();
+    },
+
     _fetchOrdersSentToTheCustomerThisMonth() {
         const type = "GET";
         const url = "/api/orders/sent";
@@ -176,7 +209,7 @@ const store = {
                     this.reactComponent.forceUpdate();
                 } else {
 
-                    // We don't display any error, because it happens so often, and possibly on page refresh
+                    // We don't display any error, because this call happens often, and possibly on page refresh
                     // alert(`AJAX failure doing a ${type} request to "${url}"`);
                 }
             }
@@ -190,14 +223,14 @@ const store = {
             this.searchNbDays = 7;
 
             this.searchCriteria = {
-                toMoment: moment().subtract(this.searchNbDays, "d"),
+                toMoment: moment().subtract(this.searchNbDays, "day"),
                 excludedOrderIds: this.topOrders.map(order => order.id)
             };
         } else {
             this.searchCriteria.fromMoment = moment(this.searchCriteria.toMoment);
 
             this.searchNbDays *= 8;
-            this.searchCriteria.toMoment.subtract(this.searchNbDays, "d");
+            this.searchCriteria.toMoment.subtract(this.searchNbDays, "day");
         }
     },
 

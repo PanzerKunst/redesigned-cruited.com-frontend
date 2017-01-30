@@ -25,7 +25,8 @@ class AccountDto @Inject()(db: Database) {
         where""" + commonClause + """
           and id = """ + id + """;"""
 
-      Logger.info("AccountDto.getOfId():" + query)
+      // Commented out because it spams too much
+      // Logger.info("AccountDto.getOfId():" + query)
 
       val rowParser = str("prenume") ~ (str("nume") ?) ~ str("email") ~ str("linkedin_basic_profile_fields") ~ date("registered_at") ~ int("tp") ~ str("lang") map {
         case firstName ~ lastNameOpt ~ emailAddress ~ linkedinBasicProfile ~ creationDate ~ accountType ~ languageCode =>

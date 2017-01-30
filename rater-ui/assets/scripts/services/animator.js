@@ -3,9 +3,14 @@ import {animationDurations} from "../global";
 export function fadeIn($el, params) {
     if (!$el.is(":visible")) {
         const animationDuration = params && _.isNumber(params.animationDuration) ? params.animationDuration : animationDurations.medium;
+        const display = params && _.isString(params.display) ? params.display : "block";
         const alpha = params && _.isNumber(params.opacity) ? params.opacity : 1;
 
-        TweenLite.set($el, {display: "block", alpha: 0});
+        TweenLite.set($el, {
+            display,
+            alpha: 0
+        });
+
         TweenLite.to($el, animationDuration, {
             alpha,
             onComplete() {

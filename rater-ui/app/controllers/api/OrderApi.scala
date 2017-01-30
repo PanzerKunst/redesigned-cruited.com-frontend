@@ -87,4 +87,14 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
       }
     }
   }
+
+  def toDo() = Action { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) => accountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) => Ok(Json.toJson(orderDto.ordersToDo))
+      }
+    }
+  }
 }
