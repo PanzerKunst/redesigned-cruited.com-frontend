@@ -6,7 +6,7 @@
     @if(accountOpt.isDefined && accountOpt.get.id > 0) {
         @defining(accountOpt.get) { account =>
             <article>
-                <span>@account.firstName @account.lastName</span>
+                <span>@account.firstName</span>
                 @if(account.linkedinProfile != play.api.libs.json.JsNull) {
                     @defining((account.linkedinProfile \ "pictureUrl").asOpt[String]) { pictureUrlOpt =>
                         <div class="profile-picture" style="background-image: url(@pictureUrlOpt)"></div>

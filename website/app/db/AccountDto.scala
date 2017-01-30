@@ -95,8 +95,15 @@ object AccountDto {
         linkedinProfileClause + """
         where id = """ + account.id + """;"""
 
-      // This log is commented since it displays the password
-      // Logger.info("AccountDto.update():" + query)
+      // Query without the password
+      Logger.info("""AccountDto.update():
+        update useri set
+        email = '""" + DbUtil.safetize(account.emailAddress.get.toLowerCase) + """',
+      lang = '""" + DbUtil.safetize(account.languageCode) + """'""" +
+        firstNameClause +
+        lastNameClause +
+        linkedinProfileClause + """
+      where id = """ + account.id + """;""")
 
       SQL(query).executeUpdate()
     }
