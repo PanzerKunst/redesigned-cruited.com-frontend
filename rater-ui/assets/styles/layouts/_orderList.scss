@@ -327,7 +327,7 @@ section#stats-todo {
   td {
     width: $stats-panel-main-col-width / 2;
 
-    &:first-child {
+    &:last-child {
       width: $stats-panel-main-col-width;
     }
   }

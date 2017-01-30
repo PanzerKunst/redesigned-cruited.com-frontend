@@ -15,16 +15,16 @@ const Component = React.createClass({
                     <table>
                         <thead>
                             <tr>
-                                <th>Team</th>
                                 <th>{`Me ${this.nbHoursSoon}h`}</th>
                                 <th>Me later</th>
+                                <th>Team</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{this.nbOrdersToDo} / {this.nbDocsToDo}</td>
                                 <td>{this.nbOrdersIneedToDoSoon} / {this.nbDocsIneedToDoSoon}</td>
                                 <td>{this.nbOrdersIneedToDoLater} / {this.nbDocsIneedToDoLater}</td>
+                                <td>{this.nbOrdersToDo} / {this.nbDocsToDo}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -34,14 +34,14 @@ const Component = React.createClass({
                     <table>
                         <thead>
                             <tr>
-                                <th>Team</th>
                                 <th>Me</th>
+                                <th>Team</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{this.nbOrdersThisMonth} / {this.nbDocsThisMonth}</td>
                                 <td>{this.nbOrdersThisMonthByMe} / {this.nbDocsThisMonthByMe}</td>
+                                <td>{this.nbOrdersThisMonth} / {this.nbDocsThisMonth}</td>
                             </tr>
                         </tbody>
                     </table>
