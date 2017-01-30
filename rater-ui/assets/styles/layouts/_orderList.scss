@@ -255,7 +255,6 @@
 }
 
 $stats-panel-main-col-width: 10em;
-$stats-panel-green: rgb(150, 237, 134); // #96ED86
 
 #stats-panel {
   @include medium-screen {
@@ -300,13 +299,6 @@ $stats-panel-green: rgb(150, 237, 134); // #96ED86
     tbody {
       color: black;
     }
-
-    tbody td {
-      background-color: $stats-panel-green;
-      &:first-child {
-        background-color: lighten($stats-panel-green, 5%);
-      }
-    }
   }
 
   div {
@@ -344,21 +336,36 @@ section#stats-todo {
     background-color: darken($stats-panel-grey, 5%);
   }
 
-  tbody td:last-child {
-    background-color: darken($stats-panel-green, 5%);
+  tbody td {
+    background-color: $brand-warning;
+    &:first-child {
+      background-color: lighten($brand-warning, 5%);
+    }
+    &:last-child {
+      background-color: darken($brand-warning, 5%);
+    }
   }
 }
 
-section#stats-month > div {
-  background-position: 3px -195px;
-  @include hidpi {
-    background-position: 3px -95px;
+section#stats-month {
+  > div {
+    background-position: 3px -195px;
+    @include hidpi {
+      background-position: 3px -95px;
+    }
+
+    @include large-screen {
+      background-position: 6px -191px;
+      @include hidpi {
+        background-position: 6px -91px;
+      }
+    }
   }
 
-  @include large-screen {
-    background-position: 6px -191px;
-    @include hidpi {
-      background-position: 6px -91px;
+  tbody td {
+    background-color: $primary-btn-color;
+    &:first-child {
+      background-color: lighten($primary-btn-color, 5%);
     }
   }
 }
