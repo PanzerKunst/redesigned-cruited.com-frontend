@@ -21,6 +21,30 @@
     }
 }
 
+.intervjuforberedelse .main iframe {
+    height: 102em;
+    @include medium-screen {
+        height: 78em;
+    }
+    @include large-screen {
+        height: 77em;
+    }
+}
+
+.granskning .main iframe {
+    height: 38em;
+    @include medium-screen {
+        height: 23em;
+    }
+}
+
+.karriarsamtal .main iframe {
+    height: 135em;
+    @include medium-screen {
+        height: 104em;
+    }
+}
+
 #ycbmiframecruited {
     height: 49em;
     width: $small-content-width - 2*$spacer-unit-size;
