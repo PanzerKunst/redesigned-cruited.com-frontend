@@ -14,13 +14,12 @@ class EmailService @Inject()(mailerClient: MailerClient, config: GlobalConfig) {
       views.html.email.sv.reportAvailable(firstName, reportUrl)
     }
 
-    /* TODO: be careful before activating this piece of code!
     mailerClient.send(Email(
       subject,
       config.emailAccountName + " <" + config.emailAccountAddress + ">",
       Seq(emailAddress),
       bodyHtml = Some(view.toString)
-    )) */
+    ))
 
     Logger.info("Sent ReportAvailableEmail to " + emailAddress)
   }

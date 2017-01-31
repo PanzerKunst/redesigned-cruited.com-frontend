@@ -117,8 +117,11 @@ const store = {
     },
 
     isOrderReadOnly(order) {
-        return !order.rater || order.rater.id !== this.account.id ||
-            order.status === Order.statuses.scheduled || order.status === Order.statuses.completed;
+        if (order.rater && order.rater.id === this.account.id && order.status === Order.statuses.paid) {
+            return false;
+        }
+
+        return order.isReadOnly(this.account);
     },
 
     _fetchTopOrders() {

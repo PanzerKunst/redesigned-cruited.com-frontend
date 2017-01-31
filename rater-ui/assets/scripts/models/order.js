@@ -66,6 +66,22 @@ const Order = {
         }
     },
 
+    isReadOnly(raterAccount) {
+        if (!this.rater) {
+            return true;
+        }
+
+        if (this.status === this.statuses.scheduled || this.status === this.statuses.completed) {
+            return true;
+        }
+
+        if (this.rater.id !== raterAccount.id && !raterAccount.isAdmin()) {
+            return true;
+        }
+
+        return raterAccount.isAdmin() && this.status !== this.statuses.inProgress && this.status !== this.statuses.awaitingFeedback;
+    },
+
     humanReadableStatus() {
         switch (this.status) {
             case this.statuses.notPaid:

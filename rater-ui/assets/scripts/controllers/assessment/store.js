@@ -105,11 +105,7 @@ const store = {
     },
 
     isOrderReadOnly() {
-        return !this.order.rater ||
-            (this.order.rater.id !== this.account.id && this.order.status !== Order.statuses.awaitingFeedback) ||
-            this.order.status < Order.statuses.inProgress ||
-            this.order.status === Order.statuses.scheduled ||
-            this.order.status === Order.statuses.completed;
+        return this.order.isReadOnly(this.account);
     },
 
     isOrderStartable() {

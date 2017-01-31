@@ -38,9 +38,7 @@ class Scheduler @Inject()(orderDto: OrderDto, emailService: EmailService, messag
 
   private def handleScheduledAssessementsArrivedToTerm() {
     for (order <- orderDto.getScheduledOrdersArrivedToTerm) {
-      // TODO: uncomment when replacing Users app
-      // updateOrderStatusToCompleted(order)
-
+      updateOrderStatusToCompleted(order)
       sendReportAvailableEmail(order)
     }
   }
