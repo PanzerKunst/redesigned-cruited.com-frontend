@@ -3,7 +3,7 @@ package controllers
 import java.io.File
 import javax.inject.Inject
 
-import db.{AccountDto, CouponDto, OrderDto, TermAcceptationDto}
+import db.{AccountDto, CouponDto, OrderDto}
 import models.client.OrderReceivedFromClient
 import models.{Coupon, Order}
 import play.api.Logger
@@ -154,122 +154,6 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
     }
   }
 
-  // TODO: delete when the new App pages are released
-  def createOrder = CorsAction() {
-    Action(parse.multipartFormData) { request =>
-      val requestBody = request.body
-      val requestData = requestBody.dataParts
-
-      if (!requestData.contains("docTypes")) {
-        BadRequest("'docTypes' required")
-      } else if (!requestData.contains("editionId")) {
-        BadRequest("'editionId' required")
-      } else if (!requestData.contains("sessionId")) {
-        BadRequest("'sessionId' required")
-      } else {
-        val containedProductCodes = Order.getContainedProductCodesFromTypesString(requestData("docTypes").head)
-
-        val positionSoughtOpt = if (requestData.contains("positionSought")) {
-          Some(requestData("positionSought").head)
-        } else {
-          None
-        }
-
-        val employerSoughtOpt = if (requestData.contains("employerSought")) {
-          Some(requestData("employerSought").head)
-        } else {
-          None
-        }
-
-        val accountIdOpt = if (requestData.contains("userId")) {
-          val userId = requestData("userId").head.toLong
-
-          if (!AccountDto.getOfId(userId).isDefined) {
-            throw new Exception("No account found for ID " + userId)
-          }
-
-          Some(userId)
-        } else {
-          None
-        }
-
-        val (couponCodeOpt, couponOpt) = if (requestData.contains("couponCode")) {
-          val couponCode = requestData("couponCode").head.trim
-
-          CouponDto.getOfCode(couponCode) match {
-            case None => throw new Exception("No coupon found for code " + couponCode)
-            case Some(coupon) => (Some(couponCode), Some(coupon))
-          }
-        } else {
-          (None, None)
-        }
-
-        val linkedinPublicProfileUrlOpt = if (requestData.contains("linkedinPublicProfileUrl")) {
-          Some(requestData("linkedinPublicProfileUrl").head)
-        } else {
-          None
-        }
-
-        val orderStatus = getStatusFromOrderInfo(containedProductCodes.length, couponOpt)
-
-        // Create order and get ID
-        val orderReceivedFromClient = OrderReceivedFromClient(
-          editionId = requestData("editionId").head.toLong,
-          containedProductCodes = containedProductCodes,
-          couponCode = couponCodeOpt,
-          cvFileName = None,
-          coverLetterFileName = None,
-          linkedinPublicProfileUrl = linkedinPublicProfileUrlOpt,
-          positionSought = positionSoughtOpt,
-          employerSought = employerSoughtOpt,
-          accountId = accountIdOpt,
-          status = orderStatus,
-          sessionId = requestData("sessionId").head
-        )
-
-        val orderId = OrderDto.create(orderReceivedFromClient).get
-
-        val createdOrder = new Order(orderReceivedFromClient, orderId)
-
-        val newCvFileName = requestBody.file("cvFile") match {
-          case None => None
-          case Some(cvFile) =>
-            val fileName = cvFile.filename
-            cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
-            Some(fileName)
-        }
-
-        val newCoverLetterFileName = requestBody.file("coverLetterFile") match {
-          case None => None
-          case Some(coverLetterFile) =>
-            val fileName = coverLetterFile.filename
-            coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName))
-            Some(fileName)
-        }
-
-        val updatedOrder = createdOrder.copy(
-          cvFileName = newCvFileName,
-          coverLetterFileName = newCoverLetterFileName
-        )
-
-        OrderDto.update(updatedOrder)
-
-        Future {
-          val updatedOrderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder, linkedinPublicProfileUrlOpt)
-          orderService.generateDocThumbnails(updatedOrderWithPdfFileNames)
-        } onFailure {
-          case e => Logger.error(e.getMessage, e)
-        }
-
-        if (accountIdOpt.isDefined) {
-          TermAcceptationDto.create(orderId, accountIdOpt.get)
-        }
-
-        Created(orderId.toString)
-      }
-    }
-  }
-
   private def getStatusFromOrderInfo(orderedProductCount: Int, couponOpt: Option[Coupon]): Int = {
     couponOpt match {
       case None => Order.statusIdNotPaid
@@ -329,9 +213,6 @@ class Application @Inject()(val documentService: DocumentService, val orderServi
       case None => NoContent
       case Some(fileName) =>
         val file = new File(documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName)
-
-        // TODO: remove
-        Logger.info("Application.sendDocument() > file path: " + documentService.assessedDocumentsRootDir + orderId + Order.fileNamePrefixSeparator + fileName)
 
         if (file.exists()) {
           Ok.sendFile(

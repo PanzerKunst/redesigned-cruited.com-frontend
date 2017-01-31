@@ -9,26 +9,11 @@ import play.api.libs.json.JsNull
 
 @Singleton
 class OrderService @Inject()(val documentService: DocumentService) {
-  // TODO: remove 2nd arg when the new App pages are released
-  def convertDocsToPdf(order: Order, linkedinPublicProfileUrlOpt: Option[String] = None): Order = {
+  def convertDocsToPdf(order: Order): Order = {
     documentService.convertDocsToPdf(order.id.get)
 
-    linkedinPublicProfileUrlOpt match {
-      case None =>
-        convertLinkedinPublicProfilePageToPdf(order)
-        updateFileNamesInDb(order)
-
-      case Some(linkedinPublicProfileUrl) =>
-        legacyConvertLinkedinPublicProfilePageToPdf(order, linkedinPublicProfileUrl)
-
-        val orderWithPdfFileNames = order.copy(
-          cvFileName = getNewCvFileName(order),
-          coverLetterFileName = getNewCoverLetterFileName(order),
-          linkedinProfileFileName = Some(GlobalConfig.linkedinProfilePdfFileNameWithoutPrefix)
-        )
-        OrderDto.update(orderWithPdfFileNames)
-        orderWithPdfFileNames
-    }
+    convertLinkedinPublicProfilePageToPdf(order)
+    updateFileNamesInDb(order)
   }
 
   private def convertLinkedinPublicProfilePageToPdf(order: Order) {
@@ -40,13 +25,6 @@ class OrderService @Inject()(val documentService: DocumentService) {
         if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && linkedinProfile != JsNull) {
           documentService.convertLinkedinProfilePageToPdf(order.id.get, (linkedinProfile \ "publicProfileUrl").as[String])
         }
-    }
-  }
-
-  // TODO: delete when the new App pages are released
-  private def legacyConvertLinkedinPublicProfilePageToPdf(order: Order, linkedinPublicProfileUrl: String) {
-    if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview)) {
-      documentService.convertLinkedinProfilePageToPdf(order.id.get, linkedinPublicProfileUrl)
     }
   }
 
