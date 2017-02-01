@@ -4,8 +4,8 @@ import java.util.Date
 import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
-import models.Order
 import models.frontend.{FrontendOrder, OrderSearchData}
+import models.{Account, Order}
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 import services._
@@ -18,8 +18,15 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>
-          val ordersToDisplayAtTheTop = orderDto.getActionableOrdersOfRaterId(accountId)
-          Ok(Json.toJson(ordersToDisplayAtTheTop))
+          val actionableOrders = orderDto.getActionableOrdersOfRaterId(accountId)
+
+          val ordersAwaitingFeedback = if (account.`type` == Account.typeAdmin) {
+            orderDto.getOrdersAwaitingFeedback
+          } else {
+            List()
+          }
+
+          Ok(Json.toJson(actionableOrders ++ ordersAwaitingFeedback))
       }
     }
   }
