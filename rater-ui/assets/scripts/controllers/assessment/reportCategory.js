@@ -1,4 +1,3 @@
-import Assessment from "../../models/assessment";
 import String from "../../services/string";
 import Keyboard from "../../services/keyboard";
 import store from "./store";
@@ -6,6 +5,8 @@ import store from "./store";
 import ReportComment from "./reportComment";    // eslint-disable-line no-unused-vars
 
 const Component = React.createClass({
+    minScoreForWellDoneComment: 80,
+
     getInitialState() {
         return {
             wellDoneComment: this.props.reportCategory.wellDoneComment || this._defaultWellDoneComment()
@@ -44,7 +45,7 @@ const Component = React.createClass({
             </li>);
     },
 
-    componentDidMount() {
+    componentDidUpdate() {
         this._initElements();
         this._disableActionableElementsIfRequired();
         this._makeCommentsSortable();
@@ -73,9 +74,7 @@ const Component = React.createClass({
 
     _makeCommentsSortable() {
         if (!store.isOrderReadOnly()) {
-
-            // eslint-disable-next-line no-new
-            new Sortable(this.$commentList.get(0), {
+            new Sortable(this.$commentList.get(0), {    // eslint-disable-line no-new
                 animation: 150,
                 onUpdate: e => store.handleReportCommentsReorder(this.props.reportCategory.id, e.oldIndex, e.newIndex),
                 handle: ".fa-arrows"
@@ -84,16 +83,17 @@ const Component = React.createClass({
     },
 
     _wellDoneComment() {
-        if (store.assessment.categoryScore(this.props.reportCategory.id) < Assessment.minScoreForWellDoneComment) {
+        if (store.assessment.categoryScore(this.props.reportCategory.id) < this.minScoreForWellDoneComment) {
+            this._updateWellDoneComment(null);
             return null;
         }
 
-        this._updateWellDoneComment(false);
+        this._updateWellDoneComment(this.state.wellDoneComment);
 
         return (
             <div className="well-done-comment-composer">
                 <label>Top comment</label>
-                <textarea className="form-control" value={this.state.wellDoneComment} onChange={this._handleWellDoneCommentChange} onBlur={this._handleWellDoneCommentBlur}/>
+                <textarea className="form-control" value={this.state.wellDoneComment} onChange={this._handleWellDoneCommentChange} />
             </div>);
     },
 
@@ -134,10 +134,6 @@ const Component = React.createClass({
         });
     },
 
-    _handleWellDoneCommentBlur() {
-        this._updateWellDoneComment();
-    },
-
     _adaptTextareaHeight() {
         const ta = this.$addCommentTextarea.get(0);
 
@@ -151,12 +147,12 @@ const Component = React.createClass({
         this.$addCommentBtn.show();
     },
 
-    _updateWellDoneComment(isRefreshRequired = true) {
+    _updateWellDoneComment(wellDoneComment) {
         const updatedReportCategory = this.props.reportCategory;
 
-        updatedReportCategory.wellDoneComment = this.state.wellDoneComment;
+        updatedReportCategory.wellDoneComment = wellDoneComment;
 
-        store.updateReportCategory(updatedReportCategory, isRefreshRequired);
+        store.assessment.updateReportCategory(updatedReportCategory);
     }
 });
 

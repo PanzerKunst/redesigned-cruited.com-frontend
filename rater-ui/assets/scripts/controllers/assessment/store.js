@@ -77,14 +77,6 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    updateReportCategory(category, isRefreshRequired) {
-        this.assessment.updateReportCategory(category);
-
-        if (isRefreshRequired) {
-            this.reactComponent.forceUpdate();
-        }
-    },
-
     addReportComment(comment) {
         this.assessment.addReportComment(comment);
         this.reactComponent.forceUpdate();

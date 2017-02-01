@@ -9,7 +9,6 @@ const Assessment = {
 
     // Static
     nbReportComments: 3,
-    minScoreForWellDoneComment: 80,
 
     // Instance
     init() {

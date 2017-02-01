@@ -10,8 +10,7 @@ const Component = React.createClass({
 
         const liClasses = classNames({
             "report-comment": true,
-            "from-list": c.isRedSelected,
-            "well-done": c.isWellDone
+            "from-list": c.isRedSelected
         });
 
         const paragraphClasses = classNames({
