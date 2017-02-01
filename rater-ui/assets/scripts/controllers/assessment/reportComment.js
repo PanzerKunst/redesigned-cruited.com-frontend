@@ -63,6 +63,8 @@ const Component = React.createClass({
         const $p = $(e.currentTarget);
 
         c.redText = $p.text();
+        c.isRedSelected = true;
+        c.isGreenSelected = false;
 
         store.updateCommentInListAndReport(c);
 
