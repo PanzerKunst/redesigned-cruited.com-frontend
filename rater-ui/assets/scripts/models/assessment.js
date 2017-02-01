@@ -250,7 +250,19 @@ const Assessment = {
     },
 
     resetReportComment(comment) {
-        this.updateReportCommentIfExists(this._originalComment(comment));
+        this.updateReportCommentIfExists(this.originalComment(comment));
+    },
+
+    originalComment(comment) {
+        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
+        const originalComment = _.cloneDeep(_.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id));
+
+        if (comment.variationId) {
+            originalComment.variationId = comment.variationId;
+            originalComment.redText = _.find(this.allCommentVariations, c => c.id === comment.variationId).text;
+        }
+
+        return originalComment;
     },
 
     reorderReportComment(categoryId, oldIndex, newIndex) {
@@ -528,18 +540,6 @@ const Assessment = {
                 this.updateListComment(listComment);
             }
         });
-    },
-
-    _originalComment(comment) {
-        const categoryProductCode = Category.productCodeFromCategoryId(comment.categoryId);
-        const originalComment = _.cloneDeep(_.find(this.allDefaultComments[categoryProductCode], c => c.id === comment.id));
-
-        if (comment.variationId) {
-            originalComment.variationId = comment.variationId;
-            originalComment.redText = _.find(this.allCommentVariations, c => c.id === comment.variationId).text;
-        }
-
-        return originalComment;
     },
 
     _initListCommentsWithVariations(editionCode) {

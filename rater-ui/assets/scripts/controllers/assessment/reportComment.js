@@ -1,5 +1,3 @@
-import {animationDurations} from "../../global";
-import {fadeOut} from "../../services/animator";
 import Comment from "../../models/comment";
 import store from "./store";
 
@@ -80,16 +78,13 @@ const Component = React.createClass({
 
     _handleResetClick() {
         if (!store.isOrderReadOnly()) {
-            store.resetCommentInListAndReport(this.props.comment);
+            store.setConfirmResetCommentModal(this.props.comment);
         }
     },
 
     _handleRemoveClick() {
         if (!store.isOrderReadOnly()) {
-            fadeOut(this.$li, {
-                animationDuration: animationDurations.short,
-                onComplete: () => store.removeReportComment(this.props.comment)
-            });
+            store.setConfirmRemoveReportCommentModal(this.props.comment);
         }
     }
 });

@@ -18,6 +18,8 @@ import ReportCategory from "./reportCategory";  // eslint-disable-line no-unused
 import OrderStatusChangeBtn from "./orderStatusChangeBtn";  // eslint-disable-line no-unused-vars
 import DocAssessmentNav from "./docAssessmentNav";  // eslint-disable-line no-unused-vars
 import VariationsModal from "./variationsModal";    // eslint-disable-line no-unused-vars
+import ConfirmResetCommentModal from "./confirmResetCommentModal";  // eslint-disable-line no-unused-vars
+import ConfirmRemoveReportCommentModal from "./confirmRemoveReportCommentModal";  // eslint-disable-line no-unused-vars
 
 const controller = {
     init() {
@@ -80,6 +82,8 @@ const controller = {
                         </div>
 
                         <VariationsModal />
+                        <ConfirmResetCommentModal />
+                        <ConfirmRemoveReportCommentModal />
 
                         <div className="nav-panel">
                             <ul className="nav nav-tabs" role="tablist">

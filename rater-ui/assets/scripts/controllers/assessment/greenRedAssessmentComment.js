@@ -117,7 +117,7 @@ const Component = React.createClass({
 
     _handleResetClick() {
         if (!store.isOrderReadOnly()) {
-            store.resetCommentInListAndReport(this.props.comment);
+            store.setConfirmResetCommentModal(this.props.comment);
         }
     }
 });

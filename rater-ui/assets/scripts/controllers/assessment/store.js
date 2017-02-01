@@ -55,9 +55,9 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    resetCommentInListAndReport(comment) {
-        this.assessment.resetListComment(comment);
-        this.assessment.resetReportComment(comment);
+    resetCommentInListAndReport() {
+        this.assessment.resetListComment(this.commentToReset);
+        this.assessment.resetReportComment(this.commentToReset);
         this.reactComponent.forceUpdate();
     },
 
@@ -87,8 +87,8 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    removeReportComment(comment) {
-        this.assessment.removeReportComment(comment);
+    removeReportComment() {
+        this.assessment.removeReportComment(this.commentToRemove);
         this.reactComponent.forceUpdate();
     },
 
@@ -138,6 +138,16 @@ const store = {
 
     setVariationsModalForComment(comment) {
         this.currentDefaultComment = this.assessment.originalDefaultComment(comment);
+        this.reactComponent.forceUpdate();
+    },
+
+    setConfirmResetCommentModal(comment) {
+        this.commentToReset = comment;
+        this.reactComponent.forceUpdate();
+    },
+
+    setConfirmRemoveReportCommentModal(comment) {
+        this.commentToRemove = comment;
         this.reactComponent.forceUpdate();
     },
 
