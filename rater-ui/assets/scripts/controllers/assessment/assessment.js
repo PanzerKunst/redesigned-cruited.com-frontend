@@ -85,7 +85,7 @@ const controller = {
                             <ul className="nav nav-tabs" role="tablist">
                                 {this._tab(Category.productCodes.cv, "CV")}
                                 {this._tab(Category.productCodes.coverLetter, "Cover Letter")}
-                                {this._tab(Category.productCodes.linkedinProfile, "Linkedin Profile")}
+                                {this._tab(Category.productCodes.linkedinProfile, "Linkedin")}
                             </ul>
                         </div>
                         <div className="tab-content">
@@ -230,9 +230,15 @@ const controller = {
                 "has-errors": !_.isEmpty(validationErrors)
             });
 
+            let docScore = 0;
+
+            if (store.assessment) {
+                docScore = store.assessment.docScore(categoryProductCode);
+            }
+
             return (
                 <li role="presentation">
-                    <a href={`#${attr}`} aria-controls={attr} role="tab" data-toggle="tab" className={linkClasses} onClick={this._handleTabClick}>{label}</a>
+                    <a href={`#${attr}`} aria-controls={attr} role="tab" data-toggle="tab" className={linkClasses} onClick={this._handleTabClick}><span>{label}</span><span>{docScore}</span></a>
                     <DocAssessmentNav categoryProductCode={categoryProductCode} validationErrors={validationErrors} />
                 </li>);
         },

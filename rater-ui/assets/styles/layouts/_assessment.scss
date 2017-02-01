@@ -188,6 +188,15 @@ $white-section-padding: 2em 1em 1em;
     margin-top: $margin-below-order-details;
   }
 
+  a[role="tab"] {
+    display: flex;
+    justify-content: space-between;
+
+    > span:last-child {
+      margin-left: 1em;
+    }
+  }
+
   @include large-screen {
     .position-and-employer {
       display: flex;
@@ -218,29 +227,26 @@ $white-section-padding: 2em 1em 1em;
 
       > li {
         float: none;
-
-        /* stylelint-disable-next-line max-nesting-depth */
-        > a {
-          padding-top: 0.7em;
-          padding-bottom: 0.7em;
-
-          margin: 0;
-          width: 100%;
-          font-weight: bold;
-
-          border: none;
-          border-radius: 0;
-
-          /* stylelint-disable-next-line max-nesting-depth */
-          &.has-errors {
-            @include error-border;
-          }
-        }
       }
 
       > .active,
       > .active > a {
         background-color: $gradient-light-grey;
+      }
+    }
+
+    a[role="tab"] {
+      padding: 0.7em 0.4em;
+
+      margin: 0;
+      width: 100%;
+      font-weight: bold;
+
+      border: none;
+      border-radius: 0;
+
+      &.has-errors {
+        @include error-border;
       }
     }
 
@@ -592,6 +598,15 @@ $white-section-padding: 2em 1em 1em;
         > p {
           float: left;
         }
+      }
+    }
+
+    a[role="tab"] {
+      display: block;
+      @include clearfix;
+
+      > span {
+        float: left;
       }
     }
 

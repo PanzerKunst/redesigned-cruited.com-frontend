@@ -279,7 +279,22 @@ const Assessment = {
             }
         }
 
-        return (sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100;
+        return Math.round((sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100);
+    },
+
+    docScore(categoryProductCode) {
+        let sumOfAllPoints = 0;
+        let sumOfRedPoints = 0;
+
+        for (const listComment of this.listComments(categoryProductCode)) {
+            sumOfAllPoints += listComment.points;
+
+            if (listComment.isRedSelected) {
+                sumOfRedPoints += listComment.points;
+            }
+        }
+
+        return Math.round((sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100);
     },
 
     deleteAssessmentInfoFromLocalStorage() {

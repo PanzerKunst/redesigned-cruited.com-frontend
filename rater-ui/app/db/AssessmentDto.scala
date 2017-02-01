@@ -674,7 +674,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
    * [sum of scores for all greens] / [sum of all scores in the category] * 100
    *
    * For document total:
-   * [sum of scores for all greens in all categories] / [sum of scores for all criteria in all categories] * 100
+   * [sum of scores for all greens in all categories] / [sum of scores for all comments in all categories] * 100
    *
    * @param rows List[(docType, categoryId, defaultCommentId, score, isGreen)]
    * @return

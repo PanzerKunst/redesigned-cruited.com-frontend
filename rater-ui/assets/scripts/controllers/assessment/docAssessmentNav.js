@@ -26,7 +26,7 @@ const Component = React.createClass({
                             <li key={categoryId} className={liClasses} data-category-id={categoryId}>
                                 <i className="fa fa-check" aria-hidden="true"></i>
                                 <a href={`#list-category-${categoryId}`} onClick={this._handleScrollToLinkClick}>{store.i18nMessages[`category.title.${categoryId}`]}</a>
-                                <span className="category-score">{parseInt(store.assessment.categoryScore(categoryId), 10)}</span>
+                                <span className="category-score">{store.assessment.categoryScore(categoryId)}</span>
                             </li>);
                     })}
                 </ul>
