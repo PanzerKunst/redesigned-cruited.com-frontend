@@ -11,9 +11,6 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
   val accountAddress = Play.application().configuration().getString("play.mailer.user")
   val accountName = Play.application().configuration().getString("play.mailer.account.name")
 
-  val accountAddressErik = Play.application().configuration().getString("play.mailer.forsandree.user")
-  val accountNameErik = Play.application().configuration().getString("play.mailer.forsandree.account.name")
-
   def sendResetPasswordEmail(emailAddress: String, firstName: String, languageCode: String, resetPasswordUrl: String, subject: String) {
     val view = if (languageCode == I18nService.languageCodeEn) {
       views.html.email.en.resetPassword(firstName, resetPasswordUrl)
@@ -80,22 +77,5 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
     ))
 
     Logger.info("Sent UnpaidOrderReminderEmail to " + emailAddress)
-  }
-
-  def sendTheTwoDaysAfterAssessmentDeliveredEmail(emailAddress: String, firstName: String, languageCode: String, subject: String) = {
-    val view = if (languageCode == I18nService.languageCodeEn) {
-      views.html.email.en.twoDaysAfterAssessmentDelivered(firstName)
-    } else {
-      views.html.email.sv.twoDaysAfterAssessmentDelivered(firstName)
-    }
-
-    mailerClient.send(Email(
-      subject,
-      accountNameErik + " <" + accountAddressErik + ">",
-      Seq(emailAddress),
-      bodyHtml = Some(view.toString)
-    ))
-
-    Logger.info("Sent the TwoDaysAfterAssessmentDeliveredEmail to " + emailAddress)
   }
 }

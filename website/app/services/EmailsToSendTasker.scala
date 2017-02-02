@@ -23,15 +23,6 @@ class EmailsToSendTasker @Inject()(val messagesApi: MessagesApi, val emailServic
         OrderDto.setUnpaidOrderReminderEmailSent(orderId)
       }
 
-
-      // Retrieve the finalised orders which have status "assessment complete", and "set_done_at" > 2 days, and 2days_after_assessment_delivered_email_sent = 0
-      for ((emailAddress, firstName, languageCode, orderId) <- AccountDto.getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail) {
-        val i18nMessages = I18nService.getMessages(messagesApi, languageCode)
-
-        emailService.sendTheTwoDaysAfterAssessmentDeliveredEmail(emailAddress, firstName, languageCode, i18nMessages("email.twoDaysAfterAssessmentDelivered.subject"))
-        OrderDto.setTwoDaysAfterAssessmentDeliveredEmailSent(orderId)
-      }
-
       isRunning = false
     }
   }

@@ -295,7 +295,6 @@ order.edit.saveBtn.text=Save
 
 email.resetPassword.subject=New Password for Cruited
 email.unpaidOrderReminder.subject=Complete your order
-email.twoDaysAfterAssessmentDelivered.subject=A personal advice about your assessment
 email.orderComplete.free.subject=Assessment Created
 email.orderComplete.paid.subject=Confirmation/receipt for your order at Cruited.com
 email.orderComplete.paid.orderedProductsSeparator=and

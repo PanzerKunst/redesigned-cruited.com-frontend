@@ -307,47 +307,6 @@ object AccountDto {
     }
   }
 
-  /**
-   * @return List[(emailAddress, firstName, languageCode, orderId)]
-   */
-  def getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail: List[(String, String, String, Long)] = {
-    val nonTempAccounts = getNonTemporary
-
-    val listOfAccountIdAndLatestOrderId = DB.withConnection("users") { implicit c =>
-      val accountIds = nonTempAccounts.map(_.id)
-
-      val cal = new GregorianCalendar()
-      cal.add(Calendar.DATE, -2)
-      val assessmentCompletedDateClause = """
-        and set_done_at < '""" + DbUtil.dateFormat.format(cal.getTime) + """'"""
-
-      val query = """
-        select added_by, max(id) as order_id
-        from documents
-        where  shw = """ + Account.showActive + """
-          and added_by in (""" + accountIds.mkString(", ") + """)
-          and id > 0
-          and status = """ + Order.statusIdNotPaid + """
-          and 2days_after_assessment_delivered_email_sent = 0""" +
-        assessmentCompletedDateClause + """
-        group by added_by;"""
-
-      // Commented because spams too much
-      // Logger.info("AccountDto.getWhoNeedTheTwoDaysAfterAssessmentDeliveredEmail():" + query)
-
-      val rowParser = long("added_by") ~ long("order_id") map {
-        case accountId ~ orderId => (accountId, orderId)
-      }
-
-      SQL(query).as(rowParser.*)
-    }
-
-    listOfAccountIdAndLatestOrderId map { tuple =>
-      val account = nonTempAccounts.find(_.id == tuple._1).get
-      (account.emailAddress.get, account.firstName.get, account.languageCode, tuple._2)
-    }
-  }
-
   def getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile: List[Long] = {
     DB.withConnection("users") { implicit c =>
       val query = """

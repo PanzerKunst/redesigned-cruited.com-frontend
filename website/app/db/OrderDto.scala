@@ -537,17 +537,4 @@ object OrderDto {
       SQL(query).executeUpdate()
     }
   }
-
-  def setTwoDaysAfterAssessmentDeliveredEmailSent(orderId: Long) {
-    DB.withConnection { implicit c =>
-      val query = """
-        update documents set
-        2days_after_assessment_delivered_email_sent = 1
-        where id = """ + orderId + """;"""
-
-      Logger.info("OrderDto.setTwoDaysAfterAssessmentDeliveredEmailSent():" + query)
-
-      SQL(query).executeUpdate()
-    }
-  }
 }
