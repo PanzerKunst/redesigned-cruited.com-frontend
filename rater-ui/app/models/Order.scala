@@ -65,7 +65,7 @@ object Order {
 
   def getContainedProductCodesFromTypesArray(docTypes: Array[String]): List[String] = {
     docTypes.map { typeForDb => CruitedProduct.codeFromType(typeForDb)}
-      .toList
+      .toList.sortWith(sortProductCodes)
   }
 
   def getFileNameWithoutPrefix(fileName: Option[String]): Option[String] = {
@@ -74,6 +74,16 @@ object Order {
       case Some(fileNameWithPrefix) =>
         val indexFileNameAfterPrefix = fileNameWithPrefix.indexOf(Order.fileNamePrefixSeparator, 1) + Order.fileNamePrefixSeparator.length
         Some(fileNameWithPrefix.substring(indexFileNameAfterPrefix))
+    }
+  }
+
+  private def sortProductCodes(pc1: String, pc2: String): Boolean = {
+    if (pc2 == CruitedProduct.codeLinkedinProfileReview) {
+      true
+    } else if (pc2 == CruitedProduct.codeCoverLetterReview && pc1 == CruitedProduct.codeCvReview) {
+      true
+    } else {
+      false
     }
   }
 }

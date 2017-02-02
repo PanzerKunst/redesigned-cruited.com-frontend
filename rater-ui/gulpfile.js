@@ -128,7 +128,7 @@ function runWebpack(entryFileName, srcSubDir) {
             }
         }))
         .pipe(gulp.dest(scriptDistDir));
-};
+}
 
 // `gulp js-libs`
 gulp.task("js-libs", function() {
