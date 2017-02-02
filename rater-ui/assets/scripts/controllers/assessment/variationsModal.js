@@ -91,10 +91,12 @@ const Component = React.createClass({
             tagClasses = "extra-language";
         }
 
+        const variationIdSpan = variation.id ? <span className="variation-id">{variation.id}</span> : null;
+
         return (
             <div className="variation-id-and-tag">
-                <span className="variation-id">{variation.id}</span>
                 <span className={tagClasses}>{tagText}</span>
+                {variationIdSpan}
             </div>);
     },
 
