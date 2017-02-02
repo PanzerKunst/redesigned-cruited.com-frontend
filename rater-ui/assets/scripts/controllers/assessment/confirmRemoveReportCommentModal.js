@@ -1,3 +1,4 @@
+import Comment from "../../models/comment";
 import store from "./store";
 
 const Component = React.createClass({
@@ -8,6 +9,8 @@ const Component = React.createClass({
             return null;
         }
 
+        const title = Comment.isCustom(commentToRemove) ? "Remove custom comment from the report?" : `Remove comment ${commentToRemove.id} from the report?`;
+
         return (
             <div id="confirm-remove-report-comment-modal" className="modal fade" tabIndex="-1" role="dialog">
                 <div className="modal-dialog" role="document">
@@ -16,7 +19,7 @@ const Component = React.createClass({
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h3 className="modal-title">{`Remove comment ${commentToRemove.id} from the report?`}</h3>
+                            <h3 className="modal-title">{title}</h3>
                         </div>
                         <div className="modal-body">
                             <p>{commentToRemove.redText}</p>

@@ -8,7 +8,8 @@ const Component = React.createClass({
 
         const liClasses = classNames({
             "report-comment": true,
-            "from-list": c.isRedSelected
+            "from-list": c.isRedSelected,
+            custom: Comment.isCustom(c)
         });
 
         const paragraphClasses = classNames({
@@ -21,7 +22,7 @@ const Component = React.createClass({
                 <p className={paragraphClasses} onBlur={this._handleParagraphBlur}>{c.redText}</p>
                 <button type="button" className="styleless fa fa-arrows fa-fw" />
                 <button type="button" className="styleless fa fa-clone fa-fw" onClick={this._handleVariationsClick} />
-                <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />
+                {this._resetBtn()}
                 <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
 
                 {this._idAndPoints()}
@@ -41,10 +42,18 @@ const Component = React.createClass({
         this.$commentParagraph = this.$li.children(".comment-paragraph");
     },
 
+    _resetBtn() {
+        if (Comment.isCustom(this.props.comment)) {
+            return null;
+        }
+
+        return <button type="button" className="styleless fa fa-undo fa-fw" onClick={this._handleResetClick} />;
+    },
+
     _idAndPoints() {
         const c = this.props.comment;
 
-        if (_.isNaN(_.toNumber(c.id))) {
+        if (Comment.isCustom(c)) {
             return <div className="id-and-points"></div>;
         }
 

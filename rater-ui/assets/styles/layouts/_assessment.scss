@@ -554,6 +554,9 @@ $white-section-padding: 2em 1em 1em;
     > .fa-trash {
       top: 6em;
     }
+    &.custom > .fa-trash {
+      top: 4em;
+    }
 
 
     > .id-and-points {

@@ -52,11 +52,13 @@ const Assessment = {
         const listCommentsToUpdate = listComments[categoryProductCode];
         const commentToUpdate = _.find(listCommentsToUpdate, c => c.id === comment.id);
 
-        commentToUpdate.redText = comment.redText;
-        commentToUpdate.isGreenSelected = comment.isGreenSelected;
-        commentToUpdate.isRedSelected = comment.isRedSelected;
+        if (commentToUpdate) {
+            commentToUpdate.redText = comment.redText;
+            commentToUpdate.isGreenSelected = comment.isGreenSelected;
+            commentToUpdate.isRedSelected = comment.isRedSelected;
 
-        this._saveListCommentsInLocalStorage(listComments);
+            this._saveListCommentsInLocalStorage(listComments);
+        }
     },
 
     /*

@@ -352,7 +352,7 @@ const store = {
              */
             reportCategory.comments.forEach(c => {
                 docReport.redComments.push({
-                    defaultCommentId: _.isNumber(c.id) ? c.id : null, // Custom comments have UUID as ID on the frontend side
+                    defaultCommentId: Comment.isCustom(c) ? null : c.id, // Custom comments have UUID as ID on the frontend side
                     categoryId,
                     text: c.redText,
                     points: c.points
