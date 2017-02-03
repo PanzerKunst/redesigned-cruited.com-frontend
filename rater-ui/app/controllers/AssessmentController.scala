@@ -15,14 +15,18 @@ class AssessmentController @Inject()(accountDto: AccountDto, config: GlobalConfi
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>
-          val order = orderDto.getOfId(orderId).get
-          val i18nMessages = SessionService.getI18nMessagesFromCode(order.languageCode, messagesApi)
-          val allDefaultComments = assessmentDto.allDefaultComments
-          val allCommentVariations = assessmentDto.allCommentVariations
-          val assessmentOpt = assessmentDto.getOfOrderId(orderId)
+          orderDto.getOfId(orderId) match {
+            case None => BadRequest("No order found for ID " + orderId)
 
-          Ok(views.html.assessment(account, config, order, i18nMessages, allDefaultComments, allCommentVariations, assessmentOpt))
-            .withHeaders(doNotCachePage: _*)  // We want to avoid retrieving a cached page when navigating back
+            case Some(order) =>
+              val i18nMessages = SessionService.getI18nMessagesFromCode(order.languageCode, messagesApi)
+              val allDefaultComments = assessmentDto.allDefaultComments
+              val allCommentVariations = assessmentDto.allCommentVariations
+              val assessmentOpt = assessmentDto.getOfOrderId(orderId)
+
+              Ok(views.html.assessment(account, config, order, i18nMessages, allDefaultComments, allCommentVariations, assessmentOpt))
+                .withHeaders(doNotCachePage: _*)  // We want to avoid retrieving a cached page when navigating back
+          }
       }
     }
   }

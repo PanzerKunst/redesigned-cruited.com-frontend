@@ -265,13 +265,13 @@
   &.coupon {
     color: white;
     background-color: $dark-grey;
-    border-radius: $default-border-radius;
-    font-size: 11px;
-    padding: 0.5px 6px;
-  }
 
-  &.edition {
-    margin-left: 0.5em;
+    border-radius: $default-border-radius;
+
+    font-size: 11px;
+
+    padding: 0.5px 6px;
+    margin-right: 0.5em;
   }
 
   &.product-code > a,
