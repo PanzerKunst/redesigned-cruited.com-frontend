@@ -12,6 +12,8 @@ GET            /docs/:orderId/cv                                controllers.Appl
 GET            /docs/:orderId/cover-letter                      controllers.Application.getCoverLetterOfOrder(orderId: Long)
 GET            /docs/:orderId/linkedin-profile                  controllers.Application.getLinkedinProfileOfOrder(orderId: Long)
 
+GET            /docs/:orderId/job-ad                            controllers.Application.getJobAdOfOrder(orderId: Long)
+
 GET            /docs/:orderId/cv/thumbnail                      controllers.Application.getCvThumbnailOfOrder(orderId: Long)
 GET            /docs/:orderId/cover-letter/thumbnail            controllers.Application.getCoverLetterThumbnailOfOrder(orderId: Long)
 GET            /docs/:orderId/linkedin-profile/thumbnail        controllers.Application.getLinkedinProfileThumbnailOfOrder(orderId: Long)

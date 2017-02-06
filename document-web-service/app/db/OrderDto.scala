@@ -88,7 +88,7 @@ object OrderDto {
   def getOfId(id: Long): Option[Order] = {
     DB.withConnection { implicit c =>
       val query = """
-        select file, file_cv, file_li, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment,
+        select file, file_cv, file_li, job_ad_filename, added_at, added_by, type, d.status, position, employer, job_ad_url, customer_comment,
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, discount, discount_type, valid_date, campaign_name
         from documents d
@@ -99,10 +99,10 @@ object OrderDto {
 
       Logger.info("OrderDto.getOfId():" + query)
 
-      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
+      val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ (str("job_ad_filename") ?) ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~
         long("edition_id") ~ str("edition") ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) map {
-        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
+        case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ jobAdFileNameOpt ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~
           editionId ~ editionCode ~
           couponIdOpt ~ couponCodeOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt =>
 
@@ -119,6 +119,11 @@ object OrderDto {
           val linkedinProfileFileNameOpt = linkedinProfileFileName match {
             case "" => None
             case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
+          }
+
+          val jobAdFileNameOption = jobAdFileNameOpt match {
+            case None => None
+            case Some(jobAdFileName) => Order.getFileNameWithoutPrefix(Some(jobAdFileName))
           }
 
           val accountIdOpt = accountId match {
@@ -147,6 +152,7 @@ object OrderDto {
             positionSought = positionSoughtOpt,
             employerSought = employerSoughtOpt,
             jobAdUrl = jobAdUrlOpt,
+            jobAdFileName = jobAdFileNameOption,
             customerComment = customerCommentOpt,
             accountId = accountIdOpt,
             status = status,
