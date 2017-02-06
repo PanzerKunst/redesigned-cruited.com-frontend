@@ -9,5 +9,6 @@ case class OrderReceivedFromFrontend(tempId: Long,
                                      positionSought: Option[String],
                                      employerSought: Option[String],
                                      jobAdUrl: Option[String],
+                                     jobAdFileName: Option[String],
                                      customerComment: Option[String],
                                      accountId: Option[Long])

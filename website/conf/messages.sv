@@ -236,6 +236,10 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
 order.assessmentInfo.form.positionSought.label=Tjänst du söker
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
+order.assessmentInfo.form.jobAdUrl.uploadInstead.text=Jag vill hellre ladda upp en fil med platsannonsen
+order.assessmentInfo.form.jobAdFile.label=Fil med platsannons
+order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
+order.assessmentInfo.form.jobAdFile.urlInstead.text=Glöm det - jag anger en länk till platsannonsen istället
 order.assessmentInfo.form.customerComment.label=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.tos.text=Jag accepterar <a href="https://cruited.com/villkor/" target="_blank">användningsvillkoren</a>
@@ -262,7 +266,7 @@ order.accountCreation.registerWithEmail.validation.incorrectEmail=Den här e-pos
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Lösenordet behöver vara minst 5 tecken
 order.accountCreation.registerWithEmail.validation.alreadyRegistered=Det finns redan ett konto med den här adressen.
 
-order.accountCreation.signIn.registerInstead.text=Glöm det - Jag har inget konto än.
+order.accountCreation.signIn.registerInstead.text=Glöm det - jag har inget konto än.
 order.accountCreation.signIn.registerInstead.link.text=Skapa konto
 
 order.accountCreation.signedIn.text=Du är nu inloggad!

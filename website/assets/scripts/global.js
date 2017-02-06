@@ -8,6 +8,7 @@ CR.Services = {};
 CR.Models = {};
 
 CR.animationDurations = {
+    short: 0.2,
     default: 0.5
 };
 

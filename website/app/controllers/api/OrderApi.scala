@@ -1,6 +1,5 @@
 package controllers.api
 
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.{Inject, Singleton}
@@ -8,15 +7,18 @@ import javax.inject.{Inject, Singleton}
 import db.{AccountDto, OrderDto}
 import models.frontend.OrderReceivedFromFrontend
 import models.{Account, Order}
+import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import play.api.mvc.{Session, Action, Controller}
+import play.api.mvc.{Action, Controller, Session}
 import services._
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Random
 
 @Singleton
-class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: MessagesApi, val emailService: EmailService) extends Controller {
+class OrderApi @Inject()(val documentService: DocumentService, val orderService: OrderService, val messagesApi: MessagesApi, val emailService: EmailService) extends Controller {
   def create() = Action(parse.multipartFormData) { request =>
     // We only want to generate negative IDs, because positive ones are for non-temp orders
     val rand = Random.nextLong()
@@ -29,23 +31,19 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
 
     val requestBody = request.body
 
-    // Saving files in "documents" folder
     val cvFileNameOpt = requestBody.file("cvFile") match {
       case None => None
-      case Some(file) =>
-        val fileExtension = documentService.getFileExtension(file.filename)
-        val fileName = tempOrderId + Order.fileNamePrefixSeparator + "CV." + fileExtension
-        file.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-        Some(fileName)
+      case Some(file) => Some(documentService.saveFileInDocumentsFolder(file, tempOrderId, documentService.middleFileNameCv))
     }
 
     val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
       case None => None
-      case Some(file) =>
-        val fileExtension = documentService.getFileExtension(file.filename)
-        val fileName = tempOrderId + Order.fileNamePrefixSeparator + "cover-letter." + fileExtension
-        file.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-        Some(fileName)
+      case Some(file) => Some(documentService.saveFileInDocumentsFolder(file, tempOrderId, documentService.middleFileNameCoverLetter))
+    }
+
+    val jobAdFileNameOpt = requestBody.file("jobAdFile") match {
+      case None => None
+      case Some(file) => Some(documentService.saveFileInDocumentsFolder(file, tempOrderId, documentService.middleFileNameJobAd))
     }
 
 
@@ -92,6 +90,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
       positionSought = positionSought,
       employerSought = employerSought,
       jobAdUrl = jobAdUrl,
+      jobAdFileName = jobAdFileNameOpt,
       customerComment = customerComment,
       accountId = SessionService.getAccountId(request.session)
     )
@@ -117,22 +116,21 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
 
       OrderDto.getOfId(id) match {
         case None => BadRequest("No order found for ID " + id)
+
         case Some(existingOrder) =>
-          // Saving files in "documents" folder
           val cvFileNameOpt = requestBody.file("cvFile") match {
             case None => None
-            case Some(cvFile) =>
-              val fileName = id + Order.fileNamePrefixSeparator + cvFile.filename
-              cvFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-              Some(cvFile.filename)
+            case Some(cvFile) => Some(documentService.saveFileInDocumentsFolder(cvFile, id, documentService.middleFileNameCv))
           }
 
           val coverLetterFileNameOpt = requestBody.file("coverLetterFile") match {
             case None => None
-            case Some(coverLetterFile) =>
-              val fileName = id + Order.fileNamePrefixSeparator + coverLetterFile.filename
-              coverLetterFile.ref.moveTo(new File(documentService.assessedDocumentsRootDir + fileName))
-              Some(coverLetterFile.filename)
+            case Some(coverLetterFile) => Some(documentService.saveFileInDocumentsFolder(coverLetterFile, id, documentService.middleFileNameCoverLetter))
+          }
+
+          val jobAdFileNameOpt = requestBody.file("jobAdFile") match {
+            case None => None
+            case Some(jobAdFile) => Some(documentService.saveFileInDocumentsFolder(jobAdFile, id, documentService.middleFileNameJobAd))
           }
 
 
@@ -160,7 +158,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
             Some(requestData("customerComment").head)
           }
 
-          OrderDto.update(Order(
+          val updatedOrder = Order(
             Some(id),
             existingOrder.editionId,
             existingOrder.containedProductCodes,
@@ -171,13 +169,23 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
             positionSought,
             employerSought,
             jobAdUrl,
+            jobAdFileNameOpt,
             customerComment,
             existingOrder.accountId,
             existingOrder.status,
             existingOrder.languageCode,
             existingOrder.creationTimestamp,
             existingOrder.paymentTimestamp
-          ))
+          )
+
+          OrderDto.update(updatedOrder)
+
+          Future {
+            val orderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder)
+            orderService.generateDocThumbnails(orderWithPdfFileNames)
+          } onFailure {
+            case e => Logger.error(e.getMessage, e)
+          }
 
           Ok
       }
@@ -221,7 +229,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val messagesApi: 
     }
   }
 
-  def removeCoupon = Action { request =>
+  def removeCoupon() = Action { request =>
     SessionService.getOrderId(request.session) match {
       case None => BadRequest("Couldn't remove the coupon because no order was found in session");
       case Some(id) =>

@@ -10,7 +10,7 @@ CR.Controllers.EditOrder = P(function(c) {
 
         render: function() {
             if (!window.FormData) {
-                return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);  // TODO
+                return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);
             }
 
             if (!this.state.order) {
@@ -43,10 +43,23 @@ CR.Controllers.EditOrder = P(function(c) {
                                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
                                         <input type="text" className="form-control" id="employer-sought" defaultValue={this.state.order.getSoughtEmployer()} />
                                     </div>
-                                    <div className="form-group">
+                                    <div className="form-group" id="job-ad-url-form-group">
                                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
                                         <input type="text" className="form-control" id="job-ad-url" defaultValue={this.state.order.getJobAdUrl()} />
                                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
+                                        <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
+                                    </div>
+                                    <div className="form-group fg-file-upload" id="job-ad-file-upload-form-group">
+                                        <label>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"]}</label>
+
+                                        <div>
+                                            <label className="btn btn-default btn-file-upload" htmlFor="job-ad-file">
+                                                <input type="file" id="job-ad-file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleJobAdFileSelected} />
+                                                {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
+                                            </label>
+                                            <input type="text" className="form-control" id="job-ad-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.jobAdFile.placeHolder"]} defaultValue={this.state.order.getJobAdFileName()} disabled />
+                                        </div>
+                                        <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
                                     </div>
                                 </div>
                             </section>
@@ -67,6 +80,46 @@ CR.Controllers.EditOrder = P(function(c) {
         componentDidUpdate: function() {
             this._initElements();
             this._initValidation();
+
+            if (this.state.order.getJobAdFileName()) {
+                this.$jobAdUrlFormGroup.hide();
+                this.$jobAdFileUploadFormGroup.show();
+            }
+        },
+
+        _initElements: function() {
+            this.$form = $("#content").find("form");
+
+            this.$cvFormGroup = this.$form.find("#cv-form-group");
+            this.$cvFileField = this.$cvFormGroup.find("#cv");
+            this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
+
+            this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
+            this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
+            this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
+
+            this.$positionSoughtField = this.$form.find("#position-sought");
+            this.$employerSoughtField = this.$form.find("#employer-sought");
+
+            this.$jobAdUrlFormGroup = this.$form.find("#job-ad-url-form-group");
+            this.$jobAdUrlField = this.$jobAdUrlFormGroup.children("#job-ad-url");
+
+            this.$jobAdFileUploadFormGroup = this.$form.find("#job-ad-file-upload-form-group");
+            this.$jobAdFileField = this.$jobAdFileUploadFormGroup.find("#job-ad-file");
+            this.$jobAdFileNameField = this.$jobAdFileUploadFormGroup.find("#job-ad-file-name");
+
+            this.$customerCommentField = this.$form.find("#customer-comment");
+
+            this.$submitBtn = this.$form.find("button[type=submit]");
+        },
+
+        _initValidation: function() {
+            this.validator = CR.Services.Validator([
+                "cv-file-name",
+                "cover-letter-file-name",
+                "job-ad-url",
+                "customer-comment"
+            ]);
         },
 
         _getDocumentsSection: function() {
@@ -138,34 +191,6 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        _initElements: function() {
-            this.$form = $("#content").find("form");
-
-            this.$cvFormGroup = this.$form.find("#cv-form-group");
-            this.$cvFileField = this.$cvFormGroup.find("#cv");
-            this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
-
-            this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
-            this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
-            this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
-
-            this.$positionSoughtField = this.$form.find("#position-sought");
-            this.$employerSoughtField = this.$form.find("#employer-sought");
-            this.$jobAdUrlField = this.$form.find("#job-ad-url");
-            this.$customerCommentField = this.$form.find("#customer-comment");
-
-            this.$submitBtn = this.$form.find("button[type=submit]");
-        },
-
-        _initValidation: function() {
-            this.validator = CR.Services.Validator([
-                "cv-file-name",
-                "cover-letter-file-name",
-                "job-ad-url",
-                "customer-comment"
-            ]);
-        },
-
         _handleCvFileSelected: function() {
             this.cvFile = this.$cvFileField[0].files[0];
             this.$cvFileNameField.val(this.cvFile.name);
@@ -176,6 +201,35 @@ CR.Controllers.EditOrder = P(function(c) {
             this.coverLetterFile = this.$coverLetterFileField[0].files[0];
             this.$coverLetterFileNameField.val(this.coverLetterFile.name);
             this.$coverLetterFormGroup.removeClass("has-error");
+        },
+
+        _handleJobAdFileSelected: function() {
+            this.jobAdFile = this.$jobAdFileField[0].files[0];
+            this.$jobAdFileNameField.val(this.jobAdFile.name);
+        },
+
+        _handleJobAdAlternativeClicked: function() {
+            let $formGroupToFadeOut = this.$jobAdUrlFormGroup;
+            let $formGroupToFadeIn = this.$jobAdFileUploadFormGroup;
+
+            if (this.$jobAdFileUploadFormGroup.is(":visible")) {
+                $formGroupToFadeOut = this.$jobAdFileUploadFormGroup;
+                $formGroupToFadeIn = this.$jobAdUrlFormGroup;
+
+                this.jobAdFile = null;
+                this.$jobAdFileNameField.val(null);
+            } else {
+                this.$jobAdUrlField.val(null);
+            }
+
+            $formGroupToFadeOut.fadeOut({
+                animationDuration: CR.animationDurations.short,
+                onComplete: function() {
+                    $formGroupToFadeIn.fadeIn({
+                        animationDuration: CR.animationDurations.short
+                    });
+                }
+            });
         },
 
         _handleSubmit: function(e) {
@@ -207,6 +261,9 @@ CR.Controllers.EditOrder = P(function(c) {
                 }
                 if (jobAdUrl) {
                     formData.append("jobAdUrl", jobAdUrl);
+                }
+                if (this.jobAdFile) {
+                    formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
                 }
                 if (customerComment) {
                     formData.append("customerComment", customerComment);

@@ -10,91 +10,41 @@ import services.GlobalConfig
 object DbAdmin {
   def reCreateTables() {
     removeAlterationOnTableDocuments()
-    removeAlterationOnTableEdition()
-    dropTable("supported_language")
-    dropTable("reduction")
-    dropTable("product")
-
-    createTableProduct()
-    createTableReduction()
-    createTableSupportedLanguage()
-    alterTableEdition()
     alterTableDocuments()
   }
 
-  private def createTableProduct() {
-    DB.withConnection { implicit c =>
-      val query = """
-          create table product (
-            id serial,
-            code varchar(32) not null,
-            price_amount decimal(5,2) not null,
-            price_currency_code varchar(3) not null,
-            primary key(id),
-            constraint unique_code unique(code)
-          ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
-
-      Logger.info("DbAdmin.createTableProduct():" + query)
-
-      SQL(query).executeUpdate()
-    }
-  }
-
-  private def createTableReduction() {
-    DB.withConnection { implicit c =>
-      val query = """
-          create table reduction (
-            id serial,
-            code varchar(32) not null,
-            reduction_amount decimal(5,2) not null,
-            reduction_currency_code varchar(3) not null,
-            primary key(id),
-            constraint unique_code unique(code)
-          ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
-
-      Logger.info("DbAdmin.createTableReduction():" + query)
-
-      SQL(query).executeUpdate()
-    }
-  }
-
-  private def createTableSupportedLanguage() {
-    DB.withConnection { implicit c =>
-      val query = """
-          create table supported_language (
-            id serial,
-            ietf_code varchar(7) not null,
-            name varchar(64) not null,
-            primary key(id),
-            constraint unique_code unique(ietf_code)
-          ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
-
-      Logger.info("DbAdmin.createTableSupportedLanguage():" + query)
-
-      SQL(query).executeUpdate()
-    }
-  }
-
-  private def alterTableEdition() {
-    DB.withConnection { implicit c =>
-      val query = """
-        alter table product_edition
-        add constraint unique_code unique(edition);"""
-
-      Logger.info("DbAdmin.alterTableEdition():" + query)
-
-      SQL(query).executeUpdate()
-    }
-  }
-
-  // TODO: remove column `li_url`
   private def alterTableDocuments() {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
-        add job_ad_url varchar(255) after employer,
-        add customer_comment varchar(512) after job_ad_url,
-        add 2days_after_assessment_delivered_email_sent tinyint(1) unsigned not null default 0 after 1day_email_sent;"""
+        drop column name,
+        drop column hireability,
+        drop column storytelling,
+        drop column advanced_layout,
+        drop column open_application,
+        drop column li_url,
+        drop column last_rate,
+        drop column other_layout,
+        drop column transaction_id,
+        drop column response_code,
+        drop column payment_id,
+        drop column payment_client,
+        drop column payment_card_type,
+        drop column payment_card_holder,
+        drop column payment_last4,
+        drop column payment_error,
+        drop column how_doing_status,
+        drop column how_doing_text,
+        drop column in_progress_at,
+        drop column set_in_progress_at,
+        drop column set_done_at,
+        drop column done_email_sent,
+        drop column 2days_after_assessment_delivered_email_sent,
+        drop column doc_review,
+        drop column free_test,
+        drop column session_id,
+        drop column google_thumb,
+        add job_ad_filename varchar(255) after file_li;"""
 
       Logger.info("DbAdmin.alterTableDocuments():" + query)
 
@@ -110,26 +60,38 @@ object DbAdmin {
     }
   }
 
-  private def removeAlterationOnTableEdition() {
-    DB.withConnection { implicit c =>
-      val query = """
-        alter table product_edition
-        drop index unique_code;"""
-
-      Logger.info("DbAdmin.removeAlterationOnTableEdition():" + query)
-
-      SQL(query).executeUpdate()
-    }
-  }
-
-  // TODO: add column `li_url`
   private def removeAlterationOnTableDocuments() {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
-        drop column job_ad_url,
-        drop column customer_comment,
-        drop column 2days_after_assessment_delivered_email_sent;"""
+        add name varchar(255),
+        add hireability float(5,2),
+        add storytelling tinyint(1),
+        add advanced_layout tinyint(1),
+        add open_application tinyint(1),
+        add li_url varchar(255),
+        add last_rate date,
+        add other_layout tinyint(1),
+        add transaction_id varchar(255),
+        add response_code int(8),
+        add payment_id varchar(255),
+        add payment_client varchar(255),
+        add payment_card_type varchar(255),
+        add payment_card_holder varchar(255),
+        add payment_last4 int(4),
+        add payment_error text,
+        add how_doing_status int(2),
+        add how_doing_text text,
+        add in_progress_at bigint(20),
+        add set_in_progress_at datetime,
+        add set_done_at datetime,
+        add done_email_sent tinyint(1),
+        add 2days_after_assessment_delivered_email_sent tinyint(1) unsigned,
+        add doc_review tinyint(4),
+        add free_test tinyint(4),
+        add session_id varchar(250),
+        add google_thumb tinyint(4),
+        drop column job_ad_filename;"""
 
       Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
 
@@ -138,43 +100,11 @@ object DbAdmin {
   }
 
   def initData() {
-    initDataProduct()
-    initDataReduction()
-    initDataSupportedLanguage()
-    initDataEmailReminders()
     fixBothersomeCharactersInLinkedinProfile()
   }
 
   def fixBothersomeCharactersInLinkedinProfile() {
     val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
     AccountDto.cleanLinkedinProfileOfIds(ids)
-  }
-
-  private def initDataProduct() {
-    DB.withConnection { implicit c =>
-      SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCvReview + "', 299, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
-      SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeCoverLetterReview + "', 299, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
-      SQL("insert into product(code, price_amount, price_currency_code) values('" + CruitedProduct.codeLinkedinProfileReview + "', 299, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
-    }
-  }
-
-  private def initDataReduction() {
-    DB.withConnection { implicit c =>
-      SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('2_PRODUCTS_SAME_ORDER', 100, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
-      SQL("insert into reduction(code, reduction_amount, reduction_currency_code) values('3_PRODUCTS_SAME_ORDER', 200, '" + GlobalConfig.paymentCurrencyCode + "');").execute()
-    }
-  }
-
-  private def initDataSupportedLanguage() {
-    DB.withConnection { implicit c =>
-      SQL("insert into supported_language(ietf_code, name) values('sv', 'Svenska');").execute()
-      SQL("insert into supported_language(ietf_code, name) values('en', 'English');").execute()
-    }
-  }
-
-  private def initDataEmailReminders() = {
-    DB.withConnection { implicit c =>
-      SQL("update documents set 2days_after_assessment_delivered_email_sent = 1;").execute()
-    }
   }
 }

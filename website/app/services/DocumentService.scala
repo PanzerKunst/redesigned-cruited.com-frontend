@@ -11,6 +11,8 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.pdfbox.pdmodel.{PDDocument, PDPage}
 import org.apache.pdfbox.util.ImageIOUtil
 import org.imgscalr.Scalr
+import play.api.libs.Files
+import play.api.mvc.MultipartFormData
 import play.api.{Logger, Play}
 import play.api.Play.current
 import play.api.libs.ws.WSClient
@@ -39,7 +41,21 @@ class DocumentService @Inject()(val ws: WSClient) {
   val extensionPdf = "pdf"
   val extensionOdt = "odt"
   val extensionRtf = "rtf"
+  
+  val middleFileNameCv = "CV"
+  val middleFileNameCoverLetter = "cover-letter"
+  val middleFileNameJobAd = "job_ad"
 
+  def saveFileInDocumentsFolder(file: MultipartFormData.FilePart[Files.TemporaryFile], orderId: Long, middleFileName: String): String = {
+    val fileExtension = getFileExtension(file.filename)
+    val fileName = orderId + Order.fileNamePrefixSeparator + middleFileName + "." + fileExtension
+
+    val isToReplace = true
+    file.ref.moveTo(new File(assessedDocumentsRootDir + fileName), isToReplace)
+
+    middleFileName + "." + fileExtension
+  }
+  
   def renameFile(name: String, oldOrderId: Long, orderId: Long) {
     val oldName = oldOrderId + Order.fileNamePrefixSeparator + name
     val newName = orderId + Order.fileNamePrefixSeparator + name

@@ -4,7 +4,7 @@ import java.util.TimerTask
 import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 
 @Singleton
 class EmailsToSendTasker @Inject()(val messagesApi: MessagesApi, val emailService: EmailService) extends TimerTask {

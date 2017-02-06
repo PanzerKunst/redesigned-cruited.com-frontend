@@ -236,6 +236,10 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Employer sought
 order.assessmentInfo.form.positionSought.label=Position sought
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
+order.assessmentInfo.form.jobAdUrl.uploadInstead.text=I prefer to upload a file
+order.assessmentInfo.form.jobAdFile.label=Job ad file
+order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
+order.assessmentInfo.form.jobAdFile.urlInstead.text=Forget that - I'll input a link to the job ad
 order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?
 order.assessmentInfo.form.customerComment.description=Is there anything special we should keep in mind or that you need help with?
 order.assessmentInfo.form.tos.text=I have read and accept the <a href="https://cruited.com/villkor/" target="_blank">Terms of Service</a>
@@ -262,7 +266,7 @@ order.accountCreation.registerWithEmail.validation.incorrectEmail=This email add
 order.accountCreation.registerWithEmail.validation.passwordTooShort=Password should be at least 5 characters
 order.accountCreation.registerWithEmail.validation.alreadyRegistered=This email address is already registered.
 
-order.accountCreation.signIn.registerInstead.text=Forget what I said - I don't have an account yet.
+order.accountCreation.signIn.registerInstead.text=Forget that - I don't have an account yet.
 order.accountCreation.signIn.registerInstead.link.text=Register
 
 order.accountCreation.signedIn.text=You are now signed in!

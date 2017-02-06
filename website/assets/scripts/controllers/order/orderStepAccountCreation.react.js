@@ -3,8 +3,6 @@
 CR.Controllers.OrderStepAccountCreation = P(function(c) {
     c.reactClass = React.createClass({
         getInitialState: function() {
-            this.fadeInOutAnimationDuration = 0.2;
-
             return {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinProfile: null,
@@ -232,19 +230,19 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
             if (isRegisterSectionVisible) {
                 this.$registerSection.fadeOut({
-                    animationDuration: this.fadeInOutAnimationDuration,
+                    animationDuration: CR.animationDurations.short,
                     onComplete: function() {
                         this.$signInSection.fadeIn({
-                            animationDuration: this.fadeInOutAnimationDuration
+                            animationDuration: CR.animationDurations.short
                         });
                     }.bind(this)
                 });
             } else {
                 this.$signInSection.fadeOut({
-                    animationDuration: this.fadeInOutAnimationDuration,
+                    animationDuration: CR.animationDurations.short,
                     onComplete: function() {
                         this.$registerSection.fadeIn({
-                            animationDuration: this.fadeInOutAnimationDuration
+                            animationDuration: CR.animationDurations.short
                         });
                     }.bind(this)
                 });
@@ -253,10 +251,10 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
         _handleSignInWithEmailSuccess: function() {
             this.$signInSection.fadeOut({
-                animationDuration: this.fadeInOutAnimationDuration,
+                animationDuration: CR.animationDurations.short,
                 onComplete: function() {
                     this.$youAreSignedInSection.fadeIn({
-                        animationDuration: this.fadeInOutAnimationDuration
+                        animationDuration: CR.animationDurations.short
                     });
                     this._removeCouponIfNeeded();
                 }.bind(this)

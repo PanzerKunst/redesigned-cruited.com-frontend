@@ -52,6 +52,20 @@ class OrderService @Inject()(val documentService: DocumentService) {
     finalisedOrderId
   }
 
+  def convertDocsToPdf(order: Order): Order = {
+    documentService.convertDocsToPdf(order.id.get)
+    convertLinkedinPublicProfilePageToPdf(order)
+    updateFileNamesInDb(order)
+  }
+
+  def generateDocThumbnails(order: Order) {
+    Logger.info("OrderService.generateDocThumbnails() > order ID: " + order.id.get)
+
+    generateThumbnailForFile(order.id.get, order.cvFileName)
+    generateThumbnailForFile(order.id.get, order.coverLetterFileName)
+    generateThumbnailForFile(order.id.get, order.linkedinProfileFileName)
+  }
+
   private def finaliseFileNames(order: Order, oldOrderId: Long) {
     if (order.cvFileName.isDefined) {
       documentService.renameFile(order.cvFileName.get, oldOrderId, order.id.get)
@@ -59,12 +73,9 @@ class OrderService @Inject()(val documentService: DocumentService) {
     if (order.coverLetterFileName.isDefined) {
       documentService.renameFile(order.coverLetterFileName.get, oldOrderId, order.id.get)
     }
-  }
-
-  private def convertDocsToPdf(order: Order): Order = {
-    documentService.convertDocsToPdf(order.id.get)
-    convertLinkedinPublicProfilePageToPdf(order)
-    updateFileNamesInDb(order)
+    if (order.jobAdFileName.isDefined) {
+      documentService.renameFile(order.jobAdFileName.get, oldOrderId, order.id.get)
+    }
   }
 
   private def convertLinkedinPublicProfilePageToPdf(order: Order) {
@@ -79,7 +90,8 @@ class OrderService @Inject()(val documentService: DocumentService) {
     val orderWithPdfFileNames = order.copy(
       cvFileName = getNewCvFileName(order),
       coverLetterFileName = getNewCoverLetterFileName(order),
-      linkedinProfileFileName = getNewLinkedinProfileFileName(order)
+      linkedinProfileFileName = getNewLinkedinProfileFileName(order),
+      jobAdFileName = getNewJobAdFileName(order)
     )
 
     OrderDto.update(orderWithPdfFileNames)
@@ -90,35 +102,35 @@ class OrderService @Inject()(val documentService: DocumentService) {
   private def getNewCvFileName(order: Order): Option[String] = {
     order.cvFileName match {
       case None => None
-      case Some(fileName) =>
-        val fileNameWithPdfExtension = if (documentService.getFileExtension(fileName) == documentService.extensionPdf) {
-          fileName
-        } else {
-          fileName + "." + documentService.extensionPdf
-        }
-
-        if (!documentService.isFilePresent(order.id.get + Order.fileNamePrefixSeparator + fileNameWithPdfExtension)) {
-          throw new Exception("OrderService.getNewCvFileName() > CV file name found in DB for order " + order.id.get + " but no corresponding file found")
-        }
-        Some(fileNameWithPdfExtension)
+      case Some(fileName) => newFileName(order, fileName)
     }
   }
 
   private def getNewCoverLetterFileName(order: Order): Option[String] = {
     order.coverLetterFileName match {
       case None => None
-      case Some(fileName) =>
-        val fileNameWithPdfExtension = if (documentService.getFileExtension(fileName) == documentService.extensionPdf) {
-          fileName
-        } else {
-          fileName + "." + documentService.extensionPdf
-        }
-
-        if (!documentService.isFilePresent(order.id.get + Order.fileNamePrefixSeparator + fileNameWithPdfExtension)) {
-          throw new Exception("OrderService.getNewCoverLetterFileName() > Cover letter file name found in DB for order " + order.id.get + " but no corresponding file found")
-        }
-        Some(fileNameWithPdfExtension)
+      case Some(fileName) => newFileName(order, fileName)
     }
+  }
+
+  private def getNewJobAdFileName(order: Order): Option[String] = {
+    order.jobAdFileName match {
+      case None => None
+      case Some(fileName) => newFileName(order, fileName)
+    }
+  }
+
+  private def newFileName(order: Order, fileName: String): Option[String] = {
+    val fileNameWithPdfExtension = if (documentService.getFileExtension(fileName) == documentService.extensionPdf) {
+      fileName
+    } else {
+      fileName + "." + documentService.extensionPdf
+    }
+
+    if (!documentService.isFilePresent(order.id.get + Order.fileNamePrefixSeparator + fileNameWithPdfExtension)) {
+      throw new Exception("OrderService.newFileName() > File name found in DB for order " + order.id.get + " but no corresponding file found")
+    }
+    Some(fileNameWithPdfExtension)
   }
 
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
@@ -132,14 +144,6 @@ class OrderService @Inject()(val documentService: DocumentService) {
     } else {
       None
     }
-  }
-
-  private def generateDocThumbnails(order: Order) {
-    Logger.info("OrderService.generateDocThumbnails() > order ID: " + order.id.get)
-
-    generateThumbnailForFile(order.id.get, order.cvFileName)
-    generateThumbnailForFile(order.id.get, order.coverLetterFileName)
-    generateThumbnailForFile(order.id.get, order.linkedinProfileFileName)
   }
 
   private def generateThumbnailForFile(orderId: Long, fileNameOpt: Option[String]) {

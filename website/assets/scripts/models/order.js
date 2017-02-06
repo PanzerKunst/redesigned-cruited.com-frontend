@@ -47,6 +47,7 @@ CR.Models.Order = P(function(c) {
         this._positionSought = order && order.positionSought ? order.positionSought : null;
         this._employerSought = order && order.employerSought ? order.employerSought : null;
         this._jobAdUrl = order && order.jobAdUrl ? order.jobAdUrl : null;
+        this._jobAdFileName = order && order.jobAdFileName ? order.jobAdFileName : null;
         this._customerComment = order && order.customerComment ? order.customerComment : null;
         this._status = order && order.status !== null ? order.status : null;
         this._creationTimestamp = order && order.creationTimestamp ? order.creationTimestamp : null;
@@ -66,6 +67,7 @@ CR.Models.Order = P(function(c) {
             positionSought: this._positionSought,
             employerSought: this._employerSought,
             jobAdUrl: this._jobAdUrl,
+            jobAdFileName: this._jobAdFileName,
             customerComment: this._customerComment,
             status: this._status,
             isTosAccepted: this._isTosAccepted
@@ -177,6 +179,14 @@ CR.Models.Order = P(function(c) {
 
     c.setJobAdUrl = function(jobAdUrl) {
         this._jobAdUrl = jobAdUrl;
+    };
+
+    c.getJobAdFileName = function() {
+        return this._jobAdFileName;
+    };
+
+    c.setJobAdFileName = function(fileName) {
+        this._jobAdFileName = fileName;
     };
 
     c.getCustomerComment = function() {

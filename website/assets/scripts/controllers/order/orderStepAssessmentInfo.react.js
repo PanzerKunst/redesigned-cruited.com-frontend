@@ -73,10 +73,23 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
                                         <input type="text" className="form-control" id="employer-sought" maxLength="230" defaultValue={employerSought} />
                                     </div>
-                                    <div className="form-group">
+                                    <div className="form-group" id="job-ad-url-form-group">
                                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
                                         <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl} />
                                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
+                                        <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
+                                    </div>
+                                    <div className="form-group fg-file-upload" id="job-ad-file-upload-form-group">
+                                        <label>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"]}</label>
+
+                                        <div>
+                                            <label className={this._getUploadLabelClasses()} htmlFor="job-ad-file">
+                                                <input type="file" id="job-ad-file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleJobAdFileSelected} />
+                                                {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
+                                            </label>
+                                            <input type="text" className="form-control" id="job-ad-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.jobAdFile.placeHolder"]} defaultValue={CR.order.getJobAdFileName()} disabled />
+                                        </div>
+                                        <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
                                     </div>
                                 </div>
                             </section>
@@ -98,6 +111,53 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         componentDidUpdate: function() {
             this._initElements();
             this._initValidation();
+        },
+
+        _initElements: function() {
+            this.$form = $("#content").find("form");
+
+            this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
+            this.$linkedinPreviewWrapper = this.$linkedinProfileFormGroup.children("div");
+            this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin").not(".btn-xs");
+            this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
+            this.$linkedinProfileCheckedCheckboxWrapper = this.$linkedinPreviewWrapper.children(".checkbox");
+
+            this.$cvFormGroup = this.$form.find("#cv-form-group");
+            this.$cvFileField = this.$cvFormGroup.find("#cv");
+            this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
+
+            this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
+            this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
+            this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
+
+            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
+
+            this.$positionSoughtField = this.$form.find("#position-sought");
+            this.$employerSoughtField = this.$form.find("#employer-sought");
+
+            this.$jobAdUrlFormGroup = this.$form.find("#job-ad-url-form-group");
+            this.$jobAdUrlField = this.$jobAdUrlFormGroup.children("#job-ad-url");
+
+            this.$jobAdFileUploadFormGroup = this.$form.find("#job-ad-file-upload-form-group");
+            this.$jobAdFileField = this.$jobAdFileUploadFormGroup.find("#job-ad-file");
+            this.$jobAdFileNameField = this.$jobAdFileUploadFormGroup.find("#job-ad-file-name");
+
+            this.$customerCommentField = this.$form.find("#customer-comment");
+
+            this.$submitBtn = this.$form.find("button[type=submit]");
+
+            this.$headerBar = $("#container").children("header");
+        },
+
+        _initValidation: function() {
+            this.validator = CR.Services.Validator([
+                "linkedin-profile-checked",
+                "cv-file-name",
+                "cover-letter-file-name",
+                "job-ad-url",
+                "customer-comment",
+                "accept-tos"
+            ]);
         },
 
         _getSignInWithLinkedinFormGroup: function() {
@@ -283,46 +343,6 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _initElements: function() {
-            this.$form = $("#content").find("form");
-
-            this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
-            this.$linkedinPreviewWrapper = this.$linkedinProfileFormGroup.children("div");
-            this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin").not(".btn-xs");
-            this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
-            this.$linkedinProfileCheckedCheckboxWrapper = this.$linkedinPreviewWrapper.children(".checkbox");
-
-            this.$cvFormGroup = this.$form.find("#cv-form-group");
-            this.$cvFileField = this.$cvFormGroup.find("#cv");
-            this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
-
-            this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
-            this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
-            this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
-
-            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
-
-            this.$positionSoughtField = this.$form.find("#position-sought");
-            this.$employerSoughtField = this.$form.find("#employer-sought");
-            this.$jobAdUrlField = this.$form.find("#job-ad-url");
-            this.$customerCommentField = this.$form.find("#customer-comment");
-
-            this.$submitBtn = this.$form.find("button[type=submit]");
-
-            this.$headerBar = $("#container").children("header");
-        },
-
-        _initValidation: function() {
-            this.validator = CR.Services.Validator([
-                "linkedin-profile-checked",
-                "cv-file-name",
-                "cover-letter-file-name",
-                "job-ad-url",
-                "customer-comment",
-                "accept-tos"
-            ]);
-        },
-
         _handleCvFileSelected: function() {
             this.cvFile = this.$cvFileField[0].files[0];
             this.$cvFileNameField.val(this.cvFile.name);
@@ -333,6 +353,35 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.coverLetterFile = this.$coverLetterFileField[0].files[0];
             this.$coverLetterFileNameField.val(this.coverLetterFile.name);
             this.$coverLetterFormGroup.removeClass("has-error");
+        },
+
+        _handleJobAdFileSelected: function() {
+            this.jobAdFile = this.$jobAdFileField[0].files[0];
+            this.$jobAdFileNameField.val(this.jobAdFile.name);
+        },
+
+        _handleJobAdAlternativeClicked: function() {
+            let $formGroupToFadeOut = this.$jobAdUrlFormGroup;
+            let $formGroupToFadeIn = this.$jobAdFileUploadFormGroup;
+
+            if (this.$jobAdFileUploadFormGroup.is(":visible")) {
+                $formGroupToFadeOut = this.$jobAdFileUploadFormGroup;
+                $formGroupToFadeIn = this.$jobAdUrlFormGroup;
+
+                this.jobAdFile = null;
+                this.$jobAdFileNameField.val(null);
+            } else {
+                this.$jobAdUrlField.val(null);
+            }
+
+            $formGroupToFadeOut.fadeOut({
+                animationDuration: CR.animationDurations.short,
+                onComplete: function() {
+                    $formGroupToFadeIn.fadeIn({
+                        animationDuration: CR.animationDurations.short
+                    });
+                }
+            });
         },
 
         _handleSubmit: function(e) {
@@ -372,6 +421,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     if (jobAdUrl) {
                         formData.append("jobAdUrl", jobAdUrl);
                     }
+                    if (this.jobAdFile) {
+                        formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
+                    }
                     if (customerComment) {
                         formData.append("customerComment", customerComment);
                     }
@@ -391,6 +443,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 CR.order.setSoughtPosition(order.positionSought);
                                 CR.order.setSoughtEmployer(order.employerSought);
                                 CR.order.setJobAdUrl(order.jobAdUrl);
+                                CR.order.setJobAdFileName(order.jobAdFileName);
                                 CR.order.setCustomerComment(order.customerComment);
                                 CR.order.setTosAccepted();
                                 CR.order.saveInLocalStorage();
