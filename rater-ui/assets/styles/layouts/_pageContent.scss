@@ -339,6 +339,28 @@
   font-weight: bold;
 }
 
+a.pdf-link {
+  color: $pdf-red;
+
+  padding-left: 20px;
+
+  $pdf-icon-location-x: -1900px;
+  $pdf-icon-location-y: -2095px;
+
+  @include hdpi-sprite;
+  background-position: $pdf-icon-location-x $pdf-icon-location-y;
+  @include hidpi {
+    background-position: half-pos($pdf-icon-location-x, $pdf-icon-location-y);
+  }
+
+  @include medium-screen {
+    padding-left: 25px;
+
+    $pdf-icon-location-y: -2199px;
+    background-position: $pdf-icon-location-x $pdf-icon-location-y;
+  }
+}
+
 .no-flexbox {
   .user-profile {
     display: block;

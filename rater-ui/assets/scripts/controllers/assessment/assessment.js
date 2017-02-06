@@ -63,7 +63,7 @@ const controller = {
                                         <EmployerSought employer={order.employerSought} />
                                     </div>
                                     {this._customerComment(order.customerComment)}
-                                    {this._jobAdLink(order.jobAdUrl)}
+                                    {this._jobAdLink()}
                                 </section>
                                 <section className="order-details-section second">
                                     <OrderTags order={order} config={store.config} />
@@ -180,11 +180,28 @@ const controller = {
             return <p className="customer-comment">{customerComment}</p>;
         },
 
-        _jobAdLink(jobAdUrl) {
-            if (!jobAdUrl) {
-                return null;
+        _jobAdLink() {
+            const order = store.order;
+            let url = null;
+            let linkText = null;
+            let classes = "job-ad-link";
+
+            if (order.jobAdUrl) {
+                url = order.jobAdUrl;
+                linkText = order.jobAdUrl;
             }
-            return <a href={jobAdUrl} target="_blank" className="job-ad-link">{jobAdUrl}</a>;
+
+            if (order.jobAdFileName) {
+                url = order.jobAdFileUrl(store.config);
+                linkText = order.jobAdFileName;
+                classes += " pdf-link";
+            }
+
+            if (url && linkText) {
+                return <a href={url} target="_blank" className={classes}>{linkText}</a>;
+            }
+
+            return null;
         },
 
         _previousOrdersAndScores() {

@@ -116,7 +116,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
         from documents d
         where `type` like '%""" + docType + """%'
           and status = """ + Order.statusIdComplete + """
-        order by last_rate desc
+        order by id desc
         limit """ + n + """;"""
 
       Logger.info("AssessmentDto.idsOfTheLastNReports():" + query)

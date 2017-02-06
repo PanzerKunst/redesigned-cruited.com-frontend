@@ -15,6 +15,7 @@ case class FrontendOrder(id: Long,
                          positionSought: Option[String],
                          employerSought: Option[String],
                          jobAdUrl: Option[String],
+                         jobAdFileName: Option[String],
                          customerComment: Option[String],
                          customer: Account,
                          rater: Option[Account],
@@ -37,6 +38,7 @@ object FrontendOrder {
       (JsPath \ "positionSought").formatNullable[String] and
       (JsPath \ "employerSought").formatNullable[String] and
       (JsPath \ "jobAdUrl").formatNullable[String] and
+      (JsPath \ "jobAdFileName").formatNullable[String] and
       (JsPath \ "customerComment").formatNullable[String] and
       (JsPath \ "customer").format[Account] and
       (JsPath \ "rater").formatNullable[Account] and

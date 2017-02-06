@@ -49,6 +49,10 @@ const Order = {
         return `${config.dwsRootUrl}docs/${this.id}/${urlMiddle}/thumbnail`;
     },
 
+    jobAdFileUrl(config) {
+        return `${config.dwsRootUrl}docs/${this.id}/job-ad`;
+    },
+
     statusCode() {
         switch (this.status) {
             case this.statuses.notPaid:
