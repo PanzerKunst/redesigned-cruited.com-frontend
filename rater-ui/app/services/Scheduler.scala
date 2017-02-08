@@ -6,6 +6,7 @@ import javax.inject.{Inject, Singleton}
 
 import db.OrderDto
 import models.Order
+import play.api.Logger
 import play.api.i18n.MessagesApi
 
 @Singleton
@@ -15,6 +16,10 @@ class Scheduler @Inject()(orderDto: OrderDto, emailService: EmailService, messag
 
   val task = new Runnable {
     def run() = {
+
+      // TODO: remove
+      Logger.info("Scheduler task is running")
+
       calculateOrdersSentToTheCustomer()
       orderDto.calculateOrdersToDo()
       handleScheduledAssessementsArrivedToTerm()
@@ -64,6 +69,6 @@ class Scheduler @Inject()(orderDto: OrderDto, emailService: EmailService, messag
     )
   }
 
-  // Starts immediately, every 10 seconds
-  ex.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS)
+  // Starts after 5 seconds, every 10s
+  ex.scheduleAtFixedRate(task, 5, 10, TimeUnit.SECONDS)
 }

@@ -1,5 +1,6 @@
 import {httpStatusCodes} from "../../global";
 import String from "../../services/string";
+import Browser from "../../services/browser";
 import Account from "../../models/account";
 import Order from "../../models/order";
 import Assessment from "../../models/assessment";
@@ -193,7 +194,7 @@ const store = {
         httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    this.assessment.deleteAssessmentInfoFromLocalStorage();
+                    Browser.clearLocalStorage();
                     location.href = `/report-preview/${store.order.id}`;
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);

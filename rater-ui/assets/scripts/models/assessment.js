@@ -310,14 +310,6 @@ const Assessment = {
         return Math.round((sumOfAllPoints - sumOfRedPoints) / sumOfAllPoints * 100);
     },
 
-    deleteAssessmentInfoFromLocalStorage() {
-        const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments) || {};
-
-        myAssessments[this.order.id] = null;
-
-        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
-    },
-
     isReportStarted() {
         let allCategoriesAsArray = [];
 

@@ -179,8 +179,8 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         and d.status in (""" + Order.statusIdScheduled + """, """ + Order.statusIdComplete + """)
       order by d.id desc;"""
 
-    // Commented out because it spams too much
-    // Logger.info("OrderDto.getOrdersFromCustomerWithReportSent():" + query)
+    /* Commented out because it spams too much
+    Logger.info("OrderDto.getOrdersFromCustomerWithReportSent():" + query) */
 
     processQuery(query)
   }
@@ -252,8 +252,8 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         and paid_on < '""" + DbUtil.dateFormat.format(oneDayAgoPlus90Minutes.getTime) + """'
       order by d.id desc;"""
 
-    // Commented out because it spams too much
-    // Logger.info("OrderDto.getScheduledOrdersArrivedToTerm():" + query)
+    /* Commented out because it spams too much
+    Logger.info("OrderDto.getScheduledOrdersArrivedToTerm():" + query) */
 
     processQuery(query).map(frontendOrder => new Order(frontendOrder))
   }
