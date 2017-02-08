@@ -1,6 +1,7 @@
 export const animationDurations = {
     short: 0.2,
-    medium: 0.5
+    medium: 0.5,
+    long: 1
 };
 
 export const httpStatusCodes = {

@@ -68,5 +68,5 @@ export function scrollTo(e, offsetCorrection) {
 
     const scrollYPos = $section.offset().top - offsetCorrection;
 
-    TweenLite.to(window, 1, {scrollTo: scrollYPos, ease: Power4.easeOut});
+    TweenLite.to(window, animationDurations.long, {scrollTo: scrollYPos, ease: Power4.easeOut});
 }

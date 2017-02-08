@@ -1,4 +1,5 @@
 import {localStorageKeys} from "../../global";
+import {animationDurations} from "../../global";
 import {enableLoading} from "../../services/animator";
 import Browser from "../../services/browser";
 import Category from "../../models/category";
@@ -336,6 +337,9 @@ const controller = {
         _handleTabClick(e) {
             e.preventDefault();
             $(e.currentTarget).tab("show");
+
+            // Scrolling near top
+            TweenLite.to(window, animationDurations.long, {scrollTo: 250, ease: Power4.easeOut});
         },
 
         _handleOverallCommentChange(e) {
