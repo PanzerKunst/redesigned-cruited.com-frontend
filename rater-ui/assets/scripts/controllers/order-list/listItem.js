@@ -76,7 +76,7 @@ const Component = React.createClass({
     _lastRating() {
         const order = this.props.order;
         const customerId = order.customer.id;
-        const ordersAndScores = store.customerIdsAndTheirOrdersAndScores ? store.customerIdsAndTheirOrdersAndScores[customerId] : null;
+        const ordersAndScores = store.customerIdsAndTheirOrdersAndScores ? _.cloneDeep(store.customerIdsAndTheirOrdersAndScores[customerId]) : null;
 
         _.remove(ordersAndScores, orderAndScores => orderAndScores.order.id === order.id);
 
@@ -88,7 +88,7 @@ const Component = React.createClass({
         const lastRater = lastOrderAndScores.order.rater;
         const lastOrderDueMoment = moment(lastOrderAndScores.order.dueTimestamp);
 
-        return <p>{`Last rated by ${lastRater.firstName} ${lastRater.lastName} on ${lastOrderDueMoment.format("YYYY-MM-DD")}`}</p>;
+        return <p><strong>{`Last rated by ${lastRater.firstName} ${lastRater.lastName}`}</strong>{` on ${lastOrderDueMoment.format("YYYY-MM-DD")}`}</p>;
     },
 
     _actionBtn() {
