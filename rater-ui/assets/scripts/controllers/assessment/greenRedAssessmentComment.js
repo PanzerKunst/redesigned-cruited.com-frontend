@@ -74,6 +74,7 @@ const Component = React.createClass({
             c.isGreenSelected = true;
 
             store.updateListComment(c);
+            store.removeReportComment(c);
         }
     },
 

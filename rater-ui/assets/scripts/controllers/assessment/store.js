@@ -88,8 +88,10 @@ const store = {
         this.reactComponent.forceUpdate();
     },
 
-    removeReportComment() {
-        this.assessment.removeReportComment(this.commentToRemove);
+    removeReportComment(comment) {
+        const commentToRemove = comment || this.commentToRemove;
+
+        this.assessment.removeReportComment(commentToRemove);
         this.reactComponent.forceUpdate();
     },
 
