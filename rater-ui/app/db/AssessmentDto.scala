@@ -454,7 +454,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
       val noOverallCommentClauseLinkedinProfile = """
         custom_comment_li = ''"""
 
-      val clauseOverallCommentLinkedinProfile = assessment.coverLetterReport match {
+      val clauseOverallCommentLinkedinProfile = assessment.linkedinProfileReport match {
         case None => noOverallCommentClauseLinkedinProfile
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseLinkedinProfile
