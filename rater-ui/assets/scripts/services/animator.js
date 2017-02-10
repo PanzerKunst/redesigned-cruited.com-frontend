@@ -68,5 +68,11 @@ export function scrollTo(e, offsetCorrection) {
 
     const scrollYPos = $section.offset().top - offsetCorrection;
 
-    TweenLite.to(window, animationDurations.long, {scrollTo: scrollYPos, ease: Power4.easeOut});
+    TweenLite.to(window, animationDurations.long, {
+        scrollTo: {
+            y: scrollYPos,
+            autoKill: false  // To avoid bug https://greensock.com/forums/topic/15108-ios-10-scrolltoplugin
+        },
+        ease: Power4.easeOut
+    });
 }

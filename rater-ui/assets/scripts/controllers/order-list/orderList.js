@@ -25,12 +25,12 @@ const controller = {
                         </div>
                     </header>
                     <div className="with-circles">
-                        {this._topOrders()}
+                        {this._myToDos()}
                         <section id="other-orders">
                             <h2>Team</h2>
 
                             <ul className="styleless orders">
-                            {store.moreOrders.map(order =>
+                            {store.otherOrders.map(order =>
                                 <ListItem key={order.id} order={order} />
                             )}
                             </ul>
@@ -55,9 +55,9 @@ const controller = {
         },
 
         componentDidUpdate() {
-            if (store.areTopOrdersFetched && !this.isDefaultSearchDone) {
-                this._searchMore();
-                this.isDefaultSearchDone = true;
+            if (store.areMyToDosFetched && !this.isTeamFetchDone) {
+                store.fetchTeamOrders();
+                this.isTeamFetchDone = true;
             }
         },
 
@@ -65,9 +65,9 @@ const controller = {
             this.$loadMorePanel = $("#load-more-panel");
         },
 
-        _topOrders() {
-            if (store.areTopOrdersFetched) {
-                if (store.topOrders.length === 0) {
+        _myToDos() {
+            if (store.areMyToDosFetched) {
+                if (store.myToDos.length === 0) {
                     return (
                         <section id="top-orders">
                             <div></div>
@@ -80,7 +80,7 @@ const controller = {
                         <h2>To Do</h2>
 
                         <ul className="styleless orders">
-                        {store.topOrders.map(order =>
+                        {store.myToDos.map(order =>
                             <ListItem key={order.id} order={order} />
                         )}
                         </ul>
@@ -94,12 +94,8 @@ const controller = {
         },
 
         _handleLoadMoreClick() {
-            this._searchMore();
-        },
-
-        _searchMore() {
             this.$loadMorePanel.addClass("loading");
-            store.searchMore(() => this.$loadMorePanel.removeClass("loading"));
+            store.fetchMoreOrders(() => this.$loadMorePanel.removeClass("loading"));
         }
     })
 };

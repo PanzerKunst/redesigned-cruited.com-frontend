@@ -72,12 +72,12 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
       where """ + commonClause + """
         and d.id = """ + id + """;"""
 
-    Logger.info("OrderDto.get():" + query)
+    Logger.info("OrderDto.getOfId():" + query)
 
     processQuerySingle(query)
   }
 
-  def getActionableOrdersOfRaterId(accountId: Long): List[FrontendOrder] = {
+  def getOrdersPaidOrInProgressAssignedTo(accountId: Long): List[FrontendOrder] = {
     val query = """
       select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
@@ -92,14 +92,14 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
       where """ + commonClause + """
         and assign_to = """ + accountId + """
         and d.status in (""" + Order.statusIdPaid + """, """ + Order.statusIdInProgress + """)
-      order by d.id desc;"""
+      order by paid_on;"""
 
-    Logger.info("OrderDto.getActionableOrdersOfRaterId():" + query)
+    Logger.info("OrderDto.getOrdersPaidOrInProgressAssignedTo():" + query)
 
     processQuery(query)
   }
 
-  def getOrdersAwaitingFeedback: List[FrontendOrder] = {
+  def getUnassignedPaidOrders: List[FrontendOrder] = {
     val query = """
       select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
@@ -112,18 +112,75 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         inner join useri r on r.id = d.assign_to
         left join codes c on c.name = d.code
       where """ + commonClause + """
-        and d.status = """ + Order.statusIdAwaitingFeedback + """
-      order by d.id desc;"""
+        and d.status = """ + Order.statusIdPaid + """
+        and d.assign_to is null
+      order by paid_on;"""
 
-    Logger.info("OrderDto.getOrdersAwaitingFeedback():" + query)
+    Logger.info("OrderDto.getUnassignedPaidOrders():" + query)
 
     processQuery(query)
   }
 
-  /* Get all orders whose payment date is between "from" and "to"
-  except those of IDs included in
-   */
-  def getOlderOrdersExcept(fromOpt: Option[Date], to: Date, excludedOrderIds: List[Long]): List[FrontendOrder] = {
+  def getAssignedPaidOrdersExcept(excludedOrderIds: List[Long]): List[FrontendOrder] = {
+    val exceptOrderIdClause = if (excludedOrderIds.isEmpty) {
+      ""
+    } else {
+      """
+        and d.id not in (""" + excludedOrderIds.mkString(",") + """)"""
+    }
+
+    val query = """
+      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+        edition,
+        u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
+        r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
+        c.id as coupon_id, c.name, c.tp as coupon_type, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
+      from documents d
+        inner join product_edition e on e.id = d.edition_id
+        inner join useri u on u.id = d.added_by
+        inner join useri r on r.id = d.assign_to
+        left join codes c on c.name = d.code
+      where """ + commonClause + """
+        and d.status = """ + Order.statusIdPaid + """
+        and d.assign_to is not NULL """ +
+        exceptOrderIdClause + """
+      order by paid_on;"""
+
+    Logger.info("OrderDto.getAssignedPaidOrdersExcept():" + query)
+
+    processQuery(query)
+  }
+
+  def getOrdersOfStatus(status: Int, excludedOrderIds: List[Long] = List()): List[FrontendOrder] = {
+    val exceptOrderIdClause = if (excludedOrderIds.isEmpty) {
+      ""
+    } else {
+      """
+        and d.id not in (""" + excludedOrderIds.mkString(",") + """)"""
+    }
+
+    val query = """
+      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+        edition,
+        u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
+        r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
+        c.id as coupon_id, c.name, c.tp as coupon_type, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
+      from documents d
+        inner join product_edition e on e.id = d.edition_id
+        inner join useri u on u.id = d.added_by
+        inner join useri r on r.id = d.assign_to
+        left join codes c on c.name = d.code
+      where """ + commonClause + """
+        and d.status = """ + status +
+      exceptOrderIdClause + """
+      order by paid_on;"""
+
+    Logger.info("OrderDto.getOrdersOfStatus():" + query)
+
+    processQuery(query)
+  }
+
+  def getCompletedOrders(fromOpt: Option[Date], to: Date): List[FrontendOrder] = {
     val paidAfterClause = fromOpt match {
       case None => ""
       case Some(from) => """
@@ -132,13 +189,6 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
     val paidBeforeClause = """
       and paid_on > '""" + DbUtil.dateFormat.format(to) + """'"""
-
-    val exceptOrderIdClause = if (excludedOrderIds.length == 0) {
-      ""
-    } else {
-      """
-        and d.id not in (""" + excludedOrderIds.mkString(",") + """)"""
-    }
 
     val query = """
         select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
@@ -151,13 +201,13 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
           inner join useri u on u.id = d.added_by
           left join useri r on r.id = d.assign_to
           left join codes c on c.name = d.code
-        where """ + commonClause +
-      paidAfterClause +
-      paidBeforeClause +
-      exceptOrderIdClause + """
-        order by d.status, d.id desc;"""
+        where """ + commonClause + """
+          and d.status = """ + Order.statusIdComplete +
+          paidAfterClause +
+          paidBeforeClause + """
+        order by paid_on desc;"""
 
-    Logger.info("OrderDto.getOlderOrdersExcept():" + query)
+    Logger.info("OrderDto.getCompletedOrders():" + query)
 
     processQuery(query)
   }
@@ -177,7 +227,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
       where """ + commonClause + """
         and u.id = """ + customerId + """
         and d.status in (""" + Order.statusIdScheduled + """, """ + Order.statusIdComplete + """)
-      order by d.id desc;"""
+      order by paid_on desc;"""
 
     /* Commented out because it spams too much
     Logger.info("OrderDto.getOrdersFromCustomerWithReportSent():" + query) */
@@ -200,11 +250,10 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         where """ + commonClause + """
           and paid_on >= '""" + DbUtil.dateFormat.format(from) + """'
           and paid_on < '""" + DbUtil.dateFormat.format(to) + """'
-          and d.status in (""" + Order.statusIdScheduled + """, """ + Order.statusIdComplete + """)
-        order by d.id desc;"""
+          and d.status in (""" + Order.statusIdScheduled + """, """ + Order.statusIdComplete + """);"""
 
     /* Commented because it spams too much
-    Logger.info("OrderDto.getOrdersSentToCustomersOrderedBetween():" + query) */
+    Logger.info("OrderDto.calculateOrdersSentToTheCustomer():" + query) */
 
     ordersSentToTheCustomer = processQuery(query)
   }
@@ -222,8 +271,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
           left join useri r on r.id = d.assign_to
           left join codes c on c.name = d.code
         where """ + commonClause + """
-          and d.status in (""" + Order.statusIdPaid + """, """ + Order.statusIdInProgress + """)
-        order by d.id desc;"""
+          and d.status in (""" + Order.statusIdPaid + """, """ + Order.statusIdInProgress + """);"""
 
     /* Commented because it spams too much
     Logger.info("OrderDto.calculateOrdersToDo():" + query) */
@@ -249,8 +297,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         left join codes c on c.name = d.code
       where """ + commonClause + """
         and d.status = '""" + Order.statusIdScheduled + """'
-        and paid_on < '""" + DbUtil.dateFormat.format(oneDayAgoPlus90Minutes.getTime) + """'
-      order by d.id desc;"""
+        and paid_on < '""" + DbUtil.dateFormat.format(oneDayAgoPlus90Minutes.getTime) + """';"""
 
     /* Commented out because it spams too much
     Logger.info("OrderDto.getScheduledOrdersArrivedToTerm():" + query) */

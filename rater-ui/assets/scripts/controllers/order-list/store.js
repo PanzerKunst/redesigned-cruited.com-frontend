@@ -6,17 +6,16 @@ const store = {
     reactComponent: null,
     account: Object.assign(Object.create(Account), CR.ControllerData.account),
     config: CR.ControllerData.config,
-    topOrders: [],
-    moreOrders: [],
+    myToDos: [],
+    otherOrders: [],
     allRaters: [],
     currentOrder: null,
-    areTopOrdersFetched: false,
-    stats: null,
+    areMyToDosFetched: false,
     ordersSentToTheCustomerThisMonth: [],
     ordersToDo: [],
 
     init() {
-        this._fetchTopOrders();
+        this._fetchMyToDos();
         this._fetchAllRaters();
 
         this._fetchStats();
@@ -31,7 +30,7 @@ const store = {
             alert("Error: `this.currentOrder` must exist, this is a bug!");
         } else {
             const predicate = ["id", this.currentOrder.id];
-            const order = _.find(this.topOrders, predicate) || _.find(this.moreOrders, predicate);
+            const order = _.find(this.myToDos, predicate) || _.find(this.otherOrders, predicate);
 
             order.rater = account;
 
@@ -69,8 +68,8 @@ const store = {
                     if (httpRequest.status === httpStatusCodes.ok) {
                         const predicate = o => o.id === orderId;
 
-                        _.remove(this.topOrders, predicate);
-                        _.remove(this.moreOrders, predicate);
+                        _.remove(this.myToDos, predicate);
+                        _.remove(this.otherOrders, predicate);
 
                         this.reactComponent.forceUpdate();
                     } else {
@@ -83,11 +82,35 @@ const store = {
         }
     },
 
-    searchMore(onAjaxRequestDone) {
+    fetchTeamOrders() {
+        const type = "POST";
+        const url = "/api/orders/team";
+        const httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = () => {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                if (httpRequest.status === httpStatusCodes.ok) {
+                    const ordersJson = JSON.parse(httpRequest.responseText);
+
+                    this.otherOrders = ordersJson.map(o => Object.assign(Object.create(Order), o));
+                    this.reactComponent.forceUpdate();
+
+                    this._fetchLastRatingInfoForDisplayedCustomers();
+                } else {
+                    alert(`AJAX failure doing a ${type} request to "${url}"`);
+                }
+            }
+        };
+        httpRequest.open(type, url);
+        httpRequest.setRequestHeader("Content-Type", "application/json");
+        httpRequest.send(JSON.stringify(this.myToDos.map(order => order.id)));
+    },
+
+    fetchMoreOrders(onAjaxRequestDone) {
         this._updateSearchCriteria();
 
         const type = "POST";
-        const url = "/api/orders/search";
+        const url = "/api/orders/completed";
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = () => {
@@ -95,10 +118,10 @@ const store = {
                 onAjaxRequestDone();
 
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    const moreOrdersJson = JSON.parse(httpRequest.responseText);
-                    const moreOrders = moreOrdersJson.map(o => Object.assign(Object.create(Order), o));
+                    const ordersJson = JSON.parse(httpRequest.responseText);
+                    const orders = ordersJson.map(o => Object.assign(Object.create(Order), o));
 
-                    this.moreOrders = _.concat(this.moreOrders, moreOrders);
+                    this.otherOrders = _.concat(this.otherOrders, orders);
                     this.reactComponent.forceUpdate();
 
                     this._fetchLastRatingInfoForDisplayedCustomers();
@@ -111,8 +134,7 @@ const store = {
         httpRequest.setRequestHeader("Content-Type", "application/json");
         httpRequest.send(JSON.stringify({
             from: this.searchCriteria.fromMoment ? this.searchCriteria.fromMoment.valueOf() : null,
-            to: this.searchCriteria.toMoment.valueOf(),
-            excludedOrderIds: this.searchCriteria.excludedOrderIds
+            to: this.searchCriteria.toMoment.valueOf()
         }));
     },
 
@@ -124,18 +146,18 @@ const store = {
         return order.isReadOnly(this.account);
     },
 
-    _fetchTopOrders() {
+    _fetchMyToDos() {
         const type = "GET";
-        const url = "/api/orders/top";
+        const url = "/api/orders/my-todo";
         const httpRequest = new XMLHttpRequest();
 
         httpRequest.onreadystatechange = () => {
             if (httpRequest.readyState === XMLHttpRequest.DONE) {
                 if (httpRequest.status === httpStatusCodes.ok) {
-                    const topOrdersJson = JSON.parse(httpRequest.responseText);
+                    const myToDosJson = JSON.parse(httpRequest.responseText);
 
-                    this.topOrders = topOrdersJson.map(o => Object.assign(Object.create(Order), o));
-                    this.areTopOrdersFetched = true;
+                    this.myToDos = myToDosJson.map(o => Object.assign(Object.create(Order), o));
+                    this.areMyToDosFetched = true;
                     this.reactComponent.forceUpdate();
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);
@@ -174,7 +196,7 @@ const store = {
 
     _fetchOrdersToDo() {
         const type = "GET";
-        const url = "/api/orders/todo";
+        const url = "/api/orders/stats/todo";
 
         const httpRequest = new XMLHttpRequest();
 
@@ -199,7 +221,7 @@ const store = {
 
     _fetchOrdersSentToTheCustomerThisMonth() {
         const type = "GET";
-        const url = "/api/orders/sent";
+        const url = "/api/orders/stats/sent";
 
         const httpRequest = new XMLHttpRequest();
 
@@ -223,16 +245,15 @@ const store = {
 
     _updateSearchCriteria() {
         if (!this.searchCriteria) {
-            this.searchNbDays = 7;
+            this.searchNbDays = 60;
 
             this.searchCriteria = {
-                toMoment: moment().subtract(this.searchNbDays, "day"),
-                excludedOrderIds: this.topOrders.map(order => order.id)
+                toMoment: moment().subtract(this.searchNbDays, "day")
             };
         } else {
             this.searchCriteria.fromMoment = moment(this.searchCriteria.toMoment);
 
-            this.searchNbDays *= 8;
+            this.searchNbDays *= 2;
             this.searchCriteria.toMoment.subtract(this.searchNbDays, "day");
         }
     },
@@ -296,11 +317,11 @@ const store = {
     _currentCustomerIds() {
         const customerIds = [];
 
-        for (const order of this.topOrders) {
+        for (const order of this.myToDos) {
             customerIds.push(order.customer.id);
         }
 
-        for (const order of this.moreOrders) {
+        for (const order of this.otherOrders) {
             customerIds.push(order.customer.id);
         }
 

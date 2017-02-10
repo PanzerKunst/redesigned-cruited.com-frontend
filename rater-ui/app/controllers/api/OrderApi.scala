@@ -12,21 +12,78 @@ import services._
 
 @Singleton
 class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) extends Controller {
-  def top = Action { request =>
+  def myToDo = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>
-          val actionableOrders = orderDto.getActionableOrdersOfRaterId(accountId)
+          val ordersPaidOrInProgressAssignedToMe = orderDto.getOrdersPaidOrInProgressAssignedTo(accountId)
 
           val ordersAwaitingFeedback = if (account.`type` == Account.typeAdmin) {
-            orderDto.getOrdersAwaitingFeedback
+            orderDto.getOrdersOfStatus(Order.statusIdAwaitingFeedback)
           } else {
             List()
           }
 
-          Ok(Json.toJson(actionableOrders ++ ordersAwaitingFeedback))
+          Ok(Json.toJson(ordersPaidOrInProgressAssignedToMe ++ ordersAwaitingFeedback))
+      }
+    }
+  }
+
+  def team = Action(parse.json) { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) => accountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) =>
+          request.body.validate[List[Long]] match {
+            case e: JsError => BadRequest("Validation of List[Long] failed")
+
+            case s: JsSuccess[List[Long]] =>
+              val excludedOrderIds = s.get
+
+              val unassignedPaidOrders = orderDto.getUnassignedPaidOrders
+              val assignedPaidOrders = orderDto.getAssignedPaidOrdersExcept(excludedOrderIds)
+              val ordersInProgress = orderDto.getOrdersOfStatus(Order.statusIdInProgress, excludedOrderIds)
+
+              val ordersAwaitingFeedback = if (account.`type` == Account.typeAdmin) {
+                List()
+              } else {
+                orderDto.getOrdersOfStatus(Order.statusIdAwaitingFeedback)
+              }
+
+              val scheduledOrders = orderDto.getOrdersOfStatus(Order.statusIdScheduled)
+
+              Ok(Json.toJson(unassignedPaidOrders ++ assignedPaidOrders ++ ordersInProgress ++ ordersAwaitingFeedback ++ scheduledOrders))
+          }
+      }
+    }
+  }
+
+  def completed = Action(parse.json) { request =>
+    SessionService.getAccountId(request.session) match {
+      case None => Unauthorized
+      case Some(accountId) => accountDto.getOfId(accountId) match {
+        case None => BadRequest("No account found in DB for ID " + accountId)
+        case Some(account) =>
+          request.body.validate[OrderSearchData] match {
+            case e: JsError => BadRequest("Validation of OrderSearchData failed")
+
+            case s: JsSuccess[OrderSearchData] =>
+              val orderSearchData = s.get
+
+              val fromOpt = orderSearchData.from match {
+                case None => None
+                case Some(ts) => Some(new Date(ts))
+              }
+
+              val to = new Date(orderSearchData.to)
+
+              val completedOrdersExcept = orderDto.getCompletedOrders(fromOpt, to)
+
+              Ok(Json.toJson(completedOrdersExcept))
+          }
       }
     }
   }
@@ -60,31 +117,6 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
     }
   }
 
-  def search() = Action(parse.json) { request =>
-    SessionService.getAccountId(request.session) match {
-      case None => Unauthorized
-      case Some(accountId) => accountDto.getOfId(accountId) match {
-        case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) =>
-          request.body.validate[OrderSearchData] match {
-            case e: JsError => BadRequest("Validation of OrderSearchData failed")
-
-            case s: JsSuccess[OrderSearchData] =>
-              val orderSearchData = s.get
-              val fromOpt = orderSearchData.from match {
-                case None => None
-                case Some(ts) => Some(new Date(ts))
-              }
-              val to = new Date(orderSearchData.to)
-
-              val olderOrdersExcept = orderDto.getOlderOrdersExcept(fromOpt, to, orderSearchData.excludedOrderIds).sortWith(sortOrderByStatus)
-
-              Ok(Json.toJson(olderOrdersExcept))
-          }
-      }
-    }
-  }
-
   def sentToTheCustomerThisMonth() = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
@@ -102,27 +134,6 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) => Ok(Json.toJson(orderDto.ordersToDo))
       }
-    }
-  }
-
-  private def sortOrderByStatus(o1: FrontendOrder, o2: FrontendOrder): Boolean = {
-    val s1 = o1.status
-    val s2 = o2.status
-
-    if (s1 == s2) {
-      o1.id > o2.id
-    } else if (o1.status == Order.statusIdComplete) {
-      false
-    } else if (o1.status == Order.statusIdScheduled && o2.status != Order.statusIdComplete) {
-      false
-    } else if (o1.status == Order.statusIdAwaitingFeedback && o2.status != Order.statusIdComplete && o2.status != Order.statusIdScheduled) {
-      false
-    } else if (o1.status == Order.statusIdInProgress && (o2.status == Order.statusIdPaid || o2.status != Order.statusIdNotPaid)) {
-      false
-    } else if (o1.status == Order.statusIdPaid && o2.status != Order.statusIdNotPaid) {
-      false
-    } else {
-      true
     }
   }
 }
