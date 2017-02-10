@@ -54,8 +54,16 @@ object AccountDto {
         currentLanguage.ietfCode + """', """ +
         Account.typeCustomer + """, '', '', '', 0, '', '', '', now(), now(), 0, 0);"""
 
-      // This log is commented since it displays the password
-      // Logger.info("AccountDto.create():" + query)
+      // Logging query without password
+      Logger.info("""AccountDto.create():
+      insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, lang, /* useful fields */
+        tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
+      values('""" + DbUtil.safetize(firstName) + """', '""" +
+        DbUtil.safetize(emailAddress.toLowerCase) + """',
+        now(), '""" +
+        linkedinProfileClause + """', '""" +
+        currentLanguage.ietfCode + """', """ +
+        Account.typeCustomer + """, '', '', '', 0, '', '', '', now(), now(), 0, 0);""")
 
       SQL(query).executeInsert()
     }

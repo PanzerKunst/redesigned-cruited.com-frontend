@@ -35,14 +35,19 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
       views.html.email.sv.orderComplete.free(firstName)
     }
 
-    mailerClient.send(Email(
-      subject,
-      accountName + " <" + accountAddress + ">",
-      Seq(emailAddress),
-      bodyHtml = Some(view.toString)
-    ))
+    // TODO: remove try-catch once Mebo fixes their email?
+    try {
+      mailerClient.send(Email(
+        subject,
+        accountName + " <" + accountAddress + ">",
+        Seq(emailAddress),
+        bodyHtml = Some(view.toString)
+      ))
 
-    Logger.info("Sent FreeOrderCompleteEmail to " + emailAddress)
+      Logger.info("Sent FreeOrderCompleteEmail to " + emailAddress)
+    } catch {
+      case e: Exception => Logger.error("Error sending FreeOrderCompleteEmail to " + emailAddress, e)
+    }
   }
 
   def sendPaidOrderCompleteEmail(emailAddress: String, firstName: String, languageCode: String, orderedProducts: String, orderId: Long, costAfterReductions: Int, vatAmount: Double, orderDateTime: String, subject: String) {
@@ -52,14 +57,19 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
       views.html.email.sv.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, GlobalConfig.paymentCurrencyCode, vatAmount, orderDateTime)
     }
 
-    mailerClient.send(Email(
-      subject,
-      accountName + " <" + accountAddress + ">",
-      Seq(emailAddress),
-      bodyHtml = Some(view.toString)
-    ))
+    // TODO: remove try-catch once Mebo fixes their email?
+    try {
+      mailerClient.send(Email(
+        subject,
+        accountName + " <" + accountAddress + ">",
+        Seq(emailAddress),
+        bodyHtml = Some(view.toString)
+      ))
 
-    Logger.info("Sent PaidOrderCompleteEmail to " + emailAddress)
+      Logger.info("Sent PaidOrderCompleteEmail to " + emailAddress)
+    } catch {
+      case e: Exception => Logger.error("Error sending PaidOrderCompleteEmail to " + emailAddress, e)
+    }
   }
 
   def sendUnpaidOrderReminderEmail(emailAddress: String, firstName: String, languageCode: String, paymentUrl: String, subject: String) = {
