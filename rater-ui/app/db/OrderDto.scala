@@ -121,7 +121,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     processQuery(query)
   }
 
-  def getAssignedPaidOrdersExcept(excludedOrderIds: List[Long]): List[FrontendOrder] = {
+  def getAssignedPaidOrInProgressOrdersExcept(excludedOrderIds: List[Long]): List[FrontendOrder] = {
     val exceptOrderIdClause = if (excludedOrderIds.isEmpty) {
       ""
     } else {
@@ -141,8 +141,8 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
         inner join useri r on r.id = d.assign_to
         left join codes c on c.name = d.code
       where """ + commonClause + """
-        and d.status = """ + Order.statusIdPaid + """
-        and d.assign_to is not NULL """ +
+        and d.status in (""" + Order.statusIdPaid + """, """ + Order.statusIdInProgress + """)
+        and d.assign_to is not null """ +
         exceptOrderIdClause + """
       order by paid_on;"""
 

@@ -44,8 +44,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
               val excludedOrderIds = s.get
 
               val unassignedPaidOrders = orderDto.getUnassignedPaidOrders
-              val assignedPaidOrders = orderDto.getAssignedPaidOrdersExcept(excludedOrderIds)
-              val ordersInProgress = orderDto.getOrdersOfStatus(Order.statusIdInProgress, excludedOrderIds)
+              val assignedPaidOrInProgressOrders = orderDto.getAssignedPaidOrInProgressOrdersExcept(excludedOrderIds)
 
               val ordersAwaitingFeedback = if (account.`type` == Account.typeAdmin) {
                 List()
@@ -55,7 +54,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
 
               val scheduledOrders = orderDto.getOrdersOfStatus(Order.statusIdScheduled)
 
-              Ok(Json.toJson(unassignedPaidOrders ++ assignedPaidOrders ++ ordersInProgress ++ ordersAwaitingFeedback ++ scheduledOrders))
+              Ok(Json.toJson(unassignedPaidOrders ++ assignedPaidOrInProgressOrders ++ ordersAwaitingFeedback ++ scheduledOrders))
           }
       }
     }
