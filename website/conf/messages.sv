@@ -236,10 +236,10 @@ order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
 order.assessmentInfo.form.positionSought.label=Tjänst du söker
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
-order.assessmentInfo.form.jobAdUrl.uploadInstead.text=Jag vill hellre ladda upp en fil med platsannonsen
+order.assessmentInfo.form.jobAdUrl.uploadInstead.text=Jag vill hellre ladda upp en fil
 order.assessmentInfo.form.jobAdFile.label=Fil med platsannons
 order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
-order.assessmentInfo.form.jobAdFile.urlInstead.text=Glöm det - jag anger en länk till platsannonsen istället
+order.assessmentInfo.form.jobAdFile.urlInstead.text=Glöm det - jag anger en länk istället
 order.assessmentInfo.form.customerComment.label=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.customerComment.description=Bör vi tänka på något särskilt i din bedömning?
 order.assessmentInfo.form.tos.text=Jag accepterar <a href="https://cruited.com/villkor/" target="_blank">användningsvillkoren</a>

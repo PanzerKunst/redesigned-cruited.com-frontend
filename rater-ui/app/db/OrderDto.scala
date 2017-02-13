@@ -109,7 +109,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
       from documents d
         inner join product_edition e on e.id = d.edition_id
         inner join useri u on u.id = d.added_by
-        inner join useri r on r.id = d.assign_to
+        left join useri r on r.id = d.assign_to
         left join codes c on c.name = d.code
       where """ + commonClause + """
         and d.status = """ + Order.statusIdPaid + """
