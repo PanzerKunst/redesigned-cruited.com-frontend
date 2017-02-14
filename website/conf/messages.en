@@ -201,6 +201,10 @@ order.productSelection.cartSection.subTotal=Sub-total
 order.productSelection.cartSection.total=Total You Pay
 
 
+# Order Step Product Selection page
+
+
+
 # Order Step Assessment Info page
 
 order.assessmentInfo.title=Assessment details

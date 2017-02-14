@@ -1,0 +1,20 @@
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], supportedLanguages: List[SupportedLanguage])
+
+@main("Cruited - " + i18nMessages("order.productSelection.title"), "order-step-product-selection", i18nMessages, lang) {
+<!--
+    Header
+-->
+@header(account, i18nMessages)
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function() {
+    CR.Controllers.OrderStepProductSelection(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
+        @Html(play.api.libs.json.Json.toJson(account).toString()),
+        @Html(play.api.libs.json.Json.toJson(supportedLanguages).toString())
+    );
+});
+}

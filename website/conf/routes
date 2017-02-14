@@ -3,43 +3,44 @@
 # ~~~~
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)
+GET           /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)
 
 # Pages
-GET         /                                                     controllers.Application.index
-GET         /logout                                               controllers.Application.signOut
-GET         /sign-out                                             controllers.Application.signOut
-GET         /signout                                              controllers.Application.signOut
-GET         /login                                                controllers.Application.signIn
-GET         /sign-in                                              controllers.Application.signIn
-GET         /signin                                               controllers.Application.signIn
-GET         /my-account                                           controllers.Application.myAccount
-GET         /reports/:orderId                                     controllers.Application.report(orderId: Long)
-GET         /reset-password                                       controllers.Application.resetPassword
-GET         /reset-password/confirm                               controllers.Application.confirmResetPassword
+GET           /                                                     controllers.Application.index
+GET           /logout                                               controllers.Application.signOut
+GET           /sign-out                                             controllers.Application.signOut
+GET           /signout                                              controllers.Application.signOut
+GET           /login                                                controllers.Application.signIn
+GET           /sign-in                                              controllers.Application.signIn
+GET           /signin                                               controllers.Application.signIn
+GET           /my-account                                           controllers.Application.myAccount
+GET           /reports/:orderId                                     controllers.Application.report(orderId: Long)
+GET           /reset-password                                       controllers.Application.resetPassword
+GET           /reset-password/confirm                               controllers.Application.confirmResetPassword
 
-GET         /order                                                controllers.Application.orderStepProductSelection
-GET         /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
-GET         /order/create-account                                 controllers.Application.orderStepAccountCreation
-GET         /order/payment                                        controllers.Application.orderStepPayment
-GET         /order/edit                                           controllers.Application.editOrder
-GET         /order/complete-payment                               controllers.Application.completePayment
+GET           /order                                                controllers.Application.orderStepProductSelection
+GET           /order/intervew-training                              controllers.Application.orderInterviewTraining
+GET           /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
+GET           /order/create-account                                 controllers.Application.orderStepAccountCreation
+GET           /order/payment                                        controllers.Application.orderStepPayment
+GET           /order/edit                                           controllers.Application.editOrder
+GET           /order/complete-payment                               controllers.Application.completePayment
 
 # API
-POST        /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables
-POST        /api/db/fix-linkedin-json                             controllers.api.DbAdminApi.fixBothersomeCharactersInLinkedinProfile
-GET         /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
-POST        /api/orders                                           controllers.api.OrderApi.create
-PUT         /api/orders                                           controllers.api.OrderApi.update
-PUT         /api/orders/pay                                       controllers.api.OrderApi.pay
-DELETE      /api/orders/coupon                                    controllers.api.OrderApi.removeCoupon
-POST        /api/accounts                                         controllers.api.AccountApi.create
-PUT         /api/accounts                                         controllers.api.AccountApi.update
-PUT         /api/accounts/password                                controllers.api.AccountApi.updatePassword
-POST        /api/auth                                             controllers.api.AuthApi.signInWithEmail
-POST        /api/auth/reset-password                              controllers.api.AuthApi.sendResetPasswordEmail
+POST          /api/db/re-create-tables                              controllers.api.DbAdminApi.reCreateTables
+POST          /api/db/fix-linkedin-json                             controllers.api.DbAdminApi.fixBothersomeCharactersInLinkedinProfile
+GET           /api/coupons/:code                                    controllers.api.CouponApi.get(code: String)
+POST          /api/orders                                           controllers.api.OrderApi.create
+PUT           /api/orders                                           controllers.api.OrderApi.update
+PUT           /api/orders/pay                                       controllers.api.OrderApi.pay
+DELETE        /api/orders/coupon                                    controllers.api.OrderApi.removeCoupon
+POST          /api/accounts                                         controllers.api.AccountApi.create
+PUT           /api/accounts                                         controllers.api.AccountApi.update
+PUT           /api/accounts/password                                controllers.api.AccountApi.updatePassword
+POST          /api/auth                                             controllers.api.AuthApi.signInWithEmail
+POST          /api/auth/reset-password                              controllers.api.AuthApi.sendResetPasswordEmail
 
 # 3rd party auth
-GET         /auth/linkedin/callback/sign-in                       controllers.Application.linkedinCallbackSignIn
-GET         /auth/linkedin/callback/order/assessment-info         controllers.Application.linkedinCallbackOrderStepAssessmentInfo
-GET         /auth/linkedin/callback/order/account-creation        controllers.Application.linkedinCallbackOrderStepAccountCreation
+GET           /auth/linkedin/callback/sign-in                       controllers.Application.linkedinCallbackSignIn
+GET           /auth/linkedin/callback/order/assessment-info         controllers.Application.linkedinCallbackOrderStepAssessmentInfo
+GET           /auth/linkedin/callback/order/account-creation        controllers.Application.linkedinCallbackOrderStepAccountCreation

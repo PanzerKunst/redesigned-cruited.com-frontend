@@ -131,6 +131,9 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
+  def orderInterviewTraining = Action { request =>
+  }
+
   def orderStepAssessmentInfo() = Action { request =>
     val (accountOpt, linkedinProfile) = SessionService.getAccountId(request.session) match {
       case None => (None, JsNull)
