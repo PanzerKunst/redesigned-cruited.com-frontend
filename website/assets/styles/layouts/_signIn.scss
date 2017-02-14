@@ -1,4 +1,8 @@
 #sign-in {
+  .alert {
+    margin-bottom: 2.9em;
+  }
+
   .sign-in-with-linkedin {
     padding-left: 22px;
     @include medium-screen {

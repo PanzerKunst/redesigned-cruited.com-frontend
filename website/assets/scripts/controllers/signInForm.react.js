@@ -114,7 +114,7 @@ CR.Controllers.SignInForm = React.createClass({
                             this.$submitBtn.disableLoading();
                             this.props.onSuccess();
                         } else {
-                            location.href = "/";
+                            location.href = this.props.orderId ? `/reports/${this.props.orderId}` : "/";
                         }
                     } else {
                         this.$submitBtn.disableLoading();

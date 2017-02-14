@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], lang: SupportedLanguage, linkedinAuthCodeRequestUrl: String, linkedinErrorMessage: Option[String], isLinkedinAccountUnregistered: Boolean)
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, linkedinAuthCodeRequestUrl: String, linkedinErrorMessage: Option[String], isLinkedinAccountUnregistered: Boolean, orderIdOpt: Option[Long] = None)
 
 @main("Cruited - " + i18nMessages("signIn.title"), "sign-in", i18nMessages, lang) {
 <!--
@@ -16,11 +16,17 @@ document.addEventListener("DOMContentLoaded", function () {
         linkedinErrorMessage = "@linkedinErrorMessage.get";
     }
 
+    var orderId = null;
+    @if(orderIdOpt.isDefined) {
+        orderId = @orderIdOpt.get;
+    }
+
     CR.Controllers.SignIn(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         "@Html(linkedinAuthCodeRequestUrl)",
         linkedinErrorMessage,
-        @isLinkedinAccountUnregistered
+        @isLinkedinAccountUnregistered,
+        orderId
     );
 });
 }
