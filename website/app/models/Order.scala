@@ -56,7 +56,7 @@ case class Order(id: Option[Long],
 
     // Product cost
     val orderPriceAmounts = orderedProducts.map(p => p.price.amount)
-    var costAfterReductions = orderPriceAmounts.reduce((total, cur) => total + cur)
+    var costAfterReductions = orderPriceAmounts.sum
 
     Logger.info("costAfterReductions - 1:" + costAfterReductions)
 
@@ -67,7 +67,7 @@ case class Order(id: Option[Long],
     val reduction = orderedProducts.length match {
       case 2 => Some(allReductions.find(r => r.code == Reduction.code2ProductsSameOrder).get)
       case 3 => Some(allReductions.find(r => r.code == Reduction.code3ProductsSameOrder).get)
-      case other => None
+      case _ => None
     }
 
     if (reduction.isDefined) {
@@ -124,7 +124,7 @@ object Order {
 
             var result = firstProduct.getTypeForDb
 
-            for (i <- 1 to nbAboveOne - 1) {
+            for (i <- 1 until nbAboveOne) {
               val product = allProducts.filter(p => p.code == containedProductCodes(i)).head
               result = result + typeStringSeparator + product.getTypeForDb
             }

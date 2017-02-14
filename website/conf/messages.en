@@ -202,8 +202,10 @@ order.productSelection.cartSection.subTotal=Sub-total
 order.productSelection.cartSection.total=Total You Pay
 
 
-# Order Step Product Selection page
+# Order Interview Training homepage
 
+order.interviewTraining.title=Interview Training
+order.interviewTraining.subtitle=How can we help you?
 
 
 # Order Step Assessment Info page

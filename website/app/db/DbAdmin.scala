@@ -1,11 +1,9 @@
 package db
 
 import anorm._
-import models.CruitedProduct
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
-import services.GlobalConfig
 
 object DbAdmin {
   def reCreateTables() {

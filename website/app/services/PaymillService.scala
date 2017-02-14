@@ -28,7 +28,7 @@ object PaymillService {
     Logger.info("Payment transaction completed: " + transactionResponseText + " (" + transactionResponseCode + ")")
 
     if (transactionResponseCode != paymillResponseCodeSuccess) {
-      throw new PaymentException(transactionResponseText + " (" + transactionResponseCode + ")")
+      throw PaymentException(transactionResponseText + " (" + transactionResponseCode + ")")
     }
   }
 }

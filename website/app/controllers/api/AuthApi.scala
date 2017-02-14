@@ -14,7 +14,7 @@ import services._
 class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailService, val orderService: OrderService) extends Controller {
   def signInWithEmail() = Action(parse.json) { request =>
     request.body.validate[SignInData] match {
-      case e: JsError => BadRequest("Validation of SignInData failed")
+      case _: JsError => BadRequest("Validation of SignInData failed")
 
       case s: JsSuccess[SignInData] =>
         val signInData = s.get
@@ -22,7 +22,7 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
         AccountDto.getOfEmailAddress(signInData.emailAddress) match {
           case None => NoContent // Email not registered
           case Some(account) =>
-            if (!account.password.isDefined) {
+            if (account.password.isEmpty) {
               Status(HttpService.httpStatusSignInNoPassword)
             } else {
               AccountDto.getOfEmailAndPassword(signInData.emailAddress, signInData.password) match {

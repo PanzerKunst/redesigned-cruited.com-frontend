@@ -46,7 +46,7 @@ CR.Controllers.Report = P(function(c) {
                         <div>
                             <h1>{CR.i18nMessages["report.title"]}</h1>
                             <a className="btn btn-danger new-assessment" href="/order">{newAssessmentBtnLabel}
-                                <i className="fa fa-plus"></i>
+                                <i className="fa fa-plus"/>
                             </a>
                         </div>
                     </header>
@@ -191,7 +191,7 @@ CR.Controllers.Report = P(function(c) {
                                     </div>
                                     <div id="score-bar">
                                         <img src="/assets/images/score-bar.png" />
-                                        <span></span>
+                                        <span/>
                                     </div>
                                     <div className="score-bar-number-labels">
                                         <span>0</span>
@@ -202,7 +202,7 @@ CR.Controllers.Report = P(function(c) {
                             <article className="expandable-panel">
                                 <header>
                                     <span>{CR.i18nMessages["report.summary.understandYourScore.title"]}</span>
-                                    <button className="styleless"></button>
+                                    <button className="styleless"/>
                                 </header>
                                 <div>
                                     <p className="score-explanation-paragraph" dangerouslySetInnerHTML={{__html: CR.i18nMessages["report.summary.understandYourScore.cScoreExplanation.text"]}} />
@@ -288,7 +288,7 @@ CR.Controllers.Report = P(function(c) {
                 <div className="sheet-of-paper centered-contents">
                     <p>{CR.i18nMessages["report.unorderedAssessment.text"]}</p>
                     <a className="btn btn-danger new-assessment" href="/order">{CR.i18nMessages["report.unorderedAssessment.orderBtn.text"]}
-                        <i className="fa fa-plus"></i>
+                        <i className="fa fa-plus"/>
                     </a>
                 </div>
             );
@@ -317,7 +317,7 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _getCommentWithProcessedLinks: function(commentText) {
-            return commentText.replace(/\{link:(.+)\}(.+)\{\/link\}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
+            return commentText.replace(/\{link:(.+)}(.+)\{\/link}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
         },
 
         _getCategoriesAndTheirComments: function(docReport) {

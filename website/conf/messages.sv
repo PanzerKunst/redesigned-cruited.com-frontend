@@ -202,6 +202,12 @@ order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Att betala
 
 
+# Order Interview Training homepage
+
+order.interviewTraining.title=Interview Training
+order.interviewTraining.subtitle=How can we help you?
+
+
 # Order Step Assessment Info page
 
 order.assessmentInfo.title=Detaljer för din bedömning

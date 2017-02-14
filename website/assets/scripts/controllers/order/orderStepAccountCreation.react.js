@@ -106,7 +106,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         },
 
         _initElements: function() {
-            var $withCirclesContainer = $("#content").children(".with-circles");
+            const $withCirclesContainer = $("#content").children(".with-circles");
 
             this.$registerSection = $withCirclesContainer.children("#register-section");
             this.$firstNameField = this.$registerSection.find("#first-name");

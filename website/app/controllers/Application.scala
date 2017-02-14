@@ -44,7 +44,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def signOut() = Action { request =>
+  def signOut() = Action {
     linkedinService.invalidateAccessToken()
     Redirect("/").withNewSession
   }
@@ -56,10 +56,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
     val orderIdOpt = if (request.queryString.contains("reportId")) {
       try {
-        Some(request.queryString.get("reportId").get.head.toLong)
+        Some(request.queryString("reportId").head.toLong)
       }
       catch {
-        case pe: NumberFormatException => None
+        case _: NumberFormatException => None
       }
     } else {
       None
@@ -97,7 +97,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def confirmResetPassword() = Action { request =>
     if (request.queryString.contains("token")) {
-      val token = request.queryString.get("token").get.head
+      val token = request.queryString("token").head
 
       AccountService.resetPasswordTokens.get(token) match {
         case None => BadRequest("This token has already been used, or is incorrect")
@@ -133,7 +133,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
 
     if (request.queryString.contains("lang")) {
-      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString.get("lang").get.head).getOrElse(SupportedLanguageDto.all.head)
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
     }
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
@@ -142,7 +142,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
-  def orderInterviewTraining = Action { request =>
+  def orderInterviewTraining = Action {
+    Ok
   }
 
   def orderStepAssessmentInfo() = Action { request =>
@@ -299,7 +300,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             if (!request.queryString.contains("id")) {
               BadRequest("'id' missing")
             } else {
-              val id = request.queryString.get("id").get.head.toLong
+              val id = request.queryString("id").head.toLong
 
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
@@ -330,7 +331,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             if (!request.queryString.contains("orderId")) {
               BadRequest("'orderId' missing")
             } else {
-              val orderId = request.queryString.get("orderId").get.head.toLong
+              val orderId = request.queryString("orderId").head.toLong
 
               OrderDto.getOfIdForFrontend(orderId) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
@@ -351,7 +352,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case None => Redirect("/login?reportId=" + orderId)
       case Some(accountId) =>
         val selectedProductCode = if (request.queryString.contains("productCode")) {
-          request.queryString.get("productCode").get.head
+          request.queryString("productCode").head
         } else {
           CruitedProduct.codeCvReview
         }
@@ -384,14 +385,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
       val isLinkedinAccountUnregistered = false
 
-      Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
+      Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString("error").head + ": " + request.queryString("error_description").head), isLinkedinAccountUnregistered))
     } else if (!request.queryString.contains("state") ||
-      request.queryString.get("state").get.head != linkedinService.linkedinState) {
+      request.queryString("state").head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
     } else if (!request.queryString.contains("code")) {
       BadRequest("Linkedin Auth did not return any value for 'code'!")
     } else {
-      linkedinService.authCode = Some(request.queryString.get("code").get.head)
+      linkedinService.authCode = Some(request.queryString("code").head)
       linkedinService.requestAccessToken(linkedinService.linkedinRedirectUriSignIn)
 
       val linkedinProfile = linkedinService.getProfile
@@ -412,7 +413,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         }
       }
 
-      if (!accountId.isDefined || AccountService.isTemporary(accountId.get)) {
+      if (accountId.isEmpty || AccountService.isTemporary(accountId.get)) {
         val currentLanguage = SessionService.getCurrentLanguage(request.session)
         val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
         val isLinkedinAccountUnregistered = true
@@ -448,14 +449,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       val currentLanguage = SessionService.getCurrentLanguage(request.session)
       val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-      Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString("error").head + ": " + request.queryString("error_description").head)))
     } else if (!request.queryString.contains("state") ||
-      request.queryString.get("state").get.head != linkedinService.linkedinState) {
+      request.queryString("state").head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
     } else if (!request.queryString.contains("code")) {
       BadRequest("Linkedin Auth did not return any value for 'code'!")
     } else {
-      linkedinService.authCode = Some(request.queryString.get("code").get.head)
+      linkedinService.authCode = Some(request.queryString("code").head)
       linkedinService.requestAccessToken(linkedinRedirectUri)
 
       val linkedinProfile = linkedinService.getProfile
@@ -502,14 +503,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
     if (request.queryString.contains("error")) {
-      Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString("error").head + ": " + request.queryString("error_description").head)))
     } else if (!request.queryString.contains("state") ||
-      request.queryString.get("state").get.head != linkedinService.linkedinState) {
+      request.queryString("state").head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
     } else if (!request.queryString.contains("code")) {
       BadRequest("Linkedin Auth did not return any value for 'code'!")
     } else {
-      linkedinService.authCode = Some(request.queryString.get("code").get.head)
+      linkedinService.authCode = Some(request.queryString("code").head)
       linkedinService.requestAccessToken(linkedinRedirectUri)
 
       val linkedinProfile = linkedinService.getProfile

@@ -513,9 +513,7 @@
   .tab-pane > div .red-comments {
     margin: 2em 0 2em #{-$list-padding-left};
 
-    list-style-type: disc;
-
-    list-style-position: inside;
+    list-style: disc inside;
 
     @include medium-screen {
       list-style-position: outside;

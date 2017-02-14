@@ -12,7 +12,7 @@ import services._
 class AccountApi @Inject()(val orderService: OrderService) extends Controller {
   def create() = Action(parse.json) { request =>
     request.body.validate[AccountReceivedFromFrontend] match {
-      case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
+      case _: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
 
       case s: JsSuccess[AccountReceivedFromFrontend] =>
         val frontendAccount = s.get
@@ -41,7 +41,7 @@ class AccountApi @Inject()(val orderService: OrderService) extends Controller {
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>
           request.body.validate[AccountReceivedFromFrontend] match {
-            case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
+            case _: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
 
             case s: JsSuccess[AccountReceivedFromFrontend] =>
               val frontendAccount = s.get
@@ -68,12 +68,12 @@ class AccountApi @Inject()(val orderService: OrderService) extends Controller {
 
   def updatePassword() = Action(parse.json) { request =>
     request.body.validate[AccountReceivedFromFrontend] match {
-      case e: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
+      case _: JsError => BadRequest("Validation of AccountReceivedFromFrontend failed")
 
       case s: JsSuccess[AccountReceivedFromFrontend] =>
         val frontendAccount = s.get
 
-        if (!frontendAccount.password.isDefined) {
+        if (frontendAccount.password.isEmpty) {
           BadRequest("Field 'password' must be specified")
         } else {
           AccountDto.getOfEmailAddress(frontendAccount.emailAddress) match {

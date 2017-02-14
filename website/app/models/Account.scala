@@ -65,7 +65,7 @@ object Account {
     val positions = (linkedinProfile \ "positions").as[JsObject]
 
     val positionValuesOpt = (positions \ "values").asOpt[JsArray]
-    var validPositionValues = new JsArray()
+    var validPositionValues = JsArray()
 
     if (positionValuesOpt.isDefined) {
       for (positionValue: JsValue <- positionValuesOpt.get.value.toArray) {

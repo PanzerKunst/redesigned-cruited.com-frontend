@@ -10,7 +10,7 @@ import services.GlobalConfig
 class DbAdminApi extends Controller {
   def reCreateTables() = Action { request =>
     if (request.queryString.contains("key") &&
-      request.queryString.get("key").get.head == GlobalConfig.applicationSecret) {
+      request.queryString("key").head == GlobalConfig.applicationSecret) {
       DbAdmin.reCreateTables()
       DbAdmin.initData()
       Created
@@ -19,7 +19,7 @@ class DbAdminApi extends Controller {
       Forbidden("Wrong key")
   }
 
-  def fixBothersomeCharactersInLinkedinProfile() = Action { request =>
+  def fixBothersomeCharactersInLinkedinProfile() = Action {
     DbAdmin.fixBothersomeCharactersInLinkedinProfile()
     Ok
   }

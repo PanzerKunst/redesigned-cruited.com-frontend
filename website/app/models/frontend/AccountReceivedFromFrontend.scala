@@ -1,7 +1,7 @@
 package models.frontend
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, JsValue, Reads}
+import play.api.libs.json.{JsPath, Reads}
 
 case class AccountReceivedFromFrontend(emailAddress: String,
                                        firstName: String,

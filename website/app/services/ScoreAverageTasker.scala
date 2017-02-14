@@ -54,9 +54,9 @@ class ScoreAverageTasker extends TimerTask {
       }
 
       // Process that list of global scores, into 3 averages: CV, Cover Letter and Linkedin Profile
-      cvAverageScore = allCvScores.foldLeft(0)(_ + _) / allCvScores.foldLeft(0)((r, c) => r + 1)
-      coverLetterAverageScore = allCoverLetterScores.foldLeft(0)(_ + _) / allCoverLetterScores.foldLeft(0)((r, c) => r + 1)
-      linkedinProfileAverageScore = allLinkedinProfileScores.foldLeft(0)(_ + _) / allLinkedinProfileScores.foldLeft(0)((r, c) => r + 1)
+      cvAverageScore = allCvScores.sum / allCvScores.foldLeft(0)((r, _) => r + 1)
+      coverLetterAverageScore = allCoverLetterScores.sum / allCoverLetterScores.foldLeft(0)((r, _) => r + 1)
+      linkedinProfileAverageScore = allLinkedinProfileScores.sum / allLinkedinProfileScores.foldLeft(0)((r, _) => r + 1)
 
       Logger.info("Average scores computed!")
       Logger.info("cvAverageScore: " + cvAverageScore)

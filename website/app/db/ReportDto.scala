@@ -397,9 +397,7 @@ object ReportDto {
 
       Logger.info("ReportDto.getIdsOfTheLastNReports():" + query)
 
-      val rowParser = long("id") map {
-        case id => id
-      }
+      val rowParser = long("id") map (id => id)
 
       SQL(query).as(rowParser.*)
     }

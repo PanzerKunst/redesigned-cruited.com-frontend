@@ -22,7 +22,7 @@ CR.Controllers.Dashboard = P(function(c) {
                         <div>
                             <h1>{CR.i18nMessages["dashboard.title"]}</h1>
                             <a className="btn btn-danger new-assessment" href="/order">{newAssessmentBtnLabel}
-                                <i className="fa fa-plus"></i>
+                                <i className="fa fa-plus"/>
                             </a>
                         </div>
                     </header>

@@ -52,7 +52,7 @@ CR.Controllers.PaymentForm = React.createClass({
                     <p className="field-error" data-check="empty" />
                 </div>
                 <div className="centered-contents">
-                    <p className="other-form-error"></p>
+                    <p className="other-form-error"/>
                     <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.payment.submitBtn.text"]}</button>
                 </div>
             </form>
