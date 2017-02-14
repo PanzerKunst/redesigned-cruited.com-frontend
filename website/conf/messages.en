@@ -78,6 +78,7 @@ menu.myAccount=My account
 # Sign In page
 
 signIn.title=Sign in
+signIn.alert.text=Please sign in to view your assessment report
 signIn.methodSeparatorText=or
 signIn.validation.incorrectEmail=This email address looks incorrect
 signIn.validation.linkedinAccountUnregistered=We could not find an account associated to this LinkedIn identity. Did you signup using e-mail?

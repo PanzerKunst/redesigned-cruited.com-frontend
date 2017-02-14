@@ -12,7 +12,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
         render: function() {
             if (!window.FormData) {
-                return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);  // TODO
+                return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);
             }
 
             if (!CR.order) {

@@ -54,7 +54,18 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
     val isLinkedinAccountUnregistered = false
 
-    Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered))
+    val orderIdOpt = if (request.queryString.contains("reportId")) {
+      try {
+        Some(request.queryString.get("reportId").get.head.toLong)
+      }
+      catch {
+        case pe: NumberFormatException => None
+      }
+    } else {
+      None
+    }
+
+    Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), None, isLinkedinAccountUnregistered, orderIdOpt))
   }
 
   def myAccount() = Action { request =>
@@ -334,7 +345,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def report(orderId: Long) = Action { request =>
     SessionService.getAccountId(request.session) match {
-      case None => Unauthorized(views.html.unauthorised())
+      case None => Redirect("/login?reportId=" + orderId)
       case Some(accountId) =>
         val selectedProductCode = if (request.queryString.contains("productCode")) {
           request.queryString.get("productCode").get.head
