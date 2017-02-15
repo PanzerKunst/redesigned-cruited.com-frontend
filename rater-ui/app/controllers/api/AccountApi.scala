@@ -14,7 +14,7 @@ class AccountApi @Inject()(val accountDto: AccountDto) extends Controller {
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) => Ok(Json.toJson(accountDto.getAllRaters))
+        case Some(_) => Ok(Json.toJson(accountDto.getAllRaters))
       }
     }
   }

@@ -12,7 +12,7 @@ import services._
 class AuthApi @Inject()(val accountDto: AccountDto) extends Controller {
   def signIn() = Action(parse.json) { request =>
     request.body.validate[SignInData] match {
-      case e: JsError => BadRequest("Validation of SignInData failed")
+      case _: JsError => BadRequest("Validation of SignInData failed")
 
       case s: JsSuccess[SignInData] =>
         val signInData = s.get

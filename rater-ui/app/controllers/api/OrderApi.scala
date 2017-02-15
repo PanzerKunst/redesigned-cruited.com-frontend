@@ -38,7 +38,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
         case None => BadRequest("No account found in DB for ID " + accountId)
         case Some(account) =>
           request.body.validate[List[Long]] match {
-            case e: JsError => BadRequest("Validation of List[Long] failed")
+            case _: JsError => BadRequest("Validation of List[Long] failed")
 
             case s: JsSuccess[List[Long]] =>
               val excludedOrderIds = s.get
@@ -65,9 +65,9 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) =>
+        case Some(_) =>
           request.body.validate[OrderSearchData] match {
-            case e: JsError => BadRequest("Validation of OrderSearchData failed")
+            case _: JsError => BadRequest("Validation of OrderSearchData failed")
 
             case s: JsSuccess[OrderSearchData] =>
               val orderSearchData = s.get
@@ -92,9 +92,9 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) =>
+        case Some(_) =>
           request.body.validate[FrontendOrder] match {
-            case e: JsError => BadRequest("Validation of FrontendOrder failed")
+            case _: JsError => BadRequest("Validation of FrontendOrder failed")
 
             case s: JsSuccess[FrontendOrder] =>
               orderDto.update(new Order(s.get))
@@ -109,7 +109,7 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) =>
+        case Some(_) =>
           orderDto.updateAsDeleted(id)
           Ok
       }
@@ -121,17 +121,17 @@ class OrderApi @Inject()(val accountDto: AccountDto, val orderDto: OrderDto) ext
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) => Ok(Json.toJson(orderDto.ordersSentToTheCustomer))
+        case Some(_) => Ok(Json.toJson(orderDto.ordersSentToTheCustomer))
       }
     }
   }
 
-  def toDo() = Action { request =>
+  def toDo = Action { request =>
     SessionService.getAccountId(request.session) match {
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) => Ok(Json.toJson(orderDto.ordersToDo))
+        case Some(_) => Ok(Json.toJson(orderDto.ordersToDo))
       }
     }
   }

@@ -509,9 +509,10 @@ const Assessment = {
     _removeReportCommentFromLocalStorage(categoryProductCode, comment) {
         const myAssessments = Browser.getFromLocalStorage(localStorageKeys.myAssessments);
 
-        _.remove(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
-
-        Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
+        if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", comment.categoryId])) {
+            _.remove(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
+            Browser.saveInLocalStorage(localStorageKeys.myAssessments, myAssessments);
+        }
     },
 
     _initListCommentsFromDocReport(categoryProductCode) {

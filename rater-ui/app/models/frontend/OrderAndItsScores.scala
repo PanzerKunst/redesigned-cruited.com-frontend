@@ -1,6 +1,6 @@
 package models.frontend
 
-import models.{AssessmentReportScores, Account, Coupon}
+import models.AssessmentReportScores
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Format, JsPath}
 

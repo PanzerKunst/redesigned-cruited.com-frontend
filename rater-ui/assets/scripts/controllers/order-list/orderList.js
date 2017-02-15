@@ -71,7 +71,7 @@ const controller = {
                     return (
                         <section id="top-orders">
                             <div></div>
-                            <p className="centered-contents">You are done!<i className="fa fa-smile-o" aria-hidden="true"></i></p>
+                            <p className="centered-contents">You are done!<i className="fa fa-smile-o" aria-hidden="true"/></p>
                         </section>);
                 }
 

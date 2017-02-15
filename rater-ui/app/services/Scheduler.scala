@@ -58,7 +58,7 @@ class Scheduler @Inject()(orderDto: OrderDto, emailService: EmailService, messag
     emailService.sendReportAvailableEmail(
       customer.emailAddress,
       languageCode,
-      SessionService.getI18nMessagesFromCode(languageCode, messagesApi).get("email.reportAvailable.subject").get,
+      SessionService.getI18nMessagesFromCode(languageCode, messagesApi)("email.reportAvailable.subject"),
       customer.firstName,
       config.customerAppRootUrl + "reports/" + order.id
     )

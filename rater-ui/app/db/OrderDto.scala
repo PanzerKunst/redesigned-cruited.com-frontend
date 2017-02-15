@@ -502,12 +502,6 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
   }
 
   private def processQuerySingle(query: String): Option[FrontendOrder] = {
-    val list = processQuery(query)
-
-    if (list.isEmpty) {
-      None
-    } else {
-      Some(list.head)
-    }
+    processQuery(query).headOption
   }
 }

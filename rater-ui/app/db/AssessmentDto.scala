@@ -52,7 +52,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
     db.withConnection { implicit c =>
       val query = """
       select v.id, variation,
-        dc.id as id_default, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, dc.type as doc_type, score, grouped,
+        dc.id as id_default, category as category_id, trim(name_good) as name_good, trim(name_bad) as name_bad, score, grouped,
         variation_type.tag_type,
         e.id as edition_id, e.edition as edition_code
       from default_variations v
@@ -68,11 +68,11 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
       Logger.info("AssessmentDto.getAllCommentVariations():" + query)
 
       val rowParser = long("id") ~ str("variation") ~
-        long("id_default") ~ long("category_id") ~ str("name_good") ~ str("name_bad") ~ str("doc_type") ~ int("score") ~ int("grouped") ~
+        long("id_default") ~ long("category_id") ~ str("name_good") ~ str("name_bad") ~ int("score") ~ int("grouped") ~
         (str("tag_type") ?) ~
         (long("edition_id") ?) ~ (str("edition_code") ?) map {
         case id ~ text ~
-          defaultCommentId ~ categoryId ~ greenText ~ redText ~ dbDocType ~ points ~ grouped ~
+          defaultCommentId ~ categoryId ~ greenText ~ redText ~ points ~ grouped ~
           tagTypeOpt ~
           editionIdOpt ~ editionCodeOpt =>
 
@@ -121,9 +121,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
 
       Logger.info("AssessmentDto.idsOfTheLastNReports():" + query)
 
-      val rowParser = long("id") map {
-        case id => id
-      }
+      val rowParser = long("id") map (id => id)
 
       SQL(query).as(rowParser.*)
     }
@@ -481,7 +479,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
     db.withConnection { implicit c =>
       val conn = db.getConnection()
       try {
-        for (i <- 0 to redComments.length - 1) {
+        for (i <- redComments.indices) {
           val redComment = redComments.apply(i)
 
           val query = """
