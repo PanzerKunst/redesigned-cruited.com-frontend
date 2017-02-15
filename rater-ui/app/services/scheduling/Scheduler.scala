@@ -6,6 +6,7 @@ import javax.inject.{Inject, Singleton}
 
 import db.OrderDto
 import models.Order
+import play.api.Logger
 import play.api.i18n.MessagesApi
 
 @Singleton
@@ -15,9 +16,13 @@ class Scheduler @Inject()(orderDto: OrderDto, emailService: EmailService, messag
 
   val task = new Runnable {
     def run() = {
-      calculateOrdersSentToTheCustomer()
-      orderDto.calculateOrdersToDo()
-      handleScheduledAssessementsArrivedToTerm()
+      try {
+        calculateOrdersSentToTheCustomer()
+        orderDto.calculateOrdersToDo()
+        handleScheduledAssessementsArrivedToTerm()
+      } catch {
+        case t: Throwable => Logger.error(t.getMessage, t)
+      }
     }
   }
 
