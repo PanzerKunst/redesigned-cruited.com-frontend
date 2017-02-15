@@ -118,7 +118,7 @@ const store = {
         let indexOfNextComment = -1;
 
         _.keys(this.allDefaultComments).forEach(categoryProductCd => {
-            const docDefaultComments = store.allDefaultComments[categoryProductCd];
+            const docDefaultComments = this.allDefaultComments[categoryProductCd];
 
             for (let i = 0; i < docDefaultComments.length; i++) {
                 if (docDefaultComments[i].id === commentId) {
@@ -129,7 +129,7 @@ const store = {
             }
         });
 
-        const nextComment = indexOfNextComment > -1 ? store.allDefaultComments[categoryProductCode][indexOfNextComment] : null;
+        const nextComment = indexOfNextComment > -1 ? this.allDefaultComments[categoryProductCode][indexOfNextComment] : null;
 
         if (nextComment && nextComment.isGrouped && nextComment.isGreenSelected === undefined && nextComment.isRedSelected === undefined) { // eslint-disable-line no-undefined
             nextComment.isGreenSelected = false;

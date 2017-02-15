@@ -78,7 +78,7 @@ menu.myAccount=Mitt konto
 # Sign In page
 
 signIn.title=Logga in
-signIn.alert.text=Please sign in to view your assessment report
+signIn.alert.text=Välkommen att logga in för att ta del av din bedömning
 signIn.methodSeparatorText=eller
 signIn.validation.incorrectEmail=Den här e-postadressen ser inte korrekt ut
 signIn.validation.linkedinAccountUnregistered=Vi kunde inte hitta ett konto hos oss kopplat till ditt på LinkedIn. Du kanske registrerade dig hos oss med din e-postadress?

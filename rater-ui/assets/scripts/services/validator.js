@@ -276,7 +276,7 @@ const Validator = {
             return true;
         }
 
-        const reg = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
+        const reg = /^([a-z0-9_\-.])+@([a-z0-9_\-.])+\.([a-z]{2,4})$/i;
 
         return reg.test(email);
     },
@@ -335,7 +335,7 @@ const Validator = {
             return true;
         }
 
-        const reg = /^(https?|ftp):\/\/(-\.)?([^\s/?\.#-]+\.?)+(\/[^\s]*)?$/i;
+        const reg = /^(https?|ftp):\/\/(-\.)?([^\s/?.#-]+\.?)+(\/[^\s]*)?$/i;
 
         return reg.test(url);
     },

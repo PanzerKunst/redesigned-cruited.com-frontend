@@ -24,7 +24,7 @@ const Component = React.createClass({
 
                         return (
                             <li key={categoryId} className={liClasses} data-category-id={categoryId}>
-                                <i className="fa fa-check" aria-hidden="true"></i>
+                                <i className="fa fa-check" aria-hidden="true"/>
                                 <a href={`#list-category-${categoryId}`} onClick={this._handleScrollToLinkClick}>{store.i18nMessages[`category.title.${categoryId}`]}</a>
                                 <span className="category-score">{store.assessment.categoryScore(categoryId)}</span>
                             </li>);

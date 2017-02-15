@@ -208,7 +208,7 @@ const controller = {
                         <p>{store.i18nMessages["report.unorderedAssessment.text"]}</p>
                         <a className="btn btn-danger new-assessment" href="/order">
                             <span>{store.i18nMessages["report.unorderedAssessment.orderBtn.text"]}</span>
-                            <i className="fa fa-plus"></i>
+                            <i className="fa fa-plus"/>
                         </a>
                     </div>);
             }
@@ -271,7 +271,7 @@ const controller = {
                                 </div>
                                 <div id="score-bar">
                                     <img src="/assets/images/score-bar.png" />
-                                    <span></span>
+                                    <span/>
                                 </div>
                                 <div className="score-bar-number-labels">
                                     <span>0</span>
@@ -282,7 +282,7 @@ const controller = {
                         <article className="expandable-panel">
                             <header>
                                 <span>{store.i18nMessages["report.summary.understandYourScore.title"]}</span>
-                                <button className="styleless"></button>
+                                <button className="styleless"/>
                             </header>
                             <div>
                                 <p className="score-explanation-paragraph" dangerouslySetInnerHTML={{__html: store.i18nMessages["report.summary.understandYourScore.cScoreExplanation.text"]}} />
@@ -363,7 +363,7 @@ const controller = {
         },
 
         _commentWithProcessedLinks(commentText) {
-            return commentText.replace(/\{link:(.+)\}(.+)\{\/link\}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
+            return commentText.replace(/\{link:(.+)}(.+)\{\/link}/, "<a href=\"$1\" target=\"_blank\">$2</a>");
         },
 
         _categoriesAndTheirComments(docReport) {

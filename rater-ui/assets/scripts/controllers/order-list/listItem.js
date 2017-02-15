@@ -107,7 +107,7 @@ const Component = React.createClass({
         const assignBtn = order.status === Order.statuses.completed || order.status === Order.statuses.scheduled ?
             null :
             <button className="styleless fa fa-user" onClick={this._handleAssignClick}>
-                <i className="fa fa-check" aria-hidden="true"></i>
+                <i className="fa fa-check" aria-hidden="true"/>
             </button>;
 
         let viewBtn = null;
@@ -120,7 +120,7 @@ const Component = React.createClass({
             <div className="secondary-buttons">
                 {assignBtn}
                 {viewBtn}
-                <button className="styleless fa fa-trash" onClick={this._handleDeleteClick}></button>
+                <button className="styleless fa fa-trash" onClick={this._handleDeleteClick}/>
             </div>);
     },
 

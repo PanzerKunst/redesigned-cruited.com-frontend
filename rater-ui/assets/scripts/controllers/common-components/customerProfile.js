@@ -19,7 +19,7 @@ const Component = React.createClass({
 
         const style = {backgroundImage: `url(${linkedinProfile.pictureUrl})`};
 
-        return <a href={linkedinProfile.publicProfileUrl} target="_blank" className="profile-picture" style={style}></a>;
+        return <a href={linkedinProfile.publicProfileUrl} target="_blank" className="profile-picture" style={style}/>;
     }
 });
 

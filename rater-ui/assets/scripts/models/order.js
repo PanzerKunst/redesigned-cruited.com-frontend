@@ -75,7 +75,7 @@ const Order = {
             return true;
         }
 
-        if (this.status === this.statuses.scheduled || this.status === this.statuses.completed) {
+        if (this.status === this.statuses.paid || this.status === this.statuses.scheduled || this.status === this.statuses.completed) {
             return true;
         }
 

@@ -20,11 +20,11 @@ class HomeController @Inject()(accountDto: AccountDto, config: GlobalConfig, ord
     }
   }
 
-  def signOut = Action { request =>
+  def signOut = Action {
     Redirect("/").withNewSession
   }
 
-  def signIn = Action { request =>
+  def signIn = Action {
     Ok(views.html.signIn())
   }
 }

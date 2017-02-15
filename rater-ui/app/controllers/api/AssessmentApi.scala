@@ -3,9 +3,8 @@ package controllers.api
 import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, AssessmentDto, OrderDto}
-import models.frontend.{OrderAndItsScores, FrontendOrder}
-import models.{Assessment, AssessmentReportScores}
-import play.api.Logger
+import models.Assessment
+import models.frontend.OrderAndItsScores
 import play.api.libs.json._
 import play.api.mvc.{Action, Controller}
 import services._
@@ -17,9 +16,9 @@ class AssessmentApi @Inject()(val accountDto: AccountDto, val assessmentDto: Ass
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) =>
+        case Some(_) =>
           request.body.validate[Assessment] match {
-            case e: JsError => BadRequest("Validation of Assessment failed")
+            case _: JsError => BadRequest("Validation of Assessment failed")
 
             case s: JsSuccess[Assessment] =>
               val assessment = s.get
@@ -37,10 +36,10 @@ class AssessmentApi @Inject()(val accountDto: AccountDto, val assessmentDto: Ass
       case None => Unauthorized
       case Some(accountId) => accountDto.getOfId(accountId) match {
         case None => BadRequest("No account found in DB for ID " + accountId)
-        case Some(account) =>
+        case Some(_) =>
 
           request.body.validate[List[Long]] match {
-            case e: JsError => BadRequest("Validation of Customer IDs failed")
+            case _: JsError => BadRequest("Validation of Customer IDs failed")
 
             case s: JsSuccess[List[Long]] =>
               val customerIds = s.get

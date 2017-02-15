@@ -4,7 +4,7 @@ const Component = props => {
     if (!account) {
         return (
             <article className="user-profile">
-                <i className="fa fa-question-circle" aria-hidden="true"></i>
+                <i className="fa fa-question-circle" aria-hidden="true"/>
                 <p>Unassigned</p>
             </article>);
     }
