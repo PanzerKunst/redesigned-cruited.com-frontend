@@ -1,72 +1,4 @@
 #order-step-product-selection {
-  .form-inline .form-control {
-    // We want this event on small res
-    display: inline-block;
-    width: auto;
-    vertical-align: baseline;
-  }
-
-  #content > header {
-    > div {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    form {
-      margin-top: 43px;
-
-      > .medium-screen {
-        display: none;
-      }
-
-      @include medium-screen {
-        margin-top: 48px;
-        font-size: #{$font-size-base-px}px;
-
-        > .form-group {
-          display: none;
-
-          &.medium-screen {
-            display: block;
-          }
-        }
-      }
-
-      @include large-screen {
-        margin-top: 73px;
-      }
-    }
-  }
-
-  .guarantee-panel {
-    @include large-screen {
-      font-size: #{$font-size-base-px}px;
-    }
-  }
-
-  .two-columns {
-    @include large-screen {
-      display: flex;
-      justify-content: space-between;
-
-      > header > p,
-      > ul,
-      > form {
-        font-size: #{$font-size-base-px}px;
-      }
-
-      > header {
-        width: 40%;
-      }
-
-      > ul,
-      > form {
-        width: 55%;
-        margin-top: 34px;
-      }
-    }
-  }
-
   #products-section,
   #editions-section {
     li {
@@ -145,10 +77,6 @@
     margin-right: $spacer-unit-size;
 
     font-size: 1.2em;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 
     > p,
     span {
@@ -294,90 +222,8 @@
       }
     }
   }
-
-  #language-section {
-    align-items: center;
-
-    > form {
-      margin-top: 0;
-    }
-
-    p,
-    .form-group {
-      margin-bottom: 0;
-    }
-  }
-
-  #cart-section {
-    > header {
-      margin-top: 2.6em;
-    }
-
-    > div {
-      margin-bottom: 2em;
-
-      li {
-        > .cart-product-price {
-          margin-right: -2.9em;
-          @include medium-screen {
-            margin-right: -2.65em;
-            margin-top: 0;
-          }
-          @include large-screen {
-            margin-right: -2.025em;
-          }
-        }
-
-        .fa-times {
-          color: $brand-danger;
-        }
-      }
-    }
-
-    table {
-      margin-bottom: 1em;
-    }
-
-    @include medium-screen {
-      > div li > span:first-child {
-        max-width: 100%;
-      }
-
-      .cart-product-name {
-        display: inline-block;
-        width: 17em;
-      }
-
-      .bottom-section {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-      }
-    }
-
-    @include large-screen {
-      .bottom-section {
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content: space-between;
-      }
-
-      table {
-        order: 1;
-        flex-shrink: 0;
-      }
-
-      .guarantee-panel {
-        margin: 2.8em 2.8em 0 0;
-      }
-    }
-  }
-
-  .with-circles > form > .other-form-error {
-    margin: $content-element-margin-bottom 0;
-  }
-
-  .btn-lg.btn-primary {
-    margin-top: 0;
-  }
 }
+
+/* TODO
+.no-flexbox {
+} */
