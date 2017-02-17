@@ -142,8 +142,32 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
-  def orderInterviewTraining = Action {
-    Ok
+  def orderInterviewTraining = Action { request =>
+    var currentLanguage = SessionService.getCurrentLanguage(request.session)
+
+    val accountOpt = SessionService.getAccountId(request.session) match {
+      case None => None
+      case Some(accountId) =>
+        if (AccountService.isTemporary(accountId)) {
+          None
+        } else {
+          AccountDto.getOfId(accountId) match {
+            case None => None
+            case Some(account) =>
+              currentLanguage = SupportedLanguageDto.getOfCode(account.languageCode).get
+              Some(account)
+          }
+        }
+    }
+
+    if (request.queryString.contains("lang")) {
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
+    }
+
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.order.orderInterviewTraining(i18nMessages, currentLanguage, accountOpt, SupportedLanguageDto.all))
+      .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
   def orderStepAssessmentInfo() = Action { request =>

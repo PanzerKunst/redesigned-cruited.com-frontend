@@ -467,6 +467,7 @@
       }
 
       .guarantee-panel {
+        max-width: 52%;
         margin: 2.8em 2.8em 0 0;
       }
     }
@@ -573,7 +574,6 @@
 
         > .guarantee-panel {
           float: left;
-          max-width: 52%;
         }
       }
     }

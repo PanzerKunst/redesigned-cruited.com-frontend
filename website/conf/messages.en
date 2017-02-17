@@ -5,6 +5,7 @@ defaultAssessmentTitle=Assessment
 product.name.CV_REVIEW=CV Review
 product.name.COVER_LETTER_REVIEW=Cover Letter Review
 product.name.LINKEDIN_PROFILE_REVIEW=LinkedIn Review
+product.name.INTERVIEW_TRAINING=Interview Training
 
 edition.name.PRO=Professional
 edition.name.YOUNG_PRO=Young Professional
@@ -206,6 +207,10 @@ order.productSelection.cartSection.total=Total You Pay
 
 order.interviewTraining.title=Interview Training
 order.interviewTraining.subtitle=How can we help you?
+
+order.interviewTraining.description.heading=Prepare yourself and train for a job interview
+order.interviewTraining.description.text.1=You can calmly prepare answers to the most common and often trickiest interview questions. We assess your answers and you will get advice on how you can improve them.
+order.interviewTraining.description.text.2=You also book a training session by phone, where you can do a test interview and get additional feedback on how you produce your answers.
 
 
 # Order Step Assessment Info page

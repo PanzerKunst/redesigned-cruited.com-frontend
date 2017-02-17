@@ -19,7 +19,7 @@ GET           /reset-password                                       controllers.
 GET           /reset-password/confirm                               controllers.Application.confirmResetPassword
 
 GET           /order                                                controllers.Application.orderStepProductSelection
-GET           /order/intervew-training                              controllers.Application.orderInterviewTraining
+GET           /order/interview-training                             controllers.Application.orderInterviewTraining
 GET           /order/assessment-info                                controllers.Application.orderStepAssessmentInfo
 GET           /order/create-account                                 controllers.Application.orderStepAccountCreation
 GET           /order/payment                                        controllers.Application.orderStepPayment

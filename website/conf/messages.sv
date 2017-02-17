@@ -5,6 +5,7 @@ defaultAssessmentTitle=Bedömning
 product.name.CV_REVIEW=Bedömning av CV
 product.name.COVER_LETTER_REVIEW=Bedömning av personligt brev
 product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn
+product.name.INTERVIEW_TRAINING=Intervjuträning
 
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
@@ -204,8 +205,12 @@ order.productSelection.cartSection.total=Att betala
 
 # Order Interview Training homepage
 
-order.interviewTraining.title=Interview Training
-order.interviewTraining.subtitle=How can we help you?
+order.interviewTraining.title=Intervjuträning
+order.interviewTraining.subtitle=Hur kan vi hjälpa dig?
+
+order.interviewTraining.description.heading=Förbered dig och träna inför en jobbintervju
+order.interviewTraining.description.text.1=Du får i lugn och ro förbereda svar på de vanligaste och ofta klurigaste intervjufrågorna. Vi bedömer dina svar och du får råd om hur du kan förbättra dem.
+order.interviewTraining.description.text.2=Du bokar också in en träningssession per telefon där du får göra en testintervju och få ytterligare feedback på hur du framställer dina svar.
 
 
 # Order Step Assessment Info page
@@ -235,7 +240,7 @@ order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="ht
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för bedömning
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Läs in igen
-order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad om min profil saknar viktiga delar. 
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad om min profil saknar viktiga delar.
 order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev

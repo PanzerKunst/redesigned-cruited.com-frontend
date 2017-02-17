@@ -1,0 +1,26 @@
+#order-interview-training {
+  #interview-training-description {
+    border-bottom: none;
+
+    > ul {
+      margin: 0;
+
+      > li:last-child {
+        margin-top: $content-element-margin-bottom;
+      }
+    }
+  }
+
+  .highlighted-number {
+    display: none;
+  }
+
+  .fa-times {
+    display: none;
+  }
+
+  #cart-section > div li > .cart-product-price {
+    margin-right: 0;
+    margin-top: 0;
+  }
+}
