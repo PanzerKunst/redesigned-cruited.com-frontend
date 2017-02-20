@@ -531,6 +531,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         // We remove file names to avoid bugs of missing uploaded files
         CR.order.setCvFileName(null);
         CR.order.setCoverLetterFileName(null);
+        CR.order.setJobAdFileName(null);
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
