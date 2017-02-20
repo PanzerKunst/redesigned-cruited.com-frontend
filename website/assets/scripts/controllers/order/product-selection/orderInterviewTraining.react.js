@@ -110,7 +110,7 @@ CR.Controllers.OrderInterviewTraining = P(function(c) {
                                     CR.order.setCoupon(coupon);
                                     CR.order.saveInLocalStorage();
 
-                                    location.href = "/order/assessment-info";
+                                    location.href = "/order/interview-training/assessment-info";
                                     break;
                                 default:
                                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");

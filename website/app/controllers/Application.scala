@@ -166,7 +166,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.orderInterviewTraining(i18nMessages, currentLanguage, accountOpt, SupportedLanguageDto.all))
+    Ok(views.html.order.interviewTraining.orderInterviewTraining(i18nMessages, currentLanguage, accountOpt, SupportedLanguageDto.all))
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
@@ -188,6 +188,25 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
     Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, accountOpt, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAssessmentInfo), linkedinProfile, None))
+      .withHeaders(doNotCachePage: _*)
+  }
+
+  def orderInterviewTrainingStepAssessmentInfo() = Action { request =>
+    val accountOpt = SessionService.getAccountId(request.session) match {
+      case None => None
+      case Some(accountId) =>
+        val account = AccountDto.getOfId(accountId).get
+        if (AccountService.isTemporary(accountId)) {
+          None
+        } else {
+          Some(account)
+        }
+    }
+
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.order.interviewTraining.orderInterviewTrainingStepAssessmentInfo(i18nMessages, currentLanguage, accountOpt))
       .withHeaders(doNotCachePage: _*)
   }
 
