@@ -6,7 +6,7 @@ CR.Controllers.OrderLanguageSelection = React.createClass({
         const currentLanguageCode = this.props.currentLanguageCode;
 
         return (
-            <section id="language-section" className="two-columns">
+            <section className="two-columns widow">
                 <header>
                     <p className="light-font">{CR.i18nMessages["order.productSelection.languageSection.subtitle"]}</p>
                 </header>

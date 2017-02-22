@@ -121,7 +121,7 @@ CR.Controllers.OrderInterviewTraining = P(function(c) {
                     httpRequest.setRequestHeader("Content-Type", "application/json");
                     httpRequest.send();
                 } else {
-                    location.href = "/order/assessment-info";
+                    location.href = "/order/interview-training/assessment-info";
                 }
             }
         }

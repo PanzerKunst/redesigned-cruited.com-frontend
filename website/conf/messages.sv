@@ -203,16 +203,6 @@ order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Att betala
 
 
-# Order Interview Training homepage
-
-order.interviewTraining.title=Intervjuträning
-order.interviewTraining.subtitle=Hur kan vi hjälpa dig?
-
-order.interviewTraining.description.heading=Förbered dig och träna inför en jobbintervju
-order.interviewTraining.description.text.1=Du får i lugn och ro förbereda svar på de vanligaste och ofta klurigaste intervjufrågorna. Vi bedömer dina svar och du får råd om hur du kan förbättra dem.
-order.interviewTraining.description.text.2=Du bokar också in en träningssession per telefon där du får göra en testintervju och få ytterligare feedback på hur du framställer dina svar.
-
-
 # Order Step Assessment Info page
 
 order.assessmentInfo.title=Detaljer för din bedömning
@@ -229,7 +219,7 @@ order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Samman
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
 order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
-order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
+order.assessmentInfo.validation.customerCommentTooLong=Högst 480 tecken
 order.assessmentInfo.validation.requestEntityTooLarge=Filerna får inte vara större än 10MB totalt
 order.assessmentInfo.validation.signInWithLinkedinFirst=Börja med LinkedIn inloggning, tack!
 
@@ -305,6 +295,34 @@ order.payment.form.cardholderName.label=Kortinnehavarens namn
 # Edit Order page
 
 order.edit.saveBtn.text=Spara
+
+
+# Order Interview Training homepage
+
+order.interviewTraining.title=Intervjuträning
+order.interviewTraining.subtitle=Hur kan vi hjälpa dig?
+
+order.interviewTraining.description.heading=Förbered dig och träna inför en jobbintervju
+order.interviewTraining.description.text.1=Du får i lugn och ro förbereda svar på de vanligaste och ofta klurigaste intervjufrågorna. Vi bedömer dina svar och du får råd om hur du kan förbättra dem.
+order.interviewTraining.description.text.2=Du bokar också in en träningssession per telefon där du får göra en testintervju och få ytterligare feedback på hur du framställer dina svar.
+
+
+# Order Interview Training assessement info
+
+order.interviewTraining.assessmentInfo.title=Something
+order.interviewTraining.assessmentInfo.subtitle=Something else
+
+order.interviewTraining.assessmentInfo.basicInfoSection.title=Basic info
+order.interviewTraining.assessmentInfo.basicInfoSection.subtitle=Bla bla bla
+order.interviewTraining.assessmentInfo.basicInfoSection.dateSelection.label=Datum för intervju
+
+order.interviewTraining.assessmentInfo.contextSection.title=Context
+order.interviewTraining.assessmentInfo.contextSection.subtitle=Bla bla bla
+order.interviewTraining.assessmentInfo.contextSection.importantForTheRole.label=Efter den research du gjort om jobbet, vad tror du är viktigast i den här rollen?
+order.interviewTraining.assessmentInfo.contextSection.latestInterview.label=Hur tycker du att din senaste intervju gick?
+order.interviewTraining.assessmentInfo.contextSection.needForImprovement.label=Vad har du själv för bild av vad du behöver förbättra i din intervjuteknik? Kanske har du tidigare fått tips och råd som du tagit fasta på?
+order.interviewTraining.assessmentInfo.contextSection.challengingQuestions.label=Några frågor du tycker är extra svåra att besvara? Frågor som gör dig orolig eller som du är osäker på?
+order.interviewTraining.assessmentInfo.contextSection.validation.textTooLong=Högst 480 tecken
 
 
 # Emails

@@ -1,5 +1,9 @@
 $two-column-form-group-width: 48%;
 
+$two-column-right-col-padding-bottom: 4em;
+$two-columns-font-size-large-screen: 0.627em;
+$two-column-right-col-width: 55%;
+
 @mixin project-border {
   border: 1px solid $well-border-color;
   border-radius: $default-border-radius;

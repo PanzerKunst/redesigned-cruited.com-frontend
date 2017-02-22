@@ -1,8 +1,4 @@
 #order-step-assessment-info {
-  .checkbox > label::before {
-    margin-top: 3px;
-  }
-
   #linkedin-profile-form-group {
     > div {
       > ol,
@@ -33,6 +29,8 @@
       padding-left: $li-btn-padding-left;
       @include medium-screen {
         padding-left: 41px;
+      }
+      @include large-screen {
         padding-top: 0.5em;
       }
 
@@ -49,6 +47,12 @@
     li {
       padding-left: 0.3em;
     }
+
+    @include large-screen {
+      .checkbox > label::before {
+        margin-top: 3px;
+      }
+    }
   }
 
   #linkedin-preview {
@@ -62,12 +66,5 @@
 
   #request-entity-too-large-error {
     margin-top: - $content-element-margin-bottom / 2;
-  }
-
-  #tos-wrapper {
-    > .checkbox {
-      display: inline-block;
-      text-align: left;
-    }
   }
 }

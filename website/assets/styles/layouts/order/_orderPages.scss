@@ -1,3 +1,61 @@
+$two-column-right-col-margin-top: 3em;
+
+.two-columns {
+  margin-top: $two-column-right-col-margin-top;
+  padding-bottom: $two-column-right-col-padding-bottom;
+  border-bottom: 1px solid $well-border-color;
+
+  > header {
+    margin-bottom: $content-element-margin-bottom;
+
+    > h2 {
+      margin-top: 0;
+    }
+  }
+
+  > ul {
+    margin-bottom: 0;
+  }
+
+  &.widow {
+    margin-top: 0;
+    align-items: center;
+
+    > header {
+      margin-bottom: 0;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  @include large-screen {
+    display: flex;
+    justify-content: space-between;
+
+    font-size: $two-columns-font-size-large-screen;
+
+    > header {
+      width: 40%;
+    }
+
+    > ul,
+    > form,
+    > div {
+      width: $two-column-right-col-width;
+    }
+
+    > ul {
+      margin-top: 36px;
+    }
+
+    > div {
+      margin-top: 3px;
+    }
+  }
+}
+
 #order-steps-breadcrumbs {
   display: flex;
   justify-content: center;
@@ -251,67 +309,6 @@
   }
 }
 
-.two-columns {
-  padding-bottom: 2.5em;
-  border-bottom: 1px solid $well-border-color;
-
-  > header {
-    > p {
-      margin-bottom: $content-element-margin-bottom;
-    }
-  }
-
-  h2 {
-    margin-top: 0;
-  }
-}
-
-#order-step-assessment-info,
-#edit-order {
-  .with-circles {
-    @include medium-screen {
-      width: auto;
-      margin: 0 $spacer-unit-size;
-    }
-    @include large-screen {
-      width: $large-content-width;
-      margin: 0 auto;
-    }
-  }
-
-  form {
-    font-size: #{$font-size-base-px}px;
-  }
-
-  #job-you-search-section,
-  form > .form-group {
-    margin-top: 3em;
-  }
-
-  @include medium-screen {
-    #documents-section,
-    #job-you-search-section {
-      display: flex;
-      justify-content: space-between;
-
-      > header {
-        width: 40%;
-      }
-
-      > div {
-        width: 55%;
-        margin-top: 12px;
-      }
-    }
-
-    form > .form-group {
-      max-width: 55%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-}
-
 .guarantee-panel {
   span {
     display: block;
@@ -320,8 +317,41 @@
   }
 }
 
+#documents-section,
+#job-you-search-section {
+  padding-bottom: $two-column-right-col-padding-bottom - $content-element-margin-bottom;
+}
+
 #job-ad-file-upload-form-group {  // Hidden by default
   display: none;
+}
+
+#customer-comment-form-group {
+  margin-top: $two-column-right-col-margin-top;
+
+  @include large-screen {
+    font-size: $two-columns-font-size-large-screen;
+
+    max-width: $two-column-right-col-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+#tos-wrapper {
+  // Otherwise things get weird when inspecting
+  > .checkbox {
+    display: inline-block;
+    text-align: left;
+  }
+
+  @include large-screen {
+    font-size: $two-columns-font-size-large-screen;
+
+    > .checkbox > label::before {
+      margin-top: 3px;
+    }
+  }
 }
 
 #order-step-product-selection,
@@ -368,42 +398,6 @@
   .guarantee-panel {
     @include large-screen {
       font-size: #{$font-size-base-px}px;
-    }
-  }
-
-  .two-columns {
-    @include large-screen {
-      display: flex;
-      justify-content: space-between;
-
-      > header > p,
-      > ul,
-      > form {
-        font-size: #{$font-size-base-px}px;
-      }
-
-      > header {
-        width: 40%;
-      }
-
-      > ul,
-      > form {
-        width: 55%;
-        margin-top: 34px;
-      }
-    }
-  }
-
-  #language-section {
-    align-items: center;
-
-    > form {
-      margin-top: 0;
-    }
-
-    p,
-    .form-group {
-      margin-bottom: 0;
     }
   }
 
@@ -482,7 +476,35 @@
   }
 }
 
+
+#order-step-assessment-info,
+#order-interview-training-step-assessment-info {
+  .with-circles > form [type="submit"] {
+    @include large-screen {
+      font-size: $two-columns-font-size-large-screen;
+    }
+  }
+}
+
+
 .no-flexbox {
+  .two-columns {
+    @include large-screen {
+      display: block;
+      @include clearfix;
+
+      > header {
+        float: left;
+      }
+
+      > ul,
+      > form,
+      > div {
+        float: right;
+      }
+    }
+  }
+
   #order-steps-breadcrumbs {
     display: table;
 
@@ -513,25 +535,6 @@
     }
   }
 
-  #order-step-assessment-info,
-  #edit-order {
-    @include medium-screen {
-      #documents-section,
-      #job-you-search-section {
-        display: block;
-        @include clearfix;
-
-        > header {
-          float: left;
-        }
-
-        > div {
-          float: right;
-        }
-      }
-    }
-  }
-
   #order-step-product-selection,
   #order-interview-training {
     #content > header > div {
@@ -544,22 +547,6 @@
 
       > form {
         float: right;
-      }
-    }
-
-    .two-columns {
-      @include large-screen {
-        display: block;
-        @include clearfix;
-
-        > header {
-          float: left;
-        }
-
-        > ul,
-        > form {
-          float: right;
-        }
       }
     }
 

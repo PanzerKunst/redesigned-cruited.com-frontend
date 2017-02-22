@@ -1,0 +1,12 @@
+#order-interview-training-step-assessment-info {
+  #context-section {
+    padding-bottom: $two-column-right-col-padding-bottom - $content-element-margin-bottom;
+    border-bottom: none;
+  }
+}
+
+
+.no-flexbox {
+  #order-interview-training-step-assessment-info {  // stylelint-disable-line no-empty-block
+  }
+}

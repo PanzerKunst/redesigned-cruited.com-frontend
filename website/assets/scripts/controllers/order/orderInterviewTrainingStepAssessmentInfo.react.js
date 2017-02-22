@@ -15,35 +15,31 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                            <h1>{CR.i18nMessages["order.interviewTraining.assessmentInfo.title"]}</h1>
                         </div>
                     </header>
                     <div className="with-circles">
-                        <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
+                        <span>{CR.i18nMessages["order.interviewTraining.assessmentInfo.subtitle"]}</span>
 
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.assessmentInfo} />
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section" className="two-columns">
                                 <header>
-                                    <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
+                                    <h2>{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.title"]}</h2>
+                                    <p className="light-font">{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.subtitle"]}</p>
                                 </header>
                                 <div>
-                                    <CR.Controllers.CvFormGroup controller={this} />
+                                    <CR.Controllers.CvFormGroup orderedCv={true} controller={this} />
                                     <CR.Controllers.JobAdFormGroups controller={this} />
+                                    <CR.Controllers.InterviewDateFormGroup />
                                     <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
                                 </div>
                             </section>
-                            <section id="context-section" className="two-columns">
-                                <header>
-                                    <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
-                                </header>
-                                <div>
-                                </div>
-                            </section>
+
+                            <CR.Controllers.InterviewTrainingContextSection />
                             <CR.Controllers.TermsOfServiceFormSection />
+
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.submitBtn.text"]}</button>
                             </div>
@@ -53,7 +49,7 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidMount: function() {
             this._initElements();
             this._initValidation();
         },

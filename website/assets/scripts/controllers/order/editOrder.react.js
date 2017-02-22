@@ -51,7 +51,7 @@ CR.Controllers.EditOrder = P(function(c) {
             this.$cvFormGroup = this.$form.find("#cv-form-group");
             this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
 
-            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");  // TODO: handle
+            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
 
             this.$positionSoughtField = this.$form.find("#position-sought");
             this.$employerSoughtField = this.$form.find("#employer-sought");
@@ -103,6 +103,8 @@ CR.Controllers.EditOrder = P(function(c) {
         _handleSubmit: function(e) {
             e.preventDefault();
 
+            this.validator.hideErrorMessage(this.$requestEntityTooLargeError);
+
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
@@ -147,7 +149,27 @@ CR.Controllers.EditOrder = P(function(c) {
                             location.href = "/";
                         } else {
                             this.$submitBtn.disableLoading();
-                            alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+
+                            // Doesn't work on test server: status == 0 :(
+                            // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
+
+                            this.validator.showErrorMessage(this.$requestEntityTooLargeError);
+
+                            if (!_.isEmpty(this.$cvFormGroup)) {
+                                this.$cvFormGroup.addClass("has-error");
+                            }
+                            if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                this.$coverLetterFormGroup.addClass("has-error");
+                            }
+
+                            if (!_.isEmpty(this.$cvFormGroup)) {
+                                this._scrollToElement(this.$cvFormGroup);
+                            } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                this._scrollToElement(this.$coverLetterFormGroup);
+                            }
+                            /* } else {
+                             alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                             } */
                         }
                     }
                 }.bind(this);

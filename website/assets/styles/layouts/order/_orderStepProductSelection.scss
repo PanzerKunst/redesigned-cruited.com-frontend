@@ -32,7 +32,7 @@
         float: left;
         margin-left: $spacer-unit-size;
 
-        width: 55%;
+        width: $two-column-right-col-width;
       }
 
       > .prices {
@@ -224,6 +224,6 @@
   }
 }
 
-/* TODO
-.no-flexbox {
-} */
+
+.no-flexbox {     // stylelint-disable-line no-empty-block
+}

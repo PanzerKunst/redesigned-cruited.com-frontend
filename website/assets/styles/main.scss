@@ -8,6 +8,7 @@
 @import "../../bower_components/font-awesome/scss/font-awesome.scss";
 @import "../../bower_components/js-breakpoints/breakpoints.scss";
 @import "../../bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
+@import "../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.scss";
 // endbower
 
 // Utils
@@ -47,6 +48,7 @@
 @import "layouts/_signIn";
 @import "layouts/_resetPassword";
 @import "layouts/order/_orderInterviewTraining";
+@import "layouts/order/_orderInterviewTrainingStepAssessmentInfo";
 
 // Browser hacks
 @import "_browserSpecific";

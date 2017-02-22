@@ -1,94 +1,101 @@
 {
-    "name": "Cruited web app",
-    "version": "2.0.0",
-    "homepage": "https://github.com/PanzerKunst/redesigned-cruited.com-frontend/website",
-    "authors": [
-        "Christophe Bram"
-    ],
-    "license": "GPL V3",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests"
-    ],
-    "dependencies": {
-        "jquery": "~2.1.4",
-        "bootstrap-sass": "~3.3.5",
-        "bourbon": "~4.2.5",
-        "fastclick": "~1.0.6",
-        "font-awesome": "~4.4.0",
-        "js-breakpoints": "~1.0.2",
-        "gsap": "~1.18.0",
-        "lodash": "~3.10.1",
-        "pjs": "jneen/pjs#~5.1.1",
-        "react": "~0.14.3",
-        "awesome-bootstrap-checkbox": "~0.3.5",
-        "classnames": "~2.2.0",
-        "moment": "~2.10.6"
+  "name": "Cruited web app",
+  "version": "2.0.0",
+  "homepage": "https://github.com/PanzerKunst/redesigned-cruited.com-frontend/website",
+  "authors": [
+    "Christophe Bram"
+  ],
+  "license": "GPL V3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap-sass": "~3.3.5",
+    "bourbon": "~4.2.5",
+    "fastclick": "~1.0.6",
+    "font-awesome": "~4.4.0",
+    "js-breakpoints": "~1.0.2",
+    "gsap": "~1.18.0",
+    "lodash": "~3.10.1",
+    "pjs": "jneen/pjs#~5.1.1",
+    "react": "~0.14.3",
+    "awesome-bootstrap-checkbox": "~0.3.5",
+    "classnames": "~2.2.0",
+    "moment": "~2.10.6",
+    "bootstrap-datepicker": "^1.6.4"
+  },
+  "description": "Application part of the Cruited website",
+  "main": "",
+  "moduleType": [],
+  "private": true,
+  "overrides": {
+    "bootstrap-sass": {
+      "main": [
+        "./assets/stylesheets/_bootstrap.scss",
+        "./assets/javascripts/bootstrap.min.js"
+      ]
     },
-    "description": "Application part of the Cruited website",
-    "main": "",
-    "moduleType": [],
-    "private": true,
-    "overrides": {
-        "bootstrap-sass": {
-            "main": [
-                "./assets/stylesheets/_bootstrap.scss",
-                "./assets/javascripts/bootstrap.min.js"
-            ]
-        },
-        "font-awesome": {
-            "main": [
-                "./scss/font-awesome.scss",
-                "./fonts/*"
-            ]
-        },
-        "gsap": {
-            "main": [
-                "./src/minified/TweenLite.min.js",
-                "./src/minified/easing/EasePack.min.js",
-                "./src/minified/plugins/CSSPlugin.min.js",
-                "./src/minified/plugins/ScrollToPlugin.min.js"
-            ]
-        },
-        "jquery": {
-            "main": [
-                "./dist/jquery.min.js"
-            ]
-        },
-        "js-breakpoints": {
-            "main": [
-                "./breakpoints.js",
-                "./breakpoints.scss"
-            ]
-        },
-        "pjs": {
-            "main": [
-                "./src/p.js"
-            ]
-        },
-        "lodash": {
-            "main": [
-                "./lodash.min.js"
-            ]
-        },
+    "font-awesome": {
+      "main": [
+        "./scss/font-awesome.scss",
+        "./fonts/*"
+      ]
+    },
+    "gsap": {
+      "main": [
+        "./src/minified/TweenLite.min.js",
+        "./src/minified/easing/EasePack.min.js",
+        "./src/minified/plugins/CSSPlugin.min.js",
+        "./src/minified/plugins/ScrollToPlugin.min.js"
+      ]
+    },
+    "jquery": {
+      "main": [
+        "./dist/jquery.min.js"
+      ]
+    },
+    "js-breakpoints": {
+      "main": [
+        "./breakpoints.js",
+        "./breakpoints.scss"
+      ]
+    },
+    "pjs": {
+      "main": [
+        "./src/p.js"
+      ]
+    },
+    "lodash": {
+      "main": [
+        "./lodash.min.js"
+      ]
+    },
     "react": {
       "main": [
         "./react.js",
         "./react-dom.js"
       ]
     },
-        "awesome-bootstrap-checkbox": {
-            "main": [
-                "./awesome-bootstrap-checkbox.scss"
-            ]
-        },
-        "moment": {
-            "main": [
-                "./min/moment-with-locales.min.js"
-            ]
-        }
+    "awesome-bootstrap-checkbox": {
+      "main": [
+        "./awesome-bootstrap-checkbox.scss"
+      ]
+    },
+    "moment": {
+      "main": [
+        "./min/moment-with-locales.min.js"
+      ]
+    },
+    "bootstrap-datepicker": {
+      "main": [
+        "./dist/css/bootstrap-datepicker3.min.scss",
+        "./dist/js/bootstrap-datepicker.min.js"
+      ]
     }
+  }
 }
