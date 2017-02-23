@@ -68,7 +68,7 @@ const Component = React.createClass({
         const c = this.props.comment;
         const $p = $(e.currentTarget);
 
-        c.redText = $p.text();
+        c.redText = $p.text().trim();
         c.isRedSelected = true;
         c.isGreenSelected = false;
 

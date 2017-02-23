@@ -88,7 +88,7 @@ const Component = React.createClass({
             return null;
         }
 
-        this._updateWellDoneComment(this.state.wellDoneComment);
+        this._updateWellDoneComment(this.state.wellDoneComment.trim());
 
         return (
             <div className="well-done-comment-composer">
@@ -121,7 +121,7 @@ const Component = React.createClass({
             store.addReportComment({
                 id: String.uuid(),
                 categoryId: this.props.reportCategory.id,
-                redText: this.$addCommentTextarea.val()
+                redText: this.$addCommentTextarea.val().trim()
             });
 
             this.$addCommentTextarea.val(null);

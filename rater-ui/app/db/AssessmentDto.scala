@@ -431,7 +431,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseCv
           case Some(overallComment) => """
-            custom_comment_cv = '""" + overallComment + """'"""
+            custom_comment_cv = '""" + DbUtil.safetize(overallComment) + """'"""
         }
       }
 
@@ -444,7 +444,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseCoverLetter
           case Some(overallComment) => """
-            custom_comment = '""" + overallComment + """'"""
+            custom_comment = '""" + DbUtil.safetize(overallComment) + """'"""
         }
       }
 
@@ -457,7 +457,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
         case Some(docReport) => docReport.overallComment match {
           case None => noOverallCommentClauseLinkedinProfile
           case Some(overallComment) => """
-            custom_comment_li = '""" + overallComment + """'"""
+            custom_comment_li = '""" + DbUtil.safetize(overallComment) + """'"""
         }
       }
 
