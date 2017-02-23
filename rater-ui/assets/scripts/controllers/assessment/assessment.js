@@ -355,7 +355,7 @@ const controller = {
             const $textarea = $(e.currentTarget);
             const categoryProductCode = this._categoryProductCodeFromOverallCommentTextarea($textarea);
 
-            const textareaValue = $textarea.val();
+            const textareaValue = $textarea.val().trim();
             const overallComment = textareaValue === "" ? null : textareaValue;
 
             store.assessment.updateOverallComment(categoryProductCode, overallComment);
