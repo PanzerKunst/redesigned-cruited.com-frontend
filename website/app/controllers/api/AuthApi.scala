@@ -45,11 +45,11 @@ class AuthApi @Inject()(val messagesApi: MessagesApi, val emailService: EmailSer
 
                     // sign in the user, then back on the client-side we show the "you are now logged-in" view.
                     Ok(Json.toJson(acc))
-                      .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
-                      + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+                      .withSession(request.session + (SessionService.SessionKeyAccountId -> accountId.toString)
+                      + (SessionService.SessionKeyOrderId -> finalisedOrderId.toString))
                   } else {
                     Ok(Json.toJson(acc))
-                      .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
+                      .withSession(request.session + (SessionService.SessionKeyAccountId -> accountId.toString))
                   }
               }
             }

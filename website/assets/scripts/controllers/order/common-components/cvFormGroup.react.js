@@ -24,7 +24,7 @@ CR.Controllers.CvFormGroup = React.createClass({
             </div>);
     },
 
-    componentDidUpdate: function() {
+    componentDidMount: function() {
         this._initElements();
     },
 

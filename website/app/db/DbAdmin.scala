@@ -7,47 +7,37 @@ import play.api.db.DB
 
 object DbAdmin {
   def reCreateTables() {
-    removeAlterationOnTableDocuments()
+    dropTable("better_scores")
+    dropTable("better_score_desc")
+    dropTable("custom_warning_message")
+    dropTable("defaults_en")
+    dropTable("default_categories_en")
+    dropTable("default_grades")
+    dropTable("default_grades_en")
+    dropTable("default_variations_en")
+    dropTable("document_payment_detail")
+    dropTable("document_payment_detail_demo")
+    dropTable("documents_aux")
+    dropTable("email_sender_info")
+    dropTable("emails")
+    dropTable("free_document_status")
+    dropTable("login_log")
+    dropTable("logs")
+    dropTable("partners_summary")
+    dropTable("prices")
+    dropTable("richtext")
+    dropTable("term_accceptation")
+    dropTable("vocabulary")
+    dropTable("interview_training_order_info")
+    dropTable("it_order_info")
+
+    createTableInterviewTrainingOrderInfo()
+
+    removeAlterationOnTableDefaultCategories()
+    alterTableDefaultCategories()
+
+    removeAlerationOnTableDocuments()
     alterTableDocuments()
-  }
-
-  private def alterTableDocuments() {
-    DB.withConnection { implicit c =>
-      val query = """
-        alter table documents
-        drop column name,
-        drop column hireability,
-        drop column storytelling,
-        drop column advanced_layout,
-        drop column open_application,
-        drop column li_url,
-        drop column last_rate,
-        drop column other_layout,
-        drop column transaction_id,
-        drop column response_code,
-        drop column payment_id,
-        drop column payment_client,
-        drop column payment_card_type,
-        drop column payment_card_holder,
-        drop column payment_last4,
-        drop column payment_error,
-        drop column how_doing_status,
-        drop column how_doing_text,
-        drop column in_progress_at,
-        drop column set_in_progress_at,
-        drop column set_done_at,
-        drop column done_email_sent,
-        drop column 2days_after_assessment_delivered_email_sent,
-        drop column doc_review,
-        drop column free_test,
-        drop column session_id,
-        drop column google_thumb,
-        add job_ad_filename varchar(255) after file_li;"""
-
-      Logger.info("DbAdmin.alterTableDocuments():" + query)
-
-      SQL(query).executeUpdate()
-    }
   }
 
   private def dropTable(tableName: String) {
@@ -58,40 +48,76 @@ object DbAdmin {
     }
   }
 
-  private def removeAlterationOnTableDocuments() {
+  private def createTableInterviewTrainingOrderInfo() {
+    DB.withConnection { implicit c =>
+      val query = """
+          create table it_order_info (
+            id serial,
+            order_id bigint not null,
+            interview_date date,
+            important_for_the_role varchar(2048),
+            latest_interview varchar(2048),
+            need_for_improvement varchar(2048),
+            challenging_questions varchar(2048),
+            primary key(id),
+            constraint fk_documents_id foreign key(order_id) references documents(id)
+          ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;"""
+
+      Logger.info("DbAdmin.createTableInterviewTrainingOrderInfo():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def removeAlterationOnTableDefaultCategories() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table default_categories
+        add descr text,
+        add full_descr text,
+        add icon varchar(255),
+        add top_comment text;"""
+
+      Logger.info("DbAdmin.removeAlterationOnTableDefaultCategories():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def alterTableDefaultCategories() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table default_categories
+        drop column descr,
+        drop column full_descr,
+        drop column icon,
+        drop column top_comment;"""
+
+      Logger.info("DbAdmin.alterTableDefaultCategories():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def removeAlerationOnTableDocuments() {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
-        add name varchar(255),
-        add hireability float(5,2),
-        add storytelling tinyint(1),
-        add advanced_layout tinyint(1),
-        add open_application tinyint(1),
-        add li_url varchar(255),
-        add last_rate date,
-        add other_layout tinyint(1),
-        add transaction_id varchar(255),
-        add response_code int(8),
-        add payment_id varchar(255),
-        add payment_client varchar(255),
-        add payment_card_type varchar(255),
-        add payment_card_holder varchar(255),
-        add payment_last4 int(4),
-        add payment_error text,
-        add how_doing_status int(2),
-        add how_doing_text text,
-        add in_progress_at bigint(20),
-        add set_in_progress_at datetime,
-        add set_done_at datetime,
-        add done_email_sent tinyint(1),
-        add 2days_after_assessment_delivered_email_sent tinyint(1) unsigned,
-        add doc_review tinyint(4),
-        add free_test tinyint(4),
-        add session_id varchar(250),
-        add google_thumb tinyint(4),
-        drop column job_ad_filename;"""
+        modify edition_id int(11) not null;"""
 
-      Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
+      Logger.info("DbAdmin.removeAlerationOnTableDocuments():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def alterTableDocuments() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table documents
+        modify edition_id int(11);"""
+
+      Logger.info("DbAdmin.alterTableDocuments():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -103,6 +129,9 @@ object DbAdmin {
 
   def fixBothersomeCharactersInLinkedinProfile() {
     val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
-    AccountDto.cleanLinkedinProfileOfIds(ids)
+
+    if (ids.nonEmpty) {
+      AccountDto.cleanLinkedinProfileOfIds(ids)
+    }
   }
 }

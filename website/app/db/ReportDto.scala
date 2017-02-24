@@ -25,7 +25,7 @@ object ReportDto {
           tc.id as top_comment_id, tc.comment as top_comment_text,
           cat2.id as top_comment_cat_id, cat2.type as top_comment_doc_type
         from documents d
-          inner join product_edition e on e.id = d.edition_id
+          left join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
           left join documents_comments rc on rc.id_doc = d.id
           left join default_categories cat on cat.id = rc.category
@@ -39,14 +39,14 @@ object ReportDto {
 
       // Use of `getAliased` because of bug when using the regular `get`
       val rowParser = str("file") ~ str("file_cv") ~ (str("job_ad_filename") ?) ~ date("added_at") ~ long("added_by") ~ str("doc_types") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ date("paid_on") ~ str("custom_comment") ~ str("custom_comment_cv") ~ str("custom_comment_li") ~ str("lang") ~
-        long("edition_id") ~ str("edition") ~
+        (long("edition_id") ?) ~ (str("edition") ?) ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) ~
         (long("red_comment_id") ?) ~ (str("red_comment_text") ?) ~ (int("points") ?) ~
         getAliased[Option[Long]]("red_comment_cat_id") ~ getAliased[Option[String]]("red_comment_doc_type") ~
         (long("top_comment_id") ?) ~ (str("top_comment_text") ?) ~
         (long("top_comment_cat_id") ?) ~ (str("top_comment_doc_type") ?) map {
         case coverLetterFileName ~ cvFileName ~ jobAdFileNameOpt ~ creationDate ~ addedBy ~ docTypes ~ positionSought ~ employerSought ~ jobAdUrl ~ customerComment ~ paymentDate ~ coverLetterOverallComment ~ cvOverallComment ~ linkedinProfileOverallComment ~ languageCode ~
-          editionId ~ editionCode ~
+          editionIdOpt ~ editionCodeOpt ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt ~
           redCommentId ~ redCommentText ~ weight ~
           redCommentCategoryId ~ redCommentDocType ~
@@ -76,6 +76,14 @@ object ReportDto {
           val employerSoughtOpt = employerSought match {
             case "" => None
             case otherString => Some(otherString)
+          }
+
+          val editionOpt = editionIdOpt match {
+            case None => None
+            case Some(editionId) => Some(Edition(
+              id = editionId,
+              code = editionCodeOpt.get
+            ))
           }
 
           val couponOpt = couponIdOpt match {
@@ -113,10 +121,7 @@ object ReportDto {
           val order = FrontendOrder(
             id = orderId,
             idInBase64 = StringService.base64Encode(orderId.toString),
-            edition = Edition(
-              id = editionId,
-              code = editionCode
-            ),
+            edition = editionOpt,
             containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
@@ -235,8 +240,8 @@ object ReportDto {
         }
       }
 
-      val redCommentsForCv = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
-      val topCommentsForCv = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
+      val redCommentsForCv = redComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCvReview)
+      val topCommentsForCv = topComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCvReview)
 
       val cvReportOpt = if (redCommentsForCv.isEmpty && topCommentsForCv.isEmpty) {
         None
@@ -248,8 +253,8 @@ object ReportDto {
         ))
       }
 
-      val redCommentsForCoverLetter = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
-      val topCommentsForCoverLetter = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
+      val redCommentsForCoverLetter = redComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCoverLetterReview)
+      val topCommentsForCoverLetter = topComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCoverLetterReview)
 
       val coverLetterReportOpt = if (redCommentsForCoverLetter.isEmpty && topCommentsForCoverLetter.isEmpty) {
         None
@@ -261,8 +266,8 @@ object ReportDto {
         ))
       }
 
-      val redCommentsForLinkedinProfile = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
-      val topCommentsForLinkedinProfile = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
+      val redCommentsForLinkedinProfile = redComments.filter(comment => comment.category.productCode == CruitedProduct.CodeLinkedinProfileReview)
+      val topCommentsForLinkedinProfile = topComments.filter(comment => comment.category.productCode == CruitedProduct.CodeLinkedinProfileReview)
 
       val linkedinProfileReportOpt = if (redCommentsForLinkedinProfile.isEmpty && topCommentsForLinkedinProfile.isEmpty) {
         None
@@ -303,9 +308,9 @@ object ReportDto {
   }
 
   private def normaliseScores(denormalisedScores: List[(String, Long, Long, Int, Int)]): AssessmentReportScores = {
-    val cvReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeCvReview))
-    val coverLetterReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeCoverLetterReview))
-    val linkedinProfileReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeLinkedinProfileReview))
+    val cvReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.DbTypeCvReview))
+    val coverLetterReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.DbTypeCoverLetterReview))
+    val linkedinProfileReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.DbTypeLinkedinProfileReview))
 
     AssessmentReportScores(
       cvReportScores = cvReportScores,

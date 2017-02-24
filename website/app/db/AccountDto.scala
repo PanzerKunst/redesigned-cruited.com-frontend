@@ -286,7 +286,7 @@ object AccountDto {
       val cal = new GregorianCalendar()
       cal.add(Calendar.DATE, -1)
       val creationDateClause = """
-        and added_at < '""" + DbUtil.dateFormat.format(cal.getTime) + """'"""
+        and added_at < '""" + DbUtil.DateTimeFormat.format(cal.getTime) + """'"""
 
       val query = """
         select added_by, max(id) as order_id

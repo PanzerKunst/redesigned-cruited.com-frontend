@@ -38,8 +38,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1}
 
           Ok(views.html.dashboard(i18nMessages, currentLanguage, accountOpt, frontendOrders))
-            .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode)
-            - SessionService.sessionKeyOrderId)
+            .withSession(request.session + (SessionService.SessionKeyLanguageCode -> currentLanguage.ietfCode)
+            - SessionService.SessionKeyOrderId)
         }
     }
   }
@@ -82,8 +82,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
           Ok(views.html.myAccount(i18nMessages, currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.all))
             .withSession(request.session
-            - SessionService.sessionKeyAccountSaveSuccessful
-            + (SessionService.sessionKeyLanguageCode -> account.languageCode))
+            - SessionService.SessionKeyAccountSaveSuccessful
+            + (SessionService.SessionKeyLanguageCode -> account.languageCode))
         }
     }
   }
@@ -107,7 +107,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val account = AccountDto.getOfId(accountId).get
 
           Ok(views.html.newPassword(i18nMessages, currentLanguage, account))
-            .withSession(request.session + (SessionService.sessionKeyResetPasswordToken -> token))
+            .withSession(request.session + (SessionService.SessionKeyResetPasswordToken -> token))
       }
     } else {
       Unauthorized(views.html.unauthorised())
@@ -139,7 +139,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
     Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
-      .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
+      .withSession(request.session + (SessionService.SessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
   def orderInterviewTraining = Action { request =>
@@ -167,7 +167,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
     Ok(views.html.order.interviewTraining.orderInterviewTraining(i18nMessages, currentLanguage, accountOpt, SupportedLanguageDto.all))
-      .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
+      .withSession(request.session + (SessionService.SessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
   def orderStepAssessmentInfo() = Action { request =>
@@ -234,7 +234,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
             Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), JsNull, None))
               .withHeaders(doNotCachePage: _*)
-              .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
+              .withSession(request.session + (SessionService.SessionKeyAccountId -> accountId.toString))
         }
 
       case Some(accountId) =>
@@ -266,8 +266,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     // log the user in (if necessary) and then redirect to "/payment"
                     Redirect("/order/payment")
                       .withHeaders(doNotCachePage: _*)
-                      .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
-                      + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+                      .withSession(request.session + (SessionService.SessionKeyAccountId -> accountId.toString)
+                      + (SessionService.SessionKeyOrderId -> finalisedOrderId.toString))
                   }
                 } else {
                   // Temporary account
@@ -285,8 +285,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     // log the user in, then display the view. The JS controller should detect that the user is logged-in (= account final), and show the "You are now logged-in" view.
                     Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, AccountDto.getOfId(finalisedAccountId), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
                       .withHeaders(doNotCachePage: _*)
-                      .withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
-                      + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+                      .withSession(request.session + (SessionService.SessionKeyAccountId -> finalisedAccountId.toString)
+                      + (SessionService.SessionKeyOrderId -> finalisedOrderId.toString))
                   }
                 }
             }
@@ -397,7 +397,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         val selectedProductCode = if (request.queryString.contains("productCode")) {
           request.queryString("productCode").head
         } else {
-          CruitedProduct.codeCvReview
+          CruitedProduct.CodeCvReview
         }
 
         OrderDto.getOfIdForFrontend(orderId) match {
@@ -478,7 +478,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             AccountDto.update(updatedAccount)
 
             Redirect("/")
-              .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.get.toString))
+              .withSession(request.session + (SessionService.SessionKeyAccountId -> accountId.get.toString))
         }
       }
     }
@@ -534,7 +534,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           AccountDto.update(updatedAccount)
 
           Redirect(appRedirectUri)
-            .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString))
+            .withSession(request.session + (SessionService.SessionKeyAccountId -> accountId.toString))
       }
     }
   }
@@ -589,8 +589,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           // sign the user in and redirect to "/payment"
           Redirect("/order/payment")
             .withHeaders(doNotCachePage: _*)
-            .withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
-            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+            .withSession(request.session + (SessionService.SessionKeyAccountId -> finalisedAccountId.toString)
+            + (SessionService.SessionKeyOrderId -> finalisedOrderId.toString))
 
         // If an account with this LI profile already exists in the DB
         case Some(existingAccount) =>
@@ -605,8 +605,8 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           // log the user in and display the Account Creation view (no redirect).
           Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(existingAccount), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
             .withHeaders(doNotCachePage: _*)
-            .withSession(request.session + (SessionService.sessionKeyAccountId -> existingAccount.id.toString)
-            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+            .withSession(request.session + (SessionService.SessionKeyAccountId -> existingAccount.id.toString)
+            + (SessionService.SessionKeyOrderId -> finalisedOrderId.toString))
       }
     }
   }

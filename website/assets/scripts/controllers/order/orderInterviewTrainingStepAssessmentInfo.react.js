@@ -32,8 +32,8 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
                                 <div>
                                     <CR.Controllers.CvFormGroup orderedCv={true} controller={this} />
                                     <CR.Controllers.JobAdFormGroups controller={this} />
-                                    <CR.Controllers.InterviewDateFormGroup />
                                     <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
+                                    <CR.Controllers.InterviewDateFormGroup />
                                 </div>
                             </section>
 
@@ -59,14 +59,17 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
 
             this.$cvFormGroup = this.$form.find("#cv-form-group");
 
-            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
-
-            this.$positionSoughtField = this.$form.find("#position-sought");
-            this.$employerSoughtField = this.$form.find("#employer-sought");
-
             this.$jobAdUrlField = this.$form.find("#job-ad-url");
 
-            this.$customerCommentField = this.$form.find("#customer-comment");
+            this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
+
+            const $interviewDateFormGroup = this.$form.find("#interview-date-form-group");
+            this.$interviewDateField = $interviewDateFormGroup.find("input[type=text]");
+
+            this.$importantForTheRoleField = this.$form.find("#important-for-the-role");
+            this.$latestInterviewField = this.$form.find("#latest-interview");
+            this.$needForImprovementField = this.$form.find("#need-for-improvement");
+            this.$challengingQuestionsField = this.$form.find("#challenging-questions");
 
             this.$submitBtn = this.$form.find("button[type=submit]");
 
@@ -93,26 +96,54 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
                 this.$submitBtn.enableLoading();
 
                 const formData = new FormData();
-                formData.append("editionId", CR.order.getEdition().id);
-                formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));    // TODO
+
+                formData.append("containedProductCodes", CR.Models.Product.codes.INTERVIEW_TRAINING);
+
                 if (CR.order.getCoupon()) {
                     formData.append("couponCode", CR.order.getCoupon().code);
                 }
-                if (this.cvFile) {
-                    formData.append("cvFile", this.cvFile, this.cvFile.name);
-                }
+
+                formData.append("cvFile", this.cvFile, this.cvFile.name);
 
                 const jobAdUrl = this.$jobAdUrlField.val();
-
                 if (jobAdUrl) {
                     formData.append("jobAdUrl", jobAdUrl);
                 }
+
                 if (this.jobAdFile) {
                     formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
                 }
 
+                const ddMmYyyy = this.$interviewDateField.val().trim();
+                let interviewMoment = null;
+
+                if (ddMmYyyy) {
+                    interviewMoment = moment(ddMmYyyy, "DD-MM-YYYY");
+                    formData.append("interviewDate", interviewMoment.format("YYYY-MM-DD"));
+                }
+
+                const answerToQuestionImportantForTheRole = this.$importantForTheRoleField.val().trim();
+                if (answerToQuestionImportantForTheRole) {
+                    formData.append("answerToQuestionImportantForTheRole", answerToQuestionImportantForTheRole);
+                }
+
+                const answerToQuestionLatestInterview = this.$latestInterviewField.val().trim();
+                if (answerToQuestionLatestInterview) {
+                    formData.append("answerToQuestionLatestInterview", answerToQuestionLatestInterview);
+                }
+
+                const answerToQuestionNeedForImprovement = this.$needForImprovementField.val().trim();
+                if (answerToQuestionNeedForImprovement) {
+                    formData.append("answerToQuestionNeedForImprovement", answerToQuestionNeedForImprovement);
+                }
+
+                const answerToQuestionChallengingQuestions = this.$challengingQuestionsField.val().trim();
+                if (answerToQuestionChallengingQuestions) {
+                    formData.append("answerToQuestionChallengingQuestions", answerToQuestionChallengingQuestions);
+                }
+
                 const type = "POST";
-                const url = "/api/orders";
+                const url = "/api/orders/interview-training";
 
                 const httpRequest = new XMLHttpRequest();
                 httpRequest.onreadystatechange = function() {
@@ -122,12 +153,15 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
                             CR.order.setId(order.id);
                             CR.order.setIdInBase64(order.idInBase64);
                             CR.order.setCvFileName(order.cvFileName);
-                            CR.order.setCoverLetterFileName(order.coverLetterFileName);
-                            CR.order.setSoughtPosition(order.positionSought);
-                            CR.order.setSoughtEmployer(order.employerSought);
                             CR.order.setJobAdUrl(order.jobAdUrl);
                             CR.order.setJobAdFileName(order.jobAdFileName);
-                            CR.order.setCustomerComment(order.customerComment);
+                            CR.order.setInterviewTrainingInfo({
+                                interviewDate: interviewMoment ? interviewMoment.format("YYYY-MM-DD") : null,
+                                importantForTheRole: answerToQuestionImportantForTheRole,
+                                latestInterview: answerToQuestionLatestInterview,
+                                needForImprovement: answerToQuestionNeedForImprovement,
+                                challengingQuestions: answerToQuestionChallengingQuestions
+                            });
                             CR.order.setTosAccepted();
                             CR.order.saveInLocalStorage();
 
@@ -146,8 +180,6 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
 
                             if (!_.isEmpty(this.$cvFormGroup)) {
                                 this._scrollToElement(this.$cvFormGroup);
-                            /* TODO } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                this._scrollToElement(this.$coverLetterFormGroup); */
                             }
                             /* } else {
                              alert("AJAX failure doing a " + type + " request to \"" + url + "\"");

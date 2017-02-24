@@ -247,22 +247,25 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
 
                     const positionSought = this.$positionSoughtField.val();
-                    const employerSought = this.$employerSoughtField.val();
-                    const jobAdUrl = this.$jobAdUrlField.val();
-                    const customerComment = this.$customerCommentField.val();
-
                     if (positionSought) {
                         formData.append("positionSought", positionSought);
                     }
+
+                    const employerSought = this.$employerSoughtField.val();
                     if (employerSought) {
                         formData.append("employerSought", employerSought);
                     }
+
+                    const jobAdUrl = this.$jobAdUrlField.val();
                     if (jobAdUrl) {
                         formData.append("jobAdUrl", jobAdUrl);
                     }
+
                     if (this.jobAdFile) {
                         formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
                     }
+
+                    const customerComment = this.$customerCommentField.val();
                     if (customerComment) {
                         formData.append("customerComment", customerComment);
                     }

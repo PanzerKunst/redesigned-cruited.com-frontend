@@ -3,7 +3,7 @@
 CR.Controllers.InterviewDateFormGroup = React.createClass({
     render: function() {
         return (
-            <div className="form-group" ref="formGroup">
+            <div className="form-group" id="interview-date-form-group">
                 <label>{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.dateSelection.label"]}</label>
 
                 <div className="input-group date">
@@ -19,12 +19,13 @@ CR.Controllers.InterviewDateFormGroup = React.createClass({
         this._initElements();
 
         this.$datePicker.datepicker({
-            format: "dd-mm-yyyy"
+            format: "dd-mm-yyyy",
+            autoclose: true
         });
     },
 
     _initElements: function() {
-        const $formGroup = $(ReactDOM.findDOMNode(this.refs.formGroup));
+        const $formGroup = $("#interview-date-form-group");
 
         this.$datePicker = $formGroup.find(".input-group.date");
     }

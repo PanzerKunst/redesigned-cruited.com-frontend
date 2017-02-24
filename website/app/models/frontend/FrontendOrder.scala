@@ -6,7 +6,7 @@ import play.api.libs.json.{JsPath, Writes}
 
 case class FrontendOrder(id: Long,
                          idInBase64: String,
-                         edition: Edition,
+                         edition: Option[Edition],
                          containedProductCodes: List[String],
                          coupon: Option[Coupon],
                          cvFileName: Option[String],
@@ -26,7 +26,7 @@ object FrontendOrder {
   implicit val writes: Writes[FrontendOrder] = (
     (JsPath \ "id").write[Long] and
       (JsPath \ "idInBase64").write[String] and
-      (JsPath \ "edition").write[Edition] and
+      (JsPath \ "edition").writeNullable[Edition] and
       (JsPath \ "containedProductCodes").write[List[String]] and
       (JsPath \ "coupon").writeNullable[Coupon] and
       (JsPath \ "cvFileName").writeNullable[String] and

@@ -31,14 +31,9 @@ CR.Models.Order = P(function(c) {
             });
         }
 
-        this._calculateReductions();
-
+        this._reductions = order && order.reductions ? _.cloneDeep(order.reductions) : [];
         this._coupon = order && order.coupon ? _.cloneDeep(order.coupon) : null;
-
-        if (order && order.edition) {
-            this._edition = _.cloneDeep(order.edition);
-        }
-
+        this._edition = order && order.edition ? _.cloneDeep(order.edition) : null;
         this._id = order && order.id ? order.id : null;
         this._idInBase64 = order && order.idInBase64 ? order.idInBase64 : null;
         this._cvFileName = order && order.cvFileName ? order.cvFileName : null;
@@ -69,6 +64,7 @@ CR.Models.Order = P(function(c) {
             jobAdFileName: this._jobAdFileName,
             customerComment: this._customerComment,
             status: this._status,
+            interviewTrainingInfo: this._interviewTrainingInfo,
             isTosAccepted: this._isTosAccepted
         });
     };
@@ -199,6 +195,14 @@ CR.Models.Order = P(function(c) {
 
     c.setCustomerComment = function(customerComment) {
         this._customerComment = customerComment;
+    };
+
+    c.getInterviewTrainingInfo = function() {
+        return this._interviewTrainingInfo;
+    };
+
+    c.setInterviewTrainingInfo = function(interviewTrainingInfo) {
+        this._interviewTrainingInfo = interviewTrainingInfo;
     };
 
     c.getStatus = function() {

@@ -57,7 +57,7 @@ object OrderDto {
       val query = """
       insert into documents(id, edition_id, file, file_cv, file_li, job_ad_filename, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, lang, custom_comment, custom_comment_cv, custom_comment_li)
       values(""" + order.tempId + """, """ +
-        order.editionId + """, '""" +
+        order.editionId.getOrElse("NULL") + """, '""" +
         coverLetterFileNameClause + """', '""" +
         cvFileNameClause + """',
         '', """ +
@@ -128,12 +128,12 @@ object OrderDto {
 
       val paymentDateClause = order.paymentTimestamp match {
         case None => "NULL"
-        case Some(paymentTimestamp) => "'" + DbUtil.dateFormat.format(new Date(paymentTimestamp)) + "'"
+        case Some(paymentTimestamp) => "'" + DbUtil.DateTimeFormat.format(new Date(paymentTimestamp)) + "'"
       }
 
       val query = """
       insert into documents(edition_id, file, file_cv, file_li, job_ad_filename, added_at, code, added_by, type, status, position, employer, job_ad_url, customer_comment, lang, paid_on, custom_comment, custom_comment_cv, custom_comment_li)
-      values(""" + order.editionId + """, '""" +
+      values(""" + order.editionId.getOrElse("NULL") + """, '""" +
         coverLetterFileNameClause + """', '""" +
         cvFileNameClause + """',
         '', """ +
@@ -190,7 +190,7 @@ object OrderDto {
 
       val paymentDateClause = order.paymentTimestamp match {
         case None => "NULL"
-        case Some(paymentTimestamp) => "'" + DbUtil.dateFormat.format(new Date(paymentTimestamp)) + "'"
+        case Some(paymentTimestamp) => "'" + DbUtil.DateTimeFormat.format(new Date(paymentTimestamp)) + "'"
       }
 
 
@@ -219,7 +219,7 @@ object OrderDto {
 
       val query = """
         update documents set
-        edition_id = """ + order.editionId + """,
+        edition_id = """ + order.editionId.getOrElse("NULL") + """,
         status = """ + order.status + """,
         added_by = """ + order.accountId.getOrElse(AccountDto.unknownUserId) + """,
         code = """ + couponCodeClause + """,
@@ -263,7 +263,7 @@ object OrderDto {
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
         from documents d
-          inner join product_edition e on e.id = d.edition_id
+          left join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
         where d.id = """ + id + """
           and d.shw = 1;"""
@@ -271,10 +271,10 @@ object OrderDto {
       Logger.info("OrderDto.getOfIdForFrontend():" + query)
 
       val rowParser = str("file") ~ str("file_cv") ~ str("file_li") ~ (str("job_ad_filename") ?) ~ date("added_at") ~ long("added_by") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~ str("lang") ~
-        long("edition_id") ~ str("edition") ~
+        (long("edition_id") ?) ~ (str("edition") ?) ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) map {
         case coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ jobAdFileNameOpt ~ creationDate ~ accountId ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~ languageCode ~
-          editionId ~ editionCode ~
+          editionIdOpt ~ editionCodeOpt ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
@@ -305,6 +305,14 @@ object OrderDto {
           val employerSoughtOpt = employerSought match {
             case "" => None
             case otherString => Some(otherString)
+          }
+
+          val editionOpt = editionIdOpt match {
+            case None => None
+            case Some(editionId) => Some(Edition(
+              id = editionId,
+              code = editionCodeOpt.get
+            ))
           }
 
           val couponOpt = couponIdOpt match {
@@ -339,10 +347,7 @@ object OrderDto {
           val frontendOrder = FrontendOrder(
             id = id,
             idInBase64 = StringService.base64Encode(id.toString),
-            edition = Edition(
-              id = editionId,
-              code = editionCode
-            ),
+            edition = editionOpt,
             containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
@@ -391,10 +396,10 @@ object OrderDto {
       Logger.info("OrderDto.getOfAccountIdForFrontend():" + query)
 
       val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ (str("job_ad_filename") ?) ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (date("paid_on") ?) ~ str("lang") ~
-        long("edition_id") ~ str("edition") ~
+        (long("edition_id") ?) ~ (str("edition") ?) ~
         (long("coupon_id") ?) ~ (str("name") ?) ~ (int("tp") ?) ~ (int("number_of_times") ?) ~ (int("discount") ?) ~ (str("discount_type") ?) ~ (date("valid_date") ?) ~ (str("campaign_name") ?) ~ (str("error_message") ?) map {
         case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ jobAdFileNameOpt ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ paymentDateOpt ~ languageCode ~
-          editionId ~ editionCode ~
+          editionIdOpt ~ editionCodeOpt ~
           couponIdOpt ~ couponCodeOpt ~ couponTypeOpt ~ couponMaxUseCountOpt ~ amountOpt ~ discountTypeOpt ~ expirationDateOpt ~ campaignNameOpt ~ couponExpiredMsgOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
@@ -420,6 +425,14 @@ object OrderDto {
           val employerSoughtOpt = employerSought match {
             case "" => None
             case otherString => Some(otherString)
+          }
+
+          val editionOpt = editionIdOpt match {
+            case None => None
+            case Some(editionId) => Some(Edition(
+              id = editionId,
+              code = editionCodeOpt.get
+            ))
           }
 
           val couponOpt = couponIdOpt match {
@@ -454,10 +467,7 @@ object OrderDto {
           val frontendOrder = FrontendOrder(
             id = orderId,
             idInBase64 = StringService.base64Encode(orderId.toString),
-            edition = Edition(
-              id = editionId,
-              code = editionCode
-            ),
+            edition = editionOpt,
             containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             coupon = couponOpt,
             cvFileName = cvFileNameOpt,
@@ -502,9 +512,9 @@ object OrderDto {
 
       Logger.info("OrderDto.getMostRecentUnpaidOfAccountId():" + query)
 
-      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ (str("job_ad_filename") ?) ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ long("edition_id") ~ str("lang") ~
+      val rowParser = long("order_id") ~ str("file") ~ str("file_cv") ~ str("file_li") ~ (str("job_ad_filename") ?) ~ date("added_at") ~ str("type") ~ int("status") ~ str("position") ~ str("employer") ~ (str("job_ad_url") ?) ~ (str("customer_comment") ?) ~ (long("edition_id") ?) ~ str("lang") ~
         (long("coupon_id") ?) ~ (str("name") ?) map {
-        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ jobAdFileNameOpt ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ editionId ~ languageCode ~
+        case orderId ~ coverLetterFileName ~ cvFileName ~ linkedinProfileFileName ~ jobAdFileNameOpt ~ creationDate ~ docTypes ~ status ~ positionSought ~ employerSought ~ jobAdUrlOpt ~ customerCommentOpt ~ editionIdOpt ~ languageCode ~
           couponIdOpt ~ couponCodeOpt =>
 
           val coverLetterFileNameOpt = coverLetterFileName match {
@@ -539,7 +549,7 @@ object OrderDto {
 
           Order(
             id = Some(orderId),
-            editionId = editionId,
+            editionId = editionIdOpt,
             containedProductCodes = Order.getContainedProductCodesFromTypesString(docTypes),
             couponId = couponIdOpt,
             cvFileName = cvFileNameOpt,

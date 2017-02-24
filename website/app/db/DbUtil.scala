@@ -4,7 +4,8 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 object DbUtil {
-  val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  val DateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  val DateFormat = new SimpleDateFormat("yyyy-MM-dd")
 
   def safetize(string: String): String = {
     string.replaceAll("'", "''").replaceAll("\\n", "\\\\n")

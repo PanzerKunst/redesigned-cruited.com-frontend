@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.{Inject, Singleton}
 
-import db.{AccountDto, OrderDto}
+import db.{AccountDto, InterviewTrainingOrderInfoDto, OrderDto}
 import models.frontend.OrderReceivedFromFrontend
-import models.{Account, Order}
+import models.{Account, InterviewTrainingOrderInfo, Order}
 import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
@@ -82,7 +82,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
     // Create temporary order
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
-      editionId = requestData("editionId").head.toLong,
+      editionId = Some(requestData("editionId").head.toLong),
       containedProductCodes = requestData("containedProductCodes").head.split(",").toList,
       couponCode = couponCode,
       cvFileName = cvFileNameOpt,
@@ -99,9 +99,8 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
 
     OrderDto.createTemporary(tempOrder, currentLanguage) match {
       case None => throw new Exception("OrderDto.createTemporary didn't return an ID!")
-      case Some(createdOrderId) =>
-        Created(Json.toJson(OrderDto.getOfIdForFrontend(createdOrderId).get._1))
-          .withSession(request.session + (SessionService.sessionKeyOrderId -> tempOrderId.toString))
+      case Some(_) => Created(Json.toJson(OrderDto.getOfIdForFrontend(tempOrderId).get._1))
+        .withSession(request.session + (SessionService.SessionKeyOrderId -> tempOrderId.toString))
     }
   }
 
@@ -243,6 +242,106 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
 
             Ok
         }
+    }
+  }
+
+  private val InterviewDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+
+  def createInterviewTrainingOrder() = Action(parse.multipartFormData) { request =>
+    // We only want to generate negative IDs, because positive ones are for non-temp orders
+    val rand = Random.nextLong()
+    val tempOrderId = if (rand >= 0) {
+      -rand
+    } else {
+      rand
+    }
+
+
+    val requestBody = request.body
+
+    val cvFileNameOpt = requestBody.file("cvFile") match {
+      case None => None
+      case Some(file) => Some(documentService.saveFileInDocumentsFolder(file, tempOrderId, documentService.middleFileNameCv))
+    }
+
+    val jobAdFileNameOpt = requestBody.file("jobAdFile") match {
+      case None => None
+      case Some(file) => Some(documentService.saveFileInDocumentsFolder(file, tempOrderId, documentService.middleFileNameJobAd))
+    }
+
+
+    val requestData = requestBody.dataParts
+
+    val couponCode = if (!requestData.contains("couponCode")) {
+      None
+    } else {
+      Some(requestData("couponCode").head)
+    }
+
+    val jobAdUrl = if (!requestData.contains("jobAdUrl")) {
+      None
+    } else {
+      Some(requestData("jobAdUrl").head)
+    }
+
+    // Create temporary order
+    val tempOrder = OrderReceivedFromFrontend(
+      tempId = tempOrderId,
+      containedProductCodes = requestData("containedProductCodes").head.split(",").toList,
+      couponCode = couponCode,
+      cvFileName = cvFileNameOpt,
+      jobAdUrl = jobAdUrl,
+      jobAdFileName = jobAdFileNameOpt,
+      accountId = SessionService.getAccountId(request.session)
+    )
+
+    val currentLanguage = SessionService.getCurrentLanguage(request.session)
+
+    OrderDto.createTemporary(tempOrder, currentLanguage) match {
+      case None => throw new Exception("OrderDto.createTemporary didn't return an ID!")
+      case Some(_) =>
+        val interviewDateOpt = if (!requestData.contains("interviewDate")) {
+          None
+        } else {
+          val interviewDateAsStr = requestData("interviewDate").head
+          Some(InterviewDateFormat.parse(interviewDateAsStr))
+        }
+
+        val answerToQuestionImportantForTheRoleOpt = if (!requestData.contains("answerToQuestionImportantForTheRole")) {
+          None
+        } else {
+          Some(requestData("answerToQuestionImportantForTheRole").head)
+        }
+
+        val answerToQuestionLatestInterviewOpt = if (!requestData.contains("answerToQuestionLatestInterview")) {
+          None
+        } else {
+          Some(requestData("answerToQuestionLatestInterview").head)
+        }
+
+        val answerToQuestionNeedForImprovementOpt = if (!requestData.contains("answerToQuestionNeedForImprovement")) {
+          None
+        } else {
+          Some(requestData("answerToQuestionNeedForImprovement").head)
+        }
+
+        val answerToQuestionChallengingQuestionsOpt = if (!requestData.contains("answerToQuestionChallengingQuestions")) {
+          None
+        } else {
+          Some(requestData("answerToQuestionChallengingQuestions").head)
+        }
+
+        InterviewTrainingOrderInfoDto.create(InterviewTrainingOrderInfo(
+          orderId = tempOrderId,
+          interviewDate = interviewDateOpt,
+          importantForTheRole = answerToQuestionImportantForTheRoleOpt,
+          latestInterview = answerToQuestionLatestInterviewOpt,
+          needForImprovement = answerToQuestionNeedForImprovementOpt,
+          challengingQuestions = answerToQuestionChallengingQuestionsOpt
+        ))
+
+        Created(Json.toJson(OrderDto.getOfIdForFrontend(tempOrderId).get._1))
+          .withSession(request.session + (SessionService.SessionKeyOrderId -> tempOrderId.toString))
     }
   }
 

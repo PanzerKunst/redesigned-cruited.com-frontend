@@ -22,9 +22,9 @@ class ScoreAverageTasker extends TimerTask {
     if (!isRunning) {
       isRunning = true
 
-      val idOfTheLastNCvReports = ReportDto.getIdsOfTheLastNReports(nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeCvReview)
-      val idOfTheLastNCoverLetterReports = ReportDto.getIdsOfTheLastNReports(nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeCoverLetterReview)
-      val idOfTheLastNLinkedinProfileReports = ReportDto.getIdsOfTheLastNReports(nbLastAssessmentsToTakeIntoAccount, CruitedProduct.dbTypeLinkedinProfileReview)
+      val idOfTheLastNCvReports = ReportDto.getIdsOfTheLastNReports(nbLastAssessmentsToTakeIntoAccount, CruitedProduct.DbTypeCvReview)
+      val idOfTheLastNCoverLetterReports = ReportDto.getIdsOfTheLastNReports(nbLastAssessmentsToTakeIntoAccount, CruitedProduct.DbTypeCoverLetterReview)
+      val idOfTheLastNLinkedinProfileReports = ReportDto.getIdsOfTheLastNReports(nbLastAssessmentsToTakeIntoAccount, CruitedProduct.DbTypeLinkedinProfileReview)
 
       // Merge these 3 lists of IDs, without duplicates
       val reportIds = (idOfTheLastNCvReports ++ idOfTheLastNCoverLetterReports ++ idOfTheLastNLinkedinProfileReports).toSet

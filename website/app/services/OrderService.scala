@@ -3,7 +3,7 @@ package services
 import java.util.Date
 import javax.inject.{Inject, Singleton}
 
-import db.{AccountDto, OrderDto}
+import db.{AccountDto, InterviewTrainingOrderInfoDto, OrderDto}
 import models.{CruitedProduct, Order}
 import play.api.Logger
 import play.api.libs.json.JsNull
@@ -37,6 +37,8 @@ class OrderService @Inject()(val documentService: DocumentService) {
     // Create finalised order, with data from the old one
     val finalisedOrderId = OrderDto.createFinalised(orderToBeFinalised).get
     val finalisedOrder = OrderDto.getOfId(finalisedOrderId).get
+
+    finaliseInterviewTrainingOrderInfo(orderId, finalisedOrder)
 
     // Delete old order
     OrderDto.deleteOfId(orderId)
@@ -81,7 +83,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   private def convertLinkedinPublicProfilePageToPdf(order: Order) {
     val linkedinProfile = AccountDto.getOfId(order.accountId.get).get.linkedinProfile
 
-    if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && linkedinProfile != JsNull) {
+    if (order.containedProductCodes.contains(CruitedProduct.CodeLinkedinProfileReview) && linkedinProfile != JsNull) {
       documentService.convertLinkedinProfilePageToPdf(order.id.get, (linkedinProfile \ "publicProfileUrl").as[String])
     }
   }
@@ -134,7 +136,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
-    if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && order.accountId.get != AccountDto.unknownUserId) {
+    if (order.containedProductCodes.contains(CruitedProduct.CodeLinkedinProfileReview) && order.accountId.get != AccountDto.unknownUserId) {
       // Fail epically if the Linkedin profile doesn't exist
       if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile == JsNull) {
         throw new Exception("OrderService.getNewLinkedinProfileFileName() > Fatal error: linkedinProfile is JsNull for order ID " + order.id)
@@ -157,6 +159,21 @@ class OrderService @Inject()(val documentService: DocumentService) {
         if (documentService.isFilePresent(fileName)) {
           documentService.generateThumbnail(fileName)
         }
+    }
+  }
+
+  private def finaliseInterviewTrainingOrderInfo(tempOrderId: Long, finalisedOrder: Order): Unit = {
+    if (finalisedOrder.containedProductCodes.head == CruitedProduct.CodeInterviewTraining) {
+      InterviewTrainingOrderInfoDto.getOfOrderId(tempOrderId) match {
+        case None =>
+
+        case Some(orderInfo) =>
+          val finalisedInterviewTrainingOrderInfo = orderInfo.copy(
+            orderId = finalisedOrder.id.get
+          )
+
+          InterviewTrainingOrderInfoDto.update(finalisedInterviewTrainingOrderInfo)
+      }
     }
   }
 }

@@ -6,18 +6,18 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{AnyContent, Request, Session}
 
 object SessionService {
-  val sessionKeyAccountId = "accountId"
-  val sessionKeyOrderId = "orderId"
-  val sessionKeyAccountSaveSuccessful = "accountSaveSuccessful"
-  val sessionKeyResetPasswordToken = "resetPasswordToken"
-  val sessionKeyLanguageCode = "languageCode"
+  val SessionKeyAccountId = "accountId"
+  val SessionKeyOrderId = "orderId"
+  val SessionKeyAccountSaveSuccessful = "accountSaveSuccessful"
+  val SessionKeyResetPasswordToken = "resetPasswordToken"
+  val SessionKeyLanguageCode = "languageCode"
 
-  private val defaultLanguage = SupportedLanguageDto.all.head
-  private var i18nMessagesSv = Map[String, String]()
-  private var i18nMessagesEn = Map[String, String]()
+  private val DefaultLanguage = SupportedLanguageDto.all.head
+  private var I18nMessagesSv = Map[String, String]()
+  private var I18nMessagesEn = Map[String, String]()
 
   def getOrderId(session: Session): Option[Long] = {
-    session.get(sessionKeyOrderId) match {
+    session.get(SessionKeyOrderId) match {
       case None => None
       case Some(orderId) => Some(orderId.toLong)
     }
@@ -30,22 +30,22 @@ object SessionService {
   }
 
   def getAccountId(session: Session): Option[Long] = {
-    session.get(sessionKeyAccountId) match {
+    session.get(SessionKeyAccountId) match {
       case None => None
       case Some(accountId) => Some(accountId.toLong)
     }
   }
 
   def isAccountSaveSuccessful(session: Session): Boolean = {
-    session.get(sessionKeyAccountSaveSuccessful) match {
+    session.get(SessionKeyAccountSaveSuccessful) match {
       case None => false
       case Some(str) => str.toBoolean
     }
   }
 
   def getCurrentLanguage(session: Session): SupportedLanguage = {
-    session.get(sessionKeyLanguageCode) match {
-      case None => defaultLanguage
+    session.get(SessionKeyLanguageCode) match {
+      case None => DefaultLanguage
       case Some(languageCode) => SupportedLanguageDto.getOfCode(languageCode).get
     }
   }
@@ -55,17 +55,17 @@ object SessionService {
   }
 
   private def getI18nMessagesFromCode(languageCode: String, messagesApi: MessagesApi): Map[String, String] = {
-    if (i18nMessagesSv.isEmpty) {
-      i18nMessagesSv = I18nService.getMessages(messagesApi, I18nService.languageCodeSv)
+    if (I18nMessagesSv.isEmpty) {
+      I18nMessagesSv = I18nService.getMessages(messagesApi, I18nService.languageCodeSv)
     }
-    if (i18nMessagesEn.isEmpty) {
-      i18nMessagesEn = I18nService.getMessages(messagesApi, I18nService.languageCodeEn)
+    if (I18nMessagesEn.isEmpty) {
+      I18nMessagesEn = I18nService.getMessages(messagesApi, I18nService.languageCodeEn)
     }
 
     if (languageCode == I18nService.languageCodeEn) {
-      i18nMessagesEn
+      I18nMessagesEn
     } else {
-      i18nMessagesSv
+      I18nMessagesSv
     }
   }
 }

@@ -28,8 +28,8 @@ class AccountApi @Inject()(val orderService: OrderService) extends Controller {
           val finalisedOrderId = orderService.finaliseOrder(OrderDto.getOfId(orderId).get)
 
           // then log the user in. The JS controller should then redirect to "/payment"
-          Created.withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
-            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+          Created.withSession(request.session + (SessionService.SessionKeyAccountId -> finalisedAccountId.toString)
+            + (SessionService.SessionKeyOrderId -> finalisedOrderId.toString))
         }
     }
   }
@@ -60,7 +60,7 @@ class AccountApi @Inject()(val orderService: OrderService) extends Controller {
 
               AccountDto.update(updatedAccount)
 
-              Ok.withSession(request.session + (SessionService.sessionKeyAccountSaveSuccessful -> "true"))
+              Ok.withSession(request.session + (SessionService.SessionKeyAccountSaveSuccessful -> "true"))
           }
       }
     }
@@ -85,12 +85,12 @@ class AccountApi @Inject()(val orderService: OrderService) extends Controller {
 
               AccountDto.update(updatedAccount)
 
-              request.session.get(SessionService.sessionKeyResetPasswordToken) match {
+              request.session.get(SessionService.SessionKeyResetPasswordToken) match {
                 case None =>
                 case Some(token) => AccountService.resetPasswordTokens -= token
               }
 
-              Ok.withSession(request.session - SessionService.sessionKeyResetPasswordToken)
+              Ok.withSession(request.session - SessionService.SessionKeyResetPasswordToken)
           }
         }
     }

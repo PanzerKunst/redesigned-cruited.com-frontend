@@ -40,6 +40,7 @@ PUT           /api/accounts                                         controllers.
 PUT           /api/accounts/password                                controllers.api.AccountApi.updatePassword
 POST          /api/auth                                             controllers.api.AuthApi.signInWithEmail
 POST          /api/auth/reset-password                              controllers.api.AuthApi.sendResetPasswordEmail
+POST          /api/orders/interview-training                        controllers.api.OrderApi.createInterviewTrainingOrder
 
 # 3rd party auth
 GET           /auth/linkedin/callback/sign-in                       controllers.Application.linkedinCallbackSignIn

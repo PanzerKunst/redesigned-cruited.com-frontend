@@ -134,16 +134,19 @@ CR.Controllers.OrderInterviewTraining = P(function(c) {
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
+
         CR.order.removeAllProducts();
-        CR.order.setEdition(null);
 
         CR.order.addProduct({
-            code: "INTERVIEW_TRAINING",
+            code: CR.Models.Product.codes.INTERVIEW_TRAINING,
             price: {
                 amount: 299,
                 currencyCode: "SEK"
             }
         });
+
+        CR.order.setEdition(null);
+        CR.order.saveInLocalStorage();
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),

@@ -5,7 +5,7 @@ import models.frontend.FrontendOrder
 import play.api.Logger
 
 case class Order(id: Option[Long],
-                 editionId: Long,
+                 editionId: Option[Long],
                  containedProductCodes: List[String],
                  couponId: Option[Long],
                  cvFileName: Option[String],
@@ -24,7 +24,10 @@ case class Order(id: Option[Long],
 
   def this(frontendOrder: FrontendOrder, linkedinProfileFileName: Option[String]) = this(
     id = Some(frontendOrder.id),
-    editionId = frontendOrder.edition.id,
+    editionId = frontendOrder.edition match {
+      case None => None
+      case Some(edition) => Some(edition.id)
+    },
     containedProductCodes = frontendOrder.containedProductCodes,
     couponId = frontendOrder.coupon match {
       case None => None
@@ -116,8 +119,14 @@ object Order {
         val allProducts = CruitedProductDto.getAll
         nbAboveZero match {
           case 1 =>
-            allProducts.filter(p => p.code == containedProductCodes.head).head
-              .getTypeForDb
+            val containedProductCode = containedProductCodes.head
+
+            if (containedProductCode == CruitedProduct.CodeInterviewTraining) {
+              CruitedProduct.DbTypeInterviewTraining
+            } else {
+              allProducts.filter(p => p.code == containedProductCode).head
+                .getTypeForDb
+            }
           case nbAboveOne =>
             // First item handled differently - no comma prefix
             val firstProduct = allProducts.filter(p => p.code == containedProductCodes.head).head
@@ -135,12 +144,12 @@ object Order {
   }
 
   def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
-    val typeArray = docTypes.split(typeStringSeparator).map { docType => docType.trim}
+    val typeArray = docTypes.split(typeStringSeparator).map { docType => docType.trim }
     getContainedProductCodesFromTypesArray(typeArray)
   }
 
   def getContainedProductCodesFromTypesArray(docTypes: Array[String]): List[String] = {
-    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
+    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb) }
       .toList
   }
 
