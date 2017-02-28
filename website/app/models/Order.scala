@@ -48,7 +48,7 @@ case class Order(id: Option[Long],
     paymentTimestamp = frontendOrder.paymentTimestamp
   )
 
-  def getCostAfterReductions: Int = {
+  def costAfterReductions(): Int = {
     var orderedProducts: List[CruitedProduct] = List()
     for (p <- CruitedProductDto.getAll) {
       if (containedProductCodes.contains(p.code)) {

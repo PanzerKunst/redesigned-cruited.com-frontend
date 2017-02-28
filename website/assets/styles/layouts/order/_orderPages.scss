@@ -199,7 +199,31 @@ $two-column-right-col-margin-top: 3em;
         &.cart-product-price {
           float: right;
           color: $grey;
-          margin-top: 1.7em;
+        }
+      }
+
+      .fa-times {
+        color: $brand-danger;
+      }
+
+      &.editable {
+        .cart-product-price {
+          margin-right: -2.9em;
+          @include medium-screen {
+            margin-right: -2.65em;
+          }
+          @include large-screen {
+            margin-right: -2.025em;
+          }
+        }
+      }
+
+      &.with-edition {
+        .cart-product-price {
+          margin-top: 1em;
+          @include medium-screen {
+            margin-top: 0;
+          }
         }
       }
     }
@@ -408,23 +432,6 @@ $two-column-right-col-margin-top: 3em;
 
     > div {
       margin-bottom: 2em;
-
-      li {
-        > .cart-product-price {
-          margin-right: -2.9em;
-          @include medium-screen {
-            margin-right: -2.65em;
-            margin-top: 0;
-          }
-          @include large-screen {
-            margin-right: -2.025em;
-          }
-        }
-
-        .fa-times {
-          color: $brand-danger;
-        }
-      }
     }
 
     table {

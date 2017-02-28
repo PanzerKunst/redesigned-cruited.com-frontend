@@ -9,12 +9,14 @@ import play.api.db.DB
 import services.GlobalConfig
 
 object CruitedProductDto {
+  private val commonClause = "price_currency_code = '" + GlobalConfig.paymentCurrencyCode + "'"
+
   def getAll: List[CruitedProduct] = {
     DB.withConnection { implicit c =>
       val query = """
         select id, code, price_amount
         from product
-        where price_currency_code = '""" + GlobalConfig.paymentCurrencyCode + """'
+        where """ + commonClause + """
         order by id;"""
 
       Logger.info("CruitedProductDto.getAll():" + query)
@@ -35,11 +37,65 @@ object CruitedProductDto {
     }
   }
 
+  def getForMainOrderPage: List[CruitedProduct] = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select id, code, price_amount
+        from product
+        where """ + commonClause + """
+          and code != '""" + CruitedProduct.CodeInterviewTraining + """'
+        order by id;"""
+
+      Logger.info("CruitedProductDto.getForMainOrderPage():" + query)
+
+      val rowParser = long("id") ~ str("code") ~ double("price_amount") map {
+        case id ~ code ~ priceAmount =>
+          CruitedProduct(
+            id = id,
+            code = code,
+            price = Price(
+              amount = priceAmount,
+              currencyCode = GlobalConfig.paymentCurrencyCode
+            )
+          )
+      }
+
+      SQL(query).as(rowParser.*)
+    }
+  }
+
+  def getForInterviewTrainingOrderPage: CruitedProduct = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select id, code, price_amount
+        from product
+        where """ + commonClause + """
+          and code = '""" + CruitedProduct.CodeInterviewTraining + """'
+        order by id;"""
+
+      Logger.info("CruitedProductDto.getForInterviewTrainingOrderPage():" + query)
+
+      val rowParser = long("id") ~ str("code") ~ double("price_amount") map {
+        case id ~ code ~ priceAmount =>
+          CruitedProduct(
+            id = id,
+            code = code,
+            price = Price(
+              amount = priceAmount,
+              currencyCode = GlobalConfig.paymentCurrencyCode
+            )
+          )
+      }
+
+      SQL(query).as(rowParser.single)
+    }
+  }
+
   def getOfId(id: Long): Option[CruitedProduct] = {
     DB.withConnection { implicit c =>
       val query = """select code, price_amount
       from product
-      where price_currency_code = '""" + GlobalConfig.paymentCurrencyCode + """'
+      where """ + commonClause + """
         and id = """ + id + """
       limit 1;"""
 

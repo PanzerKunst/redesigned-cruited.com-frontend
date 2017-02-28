@@ -1,9 +1,11 @@
 package db
 
 import anorm._
+import models.CruitedProduct
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
+import services.GlobalConfig
 
 object DbAdmin {
   def reCreateTables() {
@@ -36,8 +38,11 @@ object DbAdmin {
     removeAlterationOnTableDefaultCategories()
     alterTableDefaultCategories()
 
-    removeAlerationOnTableDocuments()
+    removeAlterationOnTableDocuments()
     alterTableDocuments()
+
+    removeAlterationOnTableUseri()
+    alterTableUseri()
   }
 
   private def dropTable(tableName: String) {
@@ -99,13 +104,13 @@ object DbAdmin {
     }
   }
 
-  private def removeAlerationOnTableDocuments() {
+  private def removeAlterationOnTableDocuments() {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
         modify edition_id int(11) not null;"""
 
-      Logger.info("DbAdmin.removeAlerationOnTableDocuments():" + query)
+      Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
 
       SQL(query).executeUpdate()
     }
@@ -123,8 +128,43 @@ object DbAdmin {
     }
   }
 
+  private def removeAlterationOnTableUseri() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table useri
+        add code varchar(255);"""
+
+      Logger.info("DbAdmin.removeAlterationOnTableUseri():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
+  private def alterTableUseri() {
+    DB.withConnection { implicit c =>
+      val query = """
+        alter table useri
+        drop column code;"""
+
+      Logger.info("DbAdmin.alterTableUseri():" + query)
+
+      SQL(query).executeUpdate()
+    }
+  }
+
   def initData() {
+    initDataProduct()
     fixBothersomeCharactersInLinkedinProfile()
+  }
+
+  private def initDataProduct() {
+    DB.withConnection { implicit c =>
+      SQL("""delete from product
+          where code = '""" + CruitedProduct.CodeInterviewTraining + """';""").execute()
+
+      SQL("""insert into product(code, price_amount, price_currency_code)
+          values('""" + CruitedProduct.CodeInterviewTraining + """', 299, '""" + GlobalConfig.paymentCurrencyCode + """');""").execute()
+    }
   }
 
   def fixBothersomeCharactersInLinkedinProfile() {

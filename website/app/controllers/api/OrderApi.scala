@@ -198,7 +198,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
         OrderDto.getMostRecentUnpaidOfAccountId(accountId) match {
           case None => BadRequest("No unpaid order found for this account ID")
           case Some(order) =>
-            val costAfterReductions = order.getCostAfterReductions
+            val costAfterReductions = order.costAfterReductions()
 
             if (costAfterReductions == 0) {
               BadRequest("Cannot pay an order whose cost after reductions is zero")

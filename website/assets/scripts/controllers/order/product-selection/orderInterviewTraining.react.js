@@ -127,7 +127,7 @@ CR.Controllers.OrderInterviewTraining = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, loggedInAccount, supportedLanguages) {
+    c.init = function(i18nMessages, loggedInAccount, interviewTrainingProduct, supportedLanguages) {
         CR.i18nMessages = i18nMessages;
         CR.loggedInAccount = loggedInAccount;
         this.supportedLanguages = supportedLanguages;
@@ -136,15 +136,7 @@ CR.Controllers.OrderInterviewTraining = P(function(c) {
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         CR.order.removeAllProducts();
-
-        CR.order.addProduct({
-            code: CR.Models.Product.codes.INTERVIEW_TRAINING,
-            price: {
-                amount: 299,
-                currencyCode: "SEK"
-            }
-        });
-
+        CR.order.addProduct(interviewTrainingProduct);
         CR.order.setEdition(null);
         CR.order.saveInLocalStorage();
 

@@ -138,7 +138,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
       .withSession(request.session + (SessionService.SessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
@@ -166,7 +166,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.interviewTraining.orderInterviewTraining(i18nMessages, currentLanguage, accountOpt, SupportedLanguageDto.all))
+    Ok(views.html.order.interviewTraining.orderInterviewTraining(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForInterviewTrainingOrderPage, SupportedLanguageDto.all))
       .withSession(request.session + (SessionService.SessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
@@ -319,7 +319,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             that the account ID involved was '""" + accountId + """' and the order ID involved was '""" + orderId + """'""")
                   case Some(order) =>
                     // If the cost is 0, we redirect to the dashboard
-                    if (order.getCostAfterReductions == 0) {
+                    if (order.costAfterReductions() == 0) {
                       emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
                       Redirect("/?action=orderCompleted")
                     } else {

@@ -1,13 +1,11 @@
 package db
 
-import anorm.SqlParser.{date, int, long, str}
+import anorm.SqlParser.{date, long, str}
 import anorm._
 import models._
-import models.frontend.FrontendOrder
 import play.api.Logger
 import play.api.Play.current
 import play.api.db.DB
-import services.{GlobalConfig, StringService}
 
 object InterviewTrainingOrderInfoDto {
   def create(orderInfo: InterviewTrainingOrderInfo): Option[Long] = {

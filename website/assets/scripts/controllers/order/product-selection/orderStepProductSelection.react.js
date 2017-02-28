@@ -159,6 +159,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
+        this._removeInterviewTrainingProductFromOrder();
+
         if (!CR.order.getEdition() && !_.isEmpty(CR.editions)) {
             CR.order.setEdition(CR.editions[0]);
         }
@@ -195,5 +197,13 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         }
 
         return products;
+    };
+
+    c._removeInterviewTrainingProductFromOrder = function() {
+        const orderProducts = CR.order.getProducts();
+
+        if (orderProducts.length === 1 && orderProducts[0].code === CR.Models.Product.codes.INTERVIEW_TRAINING) {
+            CR.order.removeAllProducts();
+        }
     };
 });

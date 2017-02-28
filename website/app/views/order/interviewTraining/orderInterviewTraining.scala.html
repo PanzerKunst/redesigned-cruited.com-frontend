@@ -1,4 +1,4 @@
-@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], supportedLanguages: List[SupportedLanguage])
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], interviewTrainingProduct: CruitedProduct, supportedLanguages: List[SupportedLanguage])
 
 @main("Cruited - " + i18nMessages("order.interviewTraining.title"), "order-interview-training", i18nMessages, lang) {
 <!--
@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
     CR.Controllers.OrderInterviewTraining(
         @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
         @Html(play.api.libs.json.Json.toJson(account).toString()),
+        @Html(play.api.libs.json.Json.toJson(interviewTrainingProduct).toString()),
         @Html(play.api.libs.json.Json.toJson(supportedLanguages).toString())
     );
 });

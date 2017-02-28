@@ -12,6 +12,7 @@ case class CruitedProduct(id: Long,
       case CruitedProduct.CodeCvReview => CruitedProduct.DbTypeCvReview
       case CruitedProduct.CodeCoverLetterReview => CruitedProduct.DbTypeCoverLetterReview
       case CruitedProduct.CodeLinkedinProfileReview => CruitedProduct.DbTypeLinkedinProfileReview
+      case CruitedProduct.CodeInterviewTraining => CruitedProduct.DbTypeInterviewTraining
     }
   }
 }

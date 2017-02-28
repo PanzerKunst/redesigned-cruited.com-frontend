@@ -25,7 +25,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
     }
 
     // If the cost is 0, we set the status to paid
-    val orderToBeFinalised = if (order.getCostAfterReductions == 0) {
+    val orderToBeFinalised = if (order.costAfterReductions() == 0) {
       order.copy(
         status = Order.statusIdPaid,
         paymentTimestamp = Some(new Date().getTime)

@@ -17,9 +17,7 @@ CR.Controllers.CartSection = React.createClass({
                     </div>
 
                     <ul className="styleless">
-                        {CR.order.getProducts().map(function(product, index) {
-                            return <CR.Controllers.CartProductListItem key={index} product={product} controller={controller} />;
-                        })}
+                        {CR.order.getProducts().map((product, index) => <CR.Controllers.CartProductListItem key={index} product={product} isEditable={product.code !== CR.Models.Product.codes.INTERVIEW_TRAINING} controller={controller} />)}
                     </ul>
 
                     <CR.Controllers.CouponForm controller={controller} />
