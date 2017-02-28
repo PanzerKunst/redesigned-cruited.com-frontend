@@ -45,5 +45,8 @@ CR.propertyFile = {
     }
 };
 
+CR.pageIds = {
+    orderInterviewTraining: "order-interview-training"
+};
 
 // Global functions
