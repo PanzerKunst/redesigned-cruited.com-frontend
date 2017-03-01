@@ -56,7 +56,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
     val orderIdOpt = if (request.queryString.contains("reportId")) {
       try {
-        Some(request.queryString.get("reportId").get.head.toLong)
+        Some(request.queryString("reportId").head.toLong)
       }
       catch {
         case pe: NumberFormatException => None
@@ -97,7 +97,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
   def confirmResetPassword() = Action { request =>
     if (request.queryString.contains("token")) {
-      val token = request.queryString.get("token").get.head
+      val token = request.queryString("token").head
 
       AccountService.resetPasswordTokens.get(token) match {
         case None => BadRequest("This token has already been used, or is incorrect")
@@ -133,7 +133,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
 
     if (request.queryString.contains("lang")) {
-      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString.get("lang").get.head).getOrElse(SupportedLanguageDto.all.head)
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
     }
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
@@ -175,9 +175,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         // We also need to update any eventual temp order with that new account ID
         SessionService.getOrderId(request.session) match {
           case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
-            We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
+            We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
             and that the account ID involved was '""" + accountId + """'.""")
+              .withSession(request.session - SessionService.sessionKeyOrderId)
 
           case Some(orderId) =>
             val orderWithUpdatedAccountId = OrderDto.getOfId(orderId).get.copy(
@@ -199,9 +200,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           case Some(account) =>
             SessionService.getOrderId(request.session) match {
               case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
-            We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
+            We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this issue,
             and that the account ID involved was '""" + accountId + """'.""")
+                .withSession(request.session - SessionService.sessionKeyOrderId)
 
               case Some(orderId) =>
                 if (!AccountService.isTemporary(accountId)) {
@@ -267,9 +269,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
                 OrderDto.getOfId(orderId) match {
                   case None => BadRequest( """You have uncovered a bug in the \"Payment\" page of our web application.
-            We are really sorry about the inconvenience, and invite you to re-create your order from the beginning.
-            Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
-            that the account ID involved was '""" + accountId + """' and the order ID involved was '""" + orderId + """'""")
+                    We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
+                    Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
+                    that the account ID involved was '""" + accountId + """' and the order ID involved was '""" + orderId + """'""")
+                    .withSession(request.session - SessionService.sessionKeyOrderId)
+
                   case Some(order) =>
                     // If the cost is 0, we redirect to the dashboard
                     if (order.getCostAfterReductions == 0) {
@@ -296,7 +300,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             if (!request.queryString.contains("id")) {
               BadRequest("'id' missing")
             } else {
-              val id = request.queryString.get("id").get.head.toLong
+              val id = request.queryString("id").head.toLong
 
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
@@ -327,7 +331,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
             if (!request.queryString.contains("orderId")) {
               BadRequest("'orderId' missing")
             } else {
-              val orderId = request.queryString.get("orderId").get.head.toLong
+              val orderId = request.queryString("orderId").head.toLong
 
               OrderDto.getOfIdForFrontend(orderId) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + orderId)
@@ -348,7 +352,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       case None => Redirect("/login?reportId=" + orderId)
       case Some(accountId) =>
         val selectedProductCode = if (request.queryString.contains("productCode")) {
-          request.queryString.get("productCode").get.head
+          request.queryString("productCode").head
         } else {
           CruitedProduct.codeCvReview
         }
@@ -381,14 +385,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
       val isLinkedinAccountUnregistered = false
 
-      Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head), isLinkedinAccountUnregistered))
+      Ok(views.html.signIn(i18nMessages, currentLanguage, linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriSignIn), Some("Error #" + request.queryString("error").head + ": " + request.queryString("error_description").head), isLinkedinAccountUnregistered))
     } else if (!request.queryString.contains("state") ||
-      request.queryString.get("state").get.head != linkedinService.linkedinState) {
+      request.queryString("state").head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
     } else if (!request.queryString.contains("code")) {
       BadRequest("Linkedin Auth did not return any value for 'code'!")
     } else {
-      linkedinService.authCode = Some(request.queryString.get("code").get.head)
+      linkedinService.authCode = Some(request.queryString("code").head)
       linkedinService.requestAccessToken(linkedinService.linkedinRedirectUriSignIn)
 
       val linkedinProfile = linkedinService.getProfile
@@ -409,7 +413,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         }
       }
 
-      if (!accountId.isDefined || AccountService.isTemporary(accountId.get)) {
+      if (accountId.isEmpty || AccountService.isTemporary(accountId.get)) {
         val currentLanguage = SessionService.getCurrentLanguage(request.session)
         val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
         val isLinkedinAccountUnregistered = true
@@ -445,14 +449,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
       val currentLanguage = SessionService.getCurrentLanguage(request.session)
       val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-      Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      Ok(views.html.order.orderStepAssessmentInfo(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString("error").head + ": " + request.queryString("error_description").head)))
     } else if (!request.queryString.contains("state") ||
-      request.queryString.get("state").get.head != linkedinService.linkedinState) {
+      request.queryString("state").head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
     } else if (!request.queryString.contains("code")) {
       BadRequest("Linkedin Auth did not return any value for 'code'!")
     } else {
-      linkedinService.authCode = Some(request.queryString.get("code").get.head)
+      linkedinService.authCode = Some(request.queryString("code").head)
       linkedinService.requestAccessToken(linkedinRedirectUri)
 
       val linkedinProfile = linkedinService.getProfile
@@ -499,14 +503,14 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
     if (request.queryString.contains("error")) {
-      Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString.get("error").get.head + ": " + request.queryString.get("error_description").get.head)))
+      Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, None, linkedinService.getAuthCodeRequestUrl(linkedinRedirectUri), JsNull, Some("Error #" + request.queryString("error").head + ": " + request.queryString("error_description").head)))
     } else if (!request.queryString.contains("state") ||
-      request.queryString.get("state").get.head != linkedinService.linkedinState) {
+      request.queryString("state").head != linkedinService.linkedinState) {
       BadRequest("Linkedin Auth returned wrong value for 'state'!")
     } else if (!request.queryString.contains("code")) {
       BadRequest("Linkedin Auth did not return any value for 'code'!")
     } else {
-      linkedinService.authCode = Some(request.queryString.get("code").get.head)
+      linkedinService.authCode = Some(request.queryString("code").head)
       linkedinService.requestAccessToken(linkedinRedirectUri)
 
       val linkedinProfile = linkedinService.getProfile
@@ -549,17 +553,27 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         case Some(existingAccount) =>
           // we attach the order
           val orderId = SessionService.getOrderId(request.session).get
-          val attachedOrder = OrderDto.getOfId(orderId).get.copy(
-            accountId = Some(existingAccount.id)
-          )
 
-          val finalisedOrderId = orderService.finaliseOrder(attachedOrder)
+          OrderDto.getOfId(orderId) match {
+            case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
+              We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
+              Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this issue,
+              and that the account ID involved was '""" + existingAccount.id + """'.""")
+              .withSession(request.session - SessionService.sessionKeyOrderId)
 
-          // log the user in and display the Account Creation view (no redirect).
-          Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(existingAccount), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
-            .withHeaders(doNotCachePage: _*)
-            .withSession(request.session + (SessionService.sessionKeyAccountId -> existingAccount.id.toString)
-            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+            case Some(order) =>
+              val attachedOrder = order.copy(
+                accountId = Some(existingAccount.id)
+              )
+
+              val finalisedOrderId = orderService.finaliseOrder(attachedOrder)
+
+              // log the user in and display the Account Creation view (no redirect).
+              Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, Some(existingAccount), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), linkedinProfile, None))
+                .withHeaders(doNotCachePage: _*)
+                .withSession(request.session + (SessionService.sessionKeyAccountId -> existingAccount.id.toString)
+                  + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+          }
       }
     }
   }
