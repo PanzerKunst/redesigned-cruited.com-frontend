@@ -15,7 +15,7 @@ CR.Controllers.CartProductListItem = React.createClass({
                     <p className="cart-product-name">{CR.i18nMessages["product.name." + product.code]}</p>
                     <CR.Controllers.EditionElement />
                 </span>
-                <span className="cart-product-price">{product.price.amount} {product.price.currencyCode}{this._deleteButton()}</span>
+                <span className="cart-product-price">{product.price.amount}&nbsp;{product.price.currencyCode}{this._deleteButton()}</span>
             </li>
         );
     },

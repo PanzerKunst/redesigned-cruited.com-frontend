@@ -205,7 +205,7 @@ $two-column-right-col-margin-top: 3em;
         color: $brand-danger;
 
         @include medium-screen {
-          margin-top: 0.1em;
+          margin-top: 0;
         }
       }
 
@@ -226,17 +226,6 @@ $two-column-right-col-margin-top: 3em;
       &.with-edition {
         .cart-product-price {
           margin-top: 0.5em;
-        }
-
-        @include medium-screen {
-          > span {
-            display: flex;
-            align-items: center;
-          }
-
-          .cart-product-price {
-            margin-top: 0.2em;
-          }
         }
       }
     }
@@ -456,6 +445,17 @@ $two-column-right-col-margin-top: 3em;
         max-width: 100%;
       }
 
+      .with-edition {
+        > span {
+          display: flex;
+          align-items: center;
+        }
+
+        .cart-product-price {
+          margin-top: 0;
+        }
+      }
+
       .cart-product-name {
         display: inline-block;
         width: 17em;
@@ -537,19 +537,32 @@ $two-column-right-col-margin-top: 3em;
     }
   }
 
-  #cart-section form {
-    @include medium-screen {
-      > .form-group > div {
+  #cart-section {
+    > div li {
+      display: block;
+      @include clearfix;
+
+      > span {
+        float: left;
+
+        &.cart-product-price {
+          float: right;
+        }
+      }
+    }
+
+    form > .form-group > div {
+      @include medium-screen {
         display: block;
         @include clearfix;
 
-        > input,
-        > button {
+        > input {
+          max-width: 77%;
           float: left;
         }
 
-        > input {
-          max-width: 77%;
+        > button {
+          float: right;
         }
       }
     }
@@ -570,17 +583,29 @@ $two-column-right-col-margin-top: 3em;
       }
     }
 
-    #cart-section .bottom-section {
+    #cart-section {
       @include medium-screen {
-        display: block;
-        @include clearfix;
+        .with-edition > span {
+          display: block;
+          @include clearfix;
 
-        > table {
-          float: right;
+          > .cart-product-name,
+          > .edition {
+            float: left;
+          }
         }
 
-        > .guarantee-panel {
-          float: left;
+        .bottom-section {
+          display: block;
+          @include clearfix;
+
+          > table {
+            float: right;
+          }
+
+          > .guarantee-panel {
+            float: left;
+          }
         }
       }
     }
