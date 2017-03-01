@@ -185,32 +185,37 @@ $two-column-right-col-margin-top: 3em;
     }
 
     li {
-      @include clearfix;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
       margin-top: 1em;
 
       > span {
-        float: left;
-
         &:first-child {
-          max-width: 71%;
+          flex-grow: 1;
         }
 
         &.cart-product-price {
-          float: right;
           color: $grey;
         }
       }
 
       .fa-times {
         color: $brand-danger;
+
+        @include medium-screen {
+          margin-top: 0.1em;
+        }
       }
 
       &.editable {
         .cart-product-price {
           margin-right: -2.9em;
+          min-width: 7.2em;
           @include medium-screen {
             margin-right: -2.65em;
+            min-width: 0;
           }
           @include large-screen {
             margin-right: -2.025em;
@@ -220,9 +225,17 @@ $two-column-right-col-margin-top: 3em;
 
       &.with-edition {
         .cart-product-price {
-          margin-top: 1em;
-          @include medium-screen {
-            margin-top: 0;
+          margin-top: 0.5em;
+        }
+
+        @include medium-screen {
+          > span {
+            display: flex;
+            align-items: center;
+          }
+
+          .cart-product-price {
+            margin-top: 0.2em;
           }
         }
       }
