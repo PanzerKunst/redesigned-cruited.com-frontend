@@ -1,14 +1,14 @@
 #order-interview-training {
-  #interview-training-description {
+  #products-section {
     border-bottom: none;
 
-    > ul {
-      margin: 0;
-
-      > li:last-child {
-        margin-top: $content-element-margin-bottom;
-      }
+    @include large-screen {
+      padding-bottom: 2em;
     }
+  }
+
+  .checkbox input[type=checkbox]:disabled + label {
+    opacity: 1;
   }
 
   .highlighted-number {

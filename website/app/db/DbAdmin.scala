@@ -163,7 +163,7 @@ object DbAdmin {
           where code = '""" + CruitedProduct.CodeInterviewTraining + """';""").execute()
 
       SQL("""insert into product(code, price_amount, price_currency_code)
-          values('""" + CruitedProduct.CodeInterviewTraining + """', 299, '""" + GlobalConfig.paymentCurrencyCode + """');""").execute()
+          values('""" + CruitedProduct.CodeInterviewTraining + """', 749, '""" + GlobalConfig.paymentCurrencyCode + """');""").execute()
     }
   }
 

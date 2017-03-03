@@ -317,6 +317,10 @@ nav > a,
   }
 }
 
+.read-only > .checkbox > label {
+  cursor: default;
+}
+
 
 .no-flexbox {
   #linkedin-preview {

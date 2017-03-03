@@ -180,6 +180,7 @@ order.productSelection.productsSection.title=Produkter
 order.productSelection.productsSection.productName.CV_REVIEW=Bedömning av cv
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Bedömning av personligt brev
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
+order.productSelection.productsSection.productName.INTERVIEW_TRAINING=Intervjuträning
 
 order.productSelection.editionsSection.title=Välj version
 order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
@@ -194,7 +195,7 @@ order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vil
 order.productSelection.cartSection.title=Din beställning
 order.productSelection.cartSection.productsHeader.products=Produkter
 order.productSelection.cartSection.productsHeader.defaultPrice=Pris
-order.productSelection.cartSection.coupon.label=Har du ett presentkort eller en rabattkod från någon av våra partner?
+order.productSelection.cartSection.coupon.label=Har du en rabattkod från någon av våra partner?
 order.productSelection.cartSection.coupon.placeholder=Rabattkod
 order.productSelection.cartSection.coupon.addBtn.text=Lägg till
 order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
@@ -299,17 +300,16 @@ order.edit.saveBtn.text=Spara
 
 # Order Interview Training homepage
 
-order.interviewTraining.title=Intervjuträning
-order.interviewTraining.subtitle=Hur kan vi hjälpa dig?
+order.interviewTraining.title=Inledning
+order.interviewTraining.subtitle=Beställ Intervjuträning
 
-order.interviewTraining.description.heading=Förbered dig och träna inför en jobbintervju
-order.interviewTraining.description.text.1=Du får i lugn och ro förbereda svar på de vanligaste och ofta klurigaste intervjufrågorna. Vi bedömer dina svar och du får råd om hur du kan förbättra dem.
-order.interviewTraining.description.text.2=Du bokar också in en träningssession per telefon där du får göra en testintervju och få ytterligare feedback på hur du framställer dina svar.
+order.interviewTraining.productsSection.title=Produkt
+order.interviewTraining.productsSection.description=Du får i lugn och ro förbereda svar på de vanligaste och ofta klurigaste intervjufrågorna. Vi bedömer dina svar och du får råd om hur du kan förbättra dem.
 
 
 # Order Interview Training assessement info
 
-order.interviewTraining.assessmentInfo.title=Something
+order.interviewTraining.assessmentInfo.title=Detaljer
 order.interviewTraining.assessmentInfo.subtitle=Something else
 
 order.interviewTraining.assessmentInfo.basicInfoSection.title=Basic info

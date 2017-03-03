@@ -24,14 +24,19 @@ CR.Controllers.OrderInterviewTraining = P(function(c) {
 
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
 
-                        <section id="interview-training-description" className="two-columns">
-                            <header>
-                                <p className="light-font">{CR.i18nMessages["order.interviewTraining.description.heading"]}</p>
-                            </header>
-                            <ul className="styleless">
-                                <li>{CR.i18nMessages["order.interviewTraining.description.text.1"]}</li>
-                                <li>{CR.i18nMessages["order.interviewTraining.description.text.2"]}</li>
-                            </ul>
+                        <section id="products-section" className="two-columns">
+                            <h2>{CR.i18nMessages["order.interviewTraining.productsSection.title"]}</h2>
+                            <p>{CR.i18nMessages["order.interviewTraining.productsSection.description"]}</p>
+                            <div>
+                                <header>
+                                    <div className="alert alert-info guarantee-panel" role="alert">
+                                        <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                                    </div>
+                                </header>
+                                <ul className="styleless">
+                                    {CR.order.getProducts().map((product, index) => <CR.Controllers.ProductListItem key={index} product={product} readOnly={true} controller={this.state.controller} />)}
+                                </ul>
+                            </div>
                         </section>
 
                         <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order/interview-training" />

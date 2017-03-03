@@ -180,6 +180,7 @@ order.productSelection.productsSection.title=Products
 order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my LinkedIn Profile
+order.productSelection.productsSection.productName.INTERVIEW_TRAINING=Interview Training
 
 order.productSelection.editionsSection.title=Product Edition
 order.productSelection.editionsSection.subtitle=Please choose which edition best suits you.
@@ -194,7 +195,7 @@ order.productSelection.languageSection.subtitle=You're searching for a job in Sw
 order.productSelection.cartSection.title=Your Order
 order.productSelection.cartSection.productsHeader.products=Products
 order.productSelection.cartSection.productsHeader.defaultPrice=Price
-order.productSelection.cartSection.coupon.label=Have a Promotion Code or a Gift Card from one of our partners?
+order.productSelection.cartSection.coupon.label=Do you have a Promotion Code from one of our partners?
 order.productSelection.cartSection.coupon.placeholder=Coupon Code
 order.productSelection.cartSection.coupon.addBtn.text=Apply coupon
 order.productSelection.cartSection.coupon.addBtn.loadingText=Applying coupon...
@@ -299,17 +300,16 @@ order.edit.saveBtn.text=Save
 
 # Order Interview Training homepage
 
-order.interviewTraining.title=Interview Training
-order.interviewTraining.subtitle=How can we help you?
+order.interviewTraining.title=Introduction
+order.interviewTraining.subtitle=Order an interview training
 
-order.interviewTraining.description.heading=Prepare yourself and train for a job interview
-order.interviewTraining.description.text.1=You can calmly prepare answers to the most common and often trickiest interview questions. We assess your answers and you will get advice on how you can improve them.
-order.interviewTraining.description.text.2=You also book a training session by phone, where you can do a test interview and get additional feedback on how you produce your answers.
+order.interviewTraining.productsSection.title=Product
+order.interviewTraining.productsSection.description=You can calmly prepare answers to the most common and often trickiest interview questions. We assess your answers and you will get advice on how you can improve them.
 
 
 # Order Interview Training assessement info
 
-order.interviewTraining.assessmentInfo.title=Something
+order.interviewTraining.assessmentInfo.title=Details
 order.interviewTraining.assessmentInfo.subtitle=Something else
 
 order.interviewTraining.assessmentInfo.basicInfoSection.title=Basic info

@@ -18,10 +18,10 @@ object AccountDto {
     DB.withConnection("users") { implicit c =>
       val query = """
       insert into useri(id, registered_at, /* useful fields */
-        tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
+        tp, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li, linkedin_basic_profile_fields) /* unused but required fields */
       values(""" + accountId + """,
         now(), """ +
-        Account.typeCustomer + """, '', '', '', 0, '', '', '', now(), now(), 0, 0, '');"""
+        Account.typeCustomer + """, '', '', 0, '', '', '', now(), now(), 0, 0, '');"""
 
       Logger.info("AccountDto.createTemporary():" + query)
 
@@ -45,25 +45,25 @@ object AccountDto {
 
       val query = """
       insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, lang, /* useful fields */
-        tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
+        tp, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
         DbUtil.safetize(emailAddress.toLowerCase) + """', """ +
         passwordClause + """,
         now(), '""" +
         linkedinProfileClause + """', '""" +
         currentLanguage.ietfCode + """', """ +
-        Account.typeCustomer + """, '', '', '', 0, '', '', '', now(), now(), 0, 0);"""
+        Account.typeCustomer + """, '', '', 0, '', '', '', now(), now(), 0, 0);"""
 
       // Logging query without password
       Logger.info("""AccountDto.create():
       insert into useri(prenume, email, pass, registered_at, linkedin_basic_profile_fields, lang, /* useful fields */
-        tp, code, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
+        tp, img, linkedin_id, old_shw, old_nume, old_pass, old_prenume, date, last_login, fpay_done_cv, fpay_done_li) /* unused but required fields */
       values('""" + DbUtil.safetize(firstName) + """', '""" +
         DbUtil.safetize(emailAddress.toLowerCase) + """',
         now(), '""" +
         linkedinProfileClause + """', '""" +
         currentLanguage.ietfCode + """', """ +
-        Account.typeCustomer + """, '', '', '', 0, '', '', '', now(), now(), 0, 0);""")
+        Account.typeCustomer + """, '', '', 0, '', '', '', now(), now(), 0, 0);""")
 
       SQL(query).executeInsert()
     }

@@ -26,28 +26,32 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
 
                         <section id="products-section" className="two-columns">
-                            <header>
-                                <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
-                                <div className="alert alert-info guarantee-panel" role="alert">
-                                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
-                                </div>
-                            </header>
-                            <ul className="styleless">
-                                {this.state.products.map(function(product, index) {
-                                    return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
-                                }.bind(this))}
-                            </ul>
+                            <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
+                            <div>
+                                <header>
+                                    <div className="alert alert-info guarantee-panel" role="alert">
+                                        <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                                    </div>
+                                </header>
+                                <ul className="styleless">
+                                    {this.state.products.map(function(product, index) {
+                                        return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
+                                    }.bind(this))}
+                                </ul>
+                            </div>
                         </section>
                         <section id="editions-section" className="two-columns">
-                            <header>
-                                <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
-                                <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
-                            </header>
-                            <ul className="styleless">
-                            {CR.editions.map(function(edition, index) {
-                                return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
-                            }.bind(this))}
-                            </ul>
+                            <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
+                            <div>
+                                <header>
+                                    <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
+                                </header>
+                                <ul className="styleless">
+                                {CR.editions.map(function(edition, index) {
+                                    return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
+                                }.bind(this))}
+                                </ul>
+                            </div>
                         </section>
 
                         <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />

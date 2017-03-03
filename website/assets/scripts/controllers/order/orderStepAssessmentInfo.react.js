@@ -43,26 +43,30 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section" className="two-columns">
-                                <header>
-                                    <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
-                                </header>
+                                <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
                                 <div>
-                                    {this._getSignInWithLinkedinFormGroup()}
-                                    <CR.Controllers.CvFormGroup orderedCv={this.state.orderedCv} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this} />
-                                    <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.state.orderedCoverLetter} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this} />
-                                    <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
+                                    <header>
+                                        <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
+                                    </header>
+                                    <div>
+                                        {this._getSignInWithLinkedinFormGroup()}
+                                        <CR.Controllers.CvFormGroup orderedCv={this.state.orderedCv} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this} />
+                                        <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.state.orderedCoverLetter} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this} />
+                                        <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
+                                    </div>
                                 </div>
                             </section>
                             <section id="job-you-search-section" className="two-columns">
-                                <header>
-                                    <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
-                                </header>
+                                <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
                                 <div>
-                                    <CR.Controllers.PositionSoughtFormGroup />
-                                    <CR.Controllers.EmployerSoughtFormGroup />
-                                    <CR.Controllers.JobAdFormGroups controller={this} />
+                                    <header>
+                                        <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
+                                    </header>
+                                    <div>
+                                        <CR.Controllers.PositionSoughtFormGroup />
+                                        <CR.Controllers.EmployerSoughtFormGroup />
+                                        <CR.Controllers.JobAdFormGroups controller={this} />
+                                    </div>
                                 </div>
                             </section>
                             <CR.Controllers.CustomerCommentFormGroup />

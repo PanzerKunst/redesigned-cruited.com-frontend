@@ -1,7 +1,7 @@
 "use strict";
 
 CR.Controllers.ProductListItem = React.createClass({
-    render: function() {
+    render() {
         const product = this.props.product;
         const checkboxId = "product-" + product.id;
 
@@ -9,13 +9,8 @@ CR.Controllers.ProductListItem = React.createClass({
         const cartProductsCount = CR.order.getProducts().length;
 
         if (!isInOrder && cartProductsCount > 0) {
-            const reductionForTwoProductsSameOrder = _.find(CR.reductions, function(reduction) {
-                return reduction.code === CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER;
-            });
-
-            const rductionForThreeProductsSameOrdr = _.find(CR.reductions, function(reduction) {
-                return reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER;
-            });
+            const reductionForTwoProductsSameOrder = _.find(CR.reductions, reduction => reduction.code === CR.Models.Reduction.codes.TWO_PRODUCTS_SAME_ORDER);
+            const rductionForThreeProductsSameOrdr = _.find(CR.reductions, reduction => reduction.code === CR.Models.Reduction.codes.THREE_PRODUCTS_SAME_ORDER);
 
             if (cartProductsCount === 1) {
                 product.reducedPrice = {
@@ -38,13 +33,22 @@ CR.Controllers.ProductListItem = React.createClass({
             pricesClasses += " with-reduction";
         }
 
-        const liClasses = isInOrder ? "selected" : null;
+        const liClasses = classNames({
+            selected: isInOrder,
+            "read-only": this.props.readOnly
+        });
+
+        const checkboxWrapperClasses = classNames({
+            checkbox: true,
+            "checkbox-primary": !this.props.readOnly
+        });
+
         const currentPrice = product.reducedPrice || product.price;
 
         return (
             <li ref="li" className={liClasses} onClick={this._handleListItemClick}>
-                <div className="checkbox checkbox-primary">
-                    <input type="checkbox" id={checkboxId} checked={isInOrder} onChange={this._toggleProduct} />
+                <div className={checkboxWrapperClasses}>
+                    {this._checkboxInput(checkboxId, isInOrder)}
                     <label htmlFor={checkboxId}>{CR.i18nMessages["order.productSelection.productsSection.productName." + product.code]}</label>
                 </div>
                 <div className={pricesClasses}>
@@ -58,32 +62,41 @@ CR.Controllers.ProductListItem = React.createClass({
         );
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$listItem = $(ReactDOM.findDOMNode(this.refs.li));
         this.$checkbox = this.$listItem.find("input[type=\"checkbox\"]");
         this.$checkboxLabel = this.$checkbox.siblings("label");
     },
 
-    _isInOrder: function() {
-        const foundProduct = _.find(CR.order.getProducts(), function(product) {
-            return product.id === this.props.product.id;
-        }.bind(this));
-
+    _isInOrder() {
+        const foundProduct = _.find(CR.order.getProducts(), product => product.id === this.props.product.id);
         return foundProduct !== undefined;
     },
 
-    _handleListItemClick: function(e) {
-        if (e.target !== this.$checkbox[0] && e.target !== this.$checkboxLabel[0]) {
+    _checkboxInput(checkboxId, isInOrder) {
+        if (this.props.readOnly) {
+            return <input type="checkbox" id={checkboxId} checked={isInOrder} disabled />;
+        }
+
+        return <input type="checkbox" id={checkboxId} checked={isInOrder} onChange={this._toggleProduct} />;
+    },
+
+    _handleListItemClick(e) {
+        if (e.target !== this.$checkbox[0] && e.target !== this.$checkboxLabel[0] && !this.$listItem.hasClass("read-only")) {
             this.$checkbox.prop("checked", !this.$checkbox.prop("checked"));
             this._toggleProduct();
         }
     },
 
-    _toggleProduct: function() {
+    _toggleProduct() {
+        if (this.$listItem.hasClass("read-only")) {
+            return false;
+        }
+
         if (this.$checkbox.prop("checked")) {
             CR.order.addProduct(this.props.product);
         } else {

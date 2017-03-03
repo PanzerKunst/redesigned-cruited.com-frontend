@@ -25,15 +25,17 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section" className="two-columns">
-                                <header>
-                                    <h2>{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.subtitle"]}</p>
-                                </header>
+                                <h2>{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.title"]}</h2>
                                 <div>
-                                    <CR.Controllers.CvFormGroup orderedCv={true} controller={this} />
-                                    <CR.Controllers.JobAdFormGroups controller={this} />
-                                    <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
-                                    <CR.Controllers.InterviewDateFormGroup />
+                                    <header>
+                                        <p className="light-font">{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.subtitle"]}</p>
+                                    </header>
+                                    <div>
+                                        <CR.Controllers.CvFormGroup orderedCv={true} controller={this} />
+                                        <CR.Controllers.JobAdFormGroups controller={this} />
+                                        <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
+                                        <CR.Controllers.InterviewDateFormGroup />
+                                    </div>
                                 </div>
                             </section>
 

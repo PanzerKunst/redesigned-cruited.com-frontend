@@ -141,8 +141,8 @@ gulp.task("js-libs-concat", function() {
     return streamSeries(
         gulp.src("node_modules/jquery/dist/jquery.slim.js"),
         gulp.src("node_modules/lodash/lodash.js"),
-        gulp.src("node_modules/react/dist/react.min.js"),
-        gulp.src("node_modules/react-dom/dist/react-dom.min.js"),
+        gulp.src("node_modules/react/dist/react.js"),
+        gulp.src("node_modules/react-dom/dist/react-dom.js"),
         gulp.src("node_modules/classnames/index.js"),
         gulp.src("node_modules/classnames/bind.js"),
         gulp.src("node_modules/classnames/dedupe.js"),
