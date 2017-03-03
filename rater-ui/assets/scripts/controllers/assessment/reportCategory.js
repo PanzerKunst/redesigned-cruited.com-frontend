@@ -45,6 +45,10 @@ const Component = React.createClass({
             </li>);
     },
 
+    componentDidMount() {
+        this.componentDidUpdate();
+    },
+
     componentDidUpdate() {
         this._initElements();
         this._disableActionableElementsIfRequired();
