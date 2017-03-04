@@ -3,8 +3,7 @@
 After the `backup.sh` script file has been copied to the server:
 
     $ sudo chown root:root Cruited_V2/backup.sh
-    $ chmod u+x Cruited_V2/backup.sh
-
+    $ sudo chmod u+x Cruited_V2/backup.sh
     $ sudo mkdir /var/backups/Cruited
 
 
