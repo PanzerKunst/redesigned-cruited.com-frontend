@@ -28,16 +28,18 @@ When prompted for root MySQL password, enter "S#fr8QEr".
 
 # Database initialisation
 
-Harden MySQL installation: `$ sudo mysql_secure_installation`
+Harden MySQL installation: `$ sudo mysql_secure_installation`. Do not activate password requirements, otherwise current users with easy passwords can no longer sign in!
+
+If need to disable password requiements, see http://stackoverflow.com/questions/36301100/how-do-i-turn-off-the-mysql-password-validation    
 
 Create a new user named "cruited" and new database named "cruited":
 
-        $ mysql -u root -p
-		> CREATE USER 'cruited'@'localhost' IDENTIFIED BY 'AcB65oRo!F';
-        > CREATE DATABASE `cruited` CHARACTER SET utf8 COLLATE utf8_swedish_ci;
-        > GRANT ALL ON `cruited`.* TO `cruited`@'%' IDENTIFIED BY 'AcB65oRo!F';
-        > FLUSH PRIVILEGES;
-        > quit
+    $ mysql -u root -p
+	> CREATE USER 'cruited'@'localhost' IDENTIFIED BY 'AcB65oRo!F';
+    > CREATE DATABASE `cruited` CHARACTER SET utf8 COLLATE utf8_swedish_ci;
+    > GRANT ALL ON `cruited`.* TO `cruited`@'%' IDENTIFIED BY 'AcB65oRo!F';
+    > FLUSH PRIVILEGES;
+    > quit
 
 Open access to remote connections:
 
