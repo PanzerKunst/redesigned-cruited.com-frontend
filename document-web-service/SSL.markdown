@@ -1,21 +1,10 @@
-# Python upgrade
-
-[Make the system ready to install Python >= 2.7.9](https://launchpad.net/~fkrull/+archive/ubuntu/deadsnakes-python2.7). This is required for Letsencrypt
-
-    $ sudo add-apt-repository ppa:fkrull/deadsnakes-python2.7
-
-
 # Letsencrypt installation
 
-Clone `https://github.com/letsencrypt/letsencrypt` and copy the `letsencrypt` directory to `~`
-
-    $ cd ~/letsencrypt
-    $ chmod u+x letsencrypt-auto
-    $ chmod u+x bootstrap/*.sh
+Install the package if not already done: `$ sudo apt-get install letsencrypt`
 
 Free port 80 temporarily: `$ sudo service nginx stop`
 
-    $ ./letsencrypt-auto certonly -t --standalone
+    $ sudo letsencrypt certonly --standalone
 
 Enter email `services@cruited.com` and domains `api.cruited.com app.cruited.com rater.cruited.com`
 
@@ -33,8 +22,6 @@ Under the `server_name` line, add:
     ssl on;
     ssl_certificate /etc/letsencrypt/live/api.cruited.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/api.cruited.com/privkey.pem;
-
-Save, then restart Nginx: `$ sudo service nginx reload`
 
 
 # Redirect port 80 to 443

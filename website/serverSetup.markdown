@@ -1,10 +1,44 @@
+# Installing SBT
+
+Follow the steps on the [SBT website](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html).
+
+
+# JVM params
+
+`$ vi ~/.profile` and add the following line (if doesn't exist yet):
+
+    export SBT_OPTS="-Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled"
+
+Log out and in again so that the updated `.profile` is taken into account.
+
+
+# Copying source files
+
+Copy the following source files to `~/Cruited_V2/rater-ui`:
+
+- app
+- conf
+- project (cleaned of the `target` directories)
+- public
+- build.sbt
+
+
+# Configuration changes
+
+    $ vi conf/logback.xml
+
+Edit the path in the `application.home` declaration, and uncomment the line.
+
+    $ mv -f conf/application-prod.conf conf/application.conf
+
+    
 # Hostname config
 
 Check the server's IP address via `ifconfig`.
 
 `$ sudo vi /etc/hosts`
 
-Add line with the IP address and hostname: `46.4.78.11 rater.cruited.com`
+Add line with the IP address and hostname: `5.9.7.5 rater.cruited.com`
 
 
 # Web server
@@ -47,100 +81,12 @@ Finish Nginx config:
 	$ sudo service nginx reload
 
 
-# Installing SBT
-
-Follow the steps on the [SBT website](http://www.scala-sbt.org/0.13/docs/Installing-sbt-on-Linux.html).
-
-
-# Installing Activator
-
-Copy `typesafe-activator-X.Y.Z-minimal.zip` from the workstation to the server's home directory, and extract the contents:
-
-    $ cd ~
-    $ unzip typesafe-activator-X.Y.Z-minimal.zip
-
-Add `~/activator-X.Y.Z-minimal/bin` to the PATH if it isn't there yet:
-
-`$ vi ~/.profile` add the file should like this:
-
-    # if running bash
-    if [ -n "$BASH_VERSION" ]; then
-        # include .bashrc if it exists
-        if [ -f "$HOME/.bashrc" ]; then
-            . "$HOME/.bashrc"
-        fi
-    fi
-
-
-    checkPath () {
-            case ":$PATH:" in
-                    *":$1:"*) return 1
-                            ;;
-            esac
-            return 0;
-    }
-
-    # Prepend to $PATH
-    prependToPath () {
-            for a; do
-                    checkPath $a
-                    if [ $? -eq 0 ]; then
-                            PATH=$a:$PATH
-                    fi
-            done
-            export PATH
-    }
-
-    # Append to $PATH
-    appendToPath () {
-            for a; do
-                    checkPath $a
-                    if [ $? -eq 0 ]; then
-                            PATH=$PATH:$a
-                    fi
-            done
-            export PATH
-    }
-
-
-    prependToPath $HOME/bin $HOME/activator-X.Y.Z-minimal/bin
-
-
-# JVM params
-
-`$ vi ~/.profile` and add the following line (if doesn't exist yet):
-
-    export SBT_OPTS="-Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled"
-
-Log out and in again so that the updated `.profile` is taken into account.
-
-
-# Copying source files
-
-Copy the following source files to `~/Cruited_V2/rater-ui`:
-
-- app
-- conf
-- project (cleaned of the `target` directories)
-- public
-- build.sbt
-
-
-# Configuration changes
-
-    $ vi conf/logback.xml
-
-Edit the path in the `application.home` declaration, and uncomment that line.
-
-    $ mv -f conf/application-prod.conf conf/application.conf
-
-    
 # Start web server
 
     $ screen -dR
     Ctrl + a, c
     $ cd ~/Cruited_V2/rater-ui
-    $ activator
+    $ sbt
     $ stage
     $ exit
     $ ./target/universal/stage/bin/rater-ui -Dhttp.port=9009
