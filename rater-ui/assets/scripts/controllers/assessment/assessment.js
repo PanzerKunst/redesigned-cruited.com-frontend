@@ -190,9 +190,7 @@ const controller = {
             if (order.jobAdUrl) {
                 url = order.jobAdUrl;
                 linkText = order.jobAdUrl;
-            }
-
-            if (order.jobAdFileName) {
+            } else if (order.jobAdFileName) {
                 url = order.jobAdFileUrl(store.config);
                 linkText = order.jobAdFileName;
                 classes += " pdf-link";

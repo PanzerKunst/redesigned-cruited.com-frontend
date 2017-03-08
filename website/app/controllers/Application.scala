@@ -358,7 +358,13 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     val currentLanguage = SessionService.getCurrentLanguage(request.session)
                     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-                    Ok(views.html.order.editOrder(i18nMessages, currentLanguage, Some(account), order))
+                    if (order.containedProductCodes.head == CruitedProduct.CodeInterviewTraining) {
+                      val interviewTrainingOrderInfo = InterviewTrainingOrderInfoDto.getOfOrderId(order.id).get
+
+                      Ok(views.html.order.editInterviewTrainingOrder(i18nMessages, currentLanguage, Some(account), order, interviewTrainingOrderInfo))
+                    } else {
+                      Ok(views.html.order.editOrder(i18nMessages, currentLanguage, Some(account), order))
+                    }
                   } else {
                     Forbidden("You are not allowed to edit orders which are not yours")
                   }

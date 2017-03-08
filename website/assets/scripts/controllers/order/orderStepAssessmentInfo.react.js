@@ -311,9 +311,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 }
 
                                 if (!_.isEmpty(this.$cvFormGroup)) {
-                                    this._scrollToElement(this.$cvFormGroup);
+                                    CR.scrollToElement(this.$cvFormGroup);
                                 } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                    this._scrollToElement(this.$coverLetterFormGroup);
+                                    CR.scrollToElement(this.$coverLetterFormGroup);
                                 }
                                 /* } else {
                                  alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -326,11 +326,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 } else {
                     if (this.$linkedinPreviewWrapper.hasClass("has-error") &&
                         this.$linkedinProfileCheckedCheckboxWrapper[0].getBoundingClientRect().top < this.$headerBar.height()) {
-                        this._scrollToElement(this.$linkedinProfileFormGroup);
+                        CR.scrollToElement(this.$linkedinProfileFormGroup);
                     } else if (this.$cvFormGroup.hasClass("has-error")) {
-                        this._scrollToElement(this.$cvFormGroup);
+                        CR.scrollToElement(this.$cvFormGroup);
                     } else if (this.$coverLetterFormGroup.hasClass("has-error")) {
-                        this._scrollToElement(this.$coverLetterFormGroup);
+                        CR.scrollToElement(this.$coverLetterFormGroup);
                     }
                 }
             } else {
@@ -339,21 +339,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 // We want to display other potential validation messages too
                 this.validator.isValid();
 
-                this._scrollToElement(this.$linkedinProfileFormGroup);
+                CR.scrollToElement(this.$linkedinProfileFormGroup);
             }
         },
 
         _isSignInWithLinkedinBtnThere: function() {
             return this.$signInWithLinkedinBtn.length === 1;
-        },
-
-        _scrollToElement: function($el) {
-            const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerBar.height();
-
-            TweenLite.to(window, 1, {
-                scrollTo: offset,
-                ease: Power4.easeOut
-            });
         },
 
         _saveTextFieldsInLocalStorage: function() {

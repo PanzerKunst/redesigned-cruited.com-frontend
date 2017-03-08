@@ -61,9 +61,13 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
 
             this.$cvFormGroup = this.$form.find("#cv-form-group");
 
-            this.$jobAdUrlField = this.$form.find("#job-ad-url");
+            this.$jobAdUrlFormGroup = this.$form.find("#job-ad-url-form-group");
+            this.$jobAdUrlField = this.$jobAdUrlFormGroup.children("#job-ad-url");
+
+            this.$jobAdFileUploadFormGroup = this.$form.find("#job-ad-file-upload-form-group");
 
             this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
+            this.$jobAdRequiredError = this.$form.find("#job-ad-required-error");
 
             const $interviewDateFormGroup = this.$form.find("#interview-date-form-group");
             this.$interviewDateField = $interviewDateFormGroup.find("input[type=text]");
@@ -80,11 +84,12 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
 
         _initValidation: function() {
             this.validator = CR.Services.Validator([
-                "linkedin-profile-checked",
                 "cv-file-name",
-                "cover-letter-file-name",
                 "job-ad-url",
-                "customer-comment",
+                "important-for-the-role",
+                "latest-interview",
+                "need-for-improvement",
+                "challenging-questions",
                 "accept-tos"
             ]);
         },
@@ -93,125 +98,121 @@ CR.Controllers.OrderInterviewTrainingStepAssessmentInfo = P(function(c) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$requestEntityTooLargeError);
+            this.validator.hideErrorMessage(this.$jobAdRequiredError);
 
             if (this.validator.isValid()) {
-                this.$submitBtn.enableLoading();
-
-                const formData = new FormData();
-
-                formData.append("containedProductCodes", CR.Models.Product.codes.INTERVIEW_TRAINING);
-
-                if (CR.order.getCoupon()) {
-                    formData.append("couponCode", CR.order.getCoupon().code);
-                }
-
-                formData.append("cvFile", this.cvFile, this.cvFile.name);
-
                 const jobAdUrl = this.$jobAdUrlField.val();
-                if (jobAdUrl) {
-                    formData.append("jobAdUrl", jobAdUrl);
-                }
 
-                if (this.jobAdFile) {
-                    formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
-                }
+                if (!jobAdUrl && !this.jobAdFile) {
+                    this.validator.showErrorMessage(this.$jobAdRequiredError);
 
-                const ddMmYyyy = this.$interviewDateField.val().trim();
-                let interviewMoment = null;
-
-                if (ddMmYyyy) {
-                    interviewMoment = moment(ddMmYyyy, "DD-MM-YYYY");
-                    formData.append("interviewDate", interviewMoment.format("YYYY-MM-DD"));
-                }
-
-                const answerToQuestionImportantForTheRole = this.$importantForTheRoleField.val().trim();
-                if (answerToQuestionImportantForTheRole) {
-                    formData.append("answerToQuestionImportantForTheRole", answerToQuestionImportantForTheRole);
-                }
-
-                const answerToQuestionLatestInterview = this.$latestInterviewField.val().trim();
-                if (answerToQuestionLatestInterview) {
-                    formData.append("answerToQuestionLatestInterview", answerToQuestionLatestInterview);
-                }
-
-                const answerToQuestionNeedForImprovement = this.$needForImprovementField.val().trim();
-                if (answerToQuestionNeedForImprovement) {
-                    formData.append("answerToQuestionNeedForImprovement", answerToQuestionNeedForImprovement);
-                }
-
-                const answerToQuestionChallengingQuestions = this.$challengingQuestionsField.val().trim();
-                if (answerToQuestionChallengingQuestions) {
-                    formData.append("answerToQuestionChallengingQuestions", answerToQuestionChallengingQuestions);
-                }
-
-                const type = "POST";
-                const url = "/api/orders/interview-training";
-
-                const httpRequest = new XMLHttpRequest();
-                httpRequest.onreadystatechange = function() {
-                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                        if (httpRequest.status === CR.httpStatusCodes.created) {
-                            const order = JSON.parse(httpRequest.responseText);
-                            CR.order.setId(order.id);
-                            CR.order.setIdInBase64(order.idInBase64);
-                            CR.order.setCvFileName(order.cvFileName);
-                            CR.order.setJobAdUrl(order.jobAdUrl);
-                            CR.order.setJobAdFileName(order.jobAdFileName);
-                            CR.order.setInterviewTrainingInfo({
-                                interviewDate: interviewMoment ? interviewMoment.format("YYYY-MM-DD") : null,
-                                importantForTheRole: answerToQuestionImportantForTheRole,
-                                latestInterview: answerToQuestionLatestInterview,
-                                needForImprovement: answerToQuestionNeedForImprovement,
-                                challengingQuestions: answerToQuestionChallengingQuestions
-                            });
-                            CR.order.setTosAccepted();
-                            CR.order.saveInLocalStorage();
-
-                            location.href = "/order/create-account";
-                        } else {
-                            this.$submitBtn.disableLoading();
-
-                            // Doesn't work on test server: status == 0 :(
-                            // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
-
-                            this.validator.showErrorMessage(this.$requestEntityTooLargeError);
-
-                            if (!_.isEmpty(this.$cvFormGroup)) {
-                                this.$cvFormGroup.addClass("has-error");
-                            }
-
-                            if (!_.isEmpty(this.$cvFormGroup)) {
-                                this._scrollToElement(this.$cvFormGroup);
-                            }
-                            /* } else {
-                             alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-                             } */
-                        }
+                    if (this.$jobAdUrlFormGroup.is(":visible")) {
+                        CR.scrollToElement(this.$jobAdUrlFormGroup);
+                    } else {
+                        CR.scrollToElement(this.$jobAdFileUploadFormGroup);
                     }
-                }.bind(this);
-                httpRequest.open(type, url);
-                httpRequest.send(formData);
+                } else {
+                    this.$submitBtn.enableLoading();
+
+                    const formData = new FormData();
+
+                    formData.append("containedProductCodes", CR.Models.Product.codes.INTERVIEW_TRAINING);
+
+                    if (CR.order.getCoupon()) {
+                        formData.append("couponCode", CR.order.getCoupon().code);
+                    }
+
+                    formData.append("cvFile", this.cvFile, this.cvFile.name);
+
+                    if (jobAdUrl) {
+                        formData.append("jobAdUrl", jobAdUrl);
+                    }
+
+                    if (this.jobAdFile) {
+                        formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
+                    }
+
+                    const ddMmYyyy = this.$interviewDateField.val().trim();
+                    let interviewMoment = null;
+
+                    if (ddMmYyyy) {
+                        interviewMoment = moment(ddMmYyyy, "DD-MM-YYYY");
+                        formData.append("interviewDate", interviewMoment.format("YYYY-MM-DD"));
+                    }
+
+                    const answerToQuestionImportantForTheRole = this.$importantForTheRoleField.val().trim();
+                    if (answerToQuestionImportantForTheRole) {
+                        formData.append("answerToQuestionImportantForTheRole", answerToQuestionImportantForTheRole);
+                    }
+
+                    const answerToQuestionLatestInterview = this.$latestInterviewField.val().trim();
+                    if (answerToQuestionLatestInterview) {
+                        formData.append("answerToQuestionLatestInterview", answerToQuestionLatestInterview);
+                    }
+
+                    const answerToQuestionNeedForImprovement = this.$needForImprovementField.val().trim();
+                    if (answerToQuestionNeedForImprovement) {
+                        formData.append("answerToQuestionNeedForImprovement", answerToQuestionNeedForImprovement);
+                    }
+
+                    const answerToQuestionChallengingQuestions = this.$challengingQuestionsField.val().trim();
+                    if (answerToQuestionChallengingQuestions) {
+                        formData.append("answerToQuestionChallengingQuestions", answerToQuestionChallengingQuestions);
+                    }
+
+                    const type = "POST";
+                    const url = "/api/orders/interview-training";
+
+                    const httpRequest = new XMLHttpRequest();
+                    httpRequest.onreadystatechange = function() {
+                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                            if (httpRequest.status === CR.httpStatusCodes.created) {
+                                const order = JSON.parse(httpRequest.responseText);
+                                CR.order.setId(order.id);
+                                CR.order.setIdInBase64(order.idInBase64);
+                                CR.order.setCvFileName(order.cvFileName);
+                                CR.order.setJobAdUrl(order.jobAdUrl);
+                                CR.order.setJobAdFileName(order.jobAdFileName);
+                                CR.order.setInterviewTrainingInfo({
+                                    interviewDate: interviewMoment ? interviewMoment.format("YYYY-MM-DD") : null,
+                                    importantForTheRole: answerToQuestionImportantForTheRole,
+                                    latestInterview: answerToQuestionLatestInterview,
+                                    needForImprovement: answerToQuestionNeedForImprovement,
+                                    challengingQuestions: answerToQuestionChallengingQuestions
+                                });
+                                CR.order.setTosAccepted();
+                                CR.order.saveInLocalStorage();
+
+                                location.href = "/order/create-account";
+                            } else {
+                                this.$submitBtn.disableLoading();
+
+                                // Doesn't work on test server: status == 0 :(
+                                // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
+
+                                this.validator.showErrorMessage(this.$requestEntityTooLargeError);
+
+                                if (!_.isEmpty(this.$cvFormGroup)) {
+                                    this.$cvFormGroup.addClass("has-error");
+                                }
+
+                                if (!_.isEmpty(this.$cvFormGroup)) {
+                                    CR.scrollToElement(this.$cvFormGroup);
+                                }
+                                /* } else {
+                                 alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                                 } */
+                            }
+                        }
+                    }.bind(this);
+                    httpRequest.open(type, url);
+                    httpRequest.send(formData);
+                }
             } else {
                 if (this.$cvFormGroup.hasClass("has-error")) {
-                    this._scrollToElement(this.$cvFormGroup);
+                    CR.scrollToElement(this.$cvFormGroup);
                 }
             }
-        },
-
-        _scrollToElement: function($el) {
-            const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerBar.height();
-
-            TweenLite.to(window, 1, {
-                scrollTo: offset,
-                ease: Power4.easeOut
-            });
-        },
-
-        _saveTextFieldsInLocalStorage: function() {
-            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.positionSought, this.$positionSoughtField.val());
-            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.employerSought, this.$employerSoughtField.val());
-            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.jobAdUrl, this.$jobAdUrlField.val());
-            CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.customerComment, this.$customerCommentField.val());
         }
     });
 

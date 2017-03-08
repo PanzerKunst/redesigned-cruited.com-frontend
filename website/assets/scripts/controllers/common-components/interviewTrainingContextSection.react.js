@@ -2,6 +2,12 @@
 
 CR.Controllers.InterviewTrainingContextSection = React.createClass({
     render: function() {
+        const iti = CR.order.getInterviewTrainingInfo();
+        const importantForTheRole = iti ? iti.importantForTheRole : null;
+        const latestInterview = iti ? iti.latestInterview : null;
+        const needForImprovement = iti ? iti.needForImprovement : null;
+        const challengingQuestions = iti ? iti.challengingQuestions : null;
+
         return (
             <section id="context-section" className="two-columns">
                 <h2>{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.title"]}</h2>
@@ -12,22 +18,22 @@ CR.Controllers.InterviewTrainingContextSection = React.createClass({
                     <div>
                         <div className="form-group">
                             <label htmlFor="important-for-the-role">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.importantForTheRole.label"]}</label>
-                            <textarea className="form-control" id="important-for-the-role" maxLength="1900" />
+                            <textarea className="form-control" id="important-for-the-role" maxLength="1900" defaultValue={importantForTheRole} />
                             <p className="field-error" data-check="max-length">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.validation.textTooLong"]}</p>
                         </div>
                         <div className="form-group">
                             <label htmlFor="latest-interview">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.latestInterview.label"]}</label>
-                            <textarea className="form-control" id="latest-interview" maxLength="1900" />
+                            <textarea className="form-control" id="latest-interview" maxLength="1900" defaultValue={latestInterview} />
                             <p className="field-error" data-check="max-length">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.validation.textTooLong"]}</p>
                         </div>
                         <div className="form-group">
                             <label htmlFor="need-for-improvement">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.needForImprovement.label"]}</label>
-                            <textarea className="form-control" id="need-for-improvement" maxLength="1900" />
+                            <textarea className="form-control" id="need-for-improvement" maxLength="1900" defaultValue={needForImprovement} />
                             <p className="field-error" data-check="max-length">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.validation.textTooLong"]}</p>
                         </div>
                         <div className="form-group">
                             <label htmlFor="challenging-questions">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.challengingQuestions.label"]}</label>
-                            <textarea className="form-control" id="challenging-questions" maxLength="1900" />
+                            <textarea className="form-control" id="challenging-questions" maxLength="1900" defaultValue={challengingQuestions} />
                             <p className="field-error" data-check="max-length">{CR.i18nMessages["order.interviewTraining.assessmentInfo.contextSection.validation.textTooLong"]}</p>
                         </div>
                     </div>

@@ -43,12 +43,13 @@
 @import "layouts/order/_orderStepAssessmentInfo";
 @import "layouts/order/_orderStepAccountCreation";
 @import "layouts/order/_orderStepPayment";
+@import "layouts/order/_editOrder";
+@import "layouts/order/_orderInterviewTraining";
+@import "layouts/order/_orderInterviewTrainingStepAssessmentInfo";
 @import "layouts/_dashboard";
 @import "layouts/_report";
 @import "layouts/_signIn";
 @import "layouts/_resetPassword";
-@import "layouts/order/_orderInterviewTraining";
-@import "layouts/order/_orderInterviewTrainingStepAssessmentInfo";
 
 // Browser hacks
 @import "_browserSpecific";

@@ -2,11 +2,11 @@
 
 CR.Controllers.EditionElement = React.createClass({
     render: function() {
-        if (!CR.order.getEdition()) {
+        if (!this.props.edition) {
             return null;
         }
 
-        const editionCode = CR.order.getEdition().code;
+        const editionCode = this.props.edition.code;
 
         return <span className={`edition ${editionCode}`}>{CR.i18nMessages[`edition.name.${editionCode}`]}</span>;
     }

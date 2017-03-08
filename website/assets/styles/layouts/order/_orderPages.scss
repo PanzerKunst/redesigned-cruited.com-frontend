@@ -363,6 +363,10 @@ $two-column-right-col-margin-top: 3em;
   }
 }
 
+#job-ad-required-error {
+  margin: -$content-element-margin-bottom 0 $content-element-margin-bottom;
+}
+
 #tos-wrapper {
   // Otherwise things get weird when inspecting
   > .checkbox {

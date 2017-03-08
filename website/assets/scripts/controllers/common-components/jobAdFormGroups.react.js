@@ -13,6 +13,7 @@ CR.Controllers.JobAdFormGroups = React.createClass({
                     <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                     <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
                 </div>
+
                 <div className="form-group fg-file-upload" id="job-ad-file-upload-form-group">
                     <label>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"]}</label>
 
@@ -25,13 +26,18 @@ CR.Controllers.JobAdFormGroups = React.createClass({
                     </div>
                     <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
                 </div>
+
+                <p className="other-form-error" id="job-ad-required-error">{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.validation.jobAdRequired"]}</p>
             </div>);
     },
 
     componentDidMount: function() {
         this._initElements();
 
-        if (CR.order.getJobAdFileName()) {
+        if (CR.order.getJobAdUrl()) {
+            this.$jobAdFileUploadFormGroup.hide();
+            this.$jobAdUrlFormGroup.show();
+        } else if (CR.order.getJobAdFileName()) {
             this.$jobAdUrlFormGroup.hide();
             this.$jobAdFileUploadFormGroup.show();
         }

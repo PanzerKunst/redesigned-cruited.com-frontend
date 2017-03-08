@@ -57,13 +57,6 @@ CR.Controllers.Dashboard = P(function(c) {
                                     </div>);
                                 }
 
-                                let editOrderMarkup = null;
-                                if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
-                                    const url = "/order/edit?id=" + order.getId();
-                                    editOrderMarkup = <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
-                                }
-
-                                const editionClasses = "edition " + order.getEdition().code;
                                 const statusClasses = "status " + order.getStatusForHtml();
 
                                 return (
@@ -81,7 +74,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                                 {completePaymentLink}
                                             </div>
                                             <div className="centered-contents">
-                                                <span className={editionClasses}>{CR.i18nMessages["edition.name." + order.getEdition().code]}</span>
+                                                <CR.Controllers.EditionElement edition={order.getEdition()} />
                                             </div>
                                         </section>
 
@@ -92,7 +85,7 @@ CR.Controllers.Dashboard = P(function(c) {
                                                 return <CR.Controllers.OrderedDocumentAssessment key={reactItmId} order={order} productCode={product.code} />;
                                             })}
                                         </ul>
-                                        {editOrderMarkup}
+                                        {this._editOrderParagraph(order)}
                                     </li>
                                 );
                             }.bind(this))}
@@ -124,6 +117,15 @@ CR.Controllers.Dashboard = P(function(c) {
             this.$orderCompletedAlert = this.$content.find(".alert-success");
             this.$assessmentWaitingAlert = this.$content.find("#assessment-waiting-alert");
             this.$assessmentInProgressAlert = this.$content.find("#assessment-in-progress-alert");
+        },
+
+        _editOrderParagraph(order) {
+            if (order.getStatus() >= CR.Models.OrderStaticProps.statusIds.inProgress) {
+                return null;
+            }
+
+            const url = `/order/edit?id=${order.getId()}`;
+            return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
         },
 
         _showAlertIfNeeded: function() {

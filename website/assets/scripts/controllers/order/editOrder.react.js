@@ -28,7 +28,7 @@ CR.Controllers.EditOrder = P(function(c) {
                                     <div>
                                         <CR.Controllers.PositionSoughtFormGroup />
                                         <CR.Controllers.EmployerSoughtFormGroup />
-                                        <CR.Controllers.JobAdFormGroups controller={this} />
+                                        <CR.Controllers.JobAdFormGroups controller={this}/>
                                     </div>
                                 </div>
                             </section>
@@ -38,11 +38,10 @@ CR.Controllers.EditOrder = P(function(c) {
                             </div>
                         </form>
                     </div>
-                </div>
-            );
+                </div>);
         },
 
-        componentDidUpdate: function() {
+        componentDidMount: function() {
             this._initElements();
             this._initValidation();
         },
@@ -53,7 +52,13 @@ CR.Controllers.EditOrder = P(function(c) {
             this.$cvFormGroup = this.$form.find("#cv-form-group");
             this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
 
+            this.$jobAdUrlFormGroup = this.$form.find("#job-ad-url-form-group");
+            this.$jobAdUrlField = this.$jobAdUrlFormGroup.children("#job-ad-url");
+
+            this.$jobAdFileUploadFormGroup = this.$form.find("#job-ad-file-upload-form-group");
+
             this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
+            this.$jobAdRequiredError = this.$form.find("#job-ad-required-error");
 
             this.$positionSoughtField = this.$form.find("#position-sought");
             this.$employerSoughtField = this.$form.find("#employer-sought");
@@ -95,8 +100,8 @@ CR.Controllers.EditOrder = P(function(c) {
                             <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
                         </header>
                         <div>
-                            <CR.Controllers.CvFormGroup orderedCv={this.orderedCv} controller={this} />
-                            <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.orderedCoverLetter} controller={this} />
+                            <CR.Controllers.CvFormGroup orderedCv={this.orderedCv} controller={this}/>
+                            <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.orderedCoverLetter} controller={this}/>
                             <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
                         </div>
                     </div>
@@ -108,77 +113,89 @@ CR.Controllers.EditOrder = P(function(c) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$requestEntityTooLargeError);
+            this.validator.hideErrorMessage(this.$jobAdRequiredError);
 
             if (this.validator.isValid()) {
-                this.$submitBtn.enableLoading();
-
-                const formData = new FormData();
-                formData.append("id", CR.order.getId());
-
-                if (this.cvFile) {
-                    formData.append("cvFile", this.cvFile, this.cvFile.name);
-                }
-                if (this.coverLetterFile) {
-                    formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
-                }
-
-                const positionSought = this.$positionSoughtField.val();
-                const employerSought = this.$employerSoughtField.val();
                 const jobAdUrl = this.$jobAdUrlField.val();
-                const customerComment = this.$customerCommentField.val();
 
-                if (positionSought) {
-                    formData.append("positionSought", positionSought);
-                }
-                if (employerSought) {
-                    formData.append("employerSought", employerSought);
-                }
-                if (jobAdUrl) {
-                    formData.append("jobAdUrl", jobAdUrl);
-                }
-                if (this.jobAdFile) {
-                    formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
-                }
-                if (customerComment) {
-                    formData.append("customerComment", customerComment);
-                }
+                if (!jobAdUrl && !this.jobAdFile) {
+                    this.validator.showErrorMessage(this.$jobAdRequiredError);
 
-                const type = "PUT";
-                const url = "/api/orders";
-
-                const httpRequest = new XMLHttpRequest();
-                httpRequest.onreadystatechange = function() {
-                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                        if (httpRequest.status === CR.httpStatusCodes.ok) {
-                            location.href = "/";
-                        } else {
-                            this.$submitBtn.disableLoading();
-
-                            // Doesn't work on test server: status == 0 :(
-                            // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
-
-                            this.validator.showErrorMessage(this.$requestEntityTooLargeError);
-
-                            if (!_.isEmpty(this.$cvFormGroup)) {
-                                this.$cvFormGroup.addClass("has-error");
-                            }
-                            if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                this.$coverLetterFormGroup.addClass("has-error");
-                            }
-
-                            if (!_.isEmpty(this.$cvFormGroup)) {
-                                this._scrollToElement(this.$cvFormGroup);
-                            } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                this._scrollToElement(this.$coverLetterFormGroup);
-                            }
-                            /* } else {
-                             alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-                             } */
-                        }
+                    if (this.$jobAdUrlFormGroup.is(":visible")) {
+                        CR.scrollToElement(this.$jobAdUrlFormGroup);
+                    } else {
+                        CR.scrollToElement(this.$jobAdFileUploadFormGroup);
                     }
-                }.bind(this);
-                httpRequest.open(type, url);
-                httpRequest.send(formData);
+                } else {
+                    this.$submitBtn.enableLoading();
+
+                    const formData = new FormData();
+                    formData.append("id", CR.order.getId());
+
+                    if (this.cvFile) {
+                        formData.append("cvFile", this.cvFile, this.cvFile.name);
+                    }
+                    if (this.coverLetterFile) {
+                        formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
+                    }
+
+                    const positionSought = this.$positionSoughtField.val();
+                    const employerSought = this.$employerSoughtField.val();
+                    const customerComment = this.$customerCommentField.val();
+
+                    if (positionSought) {
+                        formData.append("positionSought", positionSought);
+                    }
+                    if (employerSought) {
+                        formData.append("employerSought", employerSought);
+                    }
+                    if (jobAdUrl) {
+                        formData.append("jobAdUrl", jobAdUrl);
+                    }
+                    if (this.jobAdFile) {
+                        formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
+                    }
+                    if (customerComment) {
+                        formData.append("customerComment", customerComment);
+                    }
+
+                    const type = "PUT";
+                    const url = "/api/orders";
+
+                    const httpRequest = new XMLHttpRequest();
+                    httpRequest.onreadystatechange = function() {
+                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                            if (httpRequest.status === CR.httpStatusCodes.ok) {
+                                location.href = "/";
+                            } else {
+                                this.$submitBtn.disableLoading();
+
+                                // Doesn't work on test server: status == 0 :(
+                                // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
+
+                                this.validator.showErrorMessage(this.$requestEntityTooLargeError);
+
+                                if (!_.isEmpty(this.$cvFormGroup)) {
+                                    this.$cvFormGroup.addClass("has-error");
+                                }
+                                if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                    this.$coverLetterFormGroup.addClass("has-error");
+                                }
+
+                                if (!_.isEmpty(this.$cvFormGroup)) {
+                                    CR.scrollToElement(this.$cvFormGroup);
+                                } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                    CR.scrollToElement(this.$coverLetterFormGroup);
+                                }
+                                /* } else {
+                                 alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                                 } */
+                            }
+                        }
+                    }.bind(this);
+                    httpRequest.open(type, url);
+                    httpRequest.send(formData);
+                }
             }
         }
     });

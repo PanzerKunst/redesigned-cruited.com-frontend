@@ -13,3 +13,5 @@ After the `backup.sh` script file has been copied to the server:
 `$ sudo crontab -e` and add the following line:
 
 `0  4    * * *   /home/play/Cruited_V2/backup.sh 2>&1>> /var/log/CruitedBackup.log`
+
+Make sure that the line is followed by a blank line, otherwise the job won't run!

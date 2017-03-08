@@ -35,12 +35,13 @@ POST          /api/orders                                           controllers.
 PUT           /api/orders                                           controllers.api.OrderApi.update
 PUT           /api/orders/pay                                       controllers.api.OrderApi.pay
 DELETE        /api/orders/coupon                                    controllers.api.OrderApi.removeCoupon
+POST          /api/orders/interview-training                        controllers.api.OrderApi.createInterviewTrainingOrder
+PUT           /api/orders/interview-training                        controllers.api.OrderApi.updateInterviewTrainingOrder
 POST          /api/accounts                                         controllers.api.AccountApi.create
 PUT           /api/accounts                                         controllers.api.AccountApi.update
 PUT           /api/accounts/password                                controllers.api.AccountApi.updatePassword
 POST          /api/auth                                             controllers.api.AuthApi.signInWithEmail
 POST          /api/auth/reset-password                              controllers.api.AuthApi.sendResetPasswordEmail
-POST          /api/orders/interview-training                        controllers.api.OrderApi.createInterviewTrainingOrder
 
 # 3rd party auth
 GET           /auth/linkedin/callback/sign-in                       controllers.Application.linkedinCallbackSignIn

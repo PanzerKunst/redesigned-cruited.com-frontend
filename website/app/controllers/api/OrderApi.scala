@@ -158,7 +158,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
           }
 
           val updatedOrder = Order(
-            Some(id),
+            existingOrder.id,
             existingOrder.editionId,
             existingOrder.containedProductCodes,
             existingOrder.couponId,
@@ -342,6 +342,110 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
 
         Created(Json.toJson(OrderDto.getOfIdForFrontend(tempOrderId).get._1))
           .withSession(request.session + (SessionService.SessionKeyOrderId -> tempOrderId.toString))
+    }
+  }
+
+  def updateInterviewTrainingOrder() = Action(parse.multipartFormData) { request =>
+    val requestBody = request.body
+    val requestData = requestBody.dataParts
+
+    if (!requestData.contains("id")) {
+      BadRequest("'id' required")
+    } else {
+      val id = requestData("id").head.toLong
+
+      OrderDto.getOfId(id) match {
+        case None => BadRequest("No order found for ID " + id)
+
+        case Some(existingOrder) =>
+          val cvFileNameOpt = requestBody.file("cvFile") match {
+            case None => None
+            case Some(cvFile) => Some(documentService.saveFileInDocumentsFolder(cvFile, id, documentService.middleFileNameCv))
+          }
+
+          val jobAdFileNameOpt = requestBody.file("jobAdFile") match {
+            case None => None
+            case Some(jobAdFile) => Some(documentService.saveFileInDocumentsFolder(jobAdFile, id, documentService.middleFileNameJobAd))
+          }
+
+          val jobAdUrl = if (!requestData.contains("jobAdUrl")) {
+            None
+          } else {
+            Some(requestData("jobAdUrl").head)
+          }
+
+          val updatedOrder = Order(
+            id = existingOrder.id,
+            editionId = existingOrder.editionId,
+            containedProductCodes = existingOrder.containedProductCodes,
+            couponId = existingOrder.couponId,
+            cvFileName = cvFileNameOpt,
+            coverLetterFileName = None,
+            linkedinProfileFileName = existingOrder.linkedinProfileFileName,
+            positionSought = existingOrder.positionSought,
+            employerSought = existingOrder.employerSought,
+            jobAdUrl = jobAdUrl,
+            jobAdFileName = jobAdFileNameOpt,
+            customerComment = existingOrder.customerComment,
+            accountId = existingOrder.accountId,
+            status = existingOrder.status,
+            languageCode = existingOrder.languageCode,
+            creationTimestamp = existingOrder.creationTimestamp,
+            paymentTimestamp = existingOrder.paymentTimestamp
+          )
+
+          OrderDto.update(updatedOrder)
+
+          Future {
+            val orderWithPdfFileNames = orderService.convertDocsToPdf(updatedOrder)
+            orderService.generateDocThumbnails(orderWithPdfFileNames)
+          } onFailure {
+            case e => Logger.error(e.getMessage, e)
+          }
+
+          val interviewDateOpt = if (!requestData.contains("interviewDate")) {
+            None
+          } else {
+            val interviewDateAsStr = requestData("interviewDate").head
+            Some(InterviewDateFormat.parse(interviewDateAsStr))
+          }
+
+          val answerToQuestionImportantForTheRoleOpt = if (!requestData.contains("answerToQuestionImportantForTheRole")) {
+            None
+          } else {
+            Some(requestData("answerToQuestionImportantForTheRole").head)
+          }
+
+          val answerToQuestionLatestInterviewOpt = if (!requestData.contains("answerToQuestionLatestInterview")) {
+            None
+          } else {
+            Some(requestData("answerToQuestionLatestInterview").head)
+          }
+
+          val answerToQuestionNeedForImprovementOpt = if (!requestData.contains("answerToQuestionNeedForImprovement")) {
+            None
+          } else {
+            Some(requestData("answerToQuestionNeedForImprovement").head)
+          }
+
+          val answerToQuestionChallengingQuestionsOpt = if (!requestData.contains("answerToQuestionChallengingQuestions")) {
+            None
+          } else {
+            Some(requestData("answerToQuestionChallengingQuestions").head)
+          }
+
+          val itoi = InterviewTrainingOrderInfoDto.getOfOrderId(id).get
+
+          InterviewTrainingOrderInfoDto.update(itoi.copy(
+            interviewDate = interviewDateOpt,
+            importantForTheRole = answerToQuestionImportantForTheRoleOpt,
+            latestInterview = answerToQuestionLatestInterviewOpt,
+            needForImprovement = answerToQuestionNeedForImprovementOpt,
+            challengingQuestions = answerToQuestionChallengingQuestionsOpt
+          ))
+
+          Ok
+      }
     }
   }
 

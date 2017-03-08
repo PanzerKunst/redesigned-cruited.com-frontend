@@ -387,7 +387,7 @@ object OrderDto {
           e.id as edition_id, edition,
           c.id as coupon_id, c.name, tp, number_of_times, discount, discount_type, valid_date, campaign_name, error_message
         from documents d
-          inner join product_edition e on e.id = d.edition_id
+          left join product_edition e on e.id = d.edition_id
           left join codes c on c.name = d.code
         where added_by = """ + accountId + """
           and d.shw = 1

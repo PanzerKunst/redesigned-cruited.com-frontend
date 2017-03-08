@@ -50,3 +50,12 @@ CR.pageIds = {
 };
 
 // Global functions
+CR.scrollToElement = function($el) {
+    const $headerBar = $("#container").children("header");
+    const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - $headerBar.height();
+
+    TweenLite.to(window, 1, {
+        scrollTo: offset,
+        ease: Power4.easeOut
+    });
+};

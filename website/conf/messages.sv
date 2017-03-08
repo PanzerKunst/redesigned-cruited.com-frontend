@@ -315,6 +315,7 @@ order.interviewTraining.assessmentInfo.subtitle=Something else
 order.interviewTraining.assessmentInfo.basicInfoSection.title=Basic info
 order.interviewTraining.assessmentInfo.basicInfoSection.subtitle=Bla bla bla
 order.interviewTraining.assessmentInfo.basicInfoSection.dateSelection.label=Datum för intervju
+order.interviewTraining.assessmentInfo.basicInfoSection.validation.jobAdRequired=Please input a job ad (URL or file)
 
 order.interviewTraining.assessmentInfo.contextSection.title=Context
 order.interviewTraining.assessmentInfo.contextSection.subtitle=Bla bla bla

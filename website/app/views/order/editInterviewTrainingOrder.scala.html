@@ -1,0 +1,20 @@
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], order: models.frontend.FrontendOrder, interviewTrainingOrderInfo: InterviewTrainingOrderInfo)
+
+@main("Cruited - " + i18nMessages("order.interviewTraining.assessmentInfo.title"), "edit-order", i18nMessages, lang) {
+<!--
+    Header
+-->
+@header(account, i18nMessages)
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function() {
+    CR.Controllers.EditInterviewTrainingOrder(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
+        @Html(play.api.libs.json.Json.toJson(order).toString()),
+        @Html(play.api.libs.json.Json.toJson(interviewTrainingOrderInfo).toString())
+    );
+});
+}

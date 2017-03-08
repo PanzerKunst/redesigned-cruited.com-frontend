@@ -18,7 +18,7 @@ case class CruitedProduct(id: Long,
 }
 
 object CruitedProduct {
-  implicit val Writes: Writes[CruitedProduct] = (
+  implicit val writes: Writes[CruitedProduct] = (
     (JsPath \ "id").write[Long] and
       (JsPath \ "code").write[String] and
       (JsPath \ "price").write[Price]
