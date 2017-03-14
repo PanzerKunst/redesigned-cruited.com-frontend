@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Services.Browser = {
     regexOfUserAgentsNotSupportingFlexbox: [
         "OS 8_",
@@ -9,7 +7,7 @@ CR.Services.Browser = {
         "OS 4_"
     ],
 
-    cssRules: function() {
+    cssRules() {
         if (CR.Services.Browser.allCssRules) {
             return CR.Services.Browser.allCssRules;
         }
@@ -25,6 +23,7 @@ CR.Services.Browser = {
             if (styleSheetRules) {
                 for (let j = 0; j < styleSheetRules.length; j++) {
                     const rule = styleSheetRules[j];
+
                     CR.Services.Browser.allCssRules[rule.selectorText] = rule.style;
                 }
             }
@@ -33,23 +32,24 @@ CR.Services.Browser = {
         return CR.Services.Browser.allCssRules;
     },
 
-    getCssRule: function(selector, property) {
+    getCssRule(selector, property) {
         return CR.Services.Browser.cssRules()[selector].getPropertyValue(property);
     },
 
-    getUrlQueryStrings: function() {
+    getUrlQueryStrings() {
         const queryDict = {};
+
         location.search.substr(1).split("&").forEach(function(item) {
             queryDict[item.split("=")[0]] = item.split("=")[1];
         });
         return queryDict;
     },
 
-    addUserAgentAttributeToHtmlTag: function() {
+    addUserAgentAttributeToHtmlTag() {
         document.documentElement.setAttribute("data-useragent", navigator.userAgent);
     },
 
-    isMediumScreen: function() {
+    isMediumScreen() {
         const content = window.getComputedStyle(
             document.querySelector("body"), ":after"
         ).getPropertyValue("content");
@@ -58,7 +58,7 @@ CR.Services.Browser = {
         return _.contains(content, "GLOBAL_MEDIUM_SCREEN_BREAKPOINT");
     },
 
-    isLargeScreen: function() {
+    isLargeScreen() {
         const content = window.getComputedStyle(
             document.querySelector("body"), ":after"
         ).getPropertyValue("content");
@@ -66,43 +66,45 @@ CR.Services.Browser = {
         return _.contains(content, "GLOBAL_LARGE_SCREEN_BREAKPOINT");
     },
 
-    isSmallScreen: function() {
+    isSmallScreen() {
         return !this.isMediumScreen() && !this.isLargeScreen();
     },
 
-    saveInLocalStorage: function(key, value) {
+    saveInLocalStorage(key, value) {
         if (Modernizr.localstorage && value) {
             localStorage.setItem(key, JSON.stringify(value));
         }
     },
 
-    getFromLocalStorage: function(key) {
+    getFromLocalStorage(key) {
         if (Modernizr.localstorage) {
             return JSON.parse(localStorage.getItem(key));
         }
+
+        return null;
     },
 
-    removeFromLocalStorage: function(key) {
+    removeFromLocalStorage(key) {
         if (Modernizr.localstorage) {
             localStorage.removeItem(key);
         }
     },
 
-    clearLocalStorage: function() {
+    clearLocalStorage() {
         if (Modernizr.localstorage) {
             localStorage.clear();
         }
     },
 
-    isIOS: function() {
+    isIOS() {
         return /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
     },
 
-    isWindows: function() {
+    isWindows() {
         return navigator.platform === "Win32" || navigator.platform === "Win64";
     },
 
-    fixFlexboxIndicatorClass: function() {
+    fixFlexboxIndicatorClass() {
         const $html = $("html");
         let isFound = false;
 

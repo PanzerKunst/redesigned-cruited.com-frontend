@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinProfile: null,
@@ -10,7 +8,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             };
         },
 
-        render: function() {
+        render() {
             if (!window.FormData) {
                 return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);
             }
@@ -108,12 +106,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$form = $("#content").find("form");
 
             this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
@@ -149,7 +147,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$headerBar = $("#container").children("header");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "linkedin-profile-checked",
                 "cv-file-name",
@@ -160,7 +158,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             ]);
         },
 
-        _getSignInWithLinkedinFormGroup: function() {
+        _getSignInWithLinkedinFormGroup() {
             if (!this.state.linkedinAuthCodeRequestUrl || !this.state.orderedLinkedin) {
                 return null;
             }
@@ -265,7 +263,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _getCvFormGroup: function() {
+        _getCvFormGroup() {
             if (!this.state.orderedCv) {
                 return null;
             }
@@ -289,7 +287,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _getCoverLetterFormGroup: function() {
+        _getCoverLetterFormGroup() {
             if (!this.state.orderedCoverLetter) {
                 return null;
             }
@@ -313,7 +311,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _getUploadLabelClasses: function(isBtnDisabled) {
+        _getUploadLabelClasses(isBtnDisabled) {
             let classes = "btn btn-default btn-file-upload";
 
             if (isBtnDisabled) {
@@ -323,11 +321,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             return classes;
         },
 
-        _getUploadDisabledExplanationParagraph: function(isBtnDisabled) {
+        _getUploadDisabledExplanationParagraph(isBtnDisabled) {
             return isBtnDisabled ? <p className="sign-in-with-linkedin-first">{CR.i18nMessages["order.assessmentInfo.validation.signInWithLinkedinFirst"]}</p> : null;
         },
 
-        _getTosFormGroup: function() {
+        _getTosFormGroup() {
             if (CR.loggedInAccount) {
                 return null;
             }
@@ -343,24 +341,24 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             );
         },
 
-        _handleCvFileSelected: function() {
+        _handleCvFileSelected() {
             this.cvFile = this.$cvFileField[0].files[0];
             this.$cvFileNameField.val(this.cvFile.name);
             this.$cvFormGroup.removeClass("has-error");
         },
 
-        _handleCoverLetterFileSelected: function() {
+        _handleCoverLetterFileSelected() {
             this.coverLetterFile = this.$coverLetterFileField[0].files[0];
             this.$coverLetterFileNameField.val(this.coverLetterFile.name);
             this.$coverLetterFormGroup.removeClass("has-error");
         },
 
-        _handleJobAdFileSelected: function() {
+        _handleJobAdFileSelected() {
             this.jobAdFile = this.$jobAdFileField[0].files[0];
             this.$jobAdFileNameField.val(this.jobAdFile.name);
         },
 
-        _handleJobAdAlternativeClicked: function() {
+        _handleJobAdAlternativeClicked() {
             let $formGroupToFadeOut = this.$jobAdUrlFormGroup;
             let $formGroupToFadeIn = this.$jobAdFileUploadFormGroup;
 
@@ -376,7 +374,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
             $formGroupToFadeOut.fadeOut({
                 animationDuration: CR.animationDurations.short,
-                onComplete: function() {
+                onComplete() {
                     $formGroupToFadeIn.fadeIn({
                         animationDuration: CR.animationDurations.short
                     });
@@ -384,7 +382,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             });
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$notSignedInWithLinkedinError);
@@ -395,6 +393,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     this.$submitBtn.enableLoading();
 
                     const formData = new FormData();
+
                     formData.append("editionId", CR.order.getEdition().id);
                     formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));
                     if (CR.order.getCoupon()) {
@@ -430,12 +429,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     const type = "POST";
                     const url = "/api/orders";
-
                     const httpRequest = new XMLHttpRequest();
+
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             if (httpRequest.status === CR.httpStatusCodes.created) {
                                 const order = JSON.parse(httpRequest.responseText);
+
                                 CR.order.setId(order.id);
                                 CR.order.setIdInBase64(order.idInBase64);
                                 CR.order.setCvFileName(order.cvFileName);
@@ -469,6 +469,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
                                     this._scrollToElement(this.$coverLetterFormGroup);
                                 }
+
                                 /* } else {
                                  alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
                                  } */
@@ -497,11 +498,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             }
         },
 
-        _isSignInWithLinkedinBtnThere: function() {
+        _isSignInWithLinkedinBtnThere() {
             return this.$signInWithLinkedinBtn.length === 1;
         },
 
-        _scrollToElement: function($el) {
+        _scrollToElement($el) {
             const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerBar.height();
 
             TweenLite.to(window, 1, {
@@ -510,7 +511,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             });
         },
 
-        _saveTextFieldsInLocalStorage: function() {
+        _saveTextFieldsInLocalStorage() {
             CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.positionSought, this.$positionSoughtField.val());
             CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.employerSought, this.$employerSoughtField.val());
             CR.Services.Browser.saveInLocalStorage(CR.localStorageKeys.jobAdUrl, this.$jobAdUrlField.val());
@@ -526,6 +527,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
         CR.loggedInAccount = loggedInAccount;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         // We remove file names to avoid bugs of missing uploaded files

@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Services.Validator = P(function(c) {
     c.checkEmpty = "empty";
     c.checkEmail = "email";
@@ -67,11 +65,12 @@ CR.Services.Validator = P(function(c) {
 
     c.hideErrorMessage = function($errorMsg) {
         if ($errorMsg.html()) {
-            $errorMsg.css({"display": "none", "opacity": 0});
+            $errorMsg.css({display: "none", opacity: 0});
         }
     };
 
     c._validateField = function($field, isOnBlur) {
+
         // Empty?
         if (this._isToCheckIfEmpty($field)) {
             if (this._isFieldTypeCheckbox($field)) {
@@ -275,11 +274,13 @@ CR.Services.Validator = P(function(c) {
         }
 
         const reg = /^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,4})$/i;
+
         return reg.test(email);
     };
 
     c._isUsername = function(username) {
         const reg = /^([a-z0-9_\-])+$/i;
+
         return reg.test(username);
     };
 
@@ -299,7 +300,7 @@ CR.Services.Validator = P(function(c) {
     };
 
     c._isMinLength = function(value, minLength) {
-        if (value === null || value === undefined || value === "") {
+        if (value === null || value === undefined || value === "") {    // eslint-disable-line no-undefined
             return true;
         }
 
@@ -307,7 +308,7 @@ CR.Services.Validator = P(function(c) {
     };
 
     c._isMaxLength = function(value, maxLength) {
-        if (value === null || value === undefined || value === "") {
+        if (value === null || value === undefined || value === "") {    // eslint-disable-line no-undefined
             return true;
         }
 
@@ -316,11 +317,13 @@ CR.Services.Validator = P(function(c) {
 
     c._isInteger = function(value) {
         const reg = /^\d*$/;
+
         return reg.test(value);
     };
 
     c._isDecimal = function(value) {
         const reg = /^\d*\.?\d*$/;
+
         return reg.test(value);
     };
 
@@ -330,6 +333,7 @@ CR.Services.Validator = P(function(c) {
         }
 
         const reg = /^(https?|ftp):\/\/(-\.)?([^\s/?\.#-]+\.?)+(\/[^\s]*)?$/i;
+
         return reg.test(url);
     };
 

@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.OrderStepProductSelection = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 products: [],
                 supportedLanguages: [],
@@ -11,7 +9,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             };
         },
 
-        render: function() {
+        render() {
             return (
                 <div id="content">
                     <header>
@@ -54,11 +52,17 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                     <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
                                 </div>
                             </header>
-                            <ul className="styleless">
-                                {this.state.products.map(function(product, index) {
-                                    return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
-                                }.bind(this))}
-                            </ul>
+                            <div>
+                                <ul className="styleless" id="product-list">
+                                    {this.state.products.map(function(product, index) {
+                                        return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
+                                    }.bind(this))}
+                                </ul>
+
+                                <a onClick={this._handleHowToGetItForFreeLinkClick}>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.link.text"]}</a>
+
+                                <CR.Controllers.HowToGetItForFreeModal />
+                            </div>
                         </section>
                         <section id="editions-section" className="two-columns">
                             <header>
@@ -122,7 +126,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
 
@@ -131,8 +135,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             }
         },
 
-        _initElements: function() {
+        _initElements() {
             const $content = $("#content");
+
+            this.$howToGetItForFreeModal = $content.find("#how-to-get-it-for-free-modal");
+
             this.$otherFormErrors = $content.find(".other-form-error");
             this.$emptyCartError = this.$otherFormErrors.filter("#empty-cart");
 
@@ -144,11 +151,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             this.$couponExpiredError = this.$otherFormErrors.filter("#coupon-expired-error");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator();
         },
 
-        _getCartTable: function() {
+        _getCartTable() {
             if (_.isEmpty(this.state.products)) {
                 return null;
             }
@@ -181,7 +188,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             );
         },
 
-        _getCouponRow: function() {
+        _getCouponRow() {
             const orderCoupon = CR.order.getCoupon();
 
             if (!orderCoupon) {
@@ -199,7 +206,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             );
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$otherFormErrors);
@@ -212,8 +219,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                 if (couponCodeField) {
                     const type = "GET";
                     const url = "/api/coupons/" + couponCodeField;
-
                     const httpRequest = new XMLHttpRequest();
+
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             this.$addCouponBtn.disableLoading();
@@ -253,9 +260,14 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             }
         },
 
-        _handleLanguageChange: function(e) {
+        _handleLanguageChange(e) {
             const $dropdown = $(e.currentTarget);
+
             location.replace("/order?lang=" + $dropdown.val());
+        },
+
+        _handleHowToGetItForFreeLinkClick() {
+            this.$howToGetItForFreeModal.modal();
         }
     });
 
@@ -268,6 +280,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         this.supportedLanguages = supportedLanguages;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this.reactInstance = ReactDOM.render(

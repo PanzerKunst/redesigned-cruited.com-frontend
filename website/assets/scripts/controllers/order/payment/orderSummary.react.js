@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.OrderSummary = React.createClass({
-    render: function() {
+    render() {
         const order = this.props.order;
         const currencyCode = order.getProducts()[0].price.currencyCode;
 
@@ -64,7 +62,7 @@ CR.Controllers.OrderSummary = React.createClass({
         );
     },
 
-    _getCouponRow: function() {
+    _getCouponRow() {
         const orderCoupon = this.props.order.getCoupon();
 
         if (!orderCoupon) {

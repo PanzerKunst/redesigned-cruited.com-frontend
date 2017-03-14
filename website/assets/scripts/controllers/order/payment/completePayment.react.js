@@ -1,14 +1,12 @@
-"use strict";
-
 CR.Controllers.CompletePayment = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 order: null
             };
         },
 
-        render: function() {
+        render() {
             if (!this.state.order) {
                 return null;
             }

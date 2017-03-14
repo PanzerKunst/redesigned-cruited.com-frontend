@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.PaymentForm = React.createClass({
-    render: function() {
+    render() {
         const cardNumberAndCvcInputType = Modernizr.touchevents ? "number" : "text";
 
         return (
@@ -59,13 +57,13 @@ CR.Controllers.PaymentForm = React.createClass({
         );
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
         this._initValidation();
         this._populateYearDropdown();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$form = $(ReactDOM.findDOMNode(this.refs.form));
 
         this.$cardNumberField = this.$form.find("#card-number");
@@ -82,7 +80,7 @@ CR.Controllers.PaymentForm = React.createClass({
         this.$submitBtn = this.$form.find("button[type=submit]");
     },
 
-    _initValidation: function() {
+    _initValidation() {
         this.validator = CR.Services.Validator([
             "card-number",
             "expires-month",
@@ -92,16 +90,17 @@ CR.Controllers.PaymentForm = React.createClass({
         ]);
     },
 
-    _populateYearDropdown: function() {
+    _populateYearDropdown() {
         const currentYear = parseInt(moment().format("YYYY"), 10);
 
         for (let i = 0; i < 5; i++) {
             const year = currentYear + i;
+
             this.$expiresYearField.append("<option value=\"" + year + "\">" + year + "</option>");
         }
     },
 
-    _handleSubmit: function(e) {
+    _handleSubmit(e) {
         e.preventDefault();
 
         if (this.validator.isValid()) {
@@ -134,15 +133,15 @@ CR.Controllers.PaymentForm = React.createClass({
         }
     },
 
-    _handlePaymillResponse: function(error, result) {
+    _handlePaymillResponse(error, result) {
         if (error) {
             alert("Paymill error: " + error.apierror);
             this.$submitBtn.disableLoading();
         } else {
             const type = "PUT";
             const url = "/api/orders/pay";
-
             const httpRequest = new XMLHttpRequest();
+
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === CR.httpStatusCodes.ok) {
@@ -163,11 +162,11 @@ CR.Controllers.PaymentForm = React.createClass({
         }
     },
 
-    _handleCardNumberFieldBlur: function() {
+    _handleCardNumberFieldBlur() {
         this.validator.hideErrorMessage(this.$invalidCardNumberError);
     },
 
-    _handleExpirationDateChange: function() {
+    _handleExpirationDateChange() {
         this.validator.hideErrorMessage(this.$invalidExpirationDateError);
     }
 });

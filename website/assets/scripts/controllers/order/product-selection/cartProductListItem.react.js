@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.CartProductListItem = React.createClass({
-    render: function() {
+    render() {
         const product = this.props.product;
         const editionCode = CR.order.getEdition().code;
         const editionSpanClasses = "edition " + editionCode;
@@ -17,7 +15,7 @@ CR.Controllers.CartProductListItem = React.createClass({
         );
     },
 
-    _handleClick: function() {
+    _handleClick() {
         CR.order.removeProduct(this.props.product);
         CR.order.saveInLocalStorage();
 

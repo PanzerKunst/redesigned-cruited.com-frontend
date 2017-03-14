@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.SignInForm = React.createClass({
-    render: function() {
+    render() {
         return (
             <div id="sign-in-panel" className="single-column-panel">
                 {this._getSignInWithLinkedinForm()}
@@ -13,17 +11,18 @@ CR.Controllers.SignInForm = React.createClass({
         );
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
         this._initValidation();
     },
 
-    _getSignInWithLinkedinForm: function() {
+    _getSignInWithLinkedinForm() {
         if (!this.props.linkedinAuthCodeRequestUrl) {
             return null;
         }
 
         let signInFailedParagraph = null;
+
         if (this.props.linkedinErrorMessage) {
             signInFailedParagraph = <p className="other-form-error shown-by-default">{this.props.linkedinErrorMessage}</p>;
         } else if (this.props.isLinkedinAccountUnregistered) {
@@ -40,7 +39,7 @@ CR.Controllers.SignInForm = React.createClass({
         );
     },
 
-    _getSignInWithEmailForm: function() {
+    _getSignInWithEmailForm() {
         return (
             <form ref="form" onSubmit={this._handleSubmit}>
                 <div className="form-group">
@@ -68,8 +67,9 @@ CR.Controllers.SignInForm = React.createClass({
         );
     },
 
-    _initElements: function() {
+    _initElements() {
         const $emailForm = $(ReactDOM.findDOMNode(this.refs.form));
+
         this.$emailAddressField = $emailForm.find("#email-address-si");
         this.$passwordField = $emailForm.find("#password-si");
 
@@ -82,14 +82,14 @@ CR.Controllers.SignInForm = React.createClass({
         this.$submitBtn = $emailForm.find("[type=submit]");
     },
 
-    _initValidation: function() {
+    _initValidation() {
         this.validator = CR.Services.Validator([
             "email-address-si",
             "password-si"
         ]);
     },
 
-    _handleSubmit: function(e) {
+    _handleSubmit(e) {
         e.preventDefault();
 
         this.validator.hideErrorMessage(this.$otherFormErrors);
@@ -98,13 +98,14 @@ CR.Controllers.SignInForm = React.createClass({
             this.$submitBtn.enableLoading();
 
             const type = "POST";
-
             let url = "/api/auth";
+
             if (this.props.webServiceUrlParams) {
                 url += this.props.webServiceUrlParams;
             }
 
             const httpRequest = new XMLHttpRequest();
+
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === CR.httpStatusCodes.ok) {

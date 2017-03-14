@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Controllers.Common = P(function(c) {
     c.menuOpacityTweenDuration = 0.15;
 
@@ -41,14 +39,14 @@ CR.Controllers.Common = P(function(c) {
         if (this.$siteHeader.hasClass("menu-open")) {
             TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {
                 opacity: 0,
-                onComplete: function() {
-                    this.$menu.css({"display": "none"});
-                }.bind(this)
+                onComplete: () => {
+                    this.$menu.css({display: "none"});
+                }
             });
 
             this.$siteHeader.removeClass("menu-open");
         } else {
-            this.$menu.css({"display": this._getMenuDisplayClass(), "opacity": 0});
+            this.$menu.css({display: this._getMenuDisplayClass(), opacity: 0});
             TweenLite.to(this.$menu, this.menuOpacityTweenDuration, {opacity: 1});
 
             this.$siteHeader.addClass("menu-open");

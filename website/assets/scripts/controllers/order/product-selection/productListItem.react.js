@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.ProductListItem = React.createClass({
-    render: function() {
+    render() {
         const product = this.props.product;
         const checkboxId = "product-" + product.id;
 
@@ -58,32 +56,32 @@ CR.Controllers.ProductListItem = React.createClass({
         );
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$listItem = $(ReactDOM.findDOMNode(this.refs.li));
         this.$checkbox = this.$listItem.find("input[type=\"checkbox\"]");
         this.$checkboxLabel = this.$checkbox.siblings("label");
     },
 
-    _isInOrder: function() {
+    _isInOrder() {
         const foundProduct = _.find(CR.order.getProducts(), function(product) {
             return product.id === this.props.product.id;
         }.bind(this));
 
-        return foundProduct !== undefined;
+        return foundProduct !== undefined;  // eslint-disable-line no-undefined
     },
 
-    _handleListItemClick: function(e) {
+    _handleListItemClick(e) {
         if (e.target !== this.$checkbox[0] && e.target !== this.$checkboxLabel[0]) {
             this.$checkbox.prop("checked", !this.$checkbox.prop("checked"));
             this._toggleProduct();
         }
     },
 
-    _toggleProduct: function() {
+    _toggleProduct() {
         if (this.$checkbox.prop("checked")) {
             CR.order.addProduct(this.props.product);
         } else {

@@ -1,14 +1,12 @@
-"use strict";
-
 CR.Controllers.EditOrder = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 order: null
             };
         },
 
-        render: function() {
+        render() {
             if (!window.FormData) {
                 return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);
             }
@@ -77,7 +75,7 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
 
@@ -87,7 +85,7 @@ CR.Controllers.EditOrder = P(function(c) {
             }
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$form = $("#content").find("form");
 
             this.$cvFormGroup = this.$form.find("#cv-form-group");
@@ -113,7 +111,7 @@ CR.Controllers.EditOrder = P(function(c) {
             this.$submitBtn = this.$form.find("button[type=submit]");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "cv-file-name",
                 "cover-letter-file-name",
@@ -122,7 +120,7 @@ CR.Controllers.EditOrder = P(function(c) {
             ]);
         },
 
-        _getDocumentsSection: function() {
+        _getDocumentsSection() {
             this.orderedCv = _.find(this.state.order.getProducts(), function(product) {
                 return product.code === CR.Models.Product.codes.CV_REVIEW;
             });
@@ -149,7 +147,7 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        _getCvFormGroup: function() {
+        _getCvFormGroup() {
             if (!this.orderedCv) {
                 return null;
             }
@@ -170,7 +168,7 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        _getCoverLetterFormGroup: function() {
+        _getCoverLetterFormGroup() {
             if (!this.orderedCoverLetter) {
                 return null;
             }
@@ -191,24 +189,24 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        _handleCvFileSelected: function() {
+        _handleCvFileSelected() {
             this.cvFile = this.$cvFileField[0].files[0];
             this.$cvFileNameField.val(this.cvFile.name);
             this.$cvFormGroup.removeClass("has-error");
         },
 
-        _handleCoverLetterFileSelected: function() {
+        _handleCoverLetterFileSelected() {
             this.coverLetterFile = this.$coverLetterFileField[0].files[0];
             this.$coverLetterFileNameField.val(this.coverLetterFile.name);
             this.$coverLetterFormGroup.removeClass("has-error");
         },
 
-        _handleJobAdFileSelected: function() {
+        _handleJobAdFileSelected() {
             this.jobAdFile = this.$jobAdFileField[0].files[0];
             this.$jobAdFileNameField.val(this.jobAdFile.name);
         },
 
-        _handleJobAdAlternativeClicked: function() {
+        _handleJobAdAlternativeClicked() {
             let $formGroupToFadeOut = this.$jobAdUrlFormGroup;
             let $formGroupToFadeIn = this.$jobAdFileUploadFormGroup;
 
@@ -224,7 +222,7 @@ CR.Controllers.EditOrder = P(function(c) {
 
             $formGroupToFadeOut.fadeOut({
                 animationDuration: CR.animationDurations.short,
-                onComplete: function() {
+                onComplete() {
                     $formGroupToFadeIn.fadeIn({
                         animationDuration: CR.animationDurations.short
                     });
@@ -232,13 +230,14 @@ CR.Controllers.EditOrder = P(function(c) {
             });
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             if (this.validator.isValid()) {
                 this.$submitBtn.enableLoading();
 
                 const formData = new FormData();
+
                 formData.append("id", this.state.order.getId());
 
                 if (this.cvFile) {
@@ -271,8 +270,8 @@ CR.Controllers.EditOrder = P(function(c) {
 
                 const type = "PUT";
                 const url = "/api/orders";
-
                 const httpRequest = new XMLHttpRequest();
+
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === CR.httpStatusCodes.ok) {

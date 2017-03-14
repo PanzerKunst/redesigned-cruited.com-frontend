@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.CouponForm = React.createClass({
-    render: function() {
+    render() {
         if (CR.Services.Browser.isSmallScreen()) {
             return (
                 <form ref="form" onSubmit={this._handleSubmit}>
@@ -33,12 +31,12 @@ CR.Controllers.CouponForm = React.createClass({
         );
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
         this._initValidation();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$form = $(ReactDOM.findDOMNode(this.refs.form));
         this.$couponCodeField = this.$form.find("#coupon-code");
         this.$addCouponBtn = this.$form.find("#add-coupon-btn");
@@ -48,13 +46,13 @@ CR.Controllers.CouponForm = React.createClass({
         this.$couponExpiredError = this.$otherFormErrors.filter("#coupon-expired-error");
     },
 
-    _initValidation: function() {
+    _initValidation() {
         this.validator = CR.Services.Validator([
             "coupon-code"
         ]);
     },
 
-    _handleSubmit: function(e) {
+    _handleSubmit(e) {
         e.preventDefault();
 
         this.validator.hideErrorMessage(this.$otherFormErrors);
@@ -64,8 +62,8 @@ CR.Controllers.CouponForm = React.createClass({
 
             const type = "GET";
             const url = "/api/coupons/" + this.$couponCodeField.val();
-
             const httpRequest = new XMLHttpRequest();
+
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     this.$addCouponBtn.disableLoading();

@@ -1,15 +1,13 @@
-"use strict";
-
 CR.Controllers.Dashboard = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 account: null,
                 orders: []
             };
         },
 
-        render: function() {
+        render() {
             if (!this.state.account) {
                 return null;
             }
@@ -52,14 +50,17 @@ CR.Controllers.Dashboard = P(function(c) {
 
                                 if (order.getStatus() === CR.Models.OrderStaticProps.statusIds.notPaid) {
                                     const url = "/order/complete-payment?orderId=" + order.getId();
+
                                     completePaymentLink = (<div>
                                         <a href={url} className="btn btn-primary btn-xs">{CR.i18nMessages["dashboard.completePaymentLink.text"]}</a>
                                     </div>);
                                 }
 
                                 let editOrderMarkup = null;
+
                                 if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
                                     const url = "/order/edit?id=" + order.getId();
+
                                     editOrderMarkup = <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
                                 }
 
@@ -102,31 +103,32 @@ CR.Controllers.Dashboard = P(function(c) {
             );
         },
 
-        _getOrderTitle: function(order) {
+        _getOrderTitle(order) {
             const inner = order.getTitleForHtml();
 
             if (!order.jobAdUrl) {
                 return inner;
             }
 
-            const outer = "<a href=\"" + order.jobAdUrl + "\" target=\"_blank\">{inner}</a>";
+            const outer = `<a href="${order.jobAdUrl}" target="_blank">{inner}</a>`;
+
             return CR.Services.String.template(outer, "inner", inner);
         },
 
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._showAlertIfNeeded();
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$content = $("#content");
             this.$orderCompletedAlert = this.$content.find(".alert-success");
             this.$assessmentWaitingAlert = this.$content.find("#assessment-waiting-alert");
             this.$assessmentInProgressAlert = this.$content.find("#assessment-in-progress-alert");
         },
 
-        _showAlertIfNeeded: function() {
+        _showAlertIfNeeded() {
             const queryStrings = CR.Services.Browser.getUrlQueryStrings();
             const latestOrder = _.head(this.state.orders);
             const latestOrderStatus = latestOrder ? latestOrder.getStatus() : CR.Models.OrderStaticProps.statusIds.notPaid;

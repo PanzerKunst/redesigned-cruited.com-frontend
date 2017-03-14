@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Models.OrderStaticProps = {
     statusIds: {
         notPaid: -1,
@@ -19,6 +17,7 @@ CR.Models.Order = P(function(c) {
             this._products = order.containedProductCodes.map(function(productCode) {
                 if (!_.isEmpty(CR.products)) {
                     const product = _.find(CR.products, "code", productCode);
+
                     if (product) {
                         return product;
                     }
@@ -231,6 +230,7 @@ CR.Models.Order = P(function(c) {
         });
 
         const orderCoupon = this._coupon;
+
         if (orderCoupon) {
             if (orderCoupon.discountPercentage) {
                 totalPrice = Math.round(totalPrice - totalPrice * orderCoupon.discountPercentage / 100);

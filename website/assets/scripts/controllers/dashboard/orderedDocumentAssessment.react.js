@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.OrderedDocumentAssessment = React.createClass({
-    render: function() {
+    render() {
         const isBtnDisabled = this.props.order.getStatus() !== CR.Models.OrderStaticProps.statusIds.completed;
 
         return (
@@ -10,11 +8,10 @@ CR.Controllers.OrderedDocumentAssessment = React.createClass({
                 <div className="centered-contents">
                     <button className="btn btn-default" onClick={this._handleClick} disabled={isBtnDisabled}>{CR.i18nMessages["dashboard.viewReportBtn.text"]}</button>
                 </div>
-            </li>
-            );
+            </li>);
     },
 
-    _handleClick: function() {
+    _handleClick() {
         location.href = "/reports/" + this.props.order.getId() + "?productCode=" + this.props.productCode;
     }
 });

@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Models.Coupon = {
     types: {
         NO_RESTRICTION: 0,
