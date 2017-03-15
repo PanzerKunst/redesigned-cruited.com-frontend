@@ -202,7 +202,7 @@ object ReportDto {
 
           breakable {
             for (commentInList <- redComments) {
-              if (commentInList.category.id == redComment.category.id && commentInList.id == redComment.id) {
+              if (commentInList.category.id == redComment.category.id && commentInList.text == redComment.text) {
                 // Comments of different categories can have the same ID
                 isInListAlready = true
                 break()
