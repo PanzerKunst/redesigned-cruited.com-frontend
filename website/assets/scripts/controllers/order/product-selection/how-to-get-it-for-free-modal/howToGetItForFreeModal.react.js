@@ -10,8 +10,8 @@ CR.Controllers.HowToGetItForFreeModal = React.createClass({
                             </button>
                             <h3 className="modal-title">{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.title"]}</h3>
                         </div>
-                        <CR.Controllers.ModalBodySmallRes/>
-                        <CR.Controllers.ModalBodyLargeRes/>
+                        <CR.Controllers.ModalBodySmallRes lang={this.props.lang}/>
+                        <CR.Controllers.ModalBodyLargeRes lang={this.props.lang}/>
                     </div>
                 </div>
             </div>);

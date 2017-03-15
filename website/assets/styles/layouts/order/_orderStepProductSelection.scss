@@ -186,14 +186,123 @@
     .modal-body {
       padding: 0;
 
+      .logo {
+        display: inline-block;
+
+        margin: $content-element-margin-bottom 0;
+
+        @include hdpi-sprite;
+
+        &.jusek {
+          $partner-logo-location-y: -300px;
+          $logo-width: 100px;
+          $logo-height: 68px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.vision {
+          $partner-logo-location-y: -500px;
+          $logo-width: 120px;
+          $logo-height: 54px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.unionen-egen {
+          $partner-logo-location-y: -700px;
+          $logo-width: 182px;
+          $logo-height: 45px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.tsn {
+          $partner-logo-location-y: -900px;
+          $logo-width: 124px;
+          $logo-height: 74px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.trs {
+          $partner-logo-location-y: -1100px;
+          $logo-width: 276px;
+          $logo-height: 42px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.ki {
+          $partner-logo-location-y: -1300px;
+          $logo-width: 140px;
+          $logo-height: 62px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+      }
+
       &.large-res {
         display: none;
+        min-height: 43em;
       }
     }
 
     @include large-screen {
       > .modal-dialog {
         width: 900px;
+      }
+
+      .modal-title {
+        margin-top: 0.4em;
       }
 
       .modal-body {
@@ -413,5 +522,50 @@
 
   .btn-lg.btn-primary {
     margin-top: 0;
+  }
+}
+
+.no-flexbox {
+  #order-step-product-selection {
+    #content > header > div {
+      display: block;
+      @include clearfix;
+
+      > h1 {
+        float: left;
+      }
+
+      > form {
+        float: right;
+      }
+    }
+
+    .two-columns {
+      @include large-screen {
+        display: block;
+        @include clearfix;
+
+        > header,
+        > div,
+        > ul,
+        > form {
+          float: left;
+        }
+      }
+    }
+
+    #how-to-get-it-for-free-modal {
+      @include large-screen {
+        .modal-body.large-res {
+          display: block;
+          @include clearfix;
+
+          > ul,
+          > div {
+            float: left;
+          }
+        }
+      }
+    }
   }
 }

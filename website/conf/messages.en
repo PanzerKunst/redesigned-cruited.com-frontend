@@ -180,13 +180,13 @@ order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
 order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my LinkedIn Profile
 
-order.productSelection.productsSection.howToGetItForFree.link.text=How to get it for free
+order.productSelection.productsSection.howToGetItForFree.link.text=Can you get this for free?
 order.productSelection.productsSection.howToGetItForFree.title=Our partners
 order.productSelection.productsSection.howToGetItForFree.listItem.jusek=Jusek
 order.productSelection.productsSection.howToGetItForFree.listItem.vision=Vision
 order.productSelection.productsSection.howToGetItForFree.listItem.unionenEgenforetagare=Unionen Egenföretagare
-order.productSelection.productsSection.howToGetItForFree.listItem.trygghetsstiftelsen=Trygghetsstiftelsen
-order.productSelection.productsSection.howToGetItForFree.listItem.trygghetsradet=Trygghetsrådet TRS
+order.productSelection.productsSection.howToGetItForFree.listItem.tsn=Trygghetsstiftelsen
+order.productSelection.productsSection.howToGetItForFree.listItem.trs=Trygghetsrådet TRS
 order.productSelection.productsSection.howToGetItForFree.listItem.ki=Karolinska Institutet
 
 order.productSelection.editionsSection.title=Product Edition

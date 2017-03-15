@@ -59,9 +59,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                     }.bind(this))}
                                 </ul>
 
-                                <a onClick={this._handleHowToGetItForFreeLinkClick}>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.link.text"]}</a>
+                                <div className="centered-contents">
+                                    <a onClick={this._handleHowToGetItForFreeLinkClick}>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.link.text"]}</a>
+                                </div>
 
-                                <CR.Controllers.HowToGetItForFreeModal />
+                                <CR.Controllers.HowToGetItForFreeModal lang={this.state.currentLanguageCode} />
                             </div>
                         </section>
                         <section id="editions-section" className="two-columns">

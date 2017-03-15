@@ -1,9 +1,9 @@
 .detail-panel {
-  display: flex;  // TODO .no-flexbox
+  display: flex;
 
   $list-width: 40%;
 
-  li,
+  > ul > li,
   > div {
     padding: 0.5em 1em;
   }
@@ -39,4 +39,13 @@
 }
 
 .no-flexbox { // stylelint-disable-line block-no-empty
+  .detail-panel {
+    display: block;
+    @include clearfix;
+
+    > ul,
+    > div {
+      float: left;
+    }
+  }
 }

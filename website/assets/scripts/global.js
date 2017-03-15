@@ -43,5 +43,10 @@ CR.propertyFile = {
     }
 };
 
+CR.languageCodes = {
+    sv: "sv",
+    en: "en"
+};
+
 
 // Global functions

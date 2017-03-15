@@ -105,6 +105,9 @@ object DbAdmin {
 
   def fixBothersomeCharactersInLinkedinProfile() {
     val ids = AccountDto.getIdsOfAccountsWithBothersomeCharactersInLinkedinProfile
-    AccountDto.cleanLinkedinProfileOfIds(ids)
+
+    if (ids.nonEmpty) {
+      AccountDto.cleanLinkedinProfileOfIds(ids)
+    }
   }
 }

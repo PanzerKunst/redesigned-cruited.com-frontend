@@ -15,6 +15,34 @@ CR.Controllers.ModalBodySmallRes = React.createClass({
                     </header>
                     <CR.Controllers.ModalContentVision/>
                 </article>
+
+                <article className="expandable-panel alt">
+                    <header>
+                        <span>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.unionenEgenforetagare"]}</span>
+                    </header>
+                    <CR.Controllers.ModalContentUnionenEgenforetagare/>
+                </article>
+
+                <article className="expandable-panel alt">
+                    <header>
+                        <span>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.tsn"]}</span>
+                    </header>
+                    <CR.Controllers.ModalContentTSN/>
+                </article>
+
+                <article className="expandable-panel alt">
+                    <header>
+                        <span>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.trs"]}</span>
+                    </header>
+                    <CR.Controllers.ModalContentTRS/>
+                </article>
+
+                <article className="expandable-panel alt">
+                    <header>
+                        <span>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.ki"]}</span>
+                    </header>
+                    <CR.Controllers.ModalContentKI/>
+                </article>
             </div>);
     },
 

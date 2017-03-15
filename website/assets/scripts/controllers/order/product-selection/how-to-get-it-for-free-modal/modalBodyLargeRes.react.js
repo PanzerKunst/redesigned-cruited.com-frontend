@@ -1,13 +1,23 @@
 CR.Controllers.ModalBodyLargeRes = React.createClass({
     render() {
+        const lang = this.props.lang;
+
         return (
             <div className="modal-body large-res detail-panel" ref="modalBody">
                 <ul className="styleless">
                     <li>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.jusek"]}</li>
                     <li>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.vision"]}</li>
+                    <li>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.unionenEgenforetagare"]}</li>
+                    <li>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.tsn"]}</li>
+                    <li>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.trs"]}</li>
+                    <li>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.listItem.ki"]}</li>
                 </ul>
-                <CR.Controllers.ModalContentJusek/>
-                <CR.Controllers.ModalContentVision/>
+                <CR.Controllers.ModalContentJusek lang={lang}/>
+                <CR.Controllers.ModalContentVision lang={lang}/>
+                <CR.Controllers.ModalContentUnionenEgenforetagare lang={lang}/>
+                <CR.Controllers.ModalContentTSN lang={lang}/>
+                <CR.Controllers.ModalContentTRS lang={lang}/>
+                <CR.Controllers.ModalContentKI lang={lang}/>
             </div>);
     },
 

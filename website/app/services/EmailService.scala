@@ -35,7 +35,6 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
       views.html.email.sv.orderComplete.free(firstName)
     }
 
-    // TODO: remove try-catch once Mebo fixes their email?
     try {
       mailerClient.send(Email(
         subject,
@@ -57,7 +56,6 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
       views.html.email.sv.orderComplete.paid(firstName, emailAddress, orderedProducts, orderId, costAfterReductions, GlobalConfig.paymentCurrencyCode, vatAmount, orderDateTime)
     }
 
-    // TODO: remove try-catch once Mebo fixes their email?
     try {
       mailerClient.send(Email(
         subject,
