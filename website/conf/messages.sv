@@ -181,7 +181,7 @@ order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Bedömnin
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
 
 order.productSelection.productsSection.howToGetItForFree.link.text=Kan du få det kostnadsfritt?
-order.productSelection.productsSection.howToGetItForFree.title=Våra partners
+order.productSelection.productsSection.howToGetItForFree.title=Våra partner
 order.productSelection.productsSection.howToGetItForFree.listItem.jusek=Jusek
 order.productSelection.productsSection.howToGetItForFree.listItem.vision=Vision
 order.productSelection.productsSection.howToGetItForFree.listItem.unionenEgenforetagare=Unionen Egenföretagare
@@ -238,7 +238,11 @@ order.assessmentInfo.form.linkedinProfile.check.step1.text=Öppna nu <a href="ht
 order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för bedömning
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Läs in igen
-order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad om min profil saknar viktiga delar. 
+order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad om min profil saknar viktiga delar.
+order.assessmentInfo.form.linkedinProfile.multiLanguage.link.text=I have a multilingual LinkedIn profile
+order.assessmentInfo.form.linkedinProfile.multiLanguage.selection.label=Then please select which one we should assess:
+order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.en=Profil på engelska
+order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.sv=Profil på svenska
 order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev

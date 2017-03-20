@@ -55,6 +55,12 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
       Some(requestData("couponCode").head)
     }
 
+    val linkedinProfileLangOpt = if (!requestData.contains("linkedinProfileLanguage")) {
+      None
+    } else {
+      Some(requestData("linkedinProfileLanguage").head)
+    }
+
     val positionSought = if (!requestData.contains("positionSought")) {
       None
     } else {
@@ -91,6 +97,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
       employerSought = employerSought,
       jobAdUrl = jobAdUrl,
       jobAdFileName = jobAdFileNameOpt,
+      linkedinProfileLanguage = linkedinProfileLangOpt,
       customerComment = customerComment,
       accountId = SessionService.getAccountId(request.session)
     )
@@ -170,6 +177,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
             employerSought,
             jobAdUrl,
             jobAdFileNameOpt,
+            existingOrder.linkedinProfileLanguage,
             customerComment,
             existingOrder.accountId,
             existingOrder.status,

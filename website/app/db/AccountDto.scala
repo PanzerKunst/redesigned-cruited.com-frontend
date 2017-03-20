@@ -40,7 +40,7 @@ object AccountDto {
         case JsNull => ""
         case jsValue =>
           val validJsValue = Account.getValidLinkedinProfileJson(jsValue)
-          DbUtil.safetize(validJsValue.toString())
+          DbUtil.safetize(Json.stringify(validJsValue))
       }
 
       val query = """

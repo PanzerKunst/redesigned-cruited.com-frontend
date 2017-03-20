@@ -29,7 +29,7 @@ object Account {
       (JsPath \ "type").write[Int] and
       (JsPath \ "languageCode").write[String] and
       (JsPath \ "creationTimestamp").write[Long]
-    )(unlift(Account.unapply))
+    ) (unlift(Account.unapply))
 
   val typeCustomer = 2
   val typeRater = 3
@@ -65,7 +65,7 @@ object Account {
     val positions = (linkedinProfile \ "positions").as[JsObject]
 
     val positionValuesOpt = (positions \ "values").asOpt[JsArray]
-    var validPositionValues = new JsArray()
+    var validPositionValues = JsArray()
 
     if (positionValuesOpt.isDefined) {
       for (positionValue: JsValue <- positionValuesOpt.get.value.toArray) {

@@ -234,11 +234,15 @@ order.assessmentInfo.validation.signInWithLinkedinFirst=Please start by signing 
 order.assessmentInfo.form.browseBtn.text=Browse...
 order.assessmentInfo.form.linkedinProfile.label=Your LinkedIn profile
 order.assessmentInfo.form.linkedinProfile.signInBtn.text=Sign in with LinkedIn
-order.assessmentInfo.form.linkedinProfile.check.step1.text=Open now <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">dina profilinställningar</a> och se till att alla kryssrutor till höger är ifyllda. De delar du inte kryssar för kommer vi inte att kunna granska.
-order.assessmentInfo.form.linkedinProfile.check.step2.text=Have a look at <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">din publika profilsida</a> och se till att all information är synlig. Det du ser här är det vi kommer att bedöma.
+order.assessmentInfo.form.linkedinProfile.check.step1.text=Now open <a href="https://www.linkedin.com/profile/public-profile-settings?trk=prof-edit-edit-public_profile" target="blank">your profile settings</a> and make sure all checkboxes at the right are ticked.
+order.assessmentInfo.form.linkedinProfile.check.step2.text=Have a look at <a href="https://www.linkedin.com/profile/preview?vpa=pub" target="blank">your public profile page</a> and make sure all your information is visible. What you see on that your public page, is what we will be assessing.
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Done! My profile is ready to be assessed
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Re-read
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=I understand that my assessment will be limited because my profile is missing important details. Proceed anyway.
+order.assessmentInfo.form.linkedinProfile.multiLanguage.link.text=I have a multilingual LinkedIn profile
+order.assessmentInfo.form.linkedinProfile.multiLanguage.selection.label=Then please select the one we should assess:
+order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.en=English profile
+order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.sv=Swedish profile
 order.assessmentInfo.form.cvFile.label=Your CV
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Your cover letter

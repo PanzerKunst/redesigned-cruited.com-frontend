@@ -11,6 +11,7 @@ case class Order(id: Option[Long],
                  cvFileName: Option[String],
                  coverLetterFileName: Option[String],
                  linkedinProfileFileName: Option[String],
+                 linkedinProfileLanguage: Option[String],
                  positionSought: Option[String],
                  employerSought: Option[String],
                  jobAdUrl: Option[String],
@@ -33,6 +34,7 @@ case class Order(id: Option[Long],
     cvFileName = frontendOrder.cvFileName,
     coverLetterFileName = frontendOrder.coverLetterFileName,
     linkedinProfileFileName = linkedinProfileFileName,
+    linkedinProfileLanguage = frontendOrder.linkedinProfileLanguage,
     positionSought = frontendOrder.positionSought,
     employerSought = frontendOrder.employerSought,
     jobAdUrl = frontendOrder.jobAdUrl,
@@ -56,7 +58,7 @@ case class Order(id: Option[Long],
 
     // Product cost
     val orderPriceAmounts = orderedProducts.map(p => p.price.amount)
-    var costAfterReductions = orderPriceAmounts.reduce((total, cur) => total + cur)
+    var costAfterReductions = orderPriceAmounts.sum
 
     Logger.info("costAfterReductions - 1:" + costAfterReductions)
 
@@ -124,7 +126,7 @@ object Order {
 
             var result = firstProduct.getTypeForDb
 
-            for (i <- 1 to nbAboveOne - 1) {
+            for (i <- 1 until nbAboveOne) {
               val product = allProducts.filter(p => p.code == containedProductCodes(i)).head
               result = result + typeStringSeparator + product.getTypeForDb
             }
@@ -135,12 +137,12 @@ object Order {
   }
 
   def getContainedProductCodesFromTypesString(docTypes: String): List[String] = {
-    val typeArray = docTypes.split(typeStringSeparator).map { docType => docType.trim}
+    val typeArray = docTypes.split(typeStringSeparator).map { docType => docType.trim }
     getContainedProductCodesFromTypesArray(typeArray)
   }
 
   def getContainedProductCodesFromTypesArray(docTypes: Array[String]): List[String] = {
-    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb)}
+    docTypes.map { typeForDb => CruitedProduct.getCodeFromType(typeForDb) }
       .toList
   }
 

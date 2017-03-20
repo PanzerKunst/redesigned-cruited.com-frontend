@@ -42,7 +42,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
 
-                        <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.assessmentInfo} />
+                        <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.assessmentInfo}/>
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section" className="two-columns">
@@ -65,15 +65,15 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 <div>
                                     <div className="form-group">
                                         <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                                        <input type="text" className="form-control" id="position-sought" maxLength="230" defaultValue={positionSought} />
+                                        <input type="text" className="form-control" id="position-sought" maxLength="230" defaultValue={positionSought}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                                        <input type="text" className="form-control" id="employer-sought" maxLength="230" defaultValue={employerSought} />
+                                        <input type="text" className="form-control" id="employer-sought" maxLength="230" defaultValue={employerSought}/>
                                     </div>
                                     <div className="form-group" id="job-ad-url-form-group">
                                         <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                                        <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl} />
+                                        <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl}/>
                                         <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                                         <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
                                     </div>
@@ -82,10 +82,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                                         <div>
                                             <label className={this._getUploadLabelClasses()} htmlFor="job-ad-file">
-                                                <input type="file" id="job-ad-file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleJobAdFileSelected} />
+                                                <input type="file" id="job-ad-file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleJobAdFileSelected}/>
                                                 {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                                             </label>
-                                            <input type="text" className="form-control" id="job-ad-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.jobAdFile.placeHolder"]} defaultValue={CR.order.getJobAdFileName()} disabled />
+                                            <input type="text" className="form-control" id="job-ad-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.jobAdFile.placeHolder"]} defaultValue={CR.order.getJobAdFileName()} disabled/>
                                         </div>
                                         <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
                                     </div>
@@ -93,7 +93,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             </section>
                             <div className="form-group">
                                 <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
-                                <textarea className="form-control" id="customer-comment" maxLength="480" defaultValue={customerComment} />
+                                <textarea className="form-control" id="customer-comment" maxLength="480" defaultValue={customerComment}/>
                                 <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
                             </div>
                             {this._getTosFormGroup()}
@@ -117,6 +117,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$linkedinProfileFormGroup = this.$form.find("#linkedin-profile-form-group");
             this.$linkedinPreviewWrapper = this.$linkedinProfileFormGroup.children("div");
             this.$signInWithLinkedinBtn = this.$linkedinProfileFormGroup.find(".sign-in-with-linkedin").not(".btn-xs");
+
+            const $multiLanguageLinkedinProfileSection = this.$linkedinProfileFormGroup.find("#multi-language-linkedin-profile-section");
+
+            this.$linkedinProfileLanguageSelectionPanel = $multiLanguageLinkedinProfileSection.children("div");
+            this.$linkedinProfileLanguagePills = this.$linkedinProfileLanguageSelectionPanel.find("li");
+
             this.$notSignedInWithLinkedinError = this.$linkedinProfileFormGroup.find("#not-signed-in-with-linkedin");
             this.$linkedinProfileCheckedCheckboxWrapper = this.$linkedinPreviewWrapper.children(".checkbox");
 
@@ -188,7 +194,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                         formGroupContents = (
                             <div>
                                 <article id="linkedin-preview">
-                                    <div className="profile-picture" style={{backgroundImage: "url(" + linkedinProfile.pictureUrl + ")"}} />
+                                    <div className="profile-picture" style={{backgroundImage: "url(" + linkedinProfile.pictureUrl + ")"}}/>
                                     <span>{linkedinProfile.firstName} {linkedinProfile.lastName}</span>
                                 </article>
                                 <p className="light-font">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.incompleteProfile.label"]}</p>
@@ -205,28 +211,42 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text"]}</span>
                                 </a>
                                 <div className="checkbox checkbox-primary">
-                                    <input type="checkbox" id="linkedin-profile-checked" />
+                                    <input type="checkbox" id="linkedin-profile-checked"/>
                                     <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label"]}</label>
                                 </div>
-                                <p className="field-error" data-check="empty" />
+                                <p className="field-error" data-check="empty"/>
                             </div>
                         );
                     } else {
                         formGroupContents = (
                             <div>
                                 <article id="linkedin-preview">
-                                    <div className="profile-picture" style={{backgroundImage: "url(" + linkedinProfile.pictureUrl + ")"}} />
+                                    <div className="profile-picture" style={{backgroundImage: "url(" + linkedinProfile.pictureUrl + ")"}}/>
                                     <span>{linkedinProfile.firstName} {linkedinProfile.lastName}</span>
                                 </article>
+
                                 <ol>
-                                    <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}} />
-                                    <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}} />
+                                    <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step1.text"]}}/>
+                                    <li className="light-font" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.step2.text"]}}/>
                                 </ol>
+
                                 <div className="checkbox checkbox-primary">
-                                    <input type="checkbox" id="linkedin-profile-checked" />
+                                    <input type="checkbox" id="linkedin-profile-checked"/>
                                     <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.checkbox.label"]}</label>
                                 </div>
-                                <p className="field-error" data-check="empty" />
+
+                                <section id="multi-language-linkedin-profile-section">
+                                    <a onClick={this._handleMultiLanguageLinkedinClick}>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.multiLanguage.link.text"]}</a>
+                                    <div>
+                                        <p>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.multiLanguage.selection.label"]}</p>
+                                        <ul className="nav nav-pills">
+                                            <li data-lang={CR.languageCodes.en}><a onClick={this._handleLinkedinProfileLanguageClick}>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.en"]}</a></li>
+                                            <li data-lang={CR.languageCodes.sv}><a onClick={this._handleLinkedinProfileLanguageClick}>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.sv"]}</a></li>
+                                        </ul>
+                                    </div>
+                                </section>
+
+                                <p className="field-error" data-check="empty"/>
                             </div>
                         );
                     }
@@ -276,13 +296,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     <div>
                         <label className={this._getUploadLabelClasses(isBtnDisabled)} htmlFor="cv">
-                            <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} disabled={isBtnDisabled} />
+                            <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} disabled={isBtnDisabled}/>
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={CR.order.getCvFileName()} disabled />
+                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={CR.order.getCvFileName()} disabled/>
                     </div>
                     {this._getUploadDisabledExplanationParagraph(isBtnDisabled)}
-                    <p className="field-error" data-check="empty" />
+                    <p className="field-error" data-check="empty"/>
                 </div>
             );
         },
@@ -300,13 +320,13 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     <div>
                         <label className={this._getUploadLabelClasses(isBtnDisabled)} htmlFor="cover-letter">
-                            <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} disabled={isBtnDisabled} />
+                            <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} disabled={isBtnDisabled}/>
                             {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
                         </label>
-                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={CR.order.getCoverLetterFileName()} disabled />
+                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={CR.order.getCoverLetterFileName()} disabled/>
                     </div>
                     {this._getUploadDisabledExplanationParagraph(isBtnDisabled)}
-                    <p className="field-error" data-check="empty" />
+                    <p className="field-error" data-check="empty"/>
                 </div>
             );
         },
@@ -333,10 +353,10 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             return (
                 <div id="tos-wrapper" className="centered-contents">
                     <div className="checkbox checkbox-primary">
-                        <input type="checkbox" id="accept-tos" defaultChecked={CR.order.isTosAccepted()} />
-                        <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}} />
+                        <input type="checkbox" id="accept-tos" defaultChecked={CR.order.isTosAccepted()}/>
+                        <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}}/>
                     </div>
-                    <p className="field-error" data-check="empty" />
+                    <p className="field-error" data-check="empty"/>
                 </div>
             );
         },
@@ -382,6 +402,21 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             });
         },
 
+        _handleMultiLanguageLinkedinClick() {
+            if (this.$linkedinProfileLanguageSelectionPanel.is(":visible")) {
+                this.$linkedinProfileLanguageSelectionPanel.hide();
+            } else {
+                this.$linkedinProfileLanguageSelectionPanel.fadeIn();
+            }
+        },
+
+        _handleLinkedinProfileLanguageClick(e) {
+            const $clickedPill = $(e.currentTarget).parent();
+
+            this.$linkedinProfileLanguagePills.removeClass("active");
+            $clickedPill.addClass("active");
+        },
+
         _handleSubmit(e) {
             e.preventDefault();
 
@@ -404,6 +439,17 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
                     if (this.coverLetterFile) {
                         formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
+                    }
+
+                    let selectedLinkedinProfileLanguage = null;
+                    const $selectedLinkedinProfileLanguagePill = this.$linkedinProfileLanguagePills.filter(".active");
+
+                    if (!_.isEmpty($selectedLinkedinProfileLanguagePill)) {
+                        selectedLinkedinProfileLanguage = $selectedLinkedinProfileLanguagePill.data("lang");
+                    }
+
+                    if (selectedLinkedinProfileLanguage) {
+                        formData.append("linkedinProfileLanguage", selectedLinkedinProfileLanguage);
                     }
 
                     const positionSought = this.$positionSoughtField.val();

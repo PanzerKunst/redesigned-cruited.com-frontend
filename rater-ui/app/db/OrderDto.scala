@@ -59,7 +59,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
   def getOfId(id: Long): Option[FrontendOrder] = {
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -79,7 +79,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
   def getOrdersPaidOrInProgressAssignedTo(accountId: Long): List[FrontendOrder] = {
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -101,7 +101,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
   def getUnassignedPaidOrders: List[FrontendOrder] = {
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -130,7 +130,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     }
 
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -160,7 +160,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     }
 
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -191,7 +191,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
       and paid_on > '""" + DbUtil.dateFormat.format(to) + """'"""
 
     val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+        select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
           edition,
           u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
           r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -214,7 +214,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
   def getOrdersFromCustomerWithReportSent(customerId: Long): List[FrontendOrder] = {
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -237,7 +237,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
   def calculateOrdersSentToTheCustomer(from: Date, to: Date) {
     val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+        select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
           edition,
           u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
           r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -260,7 +260,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
   def calculateOrdersToDo() {
     val query = """
-        select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+        select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
           edition,
           u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
           r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -285,7 +285,7 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
     oneDayAgoPlus90Minutes.add(Calendar.MINUTE, 90)
 
     val query = """
-      select d.id as order_id, file, file_cv, file_li, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
+      select d.id as order_id, file, file_cv, file_li, li_profile_lang, added_at, type, d.status, position, employer, job_ad_url, job_ad_filename, customer_comment, paid_on, d.lang as order_lang,
         edition,
         u.id as customer_id, u.prenume as customer_first_name, u.nume as customer_last_name, u.email as customer_email, u.linkedin_basic_profile_fields as customer_li_fields, u.registered_at as customer_creation_date, u.tp as customer_account_type, u.lang as customer_lang,
         r.id as rater_id, r.prenume as rater_first_name, r.nume as rater_last_name, r.email as rater_email, r.linkedin_basic_profile_fields as rater_li_fields, r.registered_at as rater_creation_date, r.tp as rater_account_type, r.lang as rater_lang,
@@ -315,6 +315,13 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
 
       while (rs.next()) {
         val orderId = rs.getLong("order_id")
+
+        val linkedinProfileLanguage = rs.getString("li_profile_lang")
+        val linkedinProfileLangOpt = if (rs.wasNull()) {
+          None
+        } else {
+          Some(linkedinProfileLanguage)
+        }
 
         val jobAdUrl = rs.getString("job_ad_url")
         val jobAdUrlOpt = if (rs.wasNull()) {
@@ -435,6 +442,8 @@ class OrderDto @Inject()(db: Database, couponDto: CouponDto, accountDto: Account
             case "" => None
             case otherString => Order.getFileNameWithoutPrefix(Some(otherString))
           },
+
+          linkedinProfileLanguage = linkedinProfileLangOpt,
 
           positionSought = rs.getString("position") match {
             case "" => None
