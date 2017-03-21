@@ -65,6 +65,7 @@ class LinkedinService @Inject()(val ws: WSClient) {
         val futureProfile: Future[JsValue] = ws.url(linkedinProfileDataUri)
           .withHeaders("Connection" -> "Keep-Alive")
           .withHeaders("Authorization" -> ("Bearer " + token))
+          .withHeaders("Accept-Language" -> "sv-SE, en-US")
           .get()
           .map { response => response.json}
 
