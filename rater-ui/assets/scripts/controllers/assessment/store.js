@@ -12,9 +12,9 @@ import Language from "../../models/language";
 
 const store = {
     reactComponent: null,
-    account: Object.assign(Object.create(Account), CR.ControllerData.account),
+    account: _.assign(Object.create(Account), CR.ControllerData.account),
     config: CR.ControllerData.config,
-    order: Object.assign(Object.create(Order), CR.ControllerData.order),
+    order: _.assign(Object.create(Order), CR.ControllerData.order),
     i18nMessages: CR.ControllerData.i18nMessages,
     allDefaultComments: CR.ControllerData.allDefaultComments,
     allCommentVariations: CR.ControllerData.allCommentVariations,
@@ -295,7 +295,7 @@ const store = {
                     _.remove(scoresOfOtherOrders, orderAndScores => orderAndScores.order.id === this.order.id);
 
                     this.scoresOfOtherOrders = scoresOfOtherOrders.map(orderAndScores => {
-                        const smartOrder = Object.assign(Object.create(Order), orderAndScores.order);
+                        const smartOrder = _.assign(Object.create(Order), orderAndScores.order);
 
                         return {
                             order: smartOrder,

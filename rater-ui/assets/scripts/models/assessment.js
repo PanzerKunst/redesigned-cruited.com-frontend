@@ -498,7 +498,7 @@ const Assessment = {
         const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
         if (commentToUpdate) {
-            Object.assign(commentToUpdate, comment);
+            _.assign(commentToUpdate, comment);
         } else {
             myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
         }

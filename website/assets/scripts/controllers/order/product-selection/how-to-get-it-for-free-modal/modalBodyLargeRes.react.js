@@ -24,7 +24,7 @@ CR.Controllers.ModalBodyLargeRes = React.createClass({
     componentDidMount() {
         this._initElements();
 
-        this.detailPanel = Object.assign(Object.create(CR.DetailPanel), {
+        this.detailPanel = _.assign(Object.create(CR.DetailPanel), {
             $list: this.$list,
             $contentPanels: this.$contentPanels
         });

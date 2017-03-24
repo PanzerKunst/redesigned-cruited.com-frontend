@@ -4,7 +4,7 @@ import Order from "../../models/order";
 
 const store = {
     reactComponent: null,
-    account: Object.assign(Object.create(Account), CR.ControllerData.account),
+    account: _.assign(Object.create(Account), CR.ControllerData.account),
     config: CR.ControllerData.config,
     myToDos: [],
     otherOrders: [],
@@ -92,7 +92,7 @@ const store = {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const ordersJson = JSON.parse(httpRequest.responseText);
 
-                    this.otherOrders = ordersJson.map(o => Object.assign(Object.create(Order), o));
+                    this.otherOrders = ordersJson.map(o => _.assign(Object.create(Order), o));
                     this.reactComponent.forceUpdate();
 
                     this._fetchLastRatingInfoForDisplayedCustomers();
@@ -119,7 +119,7 @@ const store = {
 
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const ordersJson = JSON.parse(httpRequest.responseText);
-                    const orders = ordersJson.map(o => Object.assign(Object.create(Order), o));
+                    const orders = ordersJson.map(o => _.assign(Object.create(Order), o));
 
                     this.otherOrders = _.concat(this.otherOrders, orders);
                     this.reactComponent.forceUpdate();
@@ -146,6 +146,19 @@ const store = {
         return order.isReadOnly(this.account);
     },
 
+    isOrderDuplicate(order) {
+
+        // TODO: remove
+        console.log("order", order);
+        console.log("this.myToDos", this.myToDos);
+        console.log("this.otherOrders", this.otherOrders);
+
+        const duplicateOrder = _.find(this.myToDos, o => o.id !== order.id && o.customer.id === order.customer.id) ||
+            _.find(this.otherOrders, o => o.id !== order.id && o.customer.id === order.customer.id);
+
+        return duplicateOrder !== undefined;    // eslint-disable-line no-undefined
+    },
+
     _fetchMyToDos() {
         const type = "GET";
         const url = "/api/orders/my-todo";
@@ -156,7 +169,7 @@ const store = {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const myToDosJson = JSON.parse(httpRequest.responseText);
 
-                    this.myToDos = myToDosJson.map(o => Object.assign(Object.create(Order), o));
+                    this.myToDos = myToDosJson.map(o => _.assign(Object.create(Order), o));
                     this.areMyToDosFetched = true;
                     this.reactComponent.forceUpdate();
                 } else {
@@ -178,7 +191,7 @@ const store = {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const allRatersJson = JSON.parse(httpRequest.responseText);
 
-                    this.allRaters = allRatersJson.map(o => Object.assign(Object.create(Account), o));
+                    this.allRaters = allRatersJson.map(o => _.assign(Object.create(Account), o));
                     this.reactComponent.forceUpdate();
                 } else {
                     alert(`AJAX failure doing a ${type} request to "${url}"`);
@@ -205,7 +218,7 @@ const store = {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const ordersToDoJson = JSON.parse(httpRequest.responseText);
 
-                    this.ordersToDo = ordersToDoJson.map(o => Object.assign(Object.create(Order), o));
+                    this.ordersToDo = ordersToDoJson.map(o => _.assign(Object.create(Order), o));
 
                     // No need to `reactComponent.forceUpdate`, as `_fetchOrdersSentToTheCustomerThisMonth()` does it already.
                 } else {
@@ -230,7 +243,7 @@ const store = {
                 if (httpRequest.status === httpStatusCodes.ok) {
                     const sentOrdersJson = JSON.parse(httpRequest.responseText);
 
-                    this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => Object.assign(Object.create(Order), o));
+                    this.ordersSentToTheCustomerThisMonth = sentOrdersJson.map(o => _.assign(Object.create(Order), o));
                     this.reactComponent.forceUpdate();
                 } else {
 
@@ -292,7 +305,7 @@ const store = {
 
                     for (const customerId of _.keys(customerIdsAndTheirOrdersAndScores)) {
                         const customerOrdersAndScores = customerIdsAndTheirOrdersAndScores[customerId].map(orderAndScores => {
-                            const smartOrder = Object.assign(Object.create(Order), orderAndScores.order);
+                            const smartOrder = _.assign(Object.create(Order), orderAndScores.order);
 
                             return {
                                 order: smartOrder,
