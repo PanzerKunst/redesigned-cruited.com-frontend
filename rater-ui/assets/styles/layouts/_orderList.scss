@@ -99,6 +99,16 @@
     }
   }
 
+  .order-date,
+  .duplicate {
+    display: inline-block;
+  }
+
+  .duplicate {
+    color: $brand-warning;
+    margin-left: 1.5em;
+  }
+
   .order-section.second {
     > div:first-child {
       margin-bottom: $content-element-margin-bottom;

@@ -22,7 +22,7 @@ const Component = React.createClass({
                         <span className={`order-status ${order.statusCode()}`}>{order.humanReadableStatus()}</span>
                     </div>
                     <TimeLeft order={order} />
-                    <p>{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</p>
+                    <span className="order-date">{moment(order.paymentTimestamp).format("YYYY-MM-DD H:mm")}</span>{this._duplicateIndicator()}
                 </section>
                 <section className="order-section second">
                     <div>
@@ -71,6 +71,14 @@ const Component = React.createClass({
             return null;
         }
         return <span className="order-list-item-tag coupon" data-toggle="tooltip" title={coupon.code}>{coupon.campaignName}</span>;
+    },
+
+    _duplicateIndicator() {
+        if (!store.isOrderDuplicate(this.props.order)) {
+            return null;
+        }
+
+        return <span className="duplicate">Duplicate!</span>;
     },
 
     _lastRating() {
