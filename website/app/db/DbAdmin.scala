@@ -9,20 +9,6 @@ import services.GlobalConfig
 
 object DbAdmin {
   def reCreateTables() {
-    removeAlterationOnTableDocuments()
-    alterTableDocuments()
-  }
-
-  private def alterTableDocuments() {
-    DB.withConnection { implicit c =>
-      val query = """
-        alter table documents
-        add li_profile_lang varchar(8) after file_li;"""
-
-      Logger.info("DbAdmin.alterTableDocuments():" + query)
-
-      SQL(query).executeUpdate()
-    }
   }
 
   private def dropTable(tableName: String) {
@@ -33,20 +19,25 @@ object DbAdmin {
     }
   }
 
-  private def removeAlterationOnTableDocuments() {
-    DB.withConnection { implicit c =>
-      val query = """
-        alter table documents
-        drop li_profile_lang;"""
-
-      Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
-
-      SQL(query).executeUpdate()
-    }
+  def initData() {
+    initDataProduct()
+    fixBothersomeCharactersInLinkedinProfile()
   }
 
-  def initData() {
-    fixBothersomeCharactersInLinkedinProfile()
+  private def initDataProduct() {
+    DB.withConnection { implicit c =>
+      SQL("""delete from product
+          where code = '""" + CruitedProduct.CodeCvReviewForConsultant + """';""").execute()
+
+      SQL("""delete from product
+          where code = '""" + CruitedProduct.CodeLinkedinProfileReviewForConsultant + """';""").execute()
+
+      SQL("""insert into product(code, price_amount, price_currency_code)
+          values('""" + CruitedProduct.CodeCvReviewForConsultant + """', 299, '""" + GlobalConfig.paymentCurrencyCode + """');""").execute()
+
+      SQL("""insert into product(code, price_amount, price_currency_code)
+          values('""" + CruitedProduct.CodeLinkedinProfileReviewForConsultant + """', 299, '""" + GlobalConfig.paymentCurrencyCode + """');""").execute()
+    }
   }
 
   def fixBothersomeCharactersInLinkedinProfile() {

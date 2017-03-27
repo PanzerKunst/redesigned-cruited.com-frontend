@@ -81,7 +81,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   private def convertLinkedinPublicProfilePageToPdf(order: Order) {
     val linkedinProfile = AccountDto.getOfId(order.accountId.get).get.linkedinProfile
 
-    if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && linkedinProfile != JsNull) {
+    if (order.containedProductCodes.contains(CruitedProduct.CodeLinkedinProfileReview) && linkedinProfile != JsNull) {
       documentService.convertLinkedinProfilePageToPdf(order.id.get, (linkedinProfile \ "publicProfileUrl").as[String])
     }
   }
@@ -134,7 +134,7 @@ class OrderService @Inject()(val documentService: DocumentService) {
   }
 
   private def getNewLinkedinProfileFileName(order: Order): Option[String] = {
-    if (order.containedProductCodes.contains(CruitedProduct.codeLinkedinProfileReview) && order.accountId.get != AccountDto.unknownUserId) {
+    if (order.containedProductCodes.contains(CruitedProduct.CodeLinkedinProfileReview) && order.accountId.get != AccountDto.unknownUserId) {
       // Fail epically if the Linkedin profile doesn't exist
       if (AccountDto.getOfId(order.accountId.get).get.linkedinProfile == JsNull) {
         throw new Exception("OrderService.getNewLinkedinProfileFileName() > Fatal error: linkedinProfile is JsNull for order ID " + order.id)

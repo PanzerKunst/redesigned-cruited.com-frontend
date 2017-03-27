@@ -1,3 +1,56 @@
+$two-column-right-col-margin-top: 3em;
+
+.two-columns {
+  margin-top: $two-column-right-col-margin-top;
+  padding-bottom: $two-column-right-col-padding-bottom;
+  border-bottom: 1px solid $well-border-color;
+
+  > h2 {
+    margin-top: 0;
+  }
+
+  header {
+    margin-bottom: $content-element-margin-bottom;
+  }
+
+  ul {
+    margin-bottom: 0;
+  }
+
+  &.widow {
+    margin-top: 0;
+    align-items: center;
+
+    > header {
+      margin-bottom: 0;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  @include large-screen {
+    &.widow,
+    > div {
+      display: flex;
+      justify-content: space-between;
+
+      font-size: $two-columns-font-size-large-screen;
+
+      > header {
+        width: 40%;
+      }
+
+      > ul,
+      > form,
+      > div {
+        width: $two-column-right-col-width;
+      }
+    }
+  }
+}
+
 #order-steps-breadcrumbs {
   display: flex;
   justify-content: center;
@@ -127,21 +180,47 @@
     }
 
     li {
-      @include clearfix;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
       margin-top: 1em;
 
       > span {
-        float: left;
-
         &:first-child {
-          max-width: 71%;
+          flex-grow: 1;
         }
 
         &.cart-product-price {
-          float: right;
           color: $grey;
-          margin-top: 1.7em;
+        }
+      }
+
+      .fa-times {
+        color: $brand-danger;
+
+        @include medium-screen {
+          margin-top: 0;
+        }
+      }
+
+      &.editable {
+        .cart-product-price {
+          margin-right: -2.9em;
+          min-width: 7.2em;
+          @include medium-screen {
+            margin-right: -2.65em;
+            min-width: 0;
+          }
+          @include large-screen {
+            margin-right: -2.025em;
+          }
+        }
+      }
+
+      &.with-edition {
+        .cart-product-price {
+          margin-top: 0.5em;
         }
       }
     }
@@ -251,67 +330,6 @@
   }
 }
 
-.two-columns {
-  padding-bottom: 2.5em;
-  border-bottom: 1px solid $well-border-color;
-
-  > header {
-    > p {
-      margin-bottom: $content-element-margin-bottom;
-    }
-  }
-
-  h2 {
-    margin-top: 0;
-  }
-}
-
-#order-step-assessment-info,
-#edit-order {
-  .with-circles {
-    @include medium-screen {
-      width: auto;
-      margin: 0 $spacer-unit-size;
-    }
-    @include large-screen {
-      width: $large-content-width;
-      margin: 0 auto;
-    }
-  }
-
-  form {
-    font-size: #{$font-size-base-px}px;
-  }
-
-  #job-you-search-section,
-  form > .form-group {
-    margin-top: 3em;
-  }
-
-  @include medium-screen {
-    #documents-section,
-    #job-you-search-section {
-      display: flex;
-      justify-content: space-between;
-
-      > header {
-        width: 40%;
-      }
-
-      > div {
-        width: 55%;
-        margin-top: 12px;
-      }
-    }
-
-    form > .form-group {
-      max-width: 55%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-}
-
 .guarantee-panel {
   span {
     display: block;
@@ -320,11 +338,69 @@
   }
 }
 
+#documents-section,
+#job-you-search-section {
+  padding-bottom: $two-column-right-col-padding-bottom - $content-element-margin-bottom;
+}
+
 #job-ad-file-upload-form-group {  // Hidden by default
   display: none;
 }
 
+#customer-comment-form-group {
+  margin-top: $two-column-right-col-margin-top;
+
+  @include large-screen {
+    font-size: $two-columns-font-size-large-screen;
+
+    max-width: $two-column-right-col-width;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+#job-ad-required-error {
+  margin: -$content-element-margin-bottom 0 $content-element-margin-bottom;
+}
+
+#tos-wrapper {
+  // Otherwise things get weird when inspecting
+  > .checkbox {
+    display: inline-block;
+    text-align: left;
+  }
+
+  @include large-screen {
+    font-size: $two-columns-font-size-large-screen;
+
+    > .checkbox > label::before {
+      margin-top: 3px;
+    }
+  }
+}
+
+
 .no-flexbox {
+  .two-columns {
+    @include large-screen {
+      &.widow,
+      > div {
+        display: block;
+        @include clearfix;
+
+        > header {
+          float: left;
+        }
+
+        > ul,
+        > form,
+        > div {
+          float: right;
+        }
+      }
+    }
+  }
+
   #order-steps-breadcrumbs {
     display: table;
 
@@ -337,19 +413,31 @@
     }
   }
 
-  #order-step-assessment-info,
-  #edit-order {
-    @include medium-screen {
-      #documents-section,
-      #job-you-search-section {
+  #cart-section {
+    > div li {
+      display: block;
+      @include clearfix;
+
+      > span {
+        float: left;
+
+        &.cart-product-price {
+          float: right;
+        }
+      }
+    }
+
+    form > .form-group > div {
+      @include medium-screen {
         display: block;
         @include clearfix;
 
-        > header {
+        > input {
+          max-width: 77%;
           float: left;
         }
 
-        > div {
+        > button {
           float: right;
         }
       }

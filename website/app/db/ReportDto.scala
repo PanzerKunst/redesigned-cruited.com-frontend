@@ -236,8 +236,8 @@ object ReportDto {
         }
       }
 
-      val redCommentsForCv = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
-      val topCommentsForCv = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCvReview)
+      val redCommentsForCv = redComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCvReview)
+      val topCommentsForCv = topComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCvReview)
 
       val cvReportOpt = if (redCommentsForCv.isEmpty && topCommentsForCv.isEmpty) {
         None
@@ -249,8 +249,8 @@ object ReportDto {
         ))
       }
 
-      val redCommentsForCoverLetter = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
-      val topCommentsForCoverLetter = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeCoverLetterReview)
+      val redCommentsForCoverLetter = redComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCoverLetterReview)
+      val topCommentsForCoverLetter = topComments.filter(comment => comment.category.productCode == CruitedProduct.CodeCoverLetterReview)
 
       val coverLetterReportOpt = if (redCommentsForCoverLetter.isEmpty && topCommentsForCoverLetter.isEmpty) {
         None
@@ -262,8 +262,8 @@ object ReportDto {
         ))
       }
 
-      val redCommentsForLinkedinProfile = redComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
-      val topCommentsForLinkedinProfile = topComments.filter(comment => comment.category.productCode == CruitedProduct.codeLinkedinProfileReview)
+      val redCommentsForLinkedinProfile = redComments.filter(comment => comment.category.productCode == CruitedProduct.CodeLinkedinProfileReview)
+      val topCommentsForLinkedinProfile = topComments.filter(comment => comment.category.productCode == CruitedProduct.CodeLinkedinProfileReview)
 
       val linkedinProfileReportOpt = if (redCommentsForLinkedinProfile.isEmpty && topCommentsForLinkedinProfile.isEmpty) {
         None
@@ -304,9 +304,9 @@ object ReportDto {
   }
 
   private def normaliseScores(denormalisedScores: List[(String, Long, Long, Int, Int)]): AssessmentReportScores = {
-    val cvReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeCvReview))
-    val coverLetterReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeCoverLetterReview))
-    val linkedinProfileReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.dbTypeLinkedinProfileReview))
+    val cvReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.DbTypeCvReview))
+    val coverLetterReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.DbTypeCoverLetterReview))
+    val linkedinProfileReportScores = getReportScores(denormalisedScores.filter(row => row._1 == CruitedProduct.DbTypeLinkedinProfileReview))
 
     AssessmentReportScores(
       cvReportScores = cvReportScores,

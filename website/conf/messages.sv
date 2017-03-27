@@ -5,6 +5,8 @@ defaultAssessmentTitle=Bedömning
 product.name.CV_REVIEW=Bedömning av CV
 product.name.COVER_LETTER_REVIEW=Bedömning av personligt brev
 product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn
+product.name.CV_REVIEW_CONSULT=Bedömning av CV
+product.name.LINKEDIN_PROFILE_REVIEW_CONSULT=Bedömning av LinkedIn
 
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
@@ -209,6 +211,15 @@ order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
 order.productSelection.cartSection.coupon.notFoundError=Koden kunde inte hittas. Vänligen kontakta kundtjänst på kontakt@cruited.com
 order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Att betala
+
+
+# Order For Consultant page
+
+order.consult.title=Välj produkt
+order.consult.subtitle=Hur kan vi hjälpa dig?
+
+order.productSelection.productsSection.productName.CV_REVIEW_CONSULT=Bedömning av cv
+order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW_CONSULT=Bedömning av LinkedIn-profil
 
 
 # Order Step Assessment Info page

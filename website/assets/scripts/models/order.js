@@ -13,6 +13,7 @@ CR.Models.OrderStaticProps = {
 CR.Models.Order = P(function(c) {
     c.init = function(order) {
         this._products = order && order.products ? _.cloneDeep(order.products) : [];
+
         if (_.isEmpty(this._products) && order && !_.isEmpty(order.containedProductCodes)) {
             this._products = order.containedProductCodes.map(function(productCode) {
                 if (!_.isEmpty(CR.products)) {
@@ -29,16 +30,9 @@ CR.Models.Order = P(function(c) {
             });
         }
 
-        this._calculateReductions();
-
+        this._reductions = order && order.reductions ? _.cloneDeep(order.reductions) : [];
         this._coupon = order && order.coupon ? _.cloneDeep(order.coupon) : null;
-
-        if (order && order.edition) {
-            this._edition = _.cloneDeep(order.edition);
-        } else if (!_.isEmpty(CR.editions)) {
-            this._edition = CR.editions[0];
-        }
-
+        this._edition = order && order.edition ? _.cloneDeep(order.edition) : null;
         this._id = order && order.id ? order.id : null;
         this._idInBase64 = order && order.idInBase64 ? order.idInBase64 : null;
         this._cvFileName = order && order.cvFileName ? order.cvFileName : null;
@@ -102,6 +96,11 @@ CR.Models.Order = P(function(c) {
             this._products.splice(productIndex, 1);
             this._calculateReductions();
         }
+    };
+
+    c.removeAllProducts = function() {
+        this._products = [];
+        this._calculateReductions();
     };
 
     c.getReductions = function() {

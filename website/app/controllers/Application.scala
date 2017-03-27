@@ -44,7 +44,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
   }
 
-  def signOut() = Action { request =>
+  def signOut() = Action {
     linkedinService.invalidateAccessToken()
     Redirect("/").withNewSession
   }
@@ -59,7 +59,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         Some(request.queryString("reportId").head.toLong)
       }
       catch {
-        case pe: NumberFormatException => None
+        case _: NumberFormatException => None
       }
     } else {
       None
@@ -138,7 +138,35 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+      .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
+  }
+
+  def orderForConsultant = Action { request =>
+    var currentLanguage = SessionService.getCurrentLanguage(request.session)
+
+    val accountOpt = SessionService.getAccountId(request.session) match {
+      case None => None
+      case Some(accountId) =>
+        if (AccountService.isTemporary(accountId)) {
+          None
+        } else {
+          AccountDto.getOfId(accountId) match {
+            case None => None
+            case Some(account) =>
+              currentLanguage = SupportedLanguageDto.getOfCode(account.languageCode).get
+              Some(account)
+          }
+        }
+    }
+
+    if (request.queryString.contains("lang")) {
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
+    }
+
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.order.orderForConsultant(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, SupportedLanguageDto.all))
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
@@ -354,7 +382,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         val selectedProductCode = if (request.queryString.contains("productCode")) {
           request.queryString("productCode").head
         } else {
-          CruitedProduct.codeCvReview
+          CruitedProduct.CodeCvReview
         }
 
         OrderDto.getOfIdForFrontend(orderId) match {

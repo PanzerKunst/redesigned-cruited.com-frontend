@@ -1,6 +1,6 @@
 #order-step-product-selection {
   .form-inline .form-control {
-    // We want this event on small res
+    // We want this even on small res
     display: inline-block;
     width: auto;
     vertical-align: baseline;
@@ -44,31 +44,6 @@
     }
   }
 
-  .two-columns {
-    @include large-screen {
-      display: flex;
-      justify-content: space-between;
-
-      > header > p,
-      > div,
-      > ul,
-      > form {
-        font-size: #{$font-size-base-px}px;
-      }
-
-      > header {
-        width: 40%;
-      }
-
-      > div,
-      > ul,
-      > form {
-        width: 55%;
-        margin-top: 34px;
-      }
-    }
-  }
-
   #product-list,
   #editions-section {
     li {
@@ -98,11 +73,15 @@
         border: 2px solid $primary-btn-color;
       }
 
+      &.read-only {
+        cursor: default;
+      }
+
       > .checkbox {
         float: left;
         margin-left: $spacer-unit-size;
 
-        width: 55%;
+        width: $two-column-right-col-width;
       }
 
       > .prices {
@@ -148,10 +127,6 @@
 
     font-size: 1.2em;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
     > p,
     span {
       line-height: 1em;
@@ -175,6 +150,10 @@
     color: $brand-danger;
     text-decoration: line-through;
     text-align: center;
+  }
+
+  #how-to-get-it-for-free-link-wrapper {
+    margin-top: $content-element-margin-bottom;
   }
 
   #how-to-get-it-for-free-modal {
@@ -438,19 +417,6 @@
     }
   }
 
-  #language-section {
-    align-items: center;
-
-    > form {
-      margin-top: 0;
-    }
-
-    p,
-    .form-group {
-      margin-bottom: 0;
-    }
-  }
-
   #cart-section {
     > header {
       margin-top: 2.6em;
@@ -458,23 +424,6 @@
 
     > div {
       margin-bottom: 2em;
-
-      li {
-        > .cart-product-price {
-          margin-right: -2.9em;
-          @include medium-screen {
-            margin-right: -2.65em;
-            margin-top: 0;
-          }
-          @include large-screen {
-            margin-right: -2.025em;
-          }
-        }
-
-        .fa-times {
-          color: $brand-danger;
-        }
-      }
     }
 
     table {
@@ -484,6 +433,17 @@
     @include medium-screen {
       > div li > span:first-child {
         max-width: 100%;
+      }
+
+      .with-edition {
+        > span {
+          display: flex;
+          align-items: center;
+        }
+
+        .cart-product-price {
+          margin-top: 0;
+        }
       }
 
       .cart-product-name {
@@ -511,6 +471,7 @@
       }
 
       .guarantee-panel {
+        max-width: 52%;
         margin: 2.8em 2.8em 0 0;
       }
     }
@@ -540,20 +501,6 @@
       }
     }
 
-    .two-columns {
-      @include large-screen {
-        display: block;
-        @include clearfix;
-
-        > header,
-        > div,
-        > ul,
-        > form {
-          float: left;
-        }
-      }
-    }
-
     #how-to-get-it-for-free-modal {
       @include large-screen {
         .modal-body.large-res {
@@ -562,6 +509,33 @@
 
           > ul,
           > div {
+            float: left;
+          }
+        }
+      }
+    }
+
+    #cart-section {
+      @include medium-screen {
+        .with-edition > span {
+          display: block;
+          @include clearfix;
+
+          > .cart-product-name,
+          > .edition {
+            float: left;
+          }
+        }
+
+        .bottom-section {
+          display: block;
+          @include clearfix;
+
+          > table {
+            float: right;
+          }
+
+          > .guarantee-panel {
             float: left;
           }
         }

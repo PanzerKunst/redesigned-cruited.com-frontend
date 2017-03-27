@@ -1,0 +1,22 @@
+@(i18nMessages: Map[String, String], lang: SupportedLanguage, account: Option[Account], products: List[CruitedProduct], reductions: List[Reduction], supportedLanguages: List[SupportedLanguage])
+
+@main("Cruited - " + i18nMessages("order.consult.title"), "order-consult", i18nMessages, lang) {
+<!--
+    Header
+-->
+@header(account, i18nMessages)
+
+} {
+/*
+    Javascript
+*/
+document.addEventListener("DOMContentLoaded", function() {
+    CR.Controllers.OrderForConsultant(
+        @Html(play.api.libs.json.Json.toJson(i18nMessages).toString()),
+        @Html(play.api.libs.json.Json.toJson(products).toString()),
+        @Html(play.api.libs.json.Json.toJson(reductions).toString()),
+        @Html(play.api.libs.json.Json.toJson(account).toString()),
+        @Html(play.api.libs.json.Json.toJson(supportedLanguages).toString())
+    );
+});
+}

@@ -117,14 +117,14 @@ CR.Services.Validator = P(function(c) {
             this.hideErrorMessage(this._get$username($field));
         }
 
-        // In the future?
-        if (this._isToCheckIfInFuture($field)) {
-            if (!this._isInFuture($field.val().trim())) {
+        // Date in the future?
+        if (this._isToCheckIfDateInFuture($field)) {
+            if (!this._isDateInFuture($field.val().trim())) {
                 this.flagInvalid($field);
-                this.showErrorMessage(this._get$inFuture($field));
+                this.showErrorMessage(this._get$dateInFuture($field));
                 return false;
             }
-            this.hideErrorMessage(this._get$inFuture($field));
+            this.hideErrorMessage(this._get$dateInFuture($field));
         }
 
         // Min length?
@@ -200,7 +200,7 @@ CR.Services.Validator = P(function(c) {
         return this._get$error($field, this.checkUsername);
     };
 
-    c._get$inFuture = function($field) {
+    c._get$dateInFuture = function($field) {
         return this._get$error($field, this.checkDateInFuture);
     };
 
@@ -244,8 +244,8 @@ CR.Services.Validator = P(function(c) {
         return this._get$username($field).length === 1;
     };
 
-    c._isToCheckIfInFuture = function($field) {
-        return this._get$inFuture($field).length === 1;
+    c._isToCheckIfDateInFuture = function($field) {
+        return this._get$dateInFuture($field).length === 1;
     };
 
     c._isToCheckIfMinLength = function($field) {
@@ -284,7 +284,7 @@ CR.Services.Validator = P(function(c) {
         return reg.test(username);
     };
 
-    c._isInFuture = function(dateStr) {
+    c._isDateInFuture = function(dateStr) {
         const yearMonthDay = dateStr.split("-");
         const year = parseInt(yearMonthDay[0], 10);
         const month = parseInt(yearMonthDay[1], 10);

@@ -1,6 +1,12 @@
 #order-step-assessment-info {
-  .checkbox > label::before {
-    margin-top: 3px;
+  .with-circles > form [type="submit"] {
+    @include large-screen {
+      font-size: $two-columns-font-size-large-screen;
+    }
+  }
+
+  .two-columns > div > div {
+    margin-top: -33px;
   }
 
   #linkedin-profile-form-group {
@@ -71,6 +77,12 @@
         }
       }
     }
+
+    @include large-screen {
+      .checkbox > label::before {
+        margin-top: 3px;
+      }
+    }
   }
 
   #linkedin-preview {
@@ -84,12 +96,5 @@
 
   #request-entity-too-large-error {
     margin-top: - $content-element-margin-bottom / 2;
-  }
-
-  #tos-wrapper {
-    > .checkbox {
-      display: inline-block;
-      text-align: left;
-    }
   }
 }
