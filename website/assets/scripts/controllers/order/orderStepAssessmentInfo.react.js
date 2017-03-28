@@ -17,8 +17,8 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            this.state.orderedLinkedin = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW);
-            this.state.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW);
+            this.state.orderedLinkedin = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW || p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT);
+            this.state.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW || p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT);
             this.state.orderedCoverLetter = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.COVER_LETTER_REVIEW);
 
             return (
@@ -265,7 +265,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     const formData = new FormData();
 
-                    formData.append("editionId", CR.order.getEdition().id);
+                    const orderEdition = CR.order.getEdition();
+
+                    if (orderEdition) {
+                        formData.append("editionId", CR.order.getEdition().id);
+                    }
+
                     formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));
                     if (CR.order.getCoupon()) {
                         formData.append("couponCode", CR.order.getCoupon().code);

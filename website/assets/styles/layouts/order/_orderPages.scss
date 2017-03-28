@@ -36,7 +36,12 @@ $two-column-right-col-margin-top: 3em;
       display: flex;
       justify-content: space-between;
 
-      font-size: $two-columns-font-size-large-screen;
+      > header,
+      > ul,
+      > form,
+      > div {
+        font-size: $two-columns-font-size-large-screen;
+      }
 
       > header {
         width: 40%;
@@ -120,6 +125,13 @@ $two-column-right-col-margin-top: 3em;
     height: 3em;
 
     margin-right: 0.5em;
+  }
+}
+
+#order-step-assessment-info,
+#edit-order {
+  .two-columns > div > div {
+    margin-top: -33px;
   }
 }
 

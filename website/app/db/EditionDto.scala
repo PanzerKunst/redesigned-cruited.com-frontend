@@ -10,13 +10,14 @@ import play.api.db.DB
 import scala.util.control.Breaks._
 
 object EditionDto {
-  val all = getAll
+  val All = getAll
+  val IdConsult = 7
 
   def getOfId(id: Long): Option[Edition] = {
     var result: Option[Edition] = None
 
     breakable {
-      for (edition <- all) {
+      for (edition <- All) {
         if (edition.id == id) {
           result = Some(edition)
           break()

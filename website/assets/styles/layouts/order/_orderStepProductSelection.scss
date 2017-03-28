@@ -1,4 +1,5 @@
-#order-step-product-selection {
+#order-step-product-selection,
+#order-consult {
   .form-inline .form-control {
     // We want this even on small res
     display: inline-block;
@@ -487,7 +488,8 @@
 }
 
 .no-flexbox {
-  #order-step-product-selection {
+  #order-step-product-selection,
+  #order-consult {
     #content > header > div {
       display: block;
       @include clearfix;

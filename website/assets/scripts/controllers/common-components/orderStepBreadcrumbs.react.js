@@ -11,7 +11,7 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepOneTag() {
-        const tagText = this._isInterviewTrainingOrdered() ? CR.i18nMessages["order.interviewTraining.title"] : CR.i18nMessages["order.productSelection.title"];
+        const tagText = this._isForConsultant() ? CR.i18nMessages["order.consult.title"] : CR.i18nMessages["order.productSelection.title"];
 
         const stepOneInnerTag = `<span>1. ${tagText}</span>`;
         let stepOneTag = <a href={this._baseUrl()} dangerouslySetInnerHTML={{__html: stepOneInnerTag}} />;
@@ -24,9 +24,7 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepTwoTag() {
-        const tagText = this._isInterviewTrainingOrdered() ? CR.i18nMessages["order.interviewTraining.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title"];
-
-        const stepTwoInnerTag = `<span>2. ${tagText}</span>`;
+        const stepTwoInnerTag = `<span>2. ${CR.i18nMessages["order.assessmentInfo.title"]}</span>`;
         let stepTwoTag = <a href={`${this._baseUrl()}/assessment-info`} dangerouslySetInnerHTML={{__html: stepTwoInnerTag}} />;
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.assessmentInfo) {
@@ -80,10 +78,10 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _baseUrl() {
-        return this._isInterviewTrainingOrdered() ? "/order/interview-training" : "/order";
+        return this._isForConsultant() ? "/order/consultant" : "/order";
     },
 
-    _isInterviewTrainingOrdered() {
-        return _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.INTERVIEW_TRAINING) !== undefined;    // eslint-disable-line no-undefined
+    _isForConsultant() {
+        return _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT || p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) !== undefined;    // eslint-disable-line no-undefined
     }
 });

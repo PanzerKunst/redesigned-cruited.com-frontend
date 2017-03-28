@@ -12,7 +12,7 @@ object SessionService {
   val sessionKeyResetPasswordToken = "resetPasswordToken"
   val sessionKeyLanguageCode = "languageCode"
 
-  private val defaultLanguage = SupportedLanguageDto.all.head
+  private val defaultLanguage = SupportedLanguageDto.All.head
   private var i18nMessagesSv = Map[String, String]()
   private var i18nMessagesEn = Map[String, String]()
 
@@ -55,10 +55,10 @@ object SessionService {
   }
 
   private def getI18nMessagesFromCode(languageCode: String, messagesApi: MessagesApi): Map[String, String] = {
-    if (i18nMessagesSv.size == 0) {
+    if (i18nMessagesSv.isEmpty) {
       i18nMessagesSv = I18nService.getMessages(messagesApi, I18nService.languageCodeSv)
     }
-    if (i18nMessagesEn.size == 0) {
+    if (i18nMessagesEn.isEmpty) {
       i18nMessagesEn = I18nService.getMessages(messagesApi, I18nService.languageCodeEn)
     }
 

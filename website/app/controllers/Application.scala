@@ -80,7 +80,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
           val isSaveSuccessful = SessionService.isAccountSaveSuccessful(request.session)
 
-          Ok(views.html.myAccount(i18nMessages, currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.all))
+          Ok(views.html.myAccount(i18nMessages, currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.All))
             .withSession(request.session
             - SessionService.sessionKeyAccountSaveSuccessful
             + (SessionService.sessionKeyLanguageCode -> account.languageCode))
@@ -133,12 +133,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
 
     if (request.queryString.contains("lang")) {
-      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.All.head)
     }
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, EditionDto.All, SupportedLanguageDto.All))
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
@@ -161,12 +161,12 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
 
     if (request.queryString.contains("lang")) {
-      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.All.head)
     }
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.orderForConsultant(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, SupportedLanguageDto.all))
+    Ok(views.html.order.orderForConsultant(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForConsultantOrderPage, ReductionDto.getAll, SupportedLanguageDto.All))
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
