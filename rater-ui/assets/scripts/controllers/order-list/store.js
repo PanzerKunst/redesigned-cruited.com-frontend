@@ -147,14 +147,8 @@ const store = {
     },
 
     isOrderDuplicate(order) {
-
-        // TODO: remove
-        console.log("order", order);
-        console.log("this.myToDos", this.myToDos);
-        console.log("this.otherOrders", this.otherOrders);
-
         const duplicateOrder = _.find(this.myToDos, o => o.id !== order.id && o.customer.id === order.customer.id) ||
-            _.find(this.otherOrders, o => o.id !== order.id && o.customer.id === order.customer.id);
+            _.find(this.otherOrders, o => o.id !== order.id && o.customer.id === order.customer.id && o.status !== Order.statuses.completed);
 
         return duplicateOrder !== undefined;    // eslint-disable-line no-undefined
     },
