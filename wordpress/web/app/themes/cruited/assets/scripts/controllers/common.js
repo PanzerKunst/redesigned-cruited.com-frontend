@@ -6,7 +6,12 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
     c.init = function() {
         this._initElements();
         this._initEvents();
+
+        this.$sectionsWithBgImages.parallax();
+        this._initPageHeaderBackground();
+
         this._removeEmptyParagraphTagsAddedByTheWpEditor();
+        this._initSmartHeightOfYouCanBookMeIframes();
     };
 
     c._initElements = function() {
@@ -25,13 +30,7 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
     c._initEvents = function() {
         this.$window.scroll(_.debounce($.proxy(this._onScroll, this), 15));
-
         this._initMenuEvents();
-
-        this.$sectionsWithBgImages.parallax();
-
-        this._initPageHeaderBackground();
-
         this.$scrollingAnchors.click($.proxy(this._scrollToSection, this));
     };
 
@@ -93,5 +92,15 @@ CR.Controllers.Common = P(CR.Controllers.Base, function(c) {
 
         var scrollYPos = $section.offset().top - this.$siteHeader.height();
         TweenLite.to(window, 1, {scrollTo: scrollYPos, ease: Power4.easeOut});
+    };
+
+    c._initSmartHeightOfYouCanBookMeIframes = function() {
+        if (window.addEventListener) {
+            window.addEventListener("message", function(e) {
+                if (/^https:\/\/\w+\.youcanbook\.me$/.test(e.origin)) {
+                    document.getElementById("ycbmiframecruited").style.height = e.data + "px";
+                }
+            }, false);
+        }
     };
 });
