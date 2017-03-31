@@ -5,11 +5,22 @@ CR.Controllers.EditOrder = P(function(c) {
                 return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);
             }
 
+            let pageTitle = null;
+            let jobYouSearchSectionTitle = null;
+
+            if (CR.order.isOfClassicProducts()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"];
+            } else if (CR.order.isForConsultant()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title.consult"] : CR.i18nMessages["order.assessmentInfo.title.consult.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title.consult"];
+            }
+
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                            <h1>{pageTitle}</h1>
                         </div>
                     </header>
                     <div className="with-circles">
@@ -18,7 +29,7 @@ CR.Controllers.EditOrder = P(function(c) {
                         <form onSubmit={this._handleSubmit}>
                             {this._getDocumentsSection()}
                             <section id="job-you-search-section" className="two-columns">
-                                <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
+                                <h2>{jobYouSearchSectionTitle}</h2>
                                 <div>
                                     <header>
                                         <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
@@ -78,13 +89,8 @@ CR.Controllers.EditOrder = P(function(c) {
         },
 
         _getDocumentsSection() {
-            this.orderedCv = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.CV_REVIEW;
-            });
-
-            this.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
+            this.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW || p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT);
+            this.orderedCoverLetter = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.COVER_LETTER_REVIEW);
 
             if (!this.orderedCv && !this.orderedCoverLetter) {
                 return null;

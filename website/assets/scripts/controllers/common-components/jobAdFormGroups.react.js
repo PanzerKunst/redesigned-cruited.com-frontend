@@ -3,18 +3,20 @@ CR.Controllers.JobAdFormGroups = React.createClass({
 
         // To avoid losing value if the page is reloaded, for example by a Sign in with LI
         const jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
+        const urlFieldLabel = CR.order.isForConsultant() ? CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label.consult"] : CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"];
+        const fileFieldLabel = CR.order.isForConsultant() ? CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label.consult"] : CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"];
 
         return (
             <div>
                 <div className="form-group" id="job-ad-url-form-group">
-                    <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
+                    <label htmlFor="job-ad-url">{urlFieldLabel}</label>
                     <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl} />
                     <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                     <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
                 </div>
 
                 <div className="form-group fg-file-upload" id="job-ad-file-upload-form-group">
-                    <label>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"]}</label>
+                    <label>{fileFieldLabel}</label>
 
                     <div>
                         <label className={CR.Controllers.OrderCommon.getUploadLabelClasses()} htmlFor="job-ad-file">

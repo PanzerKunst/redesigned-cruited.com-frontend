@@ -234,11 +234,16 @@ order.consult.switchToClassic.link.text=Switch to classic
 
 # Order Step Assessment Info page
 
-order.assessmentInfo.title=Detaljer för din bedömning
+order.assessmentInfo.title=Söker jobb
+order.assessmentInfo.title.largeScreen=För dig som söker jobb
+order.assessmentInfo.title.consult=Söker uppdrag
+order.assessmentInfo.title.consult.largeScreen=För dig som söker uppdrag
+
 order.assessmentInfo.subtitle=Information vi behöver
 order.assessmentInfo.documentsSection.title=Dina dokument
 order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att bedöma.
 order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
+order.assessmentInfo.jobYouSearchSection.title.consult=Uppdrag du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre kan vi hjälpa dig. Frivilliga uppgifter.
 order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
 order.assessmentInfo.validation.linkedin.notSignedIn=För att vi ska kunna bedöma din LinkedIn-profil behöver du logga in
@@ -269,10 +274,14 @@ order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev
 order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
+order.assessmentInfo.form.employerSought.label.consult=Kund du söker
 order.assessmentInfo.form.positionSought.label=Tjänst du söker
+order.assessmentInfo.form.positionSought.label.consult=Roll
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
+order.assessmentInfo.form.jobAdUrl.label.consult=Länk (url) till uppdragsbeskrivning
 order.assessmentInfo.form.jobAdUrl.uploadInstead.text=Jag vill hellre ladda upp en fil
 order.assessmentInfo.form.jobAdFile.label=Fil med platsannons
+order.assessmentInfo.form.jobAdFile.label.consult=Fil med uppdragsbeskrivning
 order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.jobAdFile.urlInstead.text=Glöm det - jag anger en länk istället
 order.assessmentInfo.form.customerComment.label=Bör vi tänka på något särskilt i din bedömning?

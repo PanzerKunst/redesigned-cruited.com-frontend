@@ -98,6 +98,29 @@ case class Order(id: Option[Long],
 
     math.round(costAfterReductions).toInt
   }
+
+  def isForConsultant: Boolean = {
+    for (pc <- containedProductCodes) {
+      if (pc != CruitedProduct.CodeCvReviewForConsultant && pc != CruitedProduct.CodeLinkedinProfileReviewForConsultant) {
+        return false
+      }
+    }
+
+    true
+  }
+
+  def isOfClassicProducts: Boolean = {
+    for (pc <- containedProductCodes) {
+      if (pc != CruitedProduct.CodeCvReview &&
+        pc != CruitedProduct.CodeCoverLetterReview &&
+        pc != CruitedProduct.CodeLinkedinProfileReview) {
+
+        return false
+      }
+    }
+
+    true
+  }
 }
 
 object Order {

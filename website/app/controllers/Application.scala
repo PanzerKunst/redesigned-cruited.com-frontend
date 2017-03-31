@@ -306,7 +306,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   case Some(order) =>
                     // If the cost is 0, we redirect to the dashboard
                     if (order.getCostAfterReductions == 0) {
-                      emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
+                      emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, order, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
                       Redirect("/?action=orderCompleted")
                     } else {
                       // We display the payment page
@@ -334,7 +334,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
                 case Some(tuple) =>
-                  val order = tuple._1
+                  val order = orderService.handleFrontendOrderForConsultant(tuple._1)
 
                   if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
                     val currentLanguage = SessionService.getCurrentLanguage(request.session)

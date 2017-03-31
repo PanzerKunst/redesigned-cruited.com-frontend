@@ -21,11 +21,22 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.state.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW || p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT);
             this.state.orderedCoverLetter = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.COVER_LETTER_REVIEW);
 
+            let pageTitle = null;
+            let jobYouSearchSectionTitle = null;
+
+            if (CR.order.isOfClassicProducts()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"];
+            } else if (CR.order.isForConsultant()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title.consult"] : CR.i18nMessages["order.assessmentInfo.title.consult.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title.consult"];
+            }
+
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                            <h1>{pageTitle}</h1>
                         </div>
                     </header>
 
@@ -52,7 +63,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             </section>
 
                             <section id="job-you-search-section" className="two-columns">
-                                <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
+                                <h2>{jobYouSearchSectionTitle}</h2>
                                 <div>
                                     <header>
                                         <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>

@@ -83,6 +83,10 @@ class OrderService @Inject()(val documentService: DocumentService) {
     }
   }
 
+  def handleFrontendOrderForConsultant(order: FrontendOrder): FrontendOrder = {
+    handleFrontendOrdersForConsultant(List(order)).head
+  }
+
   private def finaliseFileNames(order: Order, oldOrderId: Long) {
     if (order.cvFileName.isDefined) {
       documentService.renameFile(order.cvFileName.get, oldOrderId, order.id.get)

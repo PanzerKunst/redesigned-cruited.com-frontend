@@ -234,11 +234,16 @@ order.consult.switchToClassic.link.text=Switch to classic
 
 # Order Step Assessment Info page
 
-order.assessmentInfo.title=Assessment details
+order.assessmentInfo.title=Söker jobb
+order.assessmentInfo.title.largeScreen=För dig som söker jobb
+order.assessmentInfo.title.consult=Söker uppdrag
+order.assessmentInfo.title.consult.largeScreen=För dig som söker uppdrag
+
 order.assessmentInfo.subtitle=Tell us a bit about you
 order.assessmentInfo.documentsSection.title=Your documents
 order.assessmentInfo.documentsSection.subtitle=This is what we will assess.
 order.assessmentInfo.jobYouSearchSection.title=The job you search
+order.assessmentInfo.jobYouSearchSection.title.consult=Uppdrag du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we can help you. All optional information.
 order.assessmentInfo.submitBtn.text=Proceed to next step
 order.assessmentInfo.validation.linkedin.notSignedIn=We cannot assess your LinkedIn profile unless you sign in
@@ -269,10 +274,14 @@ order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Your cover letter
 order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Employer sought
+order.assessmentInfo.form.employerSought.label.consult=Kund du söker
 order.assessmentInfo.form.positionSought.label=Position sought
+order.assessmentInfo.form.positionSought.label.consult=Roll
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
+order.assessmentInfo.form.jobAdUrl.label.consult=Länk (url) till uppdragsbeskrivning
 order.assessmentInfo.form.jobAdUrl.uploadInstead.text=I prefer to upload a file
 order.assessmentInfo.form.jobAdFile.label=Job ad file
+order.assessmentInfo.form.jobAdFile.label.consult=Fil med uppdragsbeskrivning
 order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.jobAdFile.urlInstead.text=Forget that - I'll input a link to the job ad
 order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?

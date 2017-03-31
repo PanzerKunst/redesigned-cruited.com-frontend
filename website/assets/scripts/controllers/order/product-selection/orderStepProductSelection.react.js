@@ -208,7 +208,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         for (const p of products) {
             if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
                 p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
-                p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
+                p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
 
                 CR.order.removeProduct(p);
             }

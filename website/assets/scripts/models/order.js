@@ -275,6 +275,29 @@ CR.Models.Order = P(function(c) {
         return CR.i18nMessages["edition.name." + this._edition.code];
     };
 
+    c.isForConsultant = function() {
+        for (const p of this._products) {
+            if (p.code !== CR.Models.Product.codes.CV_REVIEW_CONSULT && p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    c.isOfClassicProducts = function() {
+        for (const p of this._products) {
+            if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
+                p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
+                p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
+
+                return false;
+            }
+        }
+
+        return true;
+    };
+
     c._calculateReductions = function() {
         this._resetReductions();
 
