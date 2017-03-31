@@ -149,6 +149,10 @@ CR.Controllers.Dashboard = P(function(c) {
         this.account = account;
 
         this.orders = orders.map(function(order) {
+            if (order.edition.code === CR.Models.Edition.codes.CONSULT) {
+                order.edition = null;
+            }
+
             return CR.Models.Order(order);
         });
 

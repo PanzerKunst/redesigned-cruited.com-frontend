@@ -47,7 +47,7 @@ CR.Controllers.ProductListItem = React.createClass({
             <li ref="li" className={liClasses} onClick={this._handleListItemClick}>
                 <div className={checkboxWrapperClasses}>
                     {this._checkboxInput(checkboxId, isInOrder)}
-                    <label htmlFor={checkboxId}>{CR.i18nMessages["order.productSelection.productsSection.productName." + product.code]}</label>
+                    <label htmlFor={checkboxId}>{CR.i18nMessages["product.name." + product.code]}</label>
                 </div>
                 <div className={pricesClasses}>
                     {fullPriceParagraph}

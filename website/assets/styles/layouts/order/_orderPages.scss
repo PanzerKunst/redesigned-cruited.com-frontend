@@ -32,7 +32,7 @@ $two-column-right-col-margin-top: 3em;
 
   @include large-screen {
     &.widow,
-    > div {
+    &:not(.widow) > div {
       display: flex;
       justify-content: space-between;
 
@@ -60,10 +60,10 @@ $two-column-right-col-margin-top: 3em;
   display: flex;
   justify-content: center;
 
-  font-size: $font-size-xs;
   text-transform: uppercase;
 
-  margin-bottom: 6em;
+  font-size: $font-size-sm;
+  margin-bottom: 4em;
 
   > a,
   > span {
@@ -71,28 +71,38 @@ $two-column-right-col-margin-top: 3em;
     flex-direction: column;
     justify-content: center;
 
-    $border-radius: 0.5em;
-    $border-radius-large: 1.85em;
+    $border-radius: 0.3em;
+    $border-radius-sides: 1.85em;
 
     text-align: center;
 
-    border-radius: $border-radius;
+    border-radius: 0.5em;
 
-    padding: 0.8em 2em;
+    padding: 0.2em 0.7em;
     margin: 0 0.2em;
 
     &:first-child {
-      border-top-left-radius: $border-radius-large;
-      border-bottom-left-radius: $border-radius-large;
+      border-top-left-radius: $border-radius-sides;
+      border-bottom-left-radius: $border-radius-sides;
     }
 
     &:last-child {
-      border-top-right-radius: $border-radius-large;
-      border-bottom-right-radius: $border-radius-large;
+      border-top-right-radius: $border-radius-sides;
+      border-bottom-right-radius: $border-radius-sides;
     }
 
     &.disabled {
       text-decoration: line-through;
+    }
+  }
+
+  @include medium-screen {
+    font-size: $font-size-xs;
+    margin-bottom: 6em;
+
+    > a,
+    > span {
+      padding: 0.8em 2em;
     }
   }
 

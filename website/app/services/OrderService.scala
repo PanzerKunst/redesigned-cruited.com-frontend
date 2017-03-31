@@ -4,7 +4,8 @@ import java.util.Date
 import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, OrderDto}
-import models.{CruitedProduct, Order}
+import models.frontend.FrontendOrder
+import models.{CruitedProduct, Edition, Order}
 import play.api.Logger
 import play.api.libs.json.JsNull
 
@@ -64,6 +65,22 @@ class OrderService @Inject()(val documentService: DocumentService) {
     generateThumbnailForFile(order.id.get, order.cvFileName)
     generateThumbnailForFile(order.id.get, order.coverLetterFileName)
     generateThumbnailForFile(order.id.get, order.linkedinProfileFileName)
+  }
+
+  def handleFrontendOrdersForConsultant(orders: List[FrontendOrder]): List[FrontendOrder] = {
+    orders.map { o =>
+      if (o.edition.code == Edition.CodeConsultant) {
+        val productCodesToReturn = o.containedProductCodes.map {
+          case CruitedProduct.CodeCvReview => CruitedProduct.CodeCvReviewForConsultant
+          case CruitedProduct.CodeLinkedinProfileReview => CruitedProduct.CodeLinkedinProfileReviewForConsultant
+          case other => other
+        }
+
+        o.copy(containedProductCodes = productCodesToReturn)
+      } else {
+        o
+      }
+    }
   }
 
   private def finaliseFileNames(order: Order, oldOrderId: Long) {

@@ -10,11 +10,13 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         render() {
+            const title = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.productSelection.title"] : CR.i18nMessages["order.productSelection.title.largeScreen"];
+
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.productSelection.title"]}</h1>
+                            <h1>{title}</h1>
                             <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
                         </div>
                     </header>
@@ -30,11 +32,20 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                 <header>
                                     <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
                                 </header>
-                                <ul className="styleless">
-                                {CR.editions.map(function(edition, index) {
-                                    return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
-                                }.bind(this))}
-                                </ul>
+                                <div>
+                                    <ul className="styleless">
+                                    {CR.editions.map((edition, index) => {
+                                        if (edition.code === CR.Models.Edition.codes.CONSULT) {
+                                            return null;
+                                        }
+
+                                        return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
+                                    })}
+                                    </ul>
+                                    <div id="switch-to-consultant-wrapper" className="centered-contents">
+                                        <a href="/order/consultant">{CR.i18nMessages["order.productSelection.switchToConsultant.link.text"]}</a>
+                                    </div>
+                                </div>
                             </div>
                         </section>
 
@@ -149,7 +160,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
 
         CR.order = CR.Models.Order(orderFromLocalStorage);
-        this._removeProductsForConsultant();
+        this._removeNonClassicProducts();
 
         if (!CR.order.getEdition() && !_.isEmpty(CR.editions)) {
             CR.order.setEdition(CR.editions[0]);
@@ -191,11 +202,14 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         return products;
     };
 
-    c._removeProductsForConsultant = function() {
+    c._removeNonClassicProducts = function() {
         const products = _.cloneDeep(CR.order.getProducts());
 
         for (const p of products) {
-            if (p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT || p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
+            if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
+                p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
+                p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
+
                 CR.order.removeProduct(p);
             }
         }

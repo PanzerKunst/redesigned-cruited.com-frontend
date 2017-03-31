@@ -4,9 +4,9 @@ defaultAssessmentTitle=Bedömning
 
 product.name.CV_REVIEW=Bedömning av CV
 product.name.COVER_LETTER_REVIEW=Bedömning av personligt brev
-product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn
-product.name.CV_REVIEW_CONSULT=Bedömning av CV
-product.name.LINKEDIN_PROFILE_REVIEW_CONSULT=Bedömning av LinkedIn
+product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
+product.name.CV_REVIEW_CONSULT=Bedömning av CV eller konsultprofil
+product.name.LINKEDIN_PROFILE_REVIEW_CONSULT=Bedömning av LinkedIn-profil
 
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
@@ -64,7 +64,17 @@ reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 1
 reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 
-moneyBackGuarantee.text=<span>Inget att förlora</span>Användbara råd inom 24 timmar som hjälper dig framåt med din ansökan - eller få pengarna tillbaka.
+breadcrumbs.step.1.text=Produkt
+breadcrumbs.step.2.text=Detaljer
+breadcrumbs.step.3.text=Konto
+breadcrumbs.step.4.text=Betalning
+
+breadcrumbs.step.1.text.largeScreen=Välj produkt
+breadcrumbs.step.2.text.largeScreen=Detaljer för din bedömning
+breadcrumbs.step.3.text.largeScreen=Skapa ditt konto
+breadcrumbs.step.4.text.largeScreen=Betalning
+
+moneyBackGuarantee.text=<span>Inget att förlora</span>Användbara råd inom 24 timmar som hjälper dig framåt - eller få pengarna tillbaka.
 
 
 # Header menu
@@ -172,15 +182,13 @@ report.analysis.explanation.docLabel.LINKEDIN_PROFILE_REVIEW=din LinkedIn-profil
 
 # Order Step Product Selection page
 
-order.productSelection.title=Välj produkt
+order.productSelection.title=Söker jobb
+order.productSelection.title.largeScreen=För dig som söker jobb
 order.productSelection.subtitle=Hur kan vi hjälpa dig?
 order.productSelection.submitBtn.text=Fortsätt till nästa steg
 order.productSelection.validation.emptyCart=Du behöver välja minst 1 produkt för att fortsätta
 
 order.productSelection.productsSection.title=Produkter
-order.productSelection.productsSection.productName.CV_REVIEW=Bedömning av cv
-order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Bedömning av personligt brev
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
 
 order.productSelection.productsSection.howToGetItForFree.link.text=Kan du få det kostnadsfritt?
 order.productSelection.productsSection.howToGetItForFree.title=Våra partner
@@ -199,6 +207,8 @@ order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (elle
 order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult eller söker uppdrag som egenföretagare eller frilans
 order.productSelection.editionsSection.editionDescription.text.ACADEMIA=Du söker jobb som forskare inom akademin (gäller ej forskningstjänster i privata organisationer)
 
+order.productSelection.switchToConsultant.link.text=Switch to consultant
+
 order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vill ha din bedömning på:
 
 order.productSelection.cartSection.title=Din beställning
@@ -215,11 +225,11 @@ order.productSelection.cartSection.total=Att betala
 
 # Order For Consultant page
 
-order.consult.title=Välj produkt
+order.consult.title=Söker uppdrag
+order.consult.title.largeScreen=För dig som söker uppdrag
 order.consult.subtitle=Hur kan vi hjälpa dig?
 
-order.productSelection.productsSection.productName.CV_REVIEW_CONSULT=Bedömning av cv
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW_CONSULT=Bedömning av LinkedIn-profil
+order.consult.switchToClassic.link.text=Switch to classic
 
 
 # Order Step Assessment Info page

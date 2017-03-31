@@ -6,7 +6,7 @@ import javax.inject.{Inject, Singleton}
 
 import db.{AccountDto, EditionDto, OrderDto}
 import models.frontend.OrderReceivedFromFrontend
-import models.{Account, Order}
+import models.{Account, Edition, Order}
 import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
@@ -88,7 +88,7 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
     val editionId: Long = if (requestData.contains("editionId")) {
       requestData("editionId").head.toLong
     } else {
-      EditionDto.IdConsult
+      EditionDto.getOfCode(Edition.CodeConsultant).get.id
     }
 
     // Create temporary order

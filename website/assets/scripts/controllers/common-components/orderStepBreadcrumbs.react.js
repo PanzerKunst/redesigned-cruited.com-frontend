@@ -11,8 +11,7 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepOneTag() {
-        const tagText = this._isForConsultant() ? CR.i18nMessages["order.consult.title"] : CR.i18nMessages["order.productSelection.title"];
-
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.1.text"] : CR.i18nMessages["breadcrumbs.step.1.text.largeScreen"];
         const stepOneInnerTag = `<span>1. ${tagText}</span>`;
         let stepOneTag = <a href={this._baseUrl()} dangerouslySetInnerHTML={{__html: stepOneInnerTag}} />;
 
@@ -24,7 +23,8 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepTwoTag() {
-        const stepTwoInnerTag = `<span>2. ${CR.i18nMessages["order.assessmentInfo.title"]}</span>`;
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.2.text"] : CR.i18nMessages["breadcrumbs.step.2.text.largeScreen"];
+        const stepTwoInnerTag = `<span>2. ${tagText}</span>`;
         let stepTwoTag = <a href={`${this._baseUrl()}/assessment-info`} dangerouslySetInnerHTML={{__html: stepTwoInnerTag}} />;
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.assessmentInfo) {
@@ -37,7 +37,8 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepThreeTag() {
-        const stepThreeInnerTag = `<span>3. ${CR.i18nMessages["order.accountCreation.title"]}</span>`;
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.3.text"] : CR.i18nMessages["breadcrumbs.step.3.text.largeScreen"];
+        const stepThreeInnerTag = `<span>3. ${tagText}</span>`;
 
         // If current step is after, and user not logged-in
         let stepThreeTag = <a href="/order/create-account" dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />;
@@ -67,7 +68,8 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepFourTag() {
-        const stepFourInnerTag = `<span>4. ${CR.i18nMessages["order.payment.title"]}</span>`;
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.4.text"] : CR.i18nMessages["breadcrumbs.step.4.text.largeScreen"];
+        const stepFourInnerTag = `<span>4. ${tagText}</span>`;
         let stepFourTag = <span dangerouslySetInnerHTML={{__html: stepFourInnerTag}} />;
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.payment) {

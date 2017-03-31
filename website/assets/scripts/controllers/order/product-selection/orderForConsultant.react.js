@@ -10,11 +10,13 @@ CR.Controllers.OrderForConsultant = P(function(c) {
         },
 
         render() {
+            const title = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.consult.title"] : CR.i18nMessages["order.consult.title.largeScreen"];
+
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.productSelection.title"]}</h1>
+                            <h1>{title}</h1>
                             <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
                         </div>
                     </header>
@@ -23,6 +25,16 @@ CR.Controllers.OrderForConsultant = P(function(c) {
 
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
                         <CR.Controllers.ProductsSection products={this.state.products} currentLanguageCode={this.state.currentLanguageCode} controller={this.state.controller}/>
+
+                        <section id="section-with-link-to-classic-products" className="two-columns widow">
+                            <header/>
+                            <div>
+                                <div className="centered-contents">
+                                    <a href="/order">{CR.i18nMessages["order.consult.switchToClassic.link.text"]}</a>
+                                </div>
+                            </div>
+                        </section>
+
                         <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
                         <CR.Controllers.CartSection products={this.state.products} controller={this.state.controller} />
 
