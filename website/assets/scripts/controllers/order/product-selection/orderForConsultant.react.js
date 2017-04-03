@@ -17,7 +17,7 @@ CR.Controllers.OrderForConsultant = P(function(c) {
                     <header>
                         <div>
                             <h1>{title}</h1>
-                            <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
+                            <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order/consultant" />
                         </div>
                     </header>
                     <div className="with-circles">

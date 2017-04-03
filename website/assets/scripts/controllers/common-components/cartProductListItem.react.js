@@ -4,7 +4,7 @@ CR.Controllers.CartProductListItem = React.createClass({
 
         const classes = classNames({
             editable: this.props.isEditable,
-            "with-edition": this.props.product.code !== CR.Models.Product.codes.INTERVIEW_TRAINING
+            "with-edition": this.props.product.code !== CR.Models.Product.codes.CV_REVIEW_CONSULT && this.props.product.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT
         });
 
         return (

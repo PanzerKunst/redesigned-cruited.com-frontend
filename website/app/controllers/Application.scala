@@ -399,7 +399,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
                   val accountId = SessionService.getAccountId(request.session).get
 
-                  Ok(views.html.report(i18nMessages, currentLanguage, AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
+                  val consultantAwareAssessmentReport = assessmentReport.copy(
+                    order = orderService.handleFrontendOrderForConsultant(assessmentReport.order)
+                  )
+
+                  Ok(views.html.report(i18nMessages, currentLanguage, AccountDto.getOfId(accountId), consultantAwareAssessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
               }
             } else {
               Forbidden("You are not allowed to view reports which are not yours")

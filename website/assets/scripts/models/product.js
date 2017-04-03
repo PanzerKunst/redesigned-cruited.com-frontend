@@ -15,5 +15,17 @@ CR.Models.Product = {
         return _.find(CR.products, function(product) {
             return product.code === code;
         });
+    },
+
+    codeTranslatedToClassic(code) {
+        if (code === CR.Models.Product.codes.CV_REVIEW_CONSULT) {
+            return CR.Models.Product.codes.CV_REVIEW;
+        }
+
+        if (code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
+            return CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
+        }
+
+        return code;
     }
 };

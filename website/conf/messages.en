@@ -69,10 +69,10 @@ breadcrumbs.step.2.text=Details
 breadcrumbs.step.3.text=Account
 breadcrumbs.step.4.text=Payment
 
-breadcrumbs.step.1.largeScreen.text=Product Selection
-breadcrumbs.step.2.largeScreen.text=Assessment details
-breadcrumbs.step.3.largeScreen.text=Create your account
-breadcrumbs.step.4.largeScreen.text=Payment
+breadcrumbs.step.1.text.largeScreen=Product Selection
+breadcrumbs.step.2.text.largeScreen=Assessment details
+breadcrumbs.step.3.text.largeScreen=Create your account
+breadcrumbs.step.4.text.largeScreen=Payment
 
 moneyBackGuarantee.text=<span>Nothing to lose</span>The advice in the review is useful and helps you move forward with your application - or we pay you back 100%.
 
