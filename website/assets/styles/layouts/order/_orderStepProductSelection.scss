@@ -121,5 +121,48 @@
 }
 
 
-.no-flexbox {     // stylelint-disable-line no-empty-block
+
+.no-flexbox {
+  #order-step-product-selection {
+    #content > header > div {
+      display: block;
+      @include clearfix;
+
+      > h1 {
+        float: left;
+      }
+
+      > form {
+        float: right;
+      }
+    }
+
+    .two-columns {
+      @include large-screen {
+        display: block;
+        @include clearfix;
+
+        > header,
+        > div,
+        > ul,
+        > form {
+          float: left;
+        }
+      }
+    }
+
+    #how-to-get-it-for-free-modal {
+      @include large-screen {
+        .modal-body.large-res {
+          display: block;
+          @include clearfix;
+
+          > ul,
+          > div {
+            float: left;
+          }
+        }
+      }
+    }
+  }
 }

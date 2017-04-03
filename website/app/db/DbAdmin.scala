@@ -108,6 +108,7 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
+        drop li_profile_lang,
         modify edition_id int(11) not null;"""
 
       Logger.info("DbAdmin.removeAlterationOnTableDocuments():" + query)
@@ -120,6 +121,7 @@ object DbAdmin {
     DB.withConnection { implicit c =>
       val query = """
         alter table documents
+        add li_profile_lang varchar(8) after file_li,
         modify edition_id int(11);"""
 
       Logger.info("DbAdmin.alterTableDocuments():" + query)
@@ -175,3 +177,4 @@ object DbAdmin {
     }
   }
 }
+

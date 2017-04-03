@@ -1,5 +1,3 @@
-"use strict";
-
 const CR = {};
 
 // Additional namespaces
@@ -48,6 +46,7 @@ CR.propertyFile = {
 CR.pageIds = {
     orderInterviewTraining: "order-interview-training"
 };
+
 
 // Global functions
 CR.scrollToElement = function($el) {

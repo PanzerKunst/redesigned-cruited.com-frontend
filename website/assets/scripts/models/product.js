@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Models.Product = {
     codes: {
         CV_REVIEW: "CV_REVIEW",
@@ -8,7 +6,7 @@ CR.Models.Product = {
         INTERVIEW_TRAINING: "INTERVIEW_TRAINING"
     },
 
-    getOfCode: function(code) {
+    getOfCode(code) {
         if (!CR.products) {
             return null;
         }

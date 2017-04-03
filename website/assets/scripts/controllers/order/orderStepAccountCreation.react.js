@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.OrderStepAccountCreation = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinProfile: null,
@@ -11,7 +9,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             };
         },
 
-        render: function() {
+        render() {
             return (
                 <div id="content">
                     <header>
@@ -57,14 +55,14 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
             this._showRelevantElements();
             this._updateSubmitBtnText();
         },
 
-        _getRegisterWithLinkedinSection: function() {
+        _getRegisterWithLinkedinSection() {
             if (!this.state.linkedinAuthCodeRequestUrl) {
                 return null;
             }
@@ -81,7 +79,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             );
         },
 
-        _getRegisterWithEmailFormContent: function() {
+        _getRegisterWithEmailFormContent() {
             return (
                 <div>
                     <div className="form-group">
@@ -105,7 +103,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             );
         },
 
-        _initElements: function() {
+        _initElements() {
             const $withCirclesContainer = $("#content").children(".with-circles");
 
             this.$registerSection = $withCirclesContainer.children("#register-section");
@@ -121,7 +119,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             this.$youAreSignedInSection = $withCirclesContainer.children("#you-are-signed-in-section");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "first-name",
                 "email-address",
@@ -129,7 +127,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             ]);
         },
 
-        _showRelevantElements: function() {
+        _showRelevantElements() {
             if (CR.loggedInAccount && CR.loggedInAccount.id > 0) {
                 this.$youAreSignedInSection.show();
                 this._removeCouponIfNeeded();
@@ -138,8 +136,9 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             }
         },
 
-        _updateSubmitBtnText: function() {
+        _updateSubmitBtnText() {
             const emailAddress = this.$emailAddressField.val();
+
             if (emailAddress) {
                 this.$registerWithEmailSubmitBtn.html(CR.i18nMessages["order.accountCreation.registerWithEmail.submitBtn.withEmailPrefix"] + "<br/>" + emailAddress);
             } else {
@@ -147,20 +146,21 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             }
         },
 
-        _removeCouponIfNeeded: function() {
+        _removeCouponIfNeeded() {
             const coupon = CR.order.getCoupon();
+
             if (coupon) {
                 const type = "GET";
                 const url = "/api/coupons/" + coupon.code;
-
                 const httpRequest = new XMLHttpRequest();
+
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         switch (httpRequest.status) {
                             case CR.httpStatusCodes.couponExpired:
                                 this.$couponRemovedAlert.fadeIn();
 
-                                CR.order.setCoupon(undefined);
+                                CR.order.setCoupon(undefined);  // eslint-disable-line no-undefined
                                 CR.order.saveInLocalStorage();
                                 this._removeCouponFromOrderOnServerSide();
 
@@ -177,11 +177,11 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             }
         },
 
-        _removeCouponFromOrderOnServerSide: function() {
+        _removeCouponFromOrderOnServerSide() {
             const type = "DELETE";
             const url = "/api/orders/coupon";
-
             const httpRequest = new XMLHttpRequest();
+
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status !== CR.httpStatusCodes.ok) {
                     alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
@@ -191,7 +191,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             httpRequest.send();
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$emailAlreadyRegisteredError);
@@ -199,8 +199,8 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
 
             const type = "POST";
             const url = "/api/accounts";
-
             const httpRequest = new XMLHttpRequest();
+
             httpRequest.onreadystatechange = function() {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {
                     if (httpRequest.status === CR.httpStatusCodes.created) {
@@ -225,39 +225,39 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
             }));
         },
 
-        _handleSwitchLink: function() {
+        _handleSwitchLink() {
             const isRegisterSectionVisible = this.$registerSection.is(":visible");
 
             if (isRegisterSectionVisible) {
                 this.$registerSection.fadeOut({
                     animationDuration: CR.animationDurations.short,
-                    onComplete: function() {
+                    onComplete: () => {
                         this.$signInSection.fadeIn({
                             animationDuration: CR.animationDurations.short
                         });
-                    }.bind(this)
+                    }
                 });
             } else {
                 this.$signInSection.fadeOut({
                     animationDuration: CR.animationDurations.short,
-                    onComplete: function() {
+                    onComplete: () => {
                         this.$registerSection.fadeIn({
                             animationDuration: CR.animationDurations.short
                         });
-                    }.bind(this)
+                    }
                 });
             }
         },
 
-        _handleSignInWithEmailSuccess: function() {
+        _handleSignInWithEmailSuccess() {
             this.$signInSection.fadeOut({
                 animationDuration: CR.animationDurations.short,
-                onComplete: function() {
+                onComplete: () => {
                     this.$youAreSignedInSection.fadeIn({
                         animationDuration: CR.animationDurations.short
                     });
                     this._removeCouponIfNeeded();
-                }.bind(this)
+                }
             });
         }
     });
@@ -270,6 +270,7 @@ CR.Controllers.OrderStepAccountCreation = P(function(c) {
         CR.loggedInAccount = loggedInAccount;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this.reactInstance = ReactDOM.render(

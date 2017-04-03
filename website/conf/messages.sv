@@ -182,6 +182,15 @@ order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Bedömnin
 order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
 order.productSelection.productsSection.productName.INTERVIEW_TRAINING=Intervjuträning
 
+order.productSelection.productsSection.howToGetItForFree.link.text=Kan du få det kostnadsfritt?
+order.productSelection.productsSection.howToGetItForFree.title=Våra partner
+order.productSelection.productsSection.howToGetItForFree.listItem.jusek=Jusek
+order.productSelection.productsSection.howToGetItForFree.listItem.vision=Vision
+order.productSelection.productsSection.howToGetItForFree.listItem.unionenEgenforetagare=Unionen Egenföretagare
+order.productSelection.productsSection.howToGetItForFree.listItem.tsn=Trygghetsstiftelsen
+order.productSelection.productsSection.howToGetItForFree.listItem.trs=Trygghetsrådet TRS
+order.productSelection.productsSection.howToGetItForFree.listItem.ki=Karolinska Institutet
+
 order.productSelection.editionsSection.title=Välj version
 order.productSelection.editionsSection.subtitle=Välj vilken version som passar dig bäst
 order.productSelection.editionsSection.editionDescription.text.PRO=Du har några års arbetslivserfarenhet
@@ -232,6 +241,10 @@ order.assessmentInfo.form.linkedinProfile.check.step2.text=Ta en titt på <a hre
 order.assessmentInfo.form.linkedinProfile.check.checkbox.label=Klart! Min profil är redo för bedömning
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.rereadBtn.text=Läs in igen
 order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label=Jag förstår att min bedömning kommer att bli begränsad om min profil saknar viktiga delar.
+order.assessmentInfo.form.linkedinProfile.multiLanguage.link.text=Min profil finns på flera språk
+order.assessmentInfo.form.linkedinProfile.multiLanguage.selection.label=Välj den språkversion du vill att vi ska bedöma:
+order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.en=Engelsk profil
+order.assessmentInfo.form.linkedinProfile.multiLanguage.langBtn.sv=Svensk profil
 order.assessmentInfo.form.cvFile.label=Ladda upp din cv
 order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev

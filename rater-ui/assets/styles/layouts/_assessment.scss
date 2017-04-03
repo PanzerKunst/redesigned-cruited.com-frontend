@@ -569,15 +569,18 @@ $white-section-padding: 2em 1em 1em;
     }
   }
 
-  .well-done-comment-composer {
-    margin-bottom: $content-element-margin-bottom;
-
+  .well-done-comment-composer,
+  .comment-composer > textarea {
     @include medium-screen {
       max-width: ($small-content-width + $medium-content-width) / 2;
     }
     @include large-screen {
       max-width: $medium-content-width;
     }
+  }
+
+  .well-done-comment-composer {
+    margin-bottom: $content-element-margin-bottom;
 
     > textarea {
       height: 4em;

@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.MyAccount = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 account: null,
                 isSaveSuccessful: false,
@@ -10,12 +8,13 @@ CR.Controllers.MyAccount = P(function(c) {
             };
         },
 
-        render: function() {
+        render() {
             if (!this.state.account) {
                 return null;
             }
 
             let successAlert = null;
+
             if (this.state.isSaveSuccessful) {
                 successAlert = (
                     <div className="alert alert-success alert-dismissible single-column-panel" role="alert">
@@ -68,12 +67,12 @@ CR.Controllers.MyAccount = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$content = $("#content");
             this.$form = this.$content.find("form");
 
@@ -86,14 +85,14 @@ CR.Controllers.MyAccount = P(function(c) {
             this.$successAlert = this.$content.children().children(".alert");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "first-name",
                 "password"
             ]);
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.$successAlert.remove();
@@ -103,8 +102,8 @@ CR.Controllers.MyAccount = P(function(c) {
 
                 const type = "PUT";
                 const url = "/api/accounts";
-
                 const httpRequest = new XMLHttpRequest();
+
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         if (httpRequest.status === CR.httpStatusCodes.ok) {

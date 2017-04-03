@@ -1,4 +1,5 @@
 import {httpStatusCodes} from "../global";
+import Language from "./language";
 import Product from "./product";
 
 const Order = {
@@ -21,7 +22,13 @@ const Order = {
 
     documentUrl(config, productCode) {
         if (productCode === Product.codes.linkedinProfile) {
-            return this.customer.linkedinProfile.publicProfileUrl;
+            const baseUrl = this.customer.linkedinProfile.publicProfileUrl;
+
+            if (this.linkedinProfileLanguage === Language.codes.sv) {
+                return `${baseUrl}?locale=se_SV`;
+            }
+
+            return baseUrl;
         }
 
         let urlMiddle = "cv";

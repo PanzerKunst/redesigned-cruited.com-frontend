@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Controllers.ProductListItem = React.createClass({
     render() {
         const product = this.props.product;
@@ -74,7 +72,7 @@ CR.Controllers.ProductListItem = React.createClass({
 
     _isInOrder() {
         const foundProduct = _.find(CR.order.getProducts(), product => product.id === this.props.product.id);
-        return foundProduct !== undefined;
+        return foundProduct !== undefined;  // eslint-disable-line no-undefined
     },
 
     _checkboxInput(checkboxId, isInOrder) {

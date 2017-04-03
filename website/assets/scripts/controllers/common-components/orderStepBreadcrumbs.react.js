@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.OrderStepBreadcrumbs = React.createClass({
-    render: function() {
+    render() {
         return (
             <nav id="order-steps-breadcrumbs">
                 {this._getStepOneTag()}
@@ -12,11 +10,12 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
         );
     },
 
-    _getStepOneTag: function() {
+    _getStepOneTag() {
         const tagText = this._isInterviewTrainingOrdered() ? CR.i18nMessages["order.interviewTraining.title"] : CR.i18nMessages["order.productSelection.title"];
 
         const stepOneInnerTag = `<span>1. ${tagText}</span>`;
         let stepOneTag = <a href={this._baseUrl()} dangerouslySetInnerHTML={{__html: stepOneInnerTag}} />;
+
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.productSelection) {
             stepOneTag = <span dangerouslySetInnerHTML={{__html: stepOneInnerTag}} className="current-step" />;
@@ -25,11 +24,12 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
         return stepOneTag;
     },
 
-    _getStepTwoTag: function() {
+    _getStepTwoTag() {
         const tagText = this._isInterviewTrainingOrdered() ? CR.i18nMessages["order.interviewTraining.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title"];
 
         const stepTwoInnerTag = `<span>2. ${tagText}</span>`;
         let stepTwoTag = <a href={`${this._baseUrl()}/assessment-info`} dangerouslySetInnerHTML={{__html: stepTwoInnerTag}} />;
+
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.assessmentInfo) {
             stepTwoTag = <span dangerouslySetInnerHTML={{__html: stepTwoInnerTag}} className="current-step" />;
@@ -40,13 +40,14 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
         return stepTwoTag;
     },
 
-    _getStepThreeTag: function() {
+    _getStepThreeTag() {
         const stepThreeInnerTag = `<span>3. ${CR.i18nMessages["order.accountCreation.title"]}</span>`;
 
         // If current step is after, and user not logged-in
         let stepThreeTag = <a href="/order/create-account" dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />;
 
         if (CR.loggedInAccount) {
+
             // If current step is after, and user logged-in
             stepThreeTag = <a className="disabled" dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />;
 
@@ -57,6 +58,7 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
                 stepThreeTag = <span dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} className="disabled" />;
             }
         } else {
+
             // If current step is equals
             if (this.props.step === CR.Controllers.OrderCommon.steps.accountCreation) {
                 stepThreeTag = <span dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} className="current-step" />;
@@ -68,9 +70,10 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
         return stepThreeTag;
     },
 
-    _getStepFourTag: function() {
+    _getStepFourTag() {
         const stepFourInnerTag = `<span>4. ${CR.i18nMessages["order.payment.title"]}</span>`;
         let stepFourTag = <span dangerouslySetInnerHTML={{__html: stepFourInnerTag}} />;
+
         if (this.props.step === CR.Controllers.OrderCommon.steps.payment) {
             stepFourTag = <span dangerouslySetInnerHTML={{__html: stepFourInnerTag}} className="current-step" />;
         }

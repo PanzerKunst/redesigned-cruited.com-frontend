@@ -574,7 +574,7 @@ class AssessmentDto @Inject()(db: Database, accountDto: AccountDto, config: Glob
 
           breakable {
             for (commentInList <- redComments) {
-              if (commentInList.categoryId == redComment.categoryId && commentInList.defaultCommentId == redComment.defaultCommentId) {
+              if (commentInList.categoryId == redComment.categoryId && commentInList.text == redComment.text) {
                 // Comments of different categories can have the same ID
                 isInListAlready = true
                 break()

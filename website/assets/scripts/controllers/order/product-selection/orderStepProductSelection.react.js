@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.OrderStepProductSelection = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 products: [],
                 supportedLanguages: [],
@@ -11,7 +9,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             };
         },
 
-        render: function() {
+        render() {
             return (
                 <div id="content">
                     <header>
@@ -26,18 +24,24 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
 
                         <section id="products-section" className="two-columns">
-                            <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
+                            <header>
+                                <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
+                                <div className="alert alert-info guarantee-panel" role="alert">
+                                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                                </div>
+                            </header>
                             <div>
-                                <header>
-                                    <div className="alert alert-info guarantee-panel" role="alert">
-                                        <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
-                                    </div>
-                                </header>
-                                <ul className="styleless">
+                                <ul className="styleless" id="product-list">
                                     {this.state.products.map(function(product, index) {
                                         return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
                                     }.bind(this))}
                                 </ul>
+
+                                <div className="centered-contents">
+                                    <a onClick={this._handleHowToGetItForFreeLinkClick}>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.link.text"]}</a>
+                                </div>
+
+                                <CR.Controllers.HowToGetItForFreeModal lang={this.state.currentLanguageCode} />
                             </div>
                         </section>
                         <section id="editions-section" className="two-columns">
@@ -66,7 +70,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
 
@@ -75,8 +79,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             }
         },
 
-        _initElements: function() {
+        _initElements() {
             const $content = $("#content");
+
+            this.$howToGetItForFreeModal = $content.find("#how-to-get-it-for-free-modal");
+
             this.$otherFormErrors = $content.find(".other-form-error");
             this.$emptyCartError = this.$otherFormErrors.filter("#empty-cart");
 
@@ -88,11 +95,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             this.$couponExpiredError = this.$otherFormErrors.filter("#coupon-expired-error");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator();
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$otherFormErrors);
@@ -105,8 +112,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                 if (couponCodeField) {
                     const type = "GET";
                     const url = "/api/coupons/" + couponCodeField;
-
                     const httpRequest = new XMLHttpRequest();
+
                     httpRequest.onreadystatechange = function() {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             this.$addCouponBtn.disableLoading();
@@ -146,9 +153,14 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
             }
         },
 
-        _handleLanguageChange: function(e) {
+        _handleLanguageChange(e) {
             const $dropdown = $(e.currentTarget);
+
             location.replace("/order?lang=" + $dropdown.val());
+        },
+
+        _handleHowToGetItForFreeLinkClick() {
+            this.$howToGetItForFreeModal.modal();
         }
     });
 
@@ -161,6 +173,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         this.supportedLanguages = supportedLanguages;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+
         CR.order = CR.Models.Order(orderFromLocalStorage);
 
         this._removeInterviewTrainingProductFromOrder();

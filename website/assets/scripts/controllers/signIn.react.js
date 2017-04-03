@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.SignIn = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 linkedinAuthCodeRequestUrl: null,
                 linkedinErrorMessage: null,
@@ -11,7 +9,7 @@ CR.Controllers.SignIn = P(function(c) {
             };
         },
 
-        render: function() {
+        render() {
             return (
                 <div id="content">
                     <header>
@@ -27,7 +25,7 @@ CR.Controllers.SignIn = P(function(c) {
             );
         },
 
-        _signInToAccessYourReportAlert: function() {
+        _signInToAccessYourReportAlert() {
             if (!this.state.orderId) {
                 return null;
             }

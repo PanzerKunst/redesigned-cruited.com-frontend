@@ -1,5 +1,7 @@
 #order-step-assessment-info {
   #linkedin-profile-form-group {
+    $element-margin-left: 3.5em;
+
     > div {
       > ol,
       > ul,
@@ -19,7 +21,7 @@
 
       > p.light-font {
         margin-bottom: 0;
-        margin-left: 3.5em;
+        margin-left: $element-margin-left;
       }
     }
 
@@ -47,6 +49,27 @@
     li {
       padding-left: 0.3em;
     }
+
+    #multi-language-linkedin-profile-section {
+      margin: 2em 0 0 $element-margin-left;
+
+      > div {
+        display: none;
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+
+      .nav-pills {
+        margin-left: -0.2em;
+
+        > li > a {
+          padding: 0.3em 0.5em;
+        }
+      }
+    }
+
 
     @include large-screen {
       .checkbox > label::before {

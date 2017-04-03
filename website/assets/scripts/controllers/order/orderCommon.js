@@ -1,5 +1,3 @@
-"use strict";
-
 CR.Controllers.OrderCommon = {
     steps: {
         productSelection: 1,

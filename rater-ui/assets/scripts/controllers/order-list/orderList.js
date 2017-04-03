@@ -46,7 +46,7 @@ const controller = {
                     </div>
 
                     <AssignModal />
-                    <div id="delete-modal" className="modal fade" tabIndex="-1" role="dialog"></div>
+                    <div id="delete-modal" className="modal fade" tabIndex="-1" role="dialog"/>
                 </div>);
         },
 
@@ -70,7 +70,7 @@ const controller = {
                 if (store.myToDos.length === 0) {
                     return (
                         <section id="top-orders">
-                            <div></div>
+                            <div/>
                             <p className="centered-contents">You are done!<i className="fa fa-smile-o" aria-hidden="true"/></p>
                         </section>);
                 }

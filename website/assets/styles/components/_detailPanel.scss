@@ -1,0 +1,51 @@
+.detail-panel {
+  display: flex;
+
+  $list-width: 40%;
+
+  > ul > li,
+  > div {
+    padding: 0.5em 1em;
+  }
+
+  > ul {
+    width: $list-width;
+    margin-bottom: 0;
+
+    color: $background-body-color;
+    background-color: $text-color;
+
+    > li {
+      cursor: pointer;
+      &.expanded {
+        cursor: default;
+      }
+
+      &.expanded,
+      &:hover {
+        background-color: lighten($text-color, 10%);
+      }
+
+      @include transition(background-color $default-animation-duration ease);
+    }
+  }
+
+  > div {
+    width: 100% - $list-width;
+
+    // Hidden by default
+    display: none;
+  }
+}
+
+.no-flexbox { // stylelint-disable-line block-no-empty
+  .detail-panel {
+    display: block;
+    @include clearfix;
+
+    > ul,
+    > div {
+      float: left;
+    }
+  }
+}

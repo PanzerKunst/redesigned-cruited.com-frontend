@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.OrderStepPayment = P(function(c) {
     c.reactClass = React.createClass({
-        render: function() {
+        render() {
             return (
                 <div id="content">
                     <header>
@@ -29,6 +27,7 @@ CR.Controllers.OrderStepPayment = P(function(c) {
         CR.loggedInAccount = loggedInAccount;
 
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
+
         CR.order = CR.Models.Order(orderFromLocalStorage);
         CR.order.setId(orderId);
         CR.order.saveInLocalStorage();

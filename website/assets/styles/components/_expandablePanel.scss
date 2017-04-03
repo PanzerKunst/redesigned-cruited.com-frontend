@@ -37,6 +37,30 @@
       content: "–";
     }
   }
+
+  &.alt {
+    border: none;
+
+    > header {
+      background-image: none;
+
+      background-color: $text-color;
+      &:hover {
+        background-color: lighten($text-color, 10%);
+      }
+
+      @include transition(background-color $default-animation-duration ease);
+
+      > span {
+        color: $background-body-color;
+      }
+    }
+
+    &.expanded > header {
+      cursor: default;
+      background-color: lighten($text-color, 10%);
+    }
+  }
 }
 
 .no-flexbox {

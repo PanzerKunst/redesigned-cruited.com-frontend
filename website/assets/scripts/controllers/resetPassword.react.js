@@ -1,8 +1,6 @@
-"use strict";
-
 CR.Controllers.ResetPassword = P(function(c) {
     c.reactClass = React.createClass({
-        render: function() {
+        render() {
             return (
                 <div id="content">
                     <header>
@@ -34,12 +32,12 @@ CR.Controllers.ResetPassword = P(function(c) {
             );
         },
 
-        componentDidMount: function() {
+        componentDidMount() {
             this._initElements();
             this._initValidation();
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$form = $("#content").find("form");
 
             this.$emailAddressField = this.$form.find("#email-address");
@@ -49,13 +47,13 @@ CR.Controllers.ResetPassword = P(function(c) {
             this.$successAlert = this.$form.children(".alert");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "email-address"
             ]);
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$noAccountFoundForThisEmailAddressError);
@@ -65,8 +63,8 @@ CR.Controllers.ResetPassword = P(function(c) {
 
                 const type = "POST";
                 const url = "/api/auth/reset-password";
-
                 const httpRequest = new XMLHttpRequest();
+
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         this.$submitBtn.disableLoading();

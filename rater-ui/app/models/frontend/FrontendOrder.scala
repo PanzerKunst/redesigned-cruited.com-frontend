@@ -12,6 +12,7 @@ case class FrontendOrder(id: Long,
                          cvFileName: Option[String],
                          coverLetterFileName: Option[String],
                          linkedinProfileFileName: Option[String],
+                         linkedinProfileLanguage: Option[String],
                          positionSought: Option[String],
                          employerSought: Option[String],
                          jobAdUrl: Option[String],
@@ -35,6 +36,7 @@ object FrontendOrder {
       (JsPath \ "cvFileName").formatNullable[String] and
       (JsPath \ "coverLetterFileName").formatNullable[String] and
       (JsPath \ "linkedinProfileFileName").formatNullable[String] and
+      (JsPath \ "linkedinProfileLanguage").formatNullable[String] and
       (JsPath \ "positionSought").formatNullable[String] and
       (JsPath \ "employerSought").formatNullable[String] and
       (JsPath \ "jobAdUrl").formatNullable[String] and

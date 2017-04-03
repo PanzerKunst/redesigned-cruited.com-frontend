@@ -1,5 +1,3 @@
-"use strict";
-
 (function($) {
     $.fn.fadeIn = function(params) {
         if (!this.is(":visible")) {
@@ -8,8 +6,8 @@
 
             TweenLite.set(this, {display: "block", alpha: 0});
             TweenLite.to(this, animationDuration, {
-                alpha: alpha,
-                onComplete: function() {
+                alpha,
+                onComplete() {
                     if (params && _.isFunction(params.onComplete)) {
                         params.onComplete();
                     }
@@ -24,12 +22,12 @@
 
             TweenLite.to(this, animationDuration, {
                 alpha: 0,
-                onComplete: function() {
+                onComplete: () => {
                     this.hide().css("opacity", 1);
                     if (params && _.isFunction(params.onComplete)) {
                         params.onComplete();
                     }
-                }.bind(this)
+                }
             });
         }
     };

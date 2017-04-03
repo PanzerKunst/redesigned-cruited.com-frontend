@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.EditionListItem = React.createClass({
-    render: function() {
+    render() {
         const editionId = this.props.edition.id;
         const editionCode = this.props.edition.code;
         const radioId = "edition-" + editionId;
@@ -9,6 +7,7 @@ CR.Controllers.EditionListItem = React.createClass({
         const isThisEditionSelected = this._isThisEditionSelected();
 
         let liClasses = editionCode;
+
         if (isThisEditionSelected) {
             liClasses += " selected";
         }
@@ -27,28 +26,28 @@ CR.Controllers.EditionListItem = React.createClass({
         );
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$listItem = $(ReactDOM.findDOMNode(this.refs.li));
         this.$radio = this.$listItem.find("input[type=\"radio\"]");
         this.$radioLabel = this.$radio.siblings("label");
     },
 
-    _isThisEditionSelected: function() {
+    _isThisEditionSelected() {
         return CR.order.getEdition() && CR.order.getEdition().id === this.props.edition.id;
     },
 
-    _handleListItemClick: function(e) {
+    _handleListItemClick(e) {
         if (e.target !== this.$radio[0] && e.target !== this.$radioLabel[0] && !this.$radio.prop("checked")) {
             this.$radio.prop("checked", true);
             this._setEdition();
         }
     },
 
-    _setEdition: function() {
+    _setEdition() {
         CR.order.setEdition(this.props.edition);
         CR.order.saveInLocalStorage();
 

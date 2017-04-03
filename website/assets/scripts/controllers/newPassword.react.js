@@ -1,14 +1,12 @@
-"use strict";
-
 CR.Controllers.NewPassword = P(function(c) {
     c.reactClass = React.createClass({
-        getInitialState: function() {
+        getInitialState() {
             return {
                 account: null
             };
         },
 
-        render: function() {
+        render() {
             if (!this.state.account) {
                 return null;
             }
@@ -43,12 +41,12 @@ CR.Controllers.NewPassword = P(function(c) {
             );
         },
 
-        componentDidUpdate: function() {
+        componentDidUpdate() {
             this._initElements();
             this._initValidation();
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$form = $("#content").find("form");
 
             this.$passwordField = this.$form.find("#password");
@@ -57,13 +55,13 @@ CR.Controllers.NewPassword = P(function(c) {
             this.$successAlert = this.$form.children(".alert");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "password"
             ]);
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.$successAlert.hide();
@@ -73,8 +71,8 @@ CR.Controllers.NewPassword = P(function(c) {
 
                 const type = "PUT";
                 const url = "/api/accounts/password";
-
                 const httpRequest = new XMLHttpRequest();
+
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         this.$submitBtn.disableLoading();

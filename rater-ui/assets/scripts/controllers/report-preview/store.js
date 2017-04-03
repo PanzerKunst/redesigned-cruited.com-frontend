@@ -3,9 +3,9 @@ import Order from "../../models/order";
 
 const store = {
     reactComponent: null,
-    account: Object.assign(Object.create(Account), CR.ControllerData.account),
+    account: _.assign(Object.create(Account), CR.ControllerData.account),
     config: CR.ControllerData.config,
-    order: Object.assign(Object.create(Order), CR.ControllerData.order),
+    order: _.assign(Object.create(Order), CR.ControllerData.order),
 
     cvReport: CR.ControllerData.assessment.cvReport,
     coverLetterReport: CR.ControllerData.assessment.coverLetterReport,

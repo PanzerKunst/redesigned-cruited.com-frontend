@@ -498,7 +498,7 @@ const Assessment = {
         const commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments, c => c.id === comment.id);
 
         if (commentToUpdate) {
-            Object.assign(commentToUpdate, comment);
+            _.assign(commentToUpdate, comment);
         } else {
             myAssessments[this.order.id].report[categoryProductCode].categories[comment.categoryId].comments.push(comment);
         }
@@ -605,20 +605,19 @@ const Assessment = {
 
         if (_.has(myAssessments, [this.order.id, "report", categoryProductCode, "categories", categoryId])) {
             let commentToUpdate = null;
+            let variationId = null;
 
             if (comment.defaultComment) {   // Variation
                 commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[categoryId].comments, c => c.id === comment.defaultComment.id);
-
-                commentToUpdate.redText = comment.text;
-                commentToUpdate.variationId = comment.id;
+                variationId = comment.id;
             } else {    // Default
                 commentToUpdate = _.find(myAssessments[this.order.id].report[categoryProductCode].categories[categoryId].comments, c => c.id === comment.id);
-
-                commentToUpdate.redText = comment.redText;
-                commentToUpdate.variationId = null;
             }
 
             if (commentToUpdate) {
+                commentToUpdate.redText = comment.text;
+                commentToUpdate.variationId = variationId;
+
                 this._saveReportCommentInLocalStorage(categoryProductCode, commentToUpdate);
             }
         }
