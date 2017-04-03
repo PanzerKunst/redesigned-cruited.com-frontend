@@ -141,7 +141,9 @@ $two-column-right-col-margin-top: 3em;
 #order-step-assessment-info,
 #edit-order {
   .two-columns > div > div {
-    margin-top: -33px;
+    @include large-screen {
+      margin-top: -33px;
+    }
   }
 }
 

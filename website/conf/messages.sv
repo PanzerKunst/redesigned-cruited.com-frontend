@@ -214,7 +214,7 @@ order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vil
 order.productSelection.cartSection.title=Din beställning
 order.productSelection.cartSection.productsHeader.products=Produkter
 order.productSelection.cartSection.productsHeader.defaultPrice=Pris
-order.productSelection.cartSection.coupon.label=Har du ett presentkort eller en rabattkod från någon av våra partner?
+order.productSelection.cartSection.coupon.label=Har du en rabattkod från någon av våra partner?
 order.productSelection.cartSection.coupon.placeholder=Rabattkod
 order.productSelection.cartSection.coupon.addBtn.text=Lägg till
 order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
@@ -253,7 +253,7 @@ order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Samman
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
 order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
-order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
+order.assessmentInfo.validation.customerCommentTooLong=Högst 480 tecken
 order.assessmentInfo.validation.requestEntityTooLarge=Filerna får inte vara större än 10MB totalt
 order.assessmentInfo.validation.signInWithLinkedinFirst=Börja med LinkedIn inloggning, tack!
 

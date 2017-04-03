@@ -27,8 +27,6 @@ CR.Controllers.JobAdFormGroups = React.createClass({
                     </div>
                     <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
                 </div>
-
-                <p className="other-form-error" id="job-ad-required-error">{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.validation.jobAdRequired"]}</p>
             </div>);
     },
 
