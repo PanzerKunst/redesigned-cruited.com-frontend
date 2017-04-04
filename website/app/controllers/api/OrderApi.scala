@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.{Inject, Singleton}
 
-import db.{AccountDto, OrderDto}
+import db.{AccountDto, EditionDto, OrderDto}
 import models.frontend.OrderReceivedFromFrontend
-import models.{Account, Order}
+import models.{Account, Edition, Order}
 import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
@@ -85,10 +85,16 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
       Some(requestData("customerComment").head)
     }
 
+    val editionId: Long = if (requestData.contains("editionId")) {
+      requestData("editionId").head.toLong
+    } else {
+      EditionDto.getOfCode(Edition.CodeConsultant).get.id
+    }
+
     // Create temporary order
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
-      editionId = requestData("editionId").head.toLong,
+      editionId = editionId,
       containedProductCodes = requestData("containedProductCodes").head.split(",").toList,
       couponCode = couponCode,
       cvFileName = cvFileNameOpt,
@@ -173,11 +179,11 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
             cvFileNameOpt,
             coverLetterFileNameOpt,
             existingOrder.linkedinProfileFileName,
+            existingOrder.linkedinProfileLanguage,
             positionSought,
             employerSought,
             jobAdUrl,
             jobAdFileNameOpt,
-            existingOrder.linkedinProfileLanguage,
             customerComment,
             existingOrder.accountId,
             existingOrder.status,

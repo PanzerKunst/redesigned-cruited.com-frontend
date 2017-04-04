@@ -50,3 +50,20 @@ CR.languageCodes = {
 
 
 // Global functions
+CR.scrollToElement = function($el) {
+    const $headerBar = $("#container").children("header");
+    const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - $headerBar.height();
+
+    TweenLite.to(window, 1, {
+        scrollTo: offset,
+        ease: Power4.easeOut
+    });
+};
+
+CR.orderLanguage = function() {
+    if (window.location.search === "?lang=en") {
+        return CR.languageCodes.en;
+    }
+
+    return CR.languageCodes.sv;
+};

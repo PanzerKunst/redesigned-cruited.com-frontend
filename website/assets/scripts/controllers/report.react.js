@@ -25,27 +25,23 @@ CR.Controllers.Report = P(function(c) {
 
             const order = this.state.order;
             const editionCode = order.getEdition().code;
+
             const editionClasses = "edition " + editionCode;
-
+            const contentPanelClasses = order.isForConsultant() ? "consult" : null;
             const newAssessmentBtnLabel = CR.Services.Browser.isSmallScreen() ? null : CR.i18nMessages["dashboard.newAssessmentBtn.text"];
-
-            let subTitle = null;
-
-            if (order.getSoughtPosition() || order.getSoughtEmployer()) {
-                subTitle = <span>{order.getTitleForHtml()}</span>;
-            }
+            const subTitle = order.getSoughtPosition() || order.getSoughtEmployer() ? <span>{order.getTitleForHtml()}</span> : null;
 
             const cvTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.CV_REVIEW"] : CR.i18nMessages["product.name.CV_REVIEW"];
             const coverLetterTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.COVER_LETTER_REVIEW"] : CR.i18nMessages["product.name.COVER_LETTER_REVIEW"];
             const linkedinProfileTabName = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["report.tabNameSmallScreen.LINKEDIN_PROFILE_REVIEW"] : CR.i18nMessages["product.name.LINKEDIN_PROFILE_REVIEW"];
 
             return (
-                <div id="content">
+                <div id="content" className={contentPanelClasses}>
                     <header id="header-with-new-assessment-btn">
                         <div>
                             <h1>{CR.i18nMessages["report.title"]}</h1>
                             <a className="btn btn-danger new-assessment" href="/order">{newAssessmentBtnLabel}
-                                <i className="fa fa-plus"></i>
+                                <i className="fa fa-plus"/>
                             </a>
                         </div>
                     </header>
@@ -59,14 +55,20 @@ CR.Controllers.Report = P(function(c) {
                         </header>
                         <section>
                             <ul className="nav nav-pills" role="tablist">
-                                <li role="presentation">
+                                <li role="presentation" id="nav-pill-cv">
                                     <a href="#CV_REVIEW-report-panel" aria-controls="CV_REVIEW-report-panel" role="tab" data-toggle="pill">{cvTabName}</a>
                                 </li>
-                                <li role="presentation">
+                                <li role="presentation" id="nav-pill-cover-letter">
                                     <a href="#COVER_LETTER_REVIEW-report-panel" aria-controls="COVER_LETTER_REVIEW-report-panel" role="tab" data-toggle="pill">{coverLetterTabName}</a>
                                 </li>
-                                <li role="presentation">
+                                <li role="presentation" id="nav-pill-linkedin-profile">
                                     <a href="#LINKEDIN_PROFILE_REVIEW-report-panel" aria-controls="LINKEDIN_PROFILE_REVIEW-report-panel" role="tab" data-toggle="pill">{linkedinProfileTabName}</a>
+                                </li>
+                                <li role="presentation" id="nav-pill-cv-consult">
+                                    <a href="#CV_REVIEW_CONSULT-report-panel" aria-controls="CV_REVIEW_CONSULT-report-panel" role="tab" data-toggle="pill">{cvTabName}</a>
+                                </li>
+                                <li role="presentation" id="nav-pill-linkedin-profile-consult">
+                                    <a href="#LINKEDIN_PROFILE_REVIEW_CONSULT-report-panel" aria-controls="LINKEDIN_PROFILE_REVIEW_CONSULT-report-panel" role="tab" data-toggle="pill">{linkedinProfileTabName}</a>
                                 </li>
                             </ul>
 
@@ -79,6 +81,12 @@ CR.Controllers.Report = P(function(c) {
                                 </div>
                                 <div role="tabpanel" className="tab-pane fade" id="LINKEDIN_PROFILE_REVIEW-report-panel">
                                     {this._getDocumentReportSection(CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW)}
+                                </div>
+                                <div role="tabpanel" className="tab-pane fade in active" id="CV_REVIEW_CONSULT-report-panel">
+                                    {this._getDocumentReportSection(CR.Models.Product.codes.CV_REVIEW_CONSULT)}
+                                </div>
+                                <div role="tabpanel" className="tab-pane fade" id="LINKEDIN_PROFILE_REVIEW_CONSULT-report-panel">
+                                    {this._getDocumentReportSection(CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT)}
                                 </div>
                             </div>
                         </section>
@@ -100,13 +108,17 @@ CR.Controllers.Report = P(function(c) {
 
             const $docPanels = $(".tab-pane");
 
-            this.$cvPanel = $docPanels.filter("#" + CR.Models.Product.codes.CV_REVIEW + "-report-panel");
+            const productCodeCvReview = this.state.order.isForConsultant() ? CR.Models.Product.codes.CV_REVIEW_CONSULT : CR.Models.Product.codes.CV_REVIEW;
+
+            this.$cvPanel = $docPanels.filter(`#${productCodeCvReview}-report-panel`);
             this.$cvScoreCursor = this.$cvPanel.find("#score-bar").children("span");
 
             this.$coverLetterPanel = $docPanels.filter("#" + CR.Models.Product.codes.COVER_LETTER_REVIEW + "-report-panel");
             this.$coverLetterScoreCursor = this.$coverLetterPanel.find("#score-bar").children("span");
 
-            this.$linkedinProfilePanel = $docPanels.filter("#" + CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW + "-report-panel");
+            const productCodeLinkedinProfileReview = this.state.order.isForConsultant() ? CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT : CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
+
+            this.$linkedinProfilePanel = $docPanels.filter(`#${productCodeLinkedinProfileReview}-report-panel`);
             this.$linkedinProfileScoreCursor = this.$linkedinProfilePanel.find("#score-bar").children("span");
 
             this.$expandablePanels = $docPanels.find(".expandable-panel");
@@ -138,11 +150,13 @@ CR.Controllers.Report = P(function(c) {
         },
 
         _selectTabForSelectedProduct() {
-            this.$tabs.filter("[aria-controls=" + this.state.selectedProductCode + "-report-panel]").tab("show");
+            this.$tabs.filter(`[aria-controls=${this.state.selectedProductCode}-report-panel]`).tab("show");
         },
 
         _getDocumentReportSection(productCode) {
             if (_.find(this.state.order.getProducts(), "code", productCode)) {
+                productCode = CR.Models.Product.codeTranslatedToClassic(productCode);
+
                 const documentUrl = this._getDocumentUrl(this.state.order.getId(), this.state.order.getIdInBase64(), productCode);
                 const thumbnailUrl = this._getThumbnailUrl(this.state.order.getId(), productCode);
 
@@ -194,7 +208,7 @@ CR.Controllers.Report = P(function(c) {
                                     </div>
                                     <div id="score-bar">
                                         <img src="/assets/images/score-bar.png" />
-                                        <span></span>
+                                        <span/>
                                     </div>
                                     <div className="score-bar-number-labels">
                                         <span>0</span>
@@ -205,7 +219,7 @@ CR.Controllers.Report = P(function(c) {
                             <article className="expandable-panel">
                                 <header>
                                     <span>{CR.i18nMessages["report.summary.understandYourScore.title"]}</span>
-                                    <button className="styleless"></button>
+                                    <button className="styleless"/>
                                 </header>
                                 <div>
                                     <p className="score-explanation-paragraph" dangerouslySetInnerHTML={{__html: CR.i18nMessages["report.summary.understandYourScore.cScoreExplanation.text"]}} />
@@ -289,11 +303,13 @@ CR.Controllers.Report = P(function(c) {
                 );
             }
 
+            const url = this.state.order.isForConsultant() ? "/order/consultant" : "/order";
+
             return (
                 <div className="sheet-of-paper centered-contents">
                     <p>{CR.i18nMessages["report.unorderedAssessment.text"]}</p>
-                    <a className="btn btn-danger new-assessment" href="/order">{CR.i18nMessages["report.unorderedAssessment.orderBtn.text"]}
-                        <i className="fa fa-plus"></i>
+                    <a className="btn btn-danger new-assessment" href={url}>{CR.i18nMessages["report.unorderedAssessment.orderBtn.text"]}
+                        <i className="fa fa-plus"/>
                     </a>
                 </div>
             );
@@ -302,6 +318,7 @@ CR.Controllers.Report = P(function(c) {
         _getDocumentUrl(orderId, orderIdInBase64, productCode) {
             switch (productCode) {
                 case CR.Models.Product.codes.CV_REVIEW:
+                case CR.Models.Product.codes.CV_REVIEW_CONSULT:
                     return this.state.dwsRootUrl + "docs/" + orderId + "/cv?token=" + orderIdInBase64;
                 case CR.Models.Product.codes.COVER_LETTER_REVIEW:
                     return this.state.dwsRootUrl + "docs/" + orderId + "/cover-letter?token=" + orderIdInBase64;
@@ -313,6 +330,7 @@ CR.Controllers.Report = P(function(c) {
         _getThumbnailUrl(orderId, productCode) {
             switch (productCode) {
                 case CR.Models.Product.codes.CV_REVIEW:
+                case CR.Models.Product.codes.CV_REVIEW_CONSULT:
                     return this.state.dwsRootUrl + "docs/" + orderId + "/cv/thumbnail";
                 case CR.Models.Product.codes.COVER_LETTER_REVIEW:
                     return this.state.dwsRootUrl + "docs/" + orderId + "/cover-letter/thumbnail";
@@ -380,12 +398,12 @@ CR.Controllers.Report = P(function(c) {
         _getSummary(productCode, globalScore) {
             const reportSummaryKey = this._getTheRightReportSummaryKey(productCode, globalScore);
 
-            return this._getTemplatedSummary(productCode, globalScore, reportSummaryKey);
+            return this._getTemplatedSummary(CR.Models.Product.codeTranslatedToClassic(productCode), globalScore, reportSummaryKey);
         },
 
         _getTheRightReportSummaryKey(productCode, globalScore) {
             return _.find(Object.keys(CR.i18nMessages).sort().reverse(), function(key) {
-                const keyPrefix = "reportSummary" + CR.propertyFile.key.word.separator + productCode + CR.propertyFile.key.word.separator;
+                const keyPrefix = "reportSummary" + CR.propertyFile.key.word.separator + CR.Models.Product.codeTranslatedToClassic(productCode) + CR.propertyFile.key.word.separator;
 
                 if (_.startsWith(key, keyPrefix)) {
                     const startIndex = keyPrefix.length;

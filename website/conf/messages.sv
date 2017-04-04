@@ -4,7 +4,9 @@ defaultAssessmentTitle=Bedömning
 
 product.name.CV_REVIEW=Bedömning av CV
 product.name.COVER_LETTER_REVIEW=Bedömning av personligt brev
-product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn
+product.name.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
+product.name.CV_REVIEW_CONSULT=Bedömning av CV eller konsultprofil
+product.name.LINKEDIN_PROFILE_REVIEW_CONSULT=Bedömning av LinkedIn-profil
 
 edition.name.PRO=Erfaren
 edition.name.YOUNG_PRO=Ny i yrkeslivet
@@ -62,7 +64,17 @@ reportSummary.LINKEDIN_PROFILE_REVIEW.51=Du fick resultatet <strong>{score} av 1
 reportSummary.LINKEDIN_PROFILE_REVIEW.74=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 reportSummary.LINKEDIN_PROFILE_REVIEW.92=Du fick resultatet <strong>{score} av 100</strong> möjliga poäng i vår bedömning av din LinkedIn-profil. Genomsnittet för de {nbLastAssessmentsToTakeIntoAccount} senaste bedömningarna av LinkedIn-profil är <strong>{averageScore}</strong>.
 
-moneyBackGuarantee.text=<span>Inget att förlora</span>Användbara råd inom 24 timmar som hjälper dig framåt med din ansökan - eller få pengarna tillbaka.
+breadcrumbs.step.1.text=Produkt
+breadcrumbs.step.2.text=Detaljer
+breadcrumbs.step.3.text=Konto
+breadcrumbs.step.4.text=Betalning
+
+breadcrumbs.step.1.text.largeScreen=Välj produkt
+breadcrumbs.step.2.text.largeScreen=Detaljer för din bedömning
+breadcrumbs.step.3.text.largeScreen=Skapa ditt konto
+breadcrumbs.step.4.text.largeScreen=Betalning
+
+moneyBackGuarantee.text=<span>Inget att förlora</span>Användbara råd inom 24 timmar som hjälper dig framåt - eller få pengarna tillbaka.
 
 
 # Header menu
@@ -170,15 +182,13 @@ report.analysis.explanation.docLabel.LINKEDIN_PROFILE_REVIEW=din LinkedIn-profil
 
 # Order Step Product Selection page
 
-order.productSelection.title=Välj produkt
+order.productSelection.title=Söker jobb
+order.productSelection.title.largeScreen=För dig som söker jobb
 order.productSelection.subtitle=Hur kan vi hjälpa dig?
 order.productSelection.submitBtn.text=Fortsätt till nästa steg
 order.productSelection.validation.emptyCart=Du behöver välja minst 1 produkt för att fortsätta
 
 order.productSelection.productsSection.title=Produkter
-order.productSelection.productsSection.productName.CV_REVIEW=Bedömning av cv
-order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Bedömning av personligt brev
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Bedömning av LinkedIn-profil
 
 order.productSelection.productsSection.howToGetItForFree.link.text=Kan du få det kostnadsfritt?
 order.productSelection.productsSection.howToGetItForFree.title=Våra partner
@@ -197,12 +207,14 @@ order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (elle
 order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult eller söker uppdrag som egenföretagare eller frilans
 order.productSelection.editionsSection.editionDescription.text.ACADEMIA=Du söker jobb som forskare inom akademin (gäller ej forskningstjänster i privata organisationer)
 
+order.productSelection.switchToConsultant.link.text=Switch to consultant
+
 order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vill ha din bedömning på:
 
 order.productSelection.cartSection.title=Din beställning
 order.productSelection.cartSection.productsHeader.products=Produkter
 order.productSelection.cartSection.productsHeader.defaultPrice=Pris
-order.productSelection.cartSection.coupon.label=Har du ett presentkort eller en rabattkod från någon av våra partner?
+order.productSelection.cartSection.coupon.label=Har du en rabattkod från någon av våra partner?
 order.productSelection.cartSection.coupon.placeholder=Rabattkod
 order.productSelection.cartSection.coupon.addBtn.text=Lägg till
 order.productSelection.cartSection.coupon.addBtn.loadingText=Lägger till kod...
@@ -211,13 +223,27 @@ order.productSelection.cartSection.subTotal=Delsumma
 order.productSelection.cartSection.total=Att betala
 
 
+# Order For Consultant page
+
+order.consult.title=Söker uppdrag
+order.consult.title.largeScreen=För dig som söker uppdrag
+order.consult.subtitle=Hur kan vi hjälpa dig?
+
+order.consult.switchToClassic.link.text=Switch to classic
+
+
 # Order Step Assessment Info page
 
-order.assessmentInfo.title=Detaljer för din bedömning
+order.assessmentInfo.title=Söker jobb
+order.assessmentInfo.title.largeScreen=För dig som söker jobb
+order.assessmentInfo.title.consult=Söker uppdrag
+order.assessmentInfo.title.consult.largeScreen=För dig som söker uppdrag
+
 order.assessmentInfo.subtitle=Information vi behöver
 order.assessmentInfo.documentsSection.title=Dina dokument
 order.assessmentInfo.documentsSection.subtitle=Det här är vad vi kommer att bedöma.
 order.assessmentInfo.jobYouSearchSection.title=Jobbet du söker
+order.assessmentInfo.jobYouSearchSection.title.consult=Uppdrag du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=Ju mer vi vet, desto bättre kan vi hjälpa dig. Frivilliga uppgifter.
 order.assessmentInfo.submitBtn.text=Gå vidare till nästa steg
 order.assessmentInfo.validation.linkedin.notSignedIn=För att vi ska kunna bedöma din LinkedIn-profil behöver du logga in
@@ -227,7 +253,7 @@ order.assessmentInfo.validation.linkedin.incompleteProfile.summaryMissing=Samman
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceMissing=Minst en tidigare arbetslivserfarenhet med beskrivning
 order.assessmentInfo.validation.linkedin.incompleteProfile.latestProfessionalExperienceSummaryMissing=En beskrivning av din senaste arbetslivserfarenhet
 order.assessmentInfo.validation.jobAdUrlIncorrect=Den adressen ser inte rätt ut :(
-order.assessmentInfo.validation.customerCommentTooLong=Högst 512 tecken
+order.assessmentInfo.validation.customerCommentTooLong=Högst 480 tecken
 order.assessmentInfo.validation.requestEntityTooLarge=Filerna får inte vara större än 10MB totalt
 order.assessmentInfo.validation.signInWithLinkedinFirst=Börja med LinkedIn inloggning, tack!
 
@@ -248,10 +274,14 @@ order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Ditt personliga brev
 order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Arbetsgivare du söker dig till
+order.assessmentInfo.form.employerSought.label.consult=Kund du söker
 order.assessmentInfo.form.positionSought.label=Tjänst du söker
+order.assessmentInfo.form.positionSought.label.consult=Roll
 order.assessmentInfo.form.jobAdUrl.label=Länk (url) till platsannons
+order.assessmentInfo.form.jobAdUrl.label.consult=Länk (url) till uppdragsbeskrivning
 order.assessmentInfo.form.jobAdUrl.uploadInstead.text=Jag vill hellre ladda upp en fil
 order.assessmentInfo.form.jobAdFile.label=Fil med platsannons
+order.assessmentInfo.form.jobAdFile.label.consult=Fil med uppdragsbeskrivning
 order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.jobAdFile.urlInstead.text=Glöm det - jag anger en länk istället
 order.assessmentInfo.form.customerComment.label=Bör vi tänka på något särskilt i din bedömning?

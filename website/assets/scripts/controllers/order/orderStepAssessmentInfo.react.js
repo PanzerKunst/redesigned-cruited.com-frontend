@@ -17,28 +17,29 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            this.state.orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
-            });
-            this.state.orderedCv = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.CV_REVIEW;
-            });
-            this.state.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
+            this.state.orderedLinkedin = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW || p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT);
+            this.state.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW || p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT);
+            this.state.orderedCoverLetter = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.COVER_LETTER_REVIEW);
 
-            const positionSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.positionSought) || CR.order.getSoughtPosition();
-            const employerSought = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.employerSought) || CR.order.getSoughtEmployer();
-            const jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
-            const customerComment = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.customerComment) || CR.order.getCustomerComment();
+            let pageTitle = null;
+            let jobYouSearchSectionTitle = null;
+
+            if (CR.order.isOfClassicProducts()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"];
+            } else if (CR.order.isForConsultant()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title.consult"] : CR.i18nMessages["order.assessmentInfo.title.consult.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title.consult"];
+            }
 
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                            <h1>{pageTitle}</h1>
                         </div>
                     </header>
+
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
 
@@ -46,64 +47,44 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                         <form onSubmit={this._handleSubmit}>
                             <section id="documents-section" className="two-columns">
-                                <header>
-                                    <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
-                                </header>
+                                <h2>{CR.i18nMessages["order.assessmentInfo.documentsSection.title"]}</h2>
                                 <div>
-                                    {this._getSignInWithLinkedinFormGroup()}
-                                    {this._getCvFormGroup()}
-                                    {this._getCoverLetterFormGroup()}
-                                    <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
-                                </div>
-                            </section>
-                            <section id="job-you-search-section" className="two-columns">
-                                <header>
-                                    <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
-                                    <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
-                                </header>
-                                <div>
-                                    <div className="form-group">
-                                        <label htmlFor="position-sought">{CR.i18nMessages["order.assessmentInfo.form.positionSought.label"]}</label>
-                                        <input type="text" className="form-control" id="position-sought" maxLength="230" defaultValue={positionSought}/>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="employer-sought">{CR.i18nMessages["order.assessmentInfo.form.employerSought.label"]}</label>
-                                        <input type="text" className="form-control" id="employer-sought" maxLength="230" defaultValue={employerSought}/>
-                                    </div>
-                                    <div className="form-group" id="job-ad-url-form-group">
-                                        <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
-                                        <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl}/>
-                                        <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
-                                        <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
-                                    </div>
-                                    <div className="form-group fg-file-upload" id="job-ad-file-upload-form-group">
-                                        <label>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"]}</label>
+                                    <header>
+                                        <p className="light-font">{CR.i18nMessages["order.assessmentInfo.documentsSection.subtitle"]}</p>
+                                    </header>
+                                    <div>
+                                        {this._getSignInWithLinkedinFormGroup()}
 
-                                        <div>
-                                            <label className={this._getUploadLabelClasses()} htmlFor="job-ad-file">
-                                                <input type="file" id="job-ad-file" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleJobAdFileSelected}/>
-                                                {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
-                                            </label>
-                                            <input type="text" className="form-control" id="job-ad-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.jobAdFile.placeHolder"]} defaultValue={CR.order.getJobAdFileName()} disabled/>
-                                        </div>
-                                        <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
+                                        <CR.Controllers.CvFormGroup orderedCv={this.state.orderedCv} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this}/>
+                                        <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.state.orderedCoverLetter} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this}/>
+                                        <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
                                     </div>
                                 </div>
                             </section>
-                            <div className="form-group">
-                                <label htmlFor="customer-comment">{CR.i18nMessages["order.assessmentInfo.form.customerComment.label"]}</label>
-                                <textarea className="form-control" id="customer-comment" maxLength="480" defaultValue={customerComment}/>
-                                <p className="field-error" data-check="max-length">{CR.i18nMessages["order.assessmentInfo.validation.customerCommentTooLong"]}</p>
-                            </div>
-                            {this._getTosFormGroup()}
+
+                            <section id="job-you-search-section" className="two-columns">
+                                <h2>{jobYouSearchSectionTitle}</h2>
+                                <div>
+                                    <header>
+                                        <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
+                                    </header>
+                                    <div>
+                                        <CR.Controllers.PositionSoughtFormGroup />
+                                        <CR.Controllers.EmployerSoughtFormGroup />
+                                        <CR.Controllers.JobAdFormGroups controller={this}/>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <CR.Controllers.CustomerCommentFormGroup />
+                            <CR.Controllers.TermsOfServiceFormSection />
+
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.submitBtn.text"]}</button>
                             </div>
                         </form>
                     </div>
-                </div>
-            );
+                </div>);
         },
 
         componentDidUpdate() {
@@ -127,24 +108,14 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
             this.$linkedinProfileCheckedCheckboxWrapper = this.$linkedinPreviewWrapper.children(".checkbox");
 
             this.$cvFormGroup = this.$form.find("#cv-form-group");
-            this.$cvFileField = this.$cvFormGroup.find("#cv");
-            this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
-
             this.$coverLetterFormGroup = this.$form.find("#cover-letter-form-group");
-            this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
-            this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
 
             this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
 
             this.$positionSoughtField = this.$form.find("#position-sought");
             this.$employerSoughtField = this.$form.find("#employer-sought");
 
-            this.$jobAdUrlFormGroup = this.$form.find("#job-ad-url-form-group");
-            this.$jobAdUrlField = this.$jobAdUrlFormGroup.children("#job-ad-url");
-
-            this.$jobAdFileUploadFormGroup = this.$form.find("#job-ad-file-upload-form-group");
-            this.$jobAdFileField = this.$jobAdFileUploadFormGroup.find("#job-ad-file");
-            this.$jobAdFileNameField = this.$jobAdFileUploadFormGroup.find("#job-ad-file-name");
+            this.$jobAdUrlField = this.$form.find("#job-ad-url");
 
             this.$customerCommentField = this.$form.find("#customer-comment");
 
@@ -215,8 +186,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label"]}</label>
                                 </div>
                                 <p className="field-error" data-check="empty"/>
-                            </div>
-                        );
+                            </div>);
                     } else {
                         formGroupContents = (
                             <div>
@@ -247,8 +217,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 </section>
 
                                 <p className="field-error" data-check="empty"/>
-                            </div>
-                        );
+                            </div>);
                     }
                 } else {
                     formGroupContents = (
@@ -257,8 +226,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                             </a>
                             <p className="other-form-error shown-by-default">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.publicProfileUrlMissing"]}</p>
-                        </div>
-                    );
+                        </div>);
                 }
             } else {
                 const signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
@@ -269,8 +237,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                         </a>
                         {signInFailedParagraph}
-                    </div>
-                );
+                    </div>);
             }
 
             return (
@@ -279,127 +246,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     {formGroupContents}
                     <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.notSignedIn"]}</p>
-                </div>
-            );
-        },
-
-        _getCvFormGroup() {
-            if (!this.state.orderedCv) {
-                return null;
-            }
-
-            const isBtnDisabled = this.state.orderedLinkedin && !this.state.linkedinProfile;
-
-            return (
-                <div className="form-group fg-file-upload" id="cv-form-group">
-                    <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.cvFile.label"]}</label>
-
-                    <div>
-                        <label className={this._getUploadLabelClasses(isBtnDisabled)} htmlFor="cv">
-                            <input type="file" id="cv" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCvFileSelected} disabled={isBtnDisabled}/>
-                            {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
-                        </label>
-                        <input type="text" className="form-control" id="cv-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.cvFile.placeHolder"]} defaultValue={CR.order.getCvFileName()} disabled/>
-                    </div>
-                    {this._getUploadDisabledExplanationParagraph(isBtnDisabled)}
-                    <p className="field-error" data-check="empty"/>
-                </div>
-            );
-        },
-
-        _getCoverLetterFormGroup() {
-            if (!this.state.orderedCoverLetter) {
-                return null;
-            }
-
-            const isBtnDisabled = this.state.orderedLinkedin && !this.state.linkedinProfile;
-
-            return (
-                <div className="form-group fg-file-upload" id="cover-letter-form-group">
-                    <label className="for-required-field">{CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.label"]}</label>
-
-                    <div>
-                        <label className={this._getUploadLabelClasses(isBtnDisabled)} htmlFor="cover-letter">
-                            <input type="file" id="cover-letter" accept=".doc, .docx, .pdf, .odt, .rtf" onChange={this._handleCoverLetterFileSelected} disabled={isBtnDisabled}/>
-                            {CR.i18nMessages["order.assessmentInfo.form.browseBtn.text"]}
-                        </label>
-                        <input type="text" className="form-control" id="cover-letter-file-name" placeholder={CR.i18nMessages["order.assessmentInfo.form.coverLetterFile.placeHolder"]} defaultValue={CR.order.getCoverLetterFileName()} disabled/>
-                    </div>
-                    {this._getUploadDisabledExplanationParagraph(isBtnDisabled)}
-                    <p className="field-error" data-check="empty"/>
-                </div>
-            );
-        },
-
-        _getUploadLabelClasses(isBtnDisabled) {
-            let classes = "btn btn-default btn-file-upload";
-
-            if (isBtnDisabled) {
-                classes += " disabled";
-            }
-
-            return classes;
-        },
-
-        _getUploadDisabledExplanationParagraph(isBtnDisabled) {
-            return isBtnDisabled ? <p className="sign-in-with-linkedin-first">{CR.i18nMessages["order.assessmentInfo.validation.signInWithLinkedinFirst"]}</p> : null;
-        },
-
-        _getTosFormGroup() {
-            if (CR.loggedInAccount) {
-                return null;
-            }
-
-            return (
-                <div id="tos-wrapper" className="centered-contents">
-                    <div className="checkbox checkbox-primary">
-                        <input type="checkbox" id="accept-tos" defaultChecked={CR.order.isTosAccepted()}/>
-                        <label htmlFor="accept-tos" dangerouslySetInnerHTML={{__html: CR.i18nMessages["order.assessmentInfo.form.tos.text"]}}/>
-                    </div>
-                    <p className="field-error" data-check="empty"/>
-                </div>
-            );
-        },
-
-        _handleCvFileSelected() {
-            this.cvFile = this.$cvFileField[0].files[0];
-            this.$cvFileNameField.val(this.cvFile.name);
-            this.$cvFormGroup.removeClass("has-error");
-        },
-
-        _handleCoverLetterFileSelected() {
-            this.coverLetterFile = this.$coverLetterFileField[0].files[0];
-            this.$coverLetterFileNameField.val(this.coverLetterFile.name);
-            this.$coverLetterFormGroup.removeClass("has-error");
-        },
-
-        _handleJobAdFileSelected() {
-            this.jobAdFile = this.$jobAdFileField[0].files[0];
-            this.$jobAdFileNameField.val(this.jobAdFile.name);
-        },
-
-        _handleJobAdAlternativeClicked() {
-            let $formGroupToFadeOut = this.$jobAdUrlFormGroup;
-            let $formGroupToFadeIn = this.$jobAdFileUploadFormGroup;
-
-            if (this.$jobAdFileUploadFormGroup.is(":visible")) {
-                $formGroupToFadeOut = this.$jobAdFileUploadFormGroup;
-                $formGroupToFadeIn = this.$jobAdUrlFormGroup;
-
-                this.jobAdFile = null;
-                this.$jobAdFileNameField.val(null);
-            } else {
-                this.$jobAdUrlField.val(null);
-            }
-
-            $formGroupToFadeOut.fadeOut({
-                animationDuration: CR.animationDurations.short,
-                onComplete() {
-                    $formGroupToFadeIn.fadeIn({
-                        animationDuration: CR.animationDurations.short
-                    });
-                }
-            });
+                </div>);
         },
 
         _handleMultiLanguageLinkedinClick() {
@@ -429,7 +276,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     const formData = new FormData();
 
-                    formData.append("editionId", CR.order.getEdition().id);
+                    const orderEdition = CR.order.getEdition();
+
+                    if (orderEdition) {
+                        formData.append("editionId", CR.order.getEdition().id);
+                    }
+
                     formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));
                     if (CR.order.getCoupon()) {
                         formData.append("couponCode", CR.order.getCoupon().code);
@@ -453,22 +305,29 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
 
                     const positionSought = this.$positionSoughtField.val();
-                    const employerSought = this.$employerSoughtField.val();
-                    const jobAdUrl = this.$jobAdUrlField.val();
-                    const customerComment = this.$customerCommentField.val();
 
                     if (positionSought) {
                         formData.append("positionSought", positionSought);
                     }
+
+                    const employerSought = this.$employerSoughtField.val();
+
                     if (employerSought) {
                         formData.append("employerSought", employerSought);
                     }
+
+                    const jobAdUrl = this.$jobAdUrlField.val();
+
                     if (jobAdUrl) {
                         formData.append("jobAdUrl", jobAdUrl);
                     }
+
                     if (this.jobAdFile) {
                         formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
                     }
+
+                    const customerComment = this.$customerCommentField.val();
+
                     if (customerComment) {
                         formData.append("customerComment", customerComment);
                     }
@@ -511,9 +370,9 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 }
 
                                 if (!_.isEmpty(this.$cvFormGroup)) {
-                                    this._scrollToElement(this.$cvFormGroup);
+                                    CR.scrollToElement(this.$cvFormGroup);
                                 } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                    this._scrollToElement(this.$coverLetterFormGroup);
+                                    CR.scrollToElement(this.$coverLetterFormGroup);
                                 }
 
                                 /* } else {
@@ -527,11 +386,11 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 } else {
                     if (this.$linkedinPreviewWrapper.hasClass("has-error") &&
                         this.$linkedinProfileCheckedCheckboxWrapper[0].getBoundingClientRect().top < this.$headerBar.height()) {
-                        this._scrollToElement(this.$linkedinProfileFormGroup);
+                        CR.scrollToElement(this.$linkedinProfileFormGroup);
                     } else if (this.$cvFormGroup.hasClass("has-error")) {
-                        this._scrollToElement(this.$cvFormGroup);
+                        CR.scrollToElement(this.$cvFormGroup);
                     } else if (this.$coverLetterFormGroup.hasClass("has-error")) {
-                        this._scrollToElement(this.$coverLetterFormGroup);
+                        CR.scrollToElement(this.$coverLetterFormGroup);
                     }
                 }
             } else {
@@ -540,21 +399,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 // We want to display other potential validation messages too
                 this.validator.isValid();
 
-                this._scrollToElement(this.$linkedinProfileFormGroup);
+                CR.scrollToElement(this.$linkedinProfileFormGroup);
             }
         },
 
         _isSignInWithLinkedinBtnThere() {
             return this.$signInWithLinkedinBtn.length === 1;
-        },
-
-        _scrollToElement($el) {
-            const offset = $el[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top - this.$headerBar.height();
-
-            TweenLite.to(window, 1, {
-                scrollTo: offset,
-                ease: Power4.easeOut
-            });
         },
 
         _saveTextFieldsInLocalStorage() {

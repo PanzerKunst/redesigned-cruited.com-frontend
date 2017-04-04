@@ -56,6 +56,24 @@
     float: none;
   }
 
+  #nav-pill-cv-consult,
+  #nav-pill-linkedin-profile-consult {
+    display: none;
+  }
+
+  #content.consult {
+    #nav-pill-cv,
+    #nav-pill-cover-letter,
+    #nav-pill-linkedin-profile {
+      display: none;
+    }
+
+    #nav-pill-cv-consult,
+    #nav-pill-linkedin-profile-consult {
+      display: inline-block;
+    }
+  }
+
   .tab-pane {
     .light-font {
       @include medium-screen {
@@ -513,9 +531,7 @@
   .tab-pane > div .red-comments {
     margin: 2em 0 2em #{-$list-padding-left};
 
-    list-style-type: disc;
-
-    list-style-position: inside;
+    list-style: disc inside;
 
     @include medium-screen {
       list-style-position: outside;

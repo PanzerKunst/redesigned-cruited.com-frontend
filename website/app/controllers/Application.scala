@@ -5,11 +5,11 @@ import javax.inject.Inject
 
 import db._
 import models.CruitedProduct
-import play.api.{Logger, Play}
 import play.api.Play.current
 import play.api.i18n.MessagesApi
 import play.api.libs.json.JsNull
 import play.api.mvc._
+import play.api.{Logger, Play}
 import services._
 
 class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: LinkedinService, val orderService: OrderService, val emailsToSendTasker: EmailsToSendTasker, val emailService: EmailService, val scoreAverageTasker: ScoreAverageTasker) extends Controller {
@@ -35,16 +35,17 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           }
 
           val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
-          val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1}
+          val frontendOrders = OrderDto.getOfAccountIdForFrontend(accountId) map { tuple => tuple._1 }
+          val consultantAwareFrontendOrders = orderService.handleFrontendOrdersForConsultant(frontendOrders)
 
-          Ok(views.html.dashboard(i18nMessages, currentLanguage, accountOpt, frontendOrders))
+          Ok(views.html.dashboard(i18nMessages, currentLanguage, accountOpt, consultantAwareFrontendOrders))
             .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode)
-            - SessionService.sessionKeyOrderId)
+              - SessionService.sessionKeyOrderId)
         }
     }
   }
 
-  def signOut() = Action { request =>
+  def signOut() = Action {
     linkedinService.invalidateAccessToken()
     Redirect("/").withNewSession
   }
@@ -59,7 +60,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         Some(request.queryString("reportId").head.toLong)
       }
       catch {
-        case pe: NumberFormatException => None
+        case _: NumberFormatException => None
       }
     } else {
       None
@@ -80,10 +81,10 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
           val isSaveSuccessful = SessionService.isAccountSaveSuccessful(request.session)
 
-          Ok(views.html.myAccount(i18nMessages, currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.all))
+          Ok(views.html.myAccount(i18nMessages, currentLanguage, account, isSaveSuccessful, SupportedLanguageDto.All))
             .withSession(request.session
-            - SessionService.sessionKeyAccountSaveSuccessful
-            + (SessionService.sessionKeyLanguageCode -> account.languageCode))
+              - SessionService.sessionKeyAccountSaveSuccessful
+              + (SessionService.sessionKeyLanguageCode -> account.languageCode))
         }
     }
   }
@@ -133,12 +134,40 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
     }
 
     if (request.queryString.contains("lang")) {
-      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.all.head)
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.All.head)
     }
 
     val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
-    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getAll, ReductionDto.getAll, EditionDto.all, SupportedLanguageDto.all))
+    Ok(views.html.order.orderStepProductSelection(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForMainOrderPage, ReductionDto.getAll, EditionDto.All, SupportedLanguageDto.All))
+      .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
+  }
+
+  def orderForConsultant = Action { request =>
+    var currentLanguage = SessionService.getCurrentLanguage(request.session)
+
+    val accountOpt = SessionService.getAccountId(request.session) match {
+      case None => None
+      case Some(accountId) =>
+        if (AccountService.isTemporary(accountId)) {
+          None
+        } else {
+          AccountDto.getOfId(accountId) match {
+            case None => None
+            case Some(account) =>
+              currentLanguage = SupportedLanguageDto.getOfCode(account.languageCode).get
+              Some(account)
+          }
+        }
+    }
+
+    if (request.queryString.contains("lang")) {
+      currentLanguage = SupportedLanguageDto.getOfCode(request.queryString("lang").head).getOrElse(SupportedLanguageDto.All.head)
+    }
+
+    val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
+
+    Ok(views.html.order.orderForConsultant(i18nMessages, currentLanguage, accountOpt, CruitedProductDto.getForConsultantOrderPage, ReductionDto.getAll, SupportedLanguageDto.All))
       .withSession(request.session + (SessionService.sessionKeyLanguageCode -> currentLanguage.ietfCode))
   }
 
@@ -174,11 +203,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
         // We also need to update any eventual temp order with that new account ID
         SessionService.getOrderId(request.session) match {
-          case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
+          case None => BadRequest("""You have uncovered a bug in the \"Account Creation\" page of our web application.
             We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
             and that the account ID involved was '""" + accountId + """'.""")
-              .withSession(request.session - SessionService.sessionKeyOrderId)
+            .withSession(request.session - SessionService.sessionKeyOrderId)
 
           case Some(orderId) =>
             val orderWithUpdatedAccountId = OrderDto.getOfId(orderId).get.copy(
@@ -199,7 +228,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
 
           case Some(account) =>
             SessionService.getOrderId(request.session) match {
-              case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
+              case None => BadRequest("""You have uncovered a bug in the \"Account Creation\" page of our web application.
             We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
             Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this issue,
             and that the account ID involved was '""" + accountId + """'.""")
@@ -222,7 +251,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     Redirect("/order/payment")
                       .withHeaders(doNotCachePage: _*)
                       .withSession(request.session + (SessionService.sessionKeyAccountId -> accountId.toString)
-                      + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+                        + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
                   }
                 } else {
                   // Temporary account
@@ -241,7 +270,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                     Ok(views.html.order.orderStepAccountCreation(i18nMessages, currentLanguage, AccountDto.getOfId(finalisedAccountId), linkedinService.getAuthCodeRequestUrl(linkedinService.linkedinRedirectUriOrderStepAccountCreation), account.linkedinProfile, None))
                       .withHeaders(doNotCachePage: _*)
                       .withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
-                      + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+                        + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
                   }
                 }
             }
@@ -268,7 +297,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                 val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
 
                 OrderDto.getOfId(orderId) match {
-                  case None => BadRequest( """You have uncovered a bug in the \"Payment\" page of our web application.
+                  case None => BadRequest("""You have uncovered a bug in the \"Payment\" page of our web application.
                     We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
                     Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this bug,
                     that the account ID involved was '""" + accountId + """' and the order ID involved was '""" + orderId + """'""")
@@ -277,7 +306,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   case Some(order) =>
                     // If the cost is 0, we redirect to the dashboard
                     if (order.getCostAfterReductions == 0) {
-                      emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
+                      emailService.sendFreeOrderCompleteEmail(account.emailAddress.get, account.firstName.get, order, currentLanguage.ietfCode, i18nMessages("email.orderComplete.free.subject"))
                       Redirect("/?action=orderCompleted")
                     } else {
                       // We display the payment page
@@ -305,7 +334,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
               OrderDto.getOfIdForFrontend(id) match {
                 case None => BadRequest("Couldn't find an order in DB for ID " + id)
                 case Some(tuple) =>
-                  val order = tuple._1
+                  val order = orderService.handleFrontendOrderForConsultant(tuple._1)
 
                   if (order.accountId.get == accountId || account.isAllowedToViewAllReportsAndEditOrders) {
                     val currentLanguage = SessionService.getCurrentLanguage(request.session)
@@ -354,7 +383,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
         val selectedProductCode = if (request.queryString.contains("productCode")) {
           request.queryString("productCode").head
         } else {
-          CruitedProduct.codeCvReview
+          CruitedProduct.CodeCvReview
         }
 
         OrderDto.getOfIdForFrontend(orderId) match {
@@ -370,7 +399,11 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
                   val i18nMessages = SessionService.getI18nMessages(currentLanguage, messagesApi)
                   val accountId = SessionService.getAccountId(request.session).get
 
-                  Ok(views.html.report(i18nMessages, currentLanguage, AccountDto.getOfId(accountId), assessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
+                  val consultantAwareAssessmentReport = assessmentReport.copy(
+                    order = orderService.handleFrontendOrderForConsultant(assessmentReport.order)
+                  )
+
+                  Ok(views.html.report(i18nMessages, currentLanguage, AccountDto.getOfId(accountId), consultantAwareAssessmentReport, ReportDto.getScoresOfOrderId(orderId), scoreAverageTasker.cvAverageScore, scoreAverageTasker.coverLetterAverageScore, scoreAverageTasker.linkedinProfileAverageScore, scoreAverageTasker.nbLastAssessmentsToTakeIntoAccount, selectedProductCode, dwsRootUrl))
               }
             } else {
               Forbidden("You are not allowed to view reports which are not yours")
@@ -547,7 +580,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           Redirect("/order/payment")
             .withHeaders(doNotCachePage: _*)
             .withSession(request.session + (SessionService.sessionKeyAccountId -> finalisedAccountId.toString)
-            + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
+              + (SessionService.sessionKeyOrderId -> finalisedOrderId.toString))
 
         // If an account with this LI profile already exists in the DB
         case Some(existingAccount) =>
@@ -555,7 +588,7 @@ class Application @Inject()(val messagesApi: MessagesApi, val linkedinService: L
           val orderId = SessionService.getOrderId(request.session).get
 
           OrderDto.getOfId(orderId) match {
-            case None => BadRequest( """You have uncovered a bug in the \"Account Creation\" page of our web application.
+            case None => BadRequest("""You have uncovered a bug in the \"Account Creation\" page of our web application.
               We are really sorry for the inconvenience, and invite you to re-create your order from the beginning.
               Also, if you have the time, we would be grateful if you could send us an e-mail (to kontakt@cruited.com), explaining that you have experienced this issue,
               and that the account ID involved was '""" + existingAccount.id + """'.""")

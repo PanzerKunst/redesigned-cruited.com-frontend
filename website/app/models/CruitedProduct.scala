@@ -9,9 +9,11 @@ case class CruitedProduct(id: Long,
 
   def getTypeForDb: String = {
     code match {
-      case CruitedProduct.codeCvReview => CruitedProduct.dbTypeCvReview
-      case CruitedProduct.codeCoverLetterReview => CruitedProduct.dbTypeCoverLetterReview
-      case CruitedProduct.codeLinkedinProfileReview => CruitedProduct.dbTypeLinkedinProfileReview
+      case CruitedProduct.CodeCvReview => CruitedProduct.DbTypeCvReview
+      case CruitedProduct.CodeCoverLetterReview => CruitedProduct.DbTypeCoverLetterReview
+      case CruitedProduct.CodeLinkedinProfileReview => CruitedProduct.DbTypeLinkedinProfileReview
+      case CruitedProduct.CodeCvReviewForConsultant => CruitedProduct.DbTypeCvReview
+      case CruitedProduct.CodeLinkedinProfileReviewForConsultant => CruitedProduct.DbTypeLinkedinProfileReview
     }
   }
 }
@@ -23,19 +25,21 @@ object CruitedProduct {
       (JsPath \ "price").write[Price]
     )(unlift(CruitedProduct.unapply))
 
-  val codeCvReview = "CV_REVIEW"
-  val codeCoverLetterReview = "COVER_LETTER_REVIEW"
-  val codeLinkedinProfileReview = "LINKEDIN_PROFILE_REVIEW"
+  val CodeCvReview = "CV_REVIEW"
+  val CodeCoverLetterReview = "COVER_LETTER_REVIEW"
+  val CodeLinkedinProfileReview = "LINKEDIN_PROFILE_REVIEW"
+  val CodeCvReviewForConsultant = "CV_REVIEW_CONSULT"
+  val CodeLinkedinProfileReviewForConsultant = "LINKEDIN_PROFILE_REVIEW_CONSULT"
 
-  val dbTypeCvReview = "cv"
-  val dbTypeCoverLetterReview = "letter"
-  val dbTypeLinkedinProfileReview = "li"
+  val DbTypeCvReview = "cv"
+  val DbTypeCoverLetterReview = "letter"
+  val DbTypeLinkedinProfileReview = "li"
 
   def getCodeFromType(typeForDb: String): String = {
     typeForDb match {
-      case `dbTypeCvReview` => codeCvReview
-      case `dbTypeCoverLetterReview` => codeCoverLetterReview
-      case `dbTypeLinkedinProfileReview` => codeLinkedinProfileReview
+      case DbTypeCvReview => CodeCvReview
+      case DbTypeCoverLetterReview => CodeCoverLetterReview
+      case DbTypeLinkedinProfileReview => CodeLinkedinProfileReview
     }
   }
 }

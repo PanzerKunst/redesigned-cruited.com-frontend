@@ -10,115 +10,48 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         render() {
+            const title = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.productSelection.title"] : CR.i18nMessages["order.productSelection.title.largeScreen"];
+
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.productSelection.title"]}</h1>
-                            <form ref="form" className="form-inline">
-                                <div className="form-group">
-                                    <label htmlFor="selected-language">Lang</label>
-                                    <select className="form-control" id="selected-language" value={this.state.currentLanguageCode} onChange={this._handleLanguageChange}>
-                                        {this.state.supportedLanguages.map(function(supportedLanguage) {
-                                            const ietfCode = supportedLanguage.ietfCode;
-                                            const shortName = ietfCode.replace(/^./, function($1) {
-                                                return $1.toUpperCase();
-                                            });
-
-                                            return <option key={supportedLanguage.id} value={ietfCode}>{shortName}</option>;
-                                        })}
-                                    </select>
-                                </div>
-                                <div className="form-group medium-screen">
-                                    <label htmlFor="selected-language-medium-screen">Language</label>
-                                    <select className="form-control" id="selected-language-medium-screen" value={this.state.currentLanguageCode} onChange={this._handleLanguageChange}>
-                                        {this.state.supportedLanguages.map(function(supportedLanguage) {
-                                            return <option key={supportedLanguage.id} value={supportedLanguage.ietfCode}>{supportedLanguage.name}</option>;
-                                        })}
-                                    </select>
-                                </div>
-                            </form>
+                            <h1>{title}</h1>
+                            <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
                         </div>
                     </header>
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.productSelection.subtitle"]}</span>
 
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
+                        <CR.Controllers.ProductsSection products={this.state.products} currentLanguageCode={this.state.currentLanguageCode} controller={this.state.controller}/>
 
-                        <section id="products-section" className="two-columns">
-                            <header>
-                                <h2>{CR.i18nMessages["order.productSelection.productsSection.title"]}</h2>
-                                <div className="alert alert-info guarantee-panel" role="alert">
-                                    <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
-                                </div>
-                            </header>
-                            <div>
-                                <ul className="styleless" id="product-list">
-                                    {this.state.products.map(function(product, index) {
-                                        return <CR.Controllers.ProductListItem key={index} product={product} controller={this.state.controller} />;
-                                    }.bind(this))}
-                                </ul>
-
-                                <div className="centered-contents">
-                                    <a onClick={this._handleHowToGetItForFreeLinkClick}>{CR.i18nMessages["order.productSelection.productsSection.howToGetItForFree.link.text"]}</a>
-                                </div>
-
-                                <CR.Controllers.HowToGetItForFreeModal lang={this.state.currentLanguageCode} />
-                            </div>
-                        </section>
                         <section id="editions-section" className="two-columns">
-                            <header>
-                                <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
-                                <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
-                            </header>
-                            <ul className="styleless">
-                            {CR.editions.map(function(edition, index) {
-                                return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
-                            }.bind(this))}
-                            </ul>
-                        </section>
-                        <section id="language-section" className="two-columns">
-                            <header>
-                                <p className="light-font">{CR.i18nMessages["order.productSelection.languageSection.subtitle"]}</p>
-                            </header>
-                            <form ref="form">
-                                <div className="form-group">
-                                     <select className="form-control" value={this.state.currentLanguageCode} onChange={this._handleLanguageChange}>
-                                         {this.state.supportedLanguages.map(function(supportedLanguage) {
-                                             return <option key={supportedLanguage.id} value={supportedLanguage.ietfCode}>{supportedLanguage.name}</option>;
-                                         })}
-                                     </select>
-                                </div>
-                            </form>
-                        </section>
-                        <section id="cart-section">
-                            <header>
-                                <h2>{CR.i18nMessages["order.productSelection.cartSection.title"]}</h2>
-                                <span className="highlighted-number">{CR.order.getProducts().length}</span>
-                            </header>
+                            <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
                             <div>
-                                <div className="column-labels">
-                                    <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.products"]}</span>
-                                    <span>{CR.i18nMessages["order.productSelection.cartSection.productsHeader.defaultPrice"]}</span>
-                                </div>
+                                <header>
+                                    <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
+                                </header>
+                                <div>
+                                    <ul className="styleless">
+                                    {CR.editions.map((edition, index) => {
+                                        if (edition.code === CR.Models.Edition.codes.CONSULT) {
+                                            return null;
+                                        }
 
-                                <ul className="styleless">
-                                    {CR.order.getProducts().map(function(product, index) {
-                                        return <CR.Controllers.CartProductListItem key={index} product={product} controller={this.state.controller} />;
-                                    }.bind(this))}
-                                </ul>
-
-                                <CR.Controllers.CouponForm controller={this.state.controller} />
-
-                                <div className="bottom-section">
-                                    {this._getCartTable()}
-
-                                    <div className="alert alert-info guarantee-panel" role="alert">
-                                        <p dangerouslySetInnerHTML={{__html: CR.i18nMessages["moneyBackGuarantee.text"]}} />
+                                        return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
+                                    })}
+                                    </ul>
+                                    <div id="switch-to-consultant-wrapper" className="centered-contents">
+                                        <a href="/order/consultant">{CR.i18nMessages["order.productSelection.switchToConsultant.link.text"]}</a>
                                     </div>
                                 </div>
                             </div>
                         </section>
+
+                        <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
+                        <CR.Controllers.CartSection products={this.state.products} controller={this.state.controller} />
+
                         <form onSubmit={this._handleSubmit} className="centered-contents">
                             <p className="other-form-error" id="empty-cart">{CR.i18nMessages["order.productSelection.validation.emptyCart"]}</p>
                             <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.productSelection.submitBtn.text"]}</button>
@@ -140,8 +73,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         _initElements() {
             const $content = $("#content");
 
-            this.$howToGetItForFreeModal = $content.find("#how-to-get-it-for-free-modal");
-
             this.$otherFormErrors = $content.find(".other-form-error");
             this.$emptyCartError = this.$otherFormErrors.filter("#empty-cart");
 
@@ -155,57 +86,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
 
         _initValidation() {
             this.validator = CR.Services.Validator();
-        },
-
-        _getCartTable() {
-            if (_.isEmpty(this.state.products)) {
-                return null;
-            }
-
-            return (
-                <table>
-                    <tbody>
-                        <tr className="sub-total-row">
-                            <td>{CR.i18nMessages["order.productSelection.cartSection.subTotal"]}:</td>
-                            <td>{CR.order.getBasePrice()} {this.state.products[0].price.currencyCode}</td>
-                        </tr>
-                        {CR.order.getReductions().map(function(reduction, index) {
-                            return (
-                                <tr key={index} className="reduction-row">
-                                    <td>{CR.i18nMessages["reduction.name." + reduction.code]}:</td>
-                                    <td>- {reduction.price.amount} {reduction.price.currencyCode}</td>
-                                </tr>
-                            );
-                        })}
-
-                        {this._getCouponRow()}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>{CR.i18nMessages["order.productSelection.cartSection.total"]}:</td>
-                            <td>{CR.order.getTotalPrice()} {this.state.products[0].price.currencyCode}</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            );
-        },
-
-        _getCouponRow() {
-            const orderCoupon = CR.order.getCoupon();
-
-            if (!orderCoupon) {
-                return null;
-            }
-
-            const amount = orderCoupon.discountPercentage || orderCoupon.discountPrice.amount;
-            const unit = orderCoupon.discountPercentage ? "%" : " " + orderCoupon.discountPrice.currencyCode;
-
-            return (
-                <tr className="coupon-row">
-                    <td>{orderCoupon.campaignName}:</td>
-                    <td>- {amount}{unit}</td>
-                </tr>
-            );
         },
 
         _handleSubmit(e) {
@@ -260,16 +140,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     location.href = "/order/assessment-info";
                 }
             }
-        },
-
-        _handleLanguageChange(e) {
-            const $dropdown = $(e.currentTarget);
-
-            location.replace("/order?lang=" + $dropdown.val());
-        },
-
-        _handleHowToGetItForFreeLinkClick() {
-            this.$howToGetItForFreeModal.modal();
         }
     });
 
@@ -284,6 +154,13 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
 
         CR.order = CR.Models.Order(orderFromLocalStorage);
+        this._removeNonClassicProducts();
+
+        if (!CR.order.getEdition() && !_.isEmpty(CR.editions)) {
+            CR.order.setEdition(CR.editions[0]);
+        }
+
+        CR.order.saveInLocalStorage();
 
         this.reactInstance = ReactDOM.render(
             React.createElement(this.reactClass),
@@ -317,5 +194,18 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         }
 
         return products;
+    };
+
+    c._removeNonClassicProducts = function() {
+        const products = _.cloneDeep(CR.order.getProducts());
+
+        for (const p of products) {
+            if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
+                p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
+                p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
+
+                CR.order.removeProduct(p);
+            }
+        }
     };
 });

@@ -1,0 +1,15 @@
+#edit-order {
+  form > section:first-child {
+    margin-top: 0;
+  }
+
+  #context-section {
+    border-bottom: none;
+    padding-bottom: 2em;
+  }
+}
+
+.no-flexbox {
+  #edit-order { // stylelint-disable-line no-empty-block
+  }
+}
