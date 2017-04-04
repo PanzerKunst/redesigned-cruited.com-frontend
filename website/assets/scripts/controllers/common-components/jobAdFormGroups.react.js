@@ -1,21 +1,22 @@
-"use strict";
-
 CR.Controllers.JobAdFormGroups = React.createClass({
-    render: function() {
+    render() {
+
         // To avoid losing value if the page is reloaded, for example by a Sign in with LI
         const jobAdUrl = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.jobAdUrl) || CR.order.getJobAdUrl();
+        const urlFieldLabel = CR.order.isForConsultant() ? CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label.consult"] : CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"];
+        const fileFieldLabel = CR.order.isForConsultant() ? CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label.consult"] : CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"];
 
         return (
             <div>
                 <div className="form-group" id="job-ad-url-form-group">
-                    <label htmlFor="job-ad-url">{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.label"]}</label>
+                    <label htmlFor="job-ad-url">{urlFieldLabel}</label>
                     <input type="text" className="form-control" id="job-ad-url" maxLength="255" defaultValue={jobAdUrl} />
                     <p className="field-error" data-check="url">{CR.i18nMessages["order.assessmentInfo.validation.jobAdUrlIncorrect"]}</p>
                     <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdUrl.uploadInstead.text"]}</a>
                 </div>
 
                 <div className="form-group fg-file-upload" id="job-ad-file-upload-form-group">
-                    <label>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.label"]}</label>
+                    <label>{fileFieldLabel}</label>
 
                     <div>
                         <label className={CR.Controllers.OrderCommon.getUploadLabelClasses()} htmlFor="job-ad-file">
@@ -26,12 +27,10 @@ CR.Controllers.JobAdFormGroups = React.createClass({
                     </div>
                     <a onClick={this._handleJobAdAlternativeClicked}>{CR.i18nMessages["order.assessmentInfo.form.jobAdFile.urlInstead.text"]}</a>
                 </div>
-
-                <p className="other-form-error" id="job-ad-required-error">{CR.i18nMessages["order.interviewTraining.assessmentInfo.basicInfoSection.validation.jobAdRequired"]}</p>
             </div>);
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
 
         if (CR.order.getJobAdUrl()) {
@@ -43,7 +42,7 @@ CR.Controllers.JobAdFormGroups = React.createClass({
         }
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$jobAdUrlFormGroup = $("#job-ad-url-form-group");
         this.$jobAdUrlField = this.$jobAdUrlFormGroup.children("#job-ad-url");
 
@@ -52,12 +51,12 @@ CR.Controllers.JobAdFormGroups = React.createClass({
         this.$jobAdFileNameField = this.$jobAdFileUploadFormGroup.find("#job-ad-file-name");
     },
 
-    _handleJobAdFileSelected: function() {
+    _handleJobAdFileSelected() {
         this.props.controller.jobAdFile = this.$jobAdFileField[0].files[0];
         this.$jobAdFileNameField.val(this.props.controller.jobAdFile.name);
     },
 
-    _handleJobAdAlternativeClicked: function() {
+    _handleJobAdAlternativeClicked() {
         let $formGroupToFadeOut = this.$jobAdUrlFormGroup;
         let $formGroupToFadeIn = this.$jobAdFileUploadFormGroup;
 
@@ -73,7 +72,7 @@ CR.Controllers.JobAdFormGroups = React.createClass({
 
         $formGroupToFadeOut.fadeOut({
             animationDuration: CR.animationDurations.short,
-            onComplete: function() {
+            onComplete() {
                 $formGroupToFadeIn.fadeIn({
                     animationDuration: CR.animationDurations.short
                 });

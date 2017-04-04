@@ -1,4 +1,4 @@
-CR.Controllers.OrderStepProductSelection = P(function(c) {
+CR.Controllers.OrderForConsultant = P(function(c) {
     c.reactClass = React.createClass({
         getInitialState() {
             return {
@@ -10,14 +10,14 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         },
 
         render() {
-            const title = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.productSelection.title"] : CR.i18nMessages["order.productSelection.title.largeScreen"];
+            const title = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.consult.title"] : CR.i18nMessages["order.consult.title.largeScreen"];
 
             return (
                 <div id="content">
                     <header>
                         <div>
                             <h1>{title}</h1>
-                            <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
+                            <CR.Controllers.LanguageSelectionInHeader supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order/consultant" />
                         </div>
                     </header>
                     <div className="with-circles">
@@ -26,30 +26,16 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                         <CR.Controllers.OrderStepBreadcrumbs step={CR.Controllers.OrderCommon.steps.productSelection} />
                         <CR.Controllers.ProductsSection products={this.state.products} currentLanguageCode={this.state.currentLanguageCode} controller={this.state.controller}/>
 
-                        <section id="editions-section" className="two-columns">
-                            <h2>{CR.i18nMessages["order.productSelection.editionsSection.title"]}</h2>
+                        <section id="section-with-link-to-classic-products" className="two-columns widow">
+                            <header/>
                             <div>
-                                <header>
-                                    <p className="light-font">{CR.i18nMessages["order.productSelection.editionsSection.subtitle"]}</p>
-                                </header>
-                                <div>
-                                    <ul className="styleless">
-                                    {CR.editions.map((edition, index) => {
-                                        if (edition.code === CR.Models.Edition.codes.CONSULT) {
-                                            return null;
-                                        }
-
-                                        return <CR.Controllers.EditionListItem key={index} edition={edition} controller={this.state.controller} />;
-                                    })}
-                                    </ul>
-                                    <div id="switch-to-consultant-wrapper" className="centered-contents">
-                                        <a href="/order/consultant">{CR.i18nMessages["order.productSelection.switchToConsultant.link.text"]}</a>
-                                    </div>
+                                <div className="centered-contents">
+                                    <a href="/order">{CR.i18nMessages["order.consult.switchToClassic.link.text"]}</a>
                                 </div>
                             </div>
                         </section>
 
-                        <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
+                        <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order/consultant" />
                         <CR.Controllers.CartSection products={this.state.products} controller={this.state.controller} />
 
                         <form onSubmit={this._handleSubmit} className="centered-contents">
@@ -143,10 +129,9 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         }
     });
 
-    c.init = function(i18nMessages, products, reductions, editions, loggedInAccount, supportedLanguages) {
+    c.init = function(i18nMessages, products, reductions, loggedInAccount, supportedLanguages) {
         CR.i18nMessages = i18nMessages;
         CR.products = products;
-        CR.editions = editions;
         CR.reductions = reductions;
         CR.loggedInAccount = loggedInAccount;
         this.supportedLanguages = supportedLanguages;
@@ -154,12 +139,8 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         const orderFromLocalStorage = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.order);
 
         CR.order = CR.Models.Order(orderFromLocalStorage);
-        this._removeNonClassicProducts();
-
-        if (!CR.order.getEdition() && !_.isEmpty(CR.editions)) {
-            CR.order.setEdition(CR.editions[0]);
-        }
-
+        this._removeProductsExceptForConsultant();
+        CR.order.setEdition(null);
         CR.order.saveInLocalStorage();
 
         this.reactInstance = ReactDOM.render(
@@ -196,14 +177,11 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
         return products;
     };
 
-    c._removeNonClassicProducts = function() {
+    c._removeProductsExceptForConsultant = function() {
         const products = _.cloneDeep(CR.order.getProducts());
 
         for (const p of products) {
-            if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
-                p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
-                p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
-
+            if (p.code !== CR.Models.Product.codes.CV_REVIEW_CONSULT && p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
                 CR.order.removeProduct(p);
             }
         }

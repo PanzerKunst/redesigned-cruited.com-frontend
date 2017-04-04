@@ -1,0 +1,11 @@
+#order-consult {
+  #products-section,
+  #section-with-link-to-classic-products {
+    border-bottom: none;
+  }
+}
+
+.no-flexbox {
+  #order-consult {  // stylelint-disable-line block-no-empty
+  }
+}

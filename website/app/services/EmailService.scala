@@ -2,6 +2,7 @@ package services
 
 import javax.inject.{Inject, Singleton}
 
+import models.Order
 import play.Play
 import play.api.Logger
 import play.api.libs.mailer.{Email, MailerClient}
@@ -28,11 +29,19 @@ class EmailService @Inject()(val mailerClient: MailerClient) {
     Logger.info("Sent ResetPasswordEmail to " + emailAddress)
   }
 
-  def sendFreeOrderCompleteEmail(emailAddress: String, firstName: String, languageCode: String, subject: String) {
+  def sendFreeOrderCompleteEmail(emailAddress: String, firstName: String, order: Order, languageCode: String, subject: String) {
     val view = if (languageCode == I18nService.languageCodeEn) {
-      views.html.email.en.orderComplete.free(firstName)
+      if (order.isForConsultant) {
+        views.html.email.en.orderComplete.free.forConsultant(firstName)
+      } else {
+        views.html.email.en.orderComplete.free.classic(firstName)
+      }
     } else {
-      views.html.email.sv.orderComplete.free(firstName)
+      if (order.isForConsultant) {
+        views.html.email.sv.orderComplete.free.forConsultant(firstName)
+      } else {
+        views.html.email.sv.orderComplete.free.classic(firstName)
+      }
     }
 
     try {

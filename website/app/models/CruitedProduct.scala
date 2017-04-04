@@ -12,6 +12,8 @@ case class CruitedProduct(id: Long,
       case CruitedProduct.CodeCvReview => CruitedProduct.DbTypeCvReview
       case CruitedProduct.CodeCoverLetterReview => CruitedProduct.DbTypeCoverLetterReview
       case CruitedProduct.CodeLinkedinProfileReview => CruitedProduct.DbTypeLinkedinProfileReview
+      case CruitedProduct.CodeCvReviewForConsultant => CruitedProduct.DbTypeCvReview
+      case CruitedProduct.CodeLinkedinProfileReviewForConsultant => CruitedProduct.DbTypeLinkedinProfileReview
       case CruitedProduct.CodeInterviewTraining => CruitedProduct.DbTypeInterviewTraining
     }
   }
@@ -27,6 +29,8 @@ object CruitedProduct {
   val CodeCvReview = "CV_REVIEW"
   val CodeCoverLetterReview = "COVER_LETTER_REVIEW"
   val CodeLinkedinProfileReview = "LINKEDIN_PROFILE_REVIEW"
+  val CodeCvReviewForConsultant = "CV_REVIEW_CONSULT"
+  val CodeLinkedinProfileReviewForConsultant = "LINKEDIN_PROFILE_REVIEW_CONSULT"
   val CodeInterviewTraining = "INTERVIEW_TRAINING"
 
   val DbTypeCvReview = "cv"

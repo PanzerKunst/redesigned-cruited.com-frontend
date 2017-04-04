@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.TermsOfServiceFormSection = React.createClass({
-    render: function() {
+    render() {
         if (CR.loggedInAccount) {
             return null;
         }

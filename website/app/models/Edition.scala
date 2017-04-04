@@ -11,4 +11,6 @@ object Edition {
     (JsPath \ "id").write[Long] and
       (JsPath \ "code").write[String]
     )(unlift(Edition.unapply))
+
+  val CodeConsultant = "CONSULT"
 }

@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.OrderLanguageSelection = React.createClass({
-    render: function() {
+    render() {
         const supportedLanguages = this.props.supportedLanguages;
         const currentLanguageCode = this.props.currentLanguageCode;
 
@@ -22,8 +20,9 @@ CR.Controllers.OrderLanguageSelection = React.createClass({
             </section>);
     },
 
-    _handleLanguageChange: function(e) {
+    _handleLanguageChange(e) {
         const $dropdown = $(e.currentTarget);
+
         location.replace(`${this.props.url}?lang=${$dropdown.val()}`);
     }
 });

@@ -1,6 +1,6 @@
 package models
 
-import db.{CouponDto, CruitedProductDto, ReductionDto}
+import db.{CouponDto, CruitedProductDto, EditionDto, ReductionDto}
 import models.frontend.FrontendOrder
 import play.api.Logger
 
@@ -100,6 +100,33 @@ case class Order(id: Option[Long],
     Logger.info("costAfterReductions - 3:" + math.round(costAfterReductions).toInt)
 
     math.round(costAfterReductions).toInt
+  }
+
+  def isForConsultant: Boolean = {
+    if (EditionDto.getOfId(editionId).get.code == Edition.CodeConsultant) {
+      return true
+    }
+
+    for (pc <- containedProductCodes) {
+      if (pc != CruitedProduct.CodeCvReviewForConsultant && pc != CruitedProduct.CodeLinkedinProfileReviewForConsultant) {
+        return false
+      }
+    }
+
+    true
+  }
+
+  def isOfClassicProducts: Boolean = {
+    for (pc <- containedProductCodes) {
+      if (pc != CruitedProduct.CodeCvReview &&
+        pc != CruitedProduct.CodeCoverLetterReview &&
+        pc != CruitedProduct.CodeLinkedinProfileReview) {
+
+        return false
+      }
+    }
+
+    true
   }
 }
 

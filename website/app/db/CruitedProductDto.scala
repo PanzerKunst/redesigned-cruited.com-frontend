@@ -43,7 +43,7 @@ object CruitedProductDto {
         select id, code, price_amount
         from product
         where """ + commonClause + """
-          and code != '""" + CruitedProduct.CodeInterviewTraining + """'
+          and code in ('""" + CruitedProduct.CodeCvReview + """', '""" + CruitedProduct.CodeCoverLetterReview + """', '""" + CruitedProduct.CodeLinkedinProfileReview + """')
         order by id;"""
 
       Logger.info("CruitedProductDto.getForMainOrderPage():" + query)
@@ -63,7 +63,34 @@ object CruitedProductDto {
       SQL(query).as(rowParser.*)
     }
   }
+  
+  def getForConsultantOrderPage: List[CruitedProduct] = {
+    DB.withConnection { implicit c =>
+      val query = """
+        select id, code, price_amount
+        from product
+        where """ + commonClause + """
+          and code in ('""" + CruitedProduct.CodeCvReviewForConsultant + """', '""" + CruitedProduct.CodeLinkedinProfileReviewForConsultant + """')
+        order by id;"""
 
+      Logger.info("CruitedProductDto.getForConsultantOrderPage():" + query)
+
+      val rowParser = long("id") ~ str("code") ~ double("price_amount") map {
+        case id ~ code ~ priceAmount =>
+          CruitedProduct(
+            id = id,
+            code = code,
+            price = Price(
+              amount = priceAmount,
+              currencyCode = GlobalConfig.paymentCurrencyCode
+            )
+          )
+      }
+
+      SQL(query).as(rowParser.*)
+    }
+  }
+  
   def getForInterviewTrainingOrderPage: CruitedProduct = {
     DB.withConnection { implicit c =>
       val query = """
@@ -90,7 +117,6 @@ object CruitedProductDto {
       SQL(query).as(rowParser.single)
     }
   }
-
   def getOfId(id: Long): Option[CruitedProduct] = {
     DB.withConnection { implicit c =>
       val query = """select code, price_amount

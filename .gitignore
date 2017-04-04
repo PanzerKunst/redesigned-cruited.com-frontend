@@ -1,6 +1,7 @@
 .sass-cache
 .idea
 *.log
+*.iml
 bower_components
 node_modules
 /design/LiveYourDreamsBg.ai

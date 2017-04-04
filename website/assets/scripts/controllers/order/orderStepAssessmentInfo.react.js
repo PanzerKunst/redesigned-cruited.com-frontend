@@ -17,23 +17,29 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                 return null;
             }
 
-            this.state.orderedLinkedin = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW;
-            });
-            this.state.orderedCv = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.CV_REVIEW;
-            });
-            this.state.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
+            this.state.orderedLinkedin = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW || p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT);
+            this.state.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW || p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT);
+            this.state.orderedCoverLetter = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.COVER_LETTER_REVIEW);
+
+            let pageTitle = null;
+            let jobYouSearchSectionTitle = null;
+
+            if (CR.order.isOfClassicProducts()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"];
+            } else if (CR.order.isForConsultant()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title.consult"] : CR.i18nMessages["order.assessmentInfo.title.consult.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title.consult"];
+            }
 
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                            <h1>{pageTitle}</h1>
                         </div>
                     </header>
+
                     <div className="with-circles">
                         <span>{CR.i18nMessages["order.assessmentInfo.subtitle"]}</span>
 
@@ -48,14 +54,16 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     </header>
                                     <div>
                                         {this._getSignInWithLinkedinFormGroup()}
-                                        <CR.Controllers.CvFormGroup orderedCv={this.state.orderedCv} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this} />
-                                        <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.state.orderedCoverLetter} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this} />
+
+                                        <CR.Controllers.CvFormGroup orderedCv={this.state.orderedCv} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this}/>
+                                        <CR.Controllers.CoverLetterFormGroup orderedCoverLetter={this.state.orderedCoverLetter} orderedLinkedin={this.state.orderedLinkedin} linkedinProfile={this.state.linkedinProfile} controller={this}/>
                                         <p className="other-form-error" id="request-entity-too-large-error">{CR.i18nMessages["order.assessmentInfo.validation.requestEntityTooLarge"]}</p>
                                     </div>
                                 </div>
                             </section>
+
                             <section id="job-you-search-section" className="two-columns">
-                                <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
+                                <h2>{jobYouSearchSectionTitle}</h2>
                                 <div>
                                     <header>
                                         <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
@@ -63,19 +71,20 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     <div>
                                         <CR.Controllers.PositionSoughtFormGroup />
                                         <CR.Controllers.EmployerSoughtFormGroup />
-                                        <CR.Controllers.JobAdFormGroups controller={this} />
+                                        <CR.Controllers.JobAdFormGroups controller={this}/>
                                     </div>
                                 </div>
                             </section>
+
                             <CR.Controllers.CustomerCommentFormGroup />
                             <CR.Controllers.TermsOfServiceFormSection />
+
                             <div className="centered-contents">
                                 <button type="submit" className="btn btn-lg btn-primary">{CR.i18nMessages["order.assessmentInfo.submitBtn.text"]}</button>
                             </div>
                         </form>
                     </div>
-                </div>
-            );
+                </div>);
         },
 
         componentDidUpdate() {
@@ -177,8 +186,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                     <label htmlFor="linkedin-profile-checked">{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.check.incompleteProfile.checkbox.label"]}</label>
                                 </div>
                                 <p className="field-error" data-check="empty"/>
-                            </div>
-                        );
+                            </div>);
                     } else {
                         formGroupContents = (
                             <div>
@@ -209,8 +217,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 </section>
 
                                 <p className="field-error" data-check="empty"/>
-                            </div>
-                        );
+                            </div>);
                     }
                 } else {
                     formGroupContents = (
@@ -219,8 +226,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                                 <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                             </a>
                             <p className="other-form-error shown-by-default">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.publicProfileUrlMissing"]}</p>
-                        </div>
-                    );
+                        </div>);
                 }
             } else {
                 const signInFailedParagraph = this.state.linkedinErrorMessage ? <p className="other-form-error shown-by-default">{this.state.linkedinErrorMessage}</p> : null;
@@ -231,8 +237,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                             <span>{CR.i18nMessages["order.assessmentInfo.form.linkedinProfile.signInBtn.text"]}</span>
                         </a>
                         {signInFailedParagraph}
-                    </div>
-                );
+                    </div>);
             }
 
             return (
@@ -241,8 +246,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     {formGroupContents}
                     <p className="other-form-error" id="not-signed-in-with-linkedin">{CR.i18nMessages["order.assessmentInfo.validation.linkedin.notSignedIn"]}</p>
-                </div>
-            );
+                </div>);
         },
 
         _handleMultiLanguageLinkedinClick() {
@@ -272,7 +276,12 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
 
                     const formData = new FormData();
 
-                    formData.append("editionId", CR.order.getEdition().id);
+                    const orderEdition = CR.order.getEdition();
+
+                    if (orderEdition) {
+                        formData.append("editionId", CR.order.getEdition().id);
+                    }
+
                     formData.append("containedProductCodes", _.map(CR.order.getProducts(), "code"));
                     if (CR.order.getCoupon()) {
                         formData.append("couponCode", CR.order.getCoupon().code);
@@ -296,16 +305,19 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
 
                     const positionSought = this.$positionSoughtField.val();
+
                     if (positionSought) {
                         formData.append("positionSought", positionSought);
                     }
 
                     const employerSought = this.$employerSoughtField.val();
+
                     if (employerSought) {
                         formData.append("employerSought", employerSought);
                     }
 
                     const jobAdUrl = this.$jobAdUrlField.val();
+
                     if (jobAdUrl) {
                         formData.append("jobAdUrl", jobAdUrl);
                     }
@@ -315,6 +327,7 @@ CR.Controllers.OrderStepAssessmentInfo = P(function(c) {
                     }
 
                     const customerComment = this.$customerCommentField.val();
+
                     if (customerComment) {
                         formData.append("customerComment", customerComment);
                     }

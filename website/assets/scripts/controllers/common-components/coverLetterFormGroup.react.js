@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.CoverLetterFormGroup = React.createClass({
-    render: function() {
+    render() {
         if (!this.props.orderedCoverLetter) {
             return null;
         }
@@ -24,17 +22,17 @@ CR.Controllers.CoverLetterFormGroup = React.createClass({
             </div>);
     },
 
-    componentDidUpdate: function() {
+    componentDidUpdate() {
         this._initElements();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$coverLetterFormGroup = $("#cover-letter-form-group");
         this.$coverLetterFileField = this.$coverLetterFormGroup.find("#cover-letter");
         this.$coverLetterFileNameField = this.$coverLetterFormGroup.find("#cover-letter-file-name");
     },
 
-    _handleCoverLetterFileSelected: function() {
+    _handleCoverLetterFileSelected() {
         this.props.controller.coverLetterFile = this.$coverLetterFileField[0].files[0];
         this.$coverLetterFileNameField.val(this.props.controller.coverLetterFile.name);
         this.$coverLetterFormGroup.removeClass("has-error");

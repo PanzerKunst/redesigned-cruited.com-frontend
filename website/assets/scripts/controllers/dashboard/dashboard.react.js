@@ -56,15 +56,6 @@ CR.Controllers.Dashboard = P(function(c) {
                                     </div>);
                                 }
 
-                                let editOrderMarkup = null;
-
-                                if (order.getStatus() < CR.Models.OrderStaticProps.statusIds.inProgress) {
-                                    const url = "/order/edit?id=" + order.getId();
-
-                                    editOrderMarkup = <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
-                                }
-
-                                const editionClasses = "edition " + order.getEdition().code;
                                 const statusClasses = "status " + order.getStatusForHtml();
 
                                 return (
@@ -134,6 +125,7 @@ CR.Controllers.Dashboard = P(function(c) {
             }
 
             const url = `/order/edit?id=${order.getId()}`;
+
             return <p className="light-font" dangerouslySetInnerHTML={{__html: CR.Services.String.template(CR.i18nMessages["dashboard.editOrder.text"], "url", url)}} />;
         },
 

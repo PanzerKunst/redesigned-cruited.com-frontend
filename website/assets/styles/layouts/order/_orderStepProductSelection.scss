@@ -1,4 +1,303 @@
-#order-step-product-selection {
+#order-step-product-selection,
+#order-consult {
+  .form-inline .form-control {
+    // We want this even on small res
+    display: inline-block;
+    width: auto;
+    vertical-align: baseline;
+  }
+
+  #content > header {
+    > div {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    form {
+      margin-top: 43px;
+
+      > .medium-screen {
+        display: none;
+      }
+
+      @include medium-screen {
+        margin-top: 48px;
+        font-size: #{$font-size-base-px}px;
+
+        > .form-group {
+          display: none;
+
+          &.medium-screen {
+            display: block;
+          }
+        }
+      }
+
+      @include large-screen {
+        margin-top: 73px;
+      }
+    }
+  }
+
+  .guarantee-panel {
+    @include large-screen {
+      font-size: #{$font-size-base-px}px;
+    }
+  }
+
+  #product-list,
+  #editions-section {
+    li {
+      background-color: white;
+      color: $grey;
+
+      @include project-border;
+
+      cursor: pointer;
+
+      margin-bottom: 0.5em;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #product-list {
+    li {
+      border-style: dashed;
+
+      // Using Float instead of Flexbox due to insuffient browser support
+      @include clearfix;
+      min-height: 5.2em;
+
+      &.selected {
+        border: 2px solid $primary-btn-color;
+      }
+
+      &.read-only {
+        cursor: default;
+      }
+
+      > .checkbox {
+        float: left;
+        margin-left: $spacer-unit-size;
+
+        width: $two-column-right-col-width;
+      }
+
+      > .prices {
+        float: right;
+
+        margin-top: 1.2em;
+        &.with-reduction {
+          margin-top: 0.7em;
+        }
+      }
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+
+    @include medium-screen {
+      .checkbox {
+        margin-top: 1.5em;
+      }
+
+      .prices {
+        margin-right: 0;
+
+        > p {
+          width: 8em;
+          text-align: center;
+
+          border-left: 1px solid $gradient-light-grey;
+        }
+      }
+    }
+
+    @include large-screen {
+      .checkbox > label::before {
+        margin-top: 3px; // Default
+      }
+    }
+  }
+
+  .prices {
+    margin-right: $spacer-unit-size;
+
+    font-size: 1.2em;
+
+    > p,
+    span {
+      line-height: 1em;
+    }
+
+    > p {
+      text-align: center;
+    }
+  }
+
+  .amount {
+    font-weight: bold;
+    font-size: 1.7em;
+  }
+
+  .currency-code {
+    margin-left: 0.3em;
+  }
+
+  .full-price {
+    color: $brand-danger;
+    text-decoration: line-through;
+    text-align: center;
+  }
+
+  #how-to-get-it-for-free-link-wrapper {
+    margin-top: $content-element-margin-bottom;
+  }
+
+  #how-to-get-it-for-free-modal {
+    .modal-title,
+    .modal-body h4 {
+      color: $text-color;
+    }
+
+    .modal-body {
+      padding: 0;
+
+      .logo {
+        display: inline-block;
+
+        margin: $content-element-margin-bottom 0;
+
+        @include hdpi-sprite;
+
+        &.jusek {
+          $partner-logo-location-y: -300px;
+          $logo-width: 100px;
+          $logo-height: 68px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.vision {
+          $partner-logo-location-y: -500px;
+          $logo-width: 120px;
+          $logo-height: 54px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.unionen-egen {
+          $partner-logo-location-y: -700px;
+          $logo-width: 182px;
+          $logo-height: 45px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.tsn {
+          $partner-logo-location-y: -900px;
+          $logo-width: 124px;
+          $logo-height: 74px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.trs {
+          $partner-logo-location-y: -1100px;
+          $logo-width: 276px;
+          $logo-height: 42px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+
+        &.ki {
+          $partner-logo-location-y: -1300px;
+          $logo-width: 140px;
+          $logo-height: 62px;
+
+          background-position: 0 $partner-logo-location-y;
+          width: $logo-width;
+          height: $logo-height;
+
+          @include hidpi {
+            background-position: half-pos(0, $partner-logo-location-y);
+            width: $logo-width / 2;
+            height: $logo-height / 2;
+          }
+        }
+      }
+
+      &.large-res {
+        display: none;
+        min-height: 43em;
+      }
+    }
+
+    @include large-screen {
+      > .modal-dialog {
+        width: 900px;
+      }
+
+      .modal-title {
+        margin-top: 0.4em;
+      }
+
+      .modal-body {
+        font-size: #{$font-size-base-px}px;
+
+        &.small-res {
+          display: none;
+        }
+        &.large-res {
+          display: flex;
+        }
+      }
+    }
+  }
+
   #editions-section {
     margin-top: 3em;
 
@@ -118,12 +417,83 @@
       }
     }
   }
+
+  #switch-to-consultant-wrapper {
+    margin-top: $content-element-margin-bottom;
+  }
+
+  #cart-section {
+    > header {
+      margin-top: 2.6em;
+    }
+
+    > div {
+      margin-bottom: 2em;
+    }
+
+    table {
+      margin-bottom: 1em;
+    }
+
+    @include medium-screen {
+      > div li > span:first-child {
+        max-width: 100%;
+      }
+
+      .with-edition {
+        > span {
+          display: flex;
+          align-items: center;
+        }
+
+        .cart-product-name {
+          display: inline-block;
+          width: 17em;
+        }
+
+        .cart-product-price {
+          margin-top: 0;
+        }
+      }
+
+      .bottom-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+    }
+
+    @include large-screen {
+      .bottom-section {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      table {
+        order: 1;
+        flex-shrink: 0;
+      }
+
+      .guarantee-panel {
+        max-width: 52%;
+        margin: 2.8em 2.8em 0 0;
+      }
+    }
+  }
+
+  .with-circles > form > .other-form-error {
+    margin: $content-element-margin-bottom 0;
+  }
+
+  .btn-lg.btn-primary {
+    margin-top: 0;
+  }
 }
 
-
-
 .no-flexbox {
-  #order-step-product-selection {
+  #order-step-product-selection,
+  #order-consult {
     #content > header > div {
       display: block;
       @include clearfix;
@@ -137,20 +507,6 @@
       }
     }
 
-    .two-columns {
-      @include large-screen {
-        display: block;
-        @include clearfix;
-
-        > header,
-        > div,
-        > ul,
-        > form {
-          float: left;
-        }
-      }
-    }
-
     #how-to-get-it-for-free-modal {
       @include large-screen {
         .modal-body.large-res {
@@ -159,6 +515,33 @@
 
           > ul,
           > div {
+            float: left;
+          }
+        }
+      }
+    }
+
+    #cart-section {
+      @include medium-screen {
+        .with-edition > span {
+          display: block;
+          @include clearfix;
+
+          > .cart-product-name,
+          > .edition {
+            float: left;
+          }
+        }
+
+        .bottom-section {
+          display: block;
+          @include clearfix;
+
+          > table {
+            float: right;
+          }
+
+          > .guarantee-panel {
             float: left;
           }
         }

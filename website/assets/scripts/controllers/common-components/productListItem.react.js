@@ -47,7 +47,7 @@ CR.Controllers.ProductListItem = React.createClass({
             <li ref="li" className={liClasses} onClick={this._handleListItemClick}>
                 <div className={checkboxWrapperClasses}>
                     {this._checkboxInput(checkboxId, isInOrder)}
-                    <label htmlFor={checkboxId}>{CR.i18nMessages["order.productSelection.productsSection.productName." + product.code]}</label>
+                    <label htmlFor={checkboxId}>{CR.i18nMessages["product.name." + product.code]}</label>
                 </div>
                 <div className={pricesClasses}>
                     {fullPriceParagraph}
@@ -72,6 +72,7 @@ CR.Controllers.ProductListItem = React.createClass({
 
     _isInOrder() {
         const foundProduct = _.find(CR.order.getProducts(), product => product.id === this.props.product.id);
+
         return foundProduct !== undefined;  // eslint-disable-line no-undefined
     },
 
@@ -103,5 +104,7 @@ CR.Controllers.ProductListItem = React.createClass({
         CR.order.saveInLocalStorage();
 
         this.props.controller.reRender();
+
+        return null;
     }
 });

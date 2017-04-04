@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.CvFormGroup = React.createClass({
-    render: function() {
+    render() {
         if (!this.props.orderedCv) {
             return null;
         }
@@ -24,17 +22,17 @@ CR.Controllers.CvFormGroup = React.createClass({
             </div>);
     },
 
-    componentDidMount: function() {
+    componentDidMount() {
         this._initElements();
     },
 
-    _initElements: function() {
+    _initElements() {
         this.$cvFormGroup = $("#cv-form-group");
         this.$cvFileField = this.$cvFormGroup.find("#cv");
         this.$cvFileNameField = this.$cvFormGroup.find("#cv-file-name");
     },
 
-    _handleCvFileSelected: function() {
+    _handleCvFileSelected() {
         this.props.controller.cvFile = this.$cvFileField[0].files[0];
         this.$cvFileNameField.val(this.props.controller.cvFile.name);
         this.$cvFormGroup.removeClass("has-error");

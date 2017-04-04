@@ -5,6 +5,8 @@ defaultAssessmentTitle=Assessment
 product.name.CV_REVIEW=CV Review
 product.name.COVER_LETTER_REVIEW=Cover Letter Review
 product.name.LINKEDIN_PROFILE_REVIEW=LinkedIn Review
+product.name.CV_REVIEW_CONSULT=CV Review
+product.name.LINKEDIN_PROFILE_REVIEW_CONSULT=LinkedIn Review
 product.name.INTERVIEW_TRAINING=Interview Training
 
 edition.name.PRO=Professional
@@ -62,6 +64,16 @@ reportSummary.LINKEDIN_PROFILE_REVIEW.25=You scored <strong>{score} out of 100</
 reportSummary.LINKEDIN_PROFILE_REVIEW.51=You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />You've done a good job and the result is quite ok, but you should work a bit further with your LinkedIn Profile. Please follow our recommendations below so your application can become excellent!
 reportSummary.LINKEDIN_PROFILE_REVIEW.74=You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />You should be very proud of your work! But there's still some room for improvement. Consider our advice below - you are not far from having an exceptional LinkedIn Profile!
 reportSummary.LINKEDIN_PROFILE_REVIEW.92=You scored <strong>{score} out of 100</strong> in our assessment of your LinkedIn Profile. The average for the {nbLastAssessmentsToTakeIntoAccount} latest profiles we've assessed is <strong>{averageScore}</strong>.<br /><br />Very well done! Your LinkedIn Profile is really really good! It can't hurt, though, to take a look at the advice below to see if there is anything you can improve further. But you should be really proud of your work!
+
+breadcrumbs.step.1.text=Products
+breadcrumbs.step.2.text=Details
+breadcrumbs.step.3.text=Account
+breadcrumbs.step.4.text=Payment
+
+breadcrumbs.step.1.text.largeScreen=Product Selection
+breadcrumbs.step.2.text.largeScreen=Assessment details
+breadcrumbs.step.3.text.largeScreen=Create your account
+breadcrumbs.step.4.text.largeScreen=Payment
 
 moneyBackGuarantee.text=<span>Nothing to lose</span>The advice in the review is useful and helps you move forward with your application - or we pay you back 100%.
 
@@ -171,16 +183,13 @@ report.analysis.explanation.docLabel.LINKEDIN_PROFILE_REVIEW=LinkedIn profile
 
 # Order Step Product Selection page
 
-order.productSelection.title=Product Selection
+order.productSelection.title=Söker jobb
+order.productSelection.title.largeScreen=För dig som söker jobb
 order.productSelection.subtitle=How can we help you?
 order.productSelection.submitBtn.text=Proceed to next step
 order.productSelection.validation.emptyCart=You need to select at least 1 product to continue
 
 order.productSelection.productsSection.title=Products
-order.productSelection.productsSection.productName.CV_REVIEW=Review my CV
-order.productSelection.productsSection.productName.COVER_LETTER_REVIEW=Review my Cover Letter
-order.productSelection.productsSection.productName.LINKEDIN_PROFILE_REVIEW=Review my LinkedIn Profile
-order.productSelection.productsSection.productName.INTERVIEW_TRAINING=Interview Training
 
 order.productSelection.productsSection.howToGetItForFree.link.text=Can you get this for free?
 order.productSelection.productsSection.howToGetItForFree.title=Our partners
@@ -199,6 +208,8 @@ order.productSelection.editionsSection.editionDescription.text.EXEC=You have (or
 order.productSelection.editionsSection.editionDescription.text.CONSULT=You work as a consultant or look for commissions as self-employed
 order.productSelection.editionsSection.editionDescription.text.ACADEMIA=You are applying for a job as researcher in academia (not applicable for private R&D positions)
 
+order.productSelection.switchToConsultant.link.text=Switch to consultant
+
 order.productSelection.languageSection.subtitle=You're searching for a job in Sweden. You want to have your assessment in:
 
 order.productSelection.cartSection.title=Your Order
@@ -213,13 +224,27 @@ order.productSelection.cartSection.subTotal=Sub-total
 order.productSelection.cartSection.total=Total You Pay
 
 
+# Order For Consultant page
+
+order.consult.title=Searching contract
+order.consult.title.largeScreen=For you searching a contract
+order.consult.subtitle=Hur kan vi hjälpa dig?
+
+order.consult.switchToClassic.link.text=Switch to classic
+
+
 # Order Step Assessment Info page
 
-order.assessmentInfo.title=Assessment details
+order.assessmentInfo.title=Söker jobb
+order.assessmentInfo.title.largeScreen=För dig som söker jobb
+order.assessmentInfo.title.consult=Söker uppdrag
+order.assessmentInfo.title.consult.largeScreen=För dig som söker uppdrag
+
 order.assessmentInfo.subtitle=Tell us a bit about you
 order.assessmentInfo.documentsSection.title=Your documents
 order.assessmentInfo.documentsSection.subtitle=This is what we will assess.
 order.assessmentInfo.jobYouSearchSection.title=The job you search
+order.assessmentInfo.jobYouSearchSection.title.consult=Uppdrag du söker
 order.assessmentInfo.jobYouSearchSection.subtitle=The more we know, the more we can help you. All optional information.
 order.assessmentInfo.submitBtn.text=Proceed to next step
 order.assessmentInfo.validation.linkedin.notSignedIn=We cannot assess your LinkedIn profile unless you sign in
@@ -250,10 +275,14 @@ order.assessmentInfo.form.cvFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.coverLetterFile.label=Your cover letter
 order.assessmentInfo.form.coverLetterFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.employerSought.label=Employer sought
+order.assessmentInfo.form.employerSought.label.consult=Kund du söker
 order.assessmentInfo.form.positionSought.label=Position sought
+order.assessmentInfo.form.positionSought.label.consult=Roll
 order.assessmentInfo.form.jobAdUrl.label=URL of the job ad
+order.assessmentInfo.form.jobAdUrl.label.consult=Länk (url) till uppdragsbeskrivning
 order.assessmentInfo.form.jobAdUrl.uploadInstead.text=I prefer to upload a file
 order.assessmentInfo.form.jobAdFile.label=Job ad file
+order.assessmentInfo.form.jobAdFile.label.consult=Fil med uppdragsbeskrivning
 order.assessmentInfo.form.jobAdFile.placeHolder=PDF, Word, OpenOffice, RTF
 order.assessmentInfo.form.jobAdFile.urlInstead.text=Forget that - I'll input a link to the job ad
 order.assessmentInfo.form.customerComment.label=Do you have any specific question regarding your documents?

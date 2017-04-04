@@ -56,6 +56,24 @@
     float: none;
   }
 
+  #nav-pill-cv-consult,
+  #nav-pill-linkedin-profile-consult {
+    display: none;
+  }
+
+  #content.consult {
+    #nav-pill-cv,
+    #nav-pill-cover-letter,
+    #nav-pill-linkedin-profile {
+      display: none;
+    }
+
+    #nav-pill-cv-consult,
+    #nav-pill-linkedin-profile-consult {
+      display: inline-block;
+    }
+  }
+
   .tab-pane {
     .light-font {
       @include medium-screen {

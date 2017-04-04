@@ -11,11 +11,9 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepOneTag() {
-        const tagText = this._isInterviewTrainingOrdered() ? CR.i18nMessages["order.interviewTraining.title"] : CR.i18nMessages["order.productSelection.title"];
-
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.1.text"] : CR.i18nMessages["breadcrumbs.step.1.text.largeScreen"];
         const stepOneInnerTag = `<span>1. ${tagText}</span>`;
         let stepOneTag = <a href={this._baseUrl()} dangerouslySetInnerHTML={{__html: stepOneInnerTag}} />;
-
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.productSelection) {
             stepOneTag = <span dangerouslySetInnerHTML={{__html: stepOneInnerTag}} className="current-step" />;
@@ -25,11 +23,9 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepTwoTag() {
-        const tagText = this._isInterviewTrainingOrdered() ? CR.i18nMessages["order.interviewTraining.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title"];
-
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.2.text"] : CR.i18nMessages["breadcrumbs.step.2.text.largeScreen"];
         const stepTwoInnerTag = `<span>2. ${tagText}</span>`;
         let stepTwoTag = <a href={`${this._baseUrl()}/assessment-info`} dangerouslySetInnerHTML={{__html: stepTwoInnerTag}} />;
-
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.assessmentInfo) {
             stepTwoTag = <span dangerouslySetInnerHTML={{__html: stepTwoInnerTag}} className="current-step" />;
@@ -41,7 +37,8 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepThreeTag() {
-        const stepThreeInnerTag = `<span>3. ${CR.i18nMessages["order.accountCreation.title"]}</span>`;
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.3.text"] : CR.i18nMessages["breadcrumbs.step.3.text.largeScreen"];
+        const stepThreeInnerTag = `<span>3. ${tagText}</span>`;
 
         // If current step is after, and user not logged-in
         let stepThreeTag = <a href="/order/create-account" dangerouslySetInnerHTML={{__html: stepThreeInnerTag}} />;
@@ -71,7 +68,8 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
     },
 
     _getStepFourTag() {
-        const stepFourInnerTag = `<span>4. ${CR.i18nMessages["order.payment.title"]}</span>`;
+        const tagText = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["breadcrumbs.step.4.text"] : CR.i18nMessages["breadcrumbs.step.4.text.largeScreen"];
+        const stepFourInnerTag = `<span>4. ${tagText}</span>`;
         let stepFourTag = <span dangerouslySetInnerHTML={{__html: stepFourInnerTag}} />;
 
         if (this.props.step === CR.Controllers.OrderCommon.steps.payment) {
@@ -81,11 +79,24 @@ CR.Controllers.OrderStepBreadcrumbs = React.createClass({
         return stepFourTag;
     },
 
-    _baseUrl: function() {
-        return this._isInterviewTrainingOrdered() ? "/order/interview-training" : "/order";
+    _baseUrl() {
+        if (this._isForConsultant()) {
+            return "/order/consultant";
+        }
+        
+        if (this._isInterviewTrainingOrdered()) {
+            return "/order/interview-training";
+        }
+        
+        return "/order";
+    },
+
+    _isForConsultant() {
+        return _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT || p.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) !== undefined;    // eslint-disable-line no-undefined
     },
 
     _isInterviewTrainingOrdered() {
-        return _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.INTERVIEW_TRAINING) !== undefined;
+        return _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.INTERVIEW_TRAINING) !== undefined;    // eslint-disable-line no-undefined
     }
 });
+

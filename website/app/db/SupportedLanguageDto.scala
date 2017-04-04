@@ -10,13 +10,13 @@ import play.api.db.DB
 import scala.util.control.Breaks._
 
 object SupportedLanguageDto {
-  val all = getAll
+  val All = getAll
 
   def getOfCode(ietfCode: String): Option[SupportedLanguage] = {
     var result: Option[SupportedLanguage] = None
 
     breakable {
-      for (supportedLanguage <- all) {
+      for (supportedLanguage <- All) {
         if (supportedLanguage.ietfCode == ietfCode) {
           result = Some(supportedLanguage)
           break()

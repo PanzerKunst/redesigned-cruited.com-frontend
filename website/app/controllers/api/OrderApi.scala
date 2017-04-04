@@ -85,10 +85,16 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
       Some(requestData("customerComment").head)
     }
 
+    val editionId: Long = if (requestData.contains("editionId")) {
+      requestData("editionId").head.toLong
+    } else {
+      EditionDto.getOfCode(Edition.CodeConsultant).get.id
+    }
+
     // Create temporary order
     val tempOrder = OrderReceivedFromFrontend(
       tempId = tempOrderId,
-      editionId = Some(requestData("editionId").head.toLong),
+      editionId = editionId,
       containedProductCodes = requestData("containedProductCodes").head.split(",").toList,
       couponCode = couponCode,
       cvFileName = cvFileNameOpt,
@@ -172,11 +178,11 @@ class OrderApi @Inject()(val documentService: DocumentService, val orderService:
             cvFileNameOpt,
             coverLetterFileNameOpt,
             existingOrder.linkedinProfileFileName,
+            existingOrder.linkedinProfileLanguage,
             positionSought,
             employerSought,
             jobAdUrl,
             jobAdFileNameOpt,
-            existingOrder.linkedinProfileLanguage,
             customerComment,
             existingOrder.accountId,
             existingOrder.status,

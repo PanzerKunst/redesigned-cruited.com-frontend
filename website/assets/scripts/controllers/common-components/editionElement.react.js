@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.EditionElement = React.createClass({
-    render: function() {
+    render() {
         if (!this.props.edition) {
             return null;
         }

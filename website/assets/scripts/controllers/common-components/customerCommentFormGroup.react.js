@@ -1,7 +1,6 @@
-"use strict";
-
 CR.Controllers.CustomerCommentFormGroup = React.createClass({
-    render: function() {
+    render() {
+
         // To avoid losing value if the page is reloaded, for example by a Sign in with LI
         const customerComment = CR.Services.Browser.getFromLocalStorage(CR.localStorageKeys.customerComment) || CR.order.getCustomerComment();
 

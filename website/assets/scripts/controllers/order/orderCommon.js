@@ -6,7 +6,7 @@ CR.Controllers.OrderCommon = {
         payment: 4
     },
 
-    getUploadLabelClasses: function(isBtnDisabled) {
+    getUploadLabelClasses(isBtnDisabled) {
         let classes = "btn btn-default btn-file-upload";
 
         if (isBtnDisabled) {
@@ -16,7 +16,7 @@ CR.Controllers.OrderCommon = {
         return classes;
     },
 
-    getUploadDisabledExplanationParagraph: function(isBtnDisabled) {
+    getUploadDisabledExplanationParagraph(isBtnDisabled) {
         return isBtnDisabled ? <p className="sign-in-with-linkedin-first">{CR.i18nMessages["order.assessmentInfo.validation.signInWithLinkedinFirst"]}</p> : null;
     }
 };

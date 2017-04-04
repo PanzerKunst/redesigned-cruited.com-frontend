@@ -1,4 +1,10 @@
 #order-step-assessment-info {
+  .with-circles > form [type="submit"] {
+    @include large-screen {
+      font-size: $two-columns-font-size-large-screen;
+    }
+  }
+
   #linkedin-profile-form-group {
     $element-margin-left: 3.5em;
 
@@ -69,7 +75,6 @@
         }
       }
     }
-
 
     @include large-screen {
       .checkbox > label::before {

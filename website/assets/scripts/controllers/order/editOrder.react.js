@@ -1,17 +1,26 @@
-"use strict";
-
 CR.Controllers.EditOrder = P(function(c) {
     c.reactClass = React.createClass({
-        render: function() {
+        render() {
             if (!window.FormData) {
                 return (<p style="color: red">Your browser is too old, it's not supported by our website</p>);
+            }
+
+            let pageTitle = null;
+            let jobYouSearchSectionTitle = null;
+
+            if (CR.order.isOfClassicProducts()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title"] : CR.i18nMessages["order.assessmentInfo.title.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"];
+            } else if (CR.order.isForConsultant()) {
+                pageTitle = CR.Services.Browser.isSmallScreen() ? CR.i18nMessages["order.assessmentInfo.title.consult"] : CR.i18nMessages["order.assessmentInfo.title.consult.largeScreen"];
+                jobYouSearchSectionTitle = CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title.consult"];
             }
 
             return (
                 <div id="content">
                     <header>
                         <div>
-                            <h1>{CR.i18nMessages["order.assessmentInfo.title"]}</h1>
+                            <h1>{pageTitle}</h1>
                         </div>
                     </header>
                     <div className="with-circles">
@@ -20,7 +29,7 @@ CR.Controllers.EditOrder = P(function(c) {
                         <form onSubmit={this._handleSubmit}>
                             {this._getDocumentsSection()}
                             <section id="job-you-search-section" className="two-columns">
-                                <h2>{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.title"]}</h2>
+                                <h2>{jobYouSearchSectionTitle}</h2>
                                 <div>
                                     <header>
                                         <p className="light-font">{CR.i18nMessages["order.assessmentInfo.jobYouSearchSection.subtitle"]}</p>
@@ -41,12 +50,12 @@ CR.Controllers.EditOrder = P(function(c) {
                 </div>);
         },
 
-        componentDidMount: function() {
+        componentDidMount() {
             this._initElements();
             this._initValidation();
         },
 
-        _initElements: function() {
+        _initElements() {
             this.$form = $("#content").find("form");
 
             this.$cvFormGroup = this.$form.find("#cv-form-group");
@@ -58,7 +67,6 @@ CR.Controllers.EditOrder = P(function(c) {
             this.$jobAdFileUploadFormGroup = this.$form.find("#job-ad-file-upload-form-group");
 
             this.$requestEntityTooLargeError = this.$form.find("#request-entity-too-large-error");
-            this.$jobAdRequiredError = this.$form.find("#job-ad-required-error");
 
             this.$positionSoughtField = this.$form.find("#position-sought");
             this.$employerSoughtField = this.$form.find("#employer-sought");
@@ -70,7 +78,7 @@ CR.Controllers.EditOrder = P(function(c) {
             this.$submitBtn = this.$form.find("button[type=submit]");
         },
 
-        _initValidation: function() {
+        _initValidation() {
             this.validator = CR.Services.Validator([
                 "cv-file-name",
                 "cover-letter-file-name",
@@ -79,14 +87,9 @@ CR.Controllers.EditOrder = P(function(c) {
             ]);
         },
 
-        _getDocumentsSection: function() {
-            this.orderedCv = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.CV_REVIEW;
-            });
-
-            this.orderedCoverLetter = _.find(CR.order.getProducts(), function(product) {
-                return product.code === CR.Models.Product.codes.COVER_LETTER_REVIEW;
-            });
+        _getDocumentsSection() {
+            this.orderedCv = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.CV_REVIEW || p.code === CR.Models.Product.codes.CV_REVIEW_CONSULT);
+            this.orderedCoverLetter = _.find(CR.order.getProducts(), p => p.code === CR.Models.Product.codes.COVER_LETTER_REVIEW);
 
             if (!this.orderedCv && !this.orderedCoverLetter) {
                 return null;
@@ -109,93 +112,90 @@ CR.Controllers.EditOrder = P(function(c) {
             );
         },
 
-        _handleSubmit: function(e) {
+        _handleSubmit(e) {
             e.preventDefault();
 
             this.validator.hideErrorMessage(this.$requestEntityTooLargeError);
-            this.validator.hideErrorMessage(this.$jobAdRequiredError);
 
             if (this.validator.isValid()) {
+                this.$submitBtn.enableLoading();
+
+                const formData = new FormData();
+
+                formData.append("id", CR.order.getId());
+
+                if (this.cvFile) {
+                    formData.append("cvFile", this.cvFile, this.cvFile.name);
+                }
+                if (this.coverLetterFile) {
+                    formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
+                }
+
+                const positionSought = this.$positionSoughtField.val();
+
+                if (positionSought) {
+                    formData.append("positionSought", positionSought);
+                }
+
+                const employerSought = this.$employerSoughtField.val();
+
+                if (employerSought) {
+                    formData.append("employerSought", employerSought);
+                }
+
                 const jobAdUrl = this.$jobAdUrlField.val();
 
-                if (!jobAdUrl && !this.jobAdFile) {
-                    this.validator.showErrorMessage(this.$jobAdRequiredError);
-
-                    if (this.$jobAdUrlFormGroup.is(":visible")) {
-                        CR.scrollToElement(this.$jobAdUrlFormGroup);
-                    } else {
-                        CR.scrollToElement(this.$jobAdFileUploadFormGroup);
-                    }
-                } else {
-                    this.$submitBtn.enableLoading();
-
-                    const formData = new FormData();
-                    formData.append("id", CR.order.getId());
-
-                    if (this.cvFile) {
-                        formData.append("cvFile", this.cvFile, this.cvFile.name);
-                    }
-                    if (this.coverLetterFile) {
-                        formData.append("coverLetterFile", this.coverLetterFile, this.coverLetterFile.name);
-                    }
-
-                    const positionSought = this.$positionSoughtField.val();
-                    const employerSought = this.$employerSoughtField.val();
-                    const customerComment = this.$customerCommentField.val();
-
-                    if (positionSought) {
-                        formData.append("positionSought", positionSought);
-                    }
-                    if (employerSought) {
-                        formData.append("employerSought", employerSought);
-                    }
-                    if (jobAdUrl) {
-                        formData.append("jobAdUrl", jobAdUrl);
-                    }
-                    if (this.jobAdFile) {
-                        formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
-                    }
-                    if (customerComment) {
-                        formData.append("customerComment", customerComment);
-                    }
-
-                    const type = "PUT";
-                    const url = "/api/orders";
-
-                    const httpRequest = new XMLHttpRequest();
-                    httpRequest.onreadystatechange = function() {
-                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                            if (httpRequest.status === CR.httpStatusCodes.ok) {
-                                location.href = "/";
-                            } else {
-                                this.$submitBtn.disableLoading();
-
-                                // Doesn't work on test server: status == 0 :(
-                                // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
-
-                                this.validator.showErrorMessage(this.$requestEntityTooLargeError);
-
-                                if (!_.isEmpty(this.$cvFormGroup)) {
-                                    this.$cvFormGroup.addClass("has-error");
-                                }
-                                if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                    this.$coverLetterFormGroup.addClass("has-error");
-                                }
-
-                                if (!_.isEmpty(this.$cvFormGroup)) {
-                                    CR.scrollToElement(this.$cvFormGroup);
-                                } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
-                                    CR.scrollToElement(this.$coverLetterFormGroup);
-                                }
-                                /* } else {
-                                 alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
-                                 } */
-                            }
-                        }
-                    }.bind(this);
-                    httpRequest.open(type, url);
-                    httpRequest.send(formData);
+                if (jobAdUrl) {
+                    formData.append("jobAdUrl", jobAdUrl);
                 }
+
+                if (this.jobAdFile) {
+                    formData.append("jobAdFile", this.jobAdFile, this.jobAdFile.name);
+                }
+
+                const customerComment = this.$customerCommentField.val();
+
+                if (customerComment) {
+                    formData.append("customerComment", customerComment);
+                }
+
+                const type = "PUT";
+                const url = "/api/orders";
+                const httpRequest = new XMLHttpRequest();
+
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                        if (httpRequest.status === CR.httpStatusCodes.ok) {
+                            location.href = "/";
+                        } else {
+                            this.$submitBtn.disableLoading();
+
+                            // Doesn't work on test server: status == 0 :(
+                            // if (httpRequest.status === CR.httpStatusCodes.requestEntityTooLarge) {
+
+                            this.validator.showErrorMessage(this.$requestEntityTooLargeError);
+
+                            if (!_.isEmpty(this.$cvFormGroup)) {
+                                this.$cvFormGroup.addClass("has-error");
+                            }
+                            if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                this.$coverLetterFormGroup.addClass("has-error");
+                            }
+
+                            if (!_.isEmpty(this.$cvFormGroup)) {
+                                CR.scrollToElement(this.$cvFormGroup);
+                            } else if (!_.isEmpty(this.$coverLetterFormGroup)) {
+                                CR.scrollToElement(this.$coverLetterFormGroup);
+                            }
+
+                            /* } else {
+                             alert("AJAX failure doing a " + type + " request to \"" + url + "\"");
+                             } */
+                        }
+                    }
+                }.bind(this);
+                httpRequest.open(type, url);
+                httpRequest.send(formData);
             }
         }
     });
@@ -210,4 +210,3 @@ CR.Controllers.EditOrder = P(function(c) {
         );
     };
 });
-

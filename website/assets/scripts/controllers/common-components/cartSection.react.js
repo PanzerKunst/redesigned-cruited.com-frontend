@@ -1,7 +1,5 @@
-"use strict";
-
 CR.Controllers.CartSection = React.createClass({
-    render: function() {
+    render() {
         const controller = this.props.controller;
 
         return (
@@ -33,7 +31,7 @@ CR.Controllers.CartSection = React.createClass({
             </section>);
     },
 
-    _getCartTable: function() {
+    _getCartTable() {
         const products = CR.order.getProducts();
 
         if (_.isEmpty(products)) {
@@ -66,11 +64,10 @@ CR.Controllers.CartSection = React.createClass({
                     <td>{CR.order.getTotalPrice()} {productCurrencyCode}</td>
                 </tr>
                 </tfoot>
-            </table>
-        );
+            </table>);
     },
 
-    _getCouponRow: function() {
+    _getCouponRow() {
         const orderCoupon = CR.order.getCoupon();
 
         if (!orderCoupon) {
@@ -84,7 +81,6 @@ CR.Controllers.CartSection = React.createClass({
             <tr className="coupon-row">
                 <td>{orderCoupon.campaignName}:</td>
                 <td>- {amount}{unit}</td>
-            </tr>
-        );
+            </tr>);
     }
 });
