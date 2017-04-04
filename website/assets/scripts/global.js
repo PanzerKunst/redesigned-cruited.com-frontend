@@ -59,3 +59,11 @@ CR.scrollToElement = function($el) {
         ease: Power4.easeOut
     });
 };
+
+CR.orderLanguage = function() {
+    if (window.location.search === "?lang=en") {
+        return CR.languageCodes.en;
+    }
+
+    return CR.languageCodes.sv;
+};

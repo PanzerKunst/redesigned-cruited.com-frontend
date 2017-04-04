@@ -140,12 +140,6 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                     location.href = "/order/assessment-info";
                 }
             }
-        },
-
-        _handleLanguageChange(e) {
-            const $dropdown = $(e.currentTarget);
-
-            location.replace("/order?lang=" + $dropdown.val());
         }
     });
 

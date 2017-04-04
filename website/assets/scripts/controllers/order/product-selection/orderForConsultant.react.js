@@ -35,7 +35,7 @@ CR.Controllers.OrderForConsultant = P(function(c) {
                             </div>
                         </section>
 
-                        <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order" />
+                        <CR.Controllers.OrderLanguageSelection supportedLanguages={this.state.supportedLanguages} currentLanguageCode={this.state.currentLanguageCode} url="/order/consultant" />
                         <CR.Controllers.CartSection products={this.state.products} controller={this.state.controller} />
 
                         <form onSubmit={this._handleSubmit} className="centered-contents">
@@ -126,12 +126,6 @@ CR.Controllers.OrderForConsultant = P(function(c) {
                     location.href = "/order/assessment-info";
                 }
             }
-        },
-
-        _handleLanguageChange(e) {
-            const $dropdown = $(e.currentTarget);
-
-            location.replace("/order?lang=" + $dropdown.val());
         }
     });
 

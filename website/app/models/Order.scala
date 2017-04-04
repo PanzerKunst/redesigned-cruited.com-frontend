@@ -1,6 +1,6 @@
 package models
 
-import db.{CouponDto, CruitedProductDto, ReductionDto}
+import db.{CouponDto, CruitedProductDto, EditionDto, ReductionDto}
 import models.frontend.FrontendOrder
 import play.api.Logger
 
@@ -100,6 +100,10 @@ case class Order(id: Option[Long],
   }
 
   def isForConsultant: Boolean = {
+    if (EditionDto.getOfId(editionId).get.code == Edition.CodeConsultant) {
+      return true
+    }
+
     for (pc <- containedProductCodes) {
       if (pc != CruitedProduct.CodeCvReviewForConsultant && pc != CruitedProduct.CodeLinkedinProfileReviewForConsultant) {
         return false
