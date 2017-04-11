@@ -19,3 +19,4 @@ node_modules
 /rater-ui/conf/application-prod.conf
 /rater-ui/public
 /dws-test-client/conf/application.conf
+/backup.sh
