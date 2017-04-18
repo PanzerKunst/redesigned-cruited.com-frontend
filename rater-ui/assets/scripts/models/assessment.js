@@ -615,7 +615,7 @@ const Assessment = {
             }
 
             if (commentToUpdate) {
-                commentToUpdate.redText = comment.text;
+                commentToUpdate.redText = comment.text || comment.redText;  // `comment.text` if variation, `comment.redText` if default
                 commentToUpdate.variationId = variationId;
 
                 this._saveReportCommentInLocalStorage(categoryProductCode, commentToUpdate);

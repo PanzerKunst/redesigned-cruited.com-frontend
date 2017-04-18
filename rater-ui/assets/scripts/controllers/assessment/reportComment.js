@@ -24,7 +24,6 @@ const Component = React.createClass({
                 <button type="button" className="styleless fa fa-clone fa-fw" onClick={this._handleVariationsClick} />
                 {this._resetBtn()}
                 <button type="button" className="styleless fa fa-trash fa-fw" onClick={this._handleRemoveClick} />
-
                 {this._idAndPoints()}
             </li>);
     },
@@ -54,7 +53,7 @@ const Component = React.createClass({
         const c = this.props.comment;
 
         if (Comment.isCustom(c)) {
-            return <div className="id-and-points"></div>;
+            return <div className="id-and-points"/>;
         }
 
         return (
