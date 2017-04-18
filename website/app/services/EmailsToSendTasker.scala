@@ -19,8 +19,9 @@ class EmailsToSendTasker @Inject()(val messagesApi: MessagesApi, val emailServic
         val paymentUrl = GlobalConfig.rootUrl + "order/complete-payment?orderId=" + orderId
         val i18nMessages = I18nService.getMessages(messagesApi, languageCode)
 
+        /* Disabling the unpaid order reminder until customers can input coupon codes in the payment view
         emailService.sendUnpaidOrderReminderEmail(emailAddress, firstName, languageCode, paymentUrl, i18nMessages("email.unpaidOrderReminder.subject"))
-        OrderDto.setUnpaidOrderReminderEmailSent(orderId)
+        OrderDto.setUnpaidOrderReminderEmailSent(orderId) */
       }
 
       isRunning = false
