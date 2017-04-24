@@ -43,7 +43,7 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
                                     })}
                                     </ul>
                                     <div id="switch-to-consultant-wrapper" className="centered-contents">
-                                        <a href="/order/consultant">{CR.i18nMessages["order.productSelection.switchToConsultant.link.text"]}</a>
+                                        <a href={`/order/consultant${window.location.search}`}>{CR.i18nMessages["order.productSelection.switchToConsultant.link.text"]}</a>
                                     </div>
                                 </div>
                             </div>
@@ -199,13 +199,14 @@ CR.Controllers.OrderStepProductSelection = P(function(c) {
     c._removeNonClassicProducts = function() {
         const products = _.cloneDeep(CR.order.getProducts());
 
-        for (const p of products) {
+        // Not using `for of` because of an issue in IE after Babel transpilation
+        products.forEach(p => {
             if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
                 p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
                 p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {
 
                 CR.order.removeProduct(p);
             }
-        }
+        });
     };
 });

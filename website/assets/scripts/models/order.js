@@ -276,7 +276,9 @@ CR.Models.Order = P(function(c) {
     };
 
     c.isForConsultant = function() {
-        for (const p of this._products) {
+        for (let i = 0; i < this._products.length; i++) {   // Not using `for of` because of an issue in IE after Babel transpilation
+            const p = this._products[i];
+
             if (p.code !== CR.Models.Product.codes.CV_REVIEW_CONSULT && p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
                 return false;
             }
@@ -286,7 +288,9 @@ CR.Models.Order = P(function(c) {
     };
 
     c.isOfClassicProducts = function() {
-        for (const p of this._products) {
+        for (let i = 0; i < this._products.length; i++) {   // Not using `for of` because of an issue in IE after Babel transpilation
+            const p = this._products[i];
+
             if (p.code !== CR.Models.Product.codes.CV_REVIEW &&
                 p.code !== CR.Models.Product.codes.COVER_LETTER_REVIEW &&
                 p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW) {

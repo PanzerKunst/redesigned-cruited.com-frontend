@@ -30,7 +30,7 @@ CR.Controllers.OrderForConsultant = P(function(c) {
                             <header/>
                             <div>
                                 <div className="centered-contents">
-                                    <a href="/order">{CR.i18nMessages["order.consult.switchToClassic.link.text"]}</a>
+                                    <a href={`/order${window.location.search}`}>{CR.i18nMessages["order.consult.switchToClassic.link.text"]}</a>
                                 </div>
                             </div>
                         </section>
@@ -180,10 +180,11 @@ CR.Controllers.OrderForConsultant = P(function(c) {
     c._removeProductsExceptForConsultant = function() {
         const products = _.cloneDeep(CR.order.getProducts());
 
-        for (const p of products) {
+        // Not using `for of` because of an issue in IE after Babel transpilation
+        products.forEach(p => {
             if (p.code !== CR.Models.Product.codes.CV_REVIEW_CONSULT && p.code !== CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
                 CR.order.removeProduct(p);
             }
-        }
+        });
     };
 });

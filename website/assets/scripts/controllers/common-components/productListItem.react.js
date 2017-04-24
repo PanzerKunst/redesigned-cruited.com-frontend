@@ -27,7 +27,7 @@ CR.Controllers.ProductListItem = React.createClass({
         let fullPriceParagraph = null;
 
         if (product.reducedPrice) {
-            fullPriceParagraph = <p className="full-price">{product.price.amount} {product.price.currencyCode}</p>;
+            fullPriceParagraph = <p className="full-price">{CR.Models.Product.displayPrice(product.price.amount, product)} {product.price.currencyCode}</p>;
             pricesClasses += " with-reduction";
         }
 
@@ -52,7 +52,7 @@ CR.Controllers.ProductListItem = React.createClass({
                 <div className={pricesClasses}>
                     {fullPriceParagraph}
                     <p className="current-price">
-                        <span className="amount">{currentPrice.amount}</span>
+                        <span className="amount">{CR.Models.Product.displayPrice(currentPrice.amount, product)}</span>
                         <span className="currency-code">{currentPrice.currencyCode}</span>
                     </p>
                 </div>

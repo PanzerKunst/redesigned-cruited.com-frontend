@@ -207,7 +207,7 @@ order.productSelection.editionsSection.editionDescription.text.EXEC=Du har (elle
 order.productSelection.editionsSection.editionDescription.text.CONSULT=Du jobbar som konsult eller söker uppdrag som egenföretagare eller frilans
 order.productSelection.editionsSection.editionDescription.text.ACADEMIA=Du söker jobb som forskare inom akademin (gäller ej forskningstjänster i privata organisationer)
 
-order.productSelection.switchToConsultant.link.text=Switch to consultant
+order.productSelection.switchToConsultant.link.text=Är du konsult eller egenföretagare? Söker du uppdrag?
 
 order.productSelection.languageSection.subtitle=Du söker jobb i Sverige. Du vill ha din bedömning på:
 
@@ -229,7 +229,7 @@ order.consult.title=Söker uppdrag
 order.consult.title.largeScreen=För dig som söker uppdrag
 order.consult.subtitle=Hur kan vi hjälpa dig?
 
-order.consult.switchToClassic.link.text=Switch to classic
+order.consult.switchToClassic.link.text=Du vet väl att vi också har en version för dig som söker jobb?
 
 
 # Order Step Assessment Info page

@@ -27,5 +27,14 @@ CR.Models.Product = {
         }
 
         return code;
+    },
+
+    displayPrice(amount, product) { // eslint-disable-line no-unused-vars
+
+        /* TODO if (product.code === CR.Models.Product.codes.CV_REVIEW_CONSULT || product.code === CR.Models.Product.codes.LINKEDIN_PROFILE_REVIEW_CONSULT) {
+            return Math.round(amount * 0.8);    // We remove the VAT on products for consultants
+        } */
+
+        return amount;
     }
 };
